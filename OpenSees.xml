@@ -1,0 +1,10 @@
+<Infoproblemtype version="1.0">
+<Program>
+<Name>OpenSees</Name>
+<Version>1.3.1</Version>
+<MinimumGiDVersion>12.0.8</MinimumGiDVersion>
+<ImageFileBrowser></ImageFileBrowser>
+<PasswordPath>..</PasswordPath>
+<ValidatePassword>..</ValidatePassword>
+</Program>
+</Infoproblemtype>

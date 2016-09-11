@@ -1,0 +1,137 @@
+# 
+# GiD to OpenSees Interface
+#
+# Lab of R/C and Masonry Structures
+# School of Civil Engineering, AUTh
+#
+# Development team
+# T. Kartalis-Kaounis, Civil Engineer AUTh
+# V. Protopapadakis, Civil Engineer AUTh
+# T. Papadopoulos, Civil Engineer AUTh
+#
+# Project supervisor
+# V.K. Papanikolaou, Assistant Professor AUTh
+#
+#
+# Problem data file
+#
+#
+PROBLEM DATA
+TITLE: Modeling_Options
+
+QUESTION: Dimensions#CB#(2,3)
+VALUE: 3
+DEPENDENCIES: (2,SET,Vertical_Axis,Y)(3,RESTORE,Vertical_Axis,Z)
+TKWIDGET: TK_CheckModelingOptions
+
+QUESTION: DOF#CB#(2,3,6)
+VALUE: 6
+
+QUESTION: Vertical_Axis#CB#(Z,Y)
+VALUE: Z
+HELP: In a 3D model, vertical axis defines how the vector Vxz with be\nFor an non vertical element,Vxz is in same direction with Vertical Axis\nFor vertical elements,Vxz is in opposite direction with Global X axis\nSo, for an horizontal element local z is Global Vertical axis\nFor a vertical element, local z axis is opposite to the Global X axis\nIn 2D model, vertical axis is Y axis by default 
+
+TITLE: System
+
+QUESTION: System_of_Equation_Type#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM)
+VALUE: BandGeneral
+
+TITLE: Numberer
+
+QUESTION: DOF_Numberer_Type#CB#(Plain,RCM,AMD)
+VALUE: AMD
+
+TITLE: Constraints
+
+QUESTION: Constraint_Handler_Type#CB#(Plain,Lagrange,Penalty,Transformation)
+VALUE: Plain
+
+TITLE: Test
+
+QUESTION: Use_test#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Convergence_Test_Type,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Maximum_iterations,#CURRENT#,RESTORE,Display,#CURRENT#)
+DEPENDENCIES: (0,HIDE,Convergence_Test_Type,#CURRENT#,HIDE,Tolerance,#CURRENT#,HIDE,Maximum_iterations,#CURRENT#,HIDE,Display,#CURRENT#)
+
+QUESTION: Convergence_Test_Type#CB#(Energy_Increment,Norm_Displacement_Incement)
+VALUE: Energy Increment
+STATE: HIDDEN
+
+QUESTION: Tolerance
+VALUE: 1.0e-10
+HELP: 	the tolerance criteria used to check for convergence
+STATE: HIDDEN
+
+QUESTION: Maximum_iterations
+VALUE: 100
+HELP: the max number of iterations to check before returning failure condition
+STATE: HIDDEN
+
+QUESTION: Display
+VALUE: 0
+HELP: 0 print nothing \n 1 print information on norms each time test() is invoked \n2 print information on norms and number of iterations at end of successful test \n4 at each step it will print the norms and also the ΔU and R(U) vectors.\n5 if it fails to converge at end of the variable "numIter" it will print an error message BUT RETURN A SUCCESSFUL test 
+STATE: HIDDEN
+
+TITLE: Algorithm
+
+QUESTION: Solution_Algorithm_Type#CB#(Linear,Newton)
+VALUE: Linear
+
+TITLE: Analysis
+QUESTION: Analysis_Type#CB#(Static,Transient,VariableTransient)
+VALUE: Static
+
+TITLE: Eigen_Analysis
+
+QUESTION: Perform_eigen_analysis#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Number_of_eigenvalues,#CURRENT#,RESTORE,Solver,#CURRENT#) (0,HIDE,Number_of_eigenvalues,#CURRENT#,HIDE,Solver,#CURRENT#)
+
+QUESTION: Number_of_eigenvalues
+VALUE: 0
+STATE: HIDDEN
+
+QUESTION: Solver#CB#(-genBandArpack,-fullGenLapack,-symmBandLapack)
+VALUE: -fullGenLapack
+STATE: HIDDEN
+
+TITLE: Integrator
+
+QUESTION: Integrator_Type#CB#(Load_Control,Displacement_Control)
+VALUE: Load_Control
+DEPENDENCIES: (Load_Control,RESTORE,Load_factor_increment,#CURRENT#,RESTORE,Number_of_interations,#CURRENT#,RESTORE,Minimum_stepsize,#CURRENT#,RESTORE,Maximum_stepsize,#CURRENT#,RESTORE,Type_of_norm,#CURRENT#,HIDE,Node_controler,#CURRENT#,HIDE,Dof_at_the_node,#CURRENT#,HIDE,First_displacement_increment_ΔUdof,#CURRENT#)
+DEPENDENCIES: (Displacement_Control,HIDE,Load_factor_increment,#CURRENT#,HIDE,Number_of_interations,#CURRENT#,HIDE,Minimum_stepsize,#CURRENT#,HIDE,Maximum_stepsize,#CURRENT#,HIDE,Type_of_norm,#CURRENT#,RESTORE,Node_controler,#CURRENT#,RESTORE,Dof_at_the_node,#CURRENT#,RESTORE,First_displacement_increment_ΔUdof,#CURRENT#)
+QUESTION: Load_factor_increment
+VALUE: 1
+HELP: the load factor increment λ
+
+QUESTION: Number_of_interations
+VALUE: 1
+HELP: the number of iterations the user would like to occur in the solution algorithm.
+
+QUESTION: Minimum_stepsize
+VALUE: 1
+
+QUESTION: Maximum_stepsize
+VALUE: 1
+
+QUESTION: Type_of_norm
+VALUE: 2
+HELP: 0 = max-norm, 1 = 1-norm, 2 = 2-norm, ...
+
+
+QUESTION: Node_controler
+VALUE: 
+HELP: node whose response controls solution
+TKWIDGET: GidUtils::TkwidgetPickNode
+
+QUESTION: Dof_at_the_node
+VALUE: 1
+HELP: degree of freedom at the node, valid options: 1 through ndf at node.
+
+QUESTION: First_displacement_increment_DUdof
+VALUE: 
+
+
+
+END PROBLEM DATA 
