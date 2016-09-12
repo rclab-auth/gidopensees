@@ -28,6 +28,13 @@ V E R S I O N   H I S T O R Y
 
 ----------------------------------------------------------
 
+Version 1.3.3 (13/09/2016)
+
+- OpenSees.exe was removed from installation
+- Existing OpenSees.exe location is now asked during installation (recommended is C:\OpenSees\OpenSees.exe)
+
+----------------------------------------------------------
+
 Version 1.3.2 (12/09/2016)
 
 - Recorders added for every element type

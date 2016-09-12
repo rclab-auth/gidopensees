@@ -206,11 +206,11 @@ proc HelpOnOpenSees { dir } {
 }
 
 proc Splash { dir } {
+
+	set VersionNumber "v1.3.3"
+
     global GIDDEFAULT
 	global keepsplash
-	# Version Number
-
-	set VersionNumber "v1.3.2"
 
     if { [.gid.central.s disable windows] } { return }
 
