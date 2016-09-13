@@ -8,8 +8,6 @@
 
 using namespace std;
     ofstream ResFile;
-    ifstream NodesDisp3D,NodesDisp2D,NumberEigenFile;
-    ifstream ElemForces,ElemStresses,stdBrickStresses,ElemForces2d;
     string word;
     string ElementType;
     int WordCounter,NumOfEigen;
@@ -27,6 +25,8 @@ using namespace std;
     string ModalDeform[3][13];
     int ModalDeformWords[3][13];
     int RunningBeamElement; // 1 for Elastic , 2 For Elastic Timoshenko
+
+
 
     string DoubleToString(double value) {
 
@@ -60,9 +60,11 @@ string removeCharsFromString( string &str, char* charsToRemove ) {
 // example of usage:
 // removeCharsFromString( str, "()-" );
 
-void ReadElemForces2DFile(int x) {
+void ReadElemForces2DFile(int x, string &ProjectDir) {
+ifstream InFile;
+string filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "ElemForces2d.out";
 
-ElemForces2d.open ("ElemForces2d.out");
+InFile.open (filepath.c_str());
 
     WordCounter =0;
 
@@ -73,9 +75,9 @@ ElemForces2d.open ("ElemForces2d.out");
         TrussAxialForce[i]="0";
     }
 
-if (ElemForces2d.is_open()) {
+if (InFile.is_open()) {
 
-         while (ElemForces2d >> word) {
+         while (InFile >> word) {
             WordCounter+=1;
 
            if (word=="ElasticBeam2d:") {
@@ -135,16 +137,16 @@ if (ElemForces2d.is_open()) {
             }
 
 }
+InFile.close();
 }
-ElemForces2d.close();
 }
 
 
-void ReadElemForcesFile(int x) {
+void ReadElemForcesFile(int x, string &ProjectDir) {
+ifstream InFile;
+string filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "ElemForces.out";
 
-
-
-ElemForces.open ("ElemForces.out");
+InFile.open (filepath.c_str());
 
     WordCounter =0;
 
@@ -158,9 +160,9 @@ ElemForces.open ("ElemForces.out");
 
 
 
-    if (ElemForces.is_open()) {
+    if (InFile.is_open()) {
 
-         while (ElemForces >> word) {
+         while (InFile >> word) {
             WordCounter+=1;
 
             if (word=="ElasticBeam3d:") {
@@ -262,17 +264,14 @@ ElemForces.open ("ElemForces.out");
             }
 
          }
-
-    } else {
-    cout << "ElemForces.out did not open!" << endl;
+InFile.close();
     }
-     ElemForces.close();
 }
 
 
 
-void ReadPlaneGaussPointsStresses() {
-
+void ReadPlaneGaussPointsStresses(string &ProjectDir) {
+ifstream InFile;
 
     WordCounter =0;
 
@@ -281,10 +280,14 @@ void ReadPlaneGaussPointsStresses() {
         PlaneGaussPointsStressesWord[i][j]=0;
             }
     }
-ElemStresses.open ("ElemStresses.out");
-if (ElemStresses.is_open()) {
 
-         while (ElemStresses >> word) {
+string filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "ElemStresses.out";
+
+InFile.open (filepath.c_str());
+
+if (InFile.is_open()) {
+
+         while (InFile >> word) {
             WordCounter+=1;
 
             if (word=="FourNodeQuad,") {
@@ -340,8 +343,8 @@ if (ElemStresses.is_open()) {
 
 
          }
+InFile.close();
 }
-ElemStresses.close();
 
 WordCounter =0;
 
@@ -350,9 +353,11 @@ WordCounter =0;
         PlaneGaussPointsStressesWord[i][j]=0;
             }
     }
-ElemStresses.open ("ElemForces2d.out");
-if (ElemStresses.is_open()) {
-       while (ElemStresses >> word) {
+filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "ElemForces2d.out";
+
+InFile.open (filepath.c_str());
+if (InFile.is_open()) {
+       while (InFile >> word) {
             WordCounter+=1;
 
             if (word=="FourNodeQuad,") {
@@ -405,17 +410,21 @@ if (ElemStresses.is_open()) {
                     }
             }
          }
+InFile.close();
 }
 }
 
-void ReadNodesDispFile() {
+void ReadNodesDispFile(string &ProjectDir) {
+ifstream InFile;
+string filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "NodesDisp3D.out";
 
 WordCounter=0;
-NodesDisp3D.open("NodesDisp3D.out");
 
-if (NodesDisp3D.is_open()) {
+InFile.open(filepath.c_str());
 
-    while (NodesDisp3D >> word) {
+if (InFile.is_open()) {
+
+    while (InFile >> word) {
       WordCounter+=1;
 
       if (word=="Node:") {
@@ -455,16 +464,16 @@ if (NodesDisp3D.is_open()) {
 
     }
 
-
-} else {
-cout << "NodesDisp3D.out was not found" << endl;
+InFile.close();
 }
 
-NodesDisp2D.open("NodesDisp2D.out");
+filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "NodesDisp2D.out";
 
-if (NodesDisp2D.is_open()) {
+InFile.open(filepath.c_str());
 
-    while (NodesDisp2D >> word) {
+if (InFile.is_open()) {
+
+    while (InFile >> word) {
       WordCounter+=1;
 
       if (word=="Node:") {
@@ -491,25 +500,21 @@ if (NodesDisp2D.is_open()) {
 
     }
 
+InFile.close();
+}
 
-} else {
-cout << "NodesDisp2D.out was not found" << endl;
 }
 
 
+void HowManyEigenValues(string &ProjectDir) {
+ifstream InFile;
+string filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "NumOfEigenValues.out";
 
-NodesDisp2D.close();
-NodesDisp3D.close();
-}
+InFile.open(filepath.c_str());
 
+if (InFile.is_open()) {
 
-void HowManyEigenValues() {
-
-NumberEigenFile.open("NumOfEigenValues.out");
-
-if (NumberEigenFile.is_open()) {
-
-    while (NumberEigenFile >> word) {
+    while (InFile >> word) {
 
        NumOfEigen=OppValue(DoubleToString(OppValue(word)));
 
@@ -523,17 +528,19 @@ NumOfEigen=0;
 
 
 
-void ReadModalDeformation(int x) {
+void ReadModalDeformation(int x, string &ProjectDir) {
+ifstream InFile;
+string filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "NodesDisp3D.out";
 
 if (NumOfEigen>=1 && NumOfEigen<=13) {
 
 WordCounter=0;
 
-NodesDisp3D.open("NodesDisp3D.out");
+InFile.open(filepath.c_str());
 
-if (NodesDisp3D.is_open()) {
+if (InFile.is_open()) {
 
-    while (NodesDisp3D >> word) {
+    while (InFile >> word) {
         WordCounter+=1;
 
      if (word=="Node:") {
@@ -590,13 +597,16 @@ if (NodesDisp3D.is_open()) {
 
 }
 
-NodesDisp3D.close();
+InFile.close();
 }
-NodesDisp2D.open("NodesDisp2D.out");
 
-if (NodesDisp2D.is_open()) {
+filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "NodesDisp2D.out";
 
-    while (NodesDisp2D >> word) {
+InFile.open(filepath.c_str());
+
+if (InFile.is_open()) {
+
+    while (InFile >> word) {
         WordCounter+=1;
 
      if (word=="Node:") {
@@ -653,15 +663,14 @@ if (NodesDisp2D.is_open()) {
 
 }
 
-
-NodesDisp2D.close();
+InFile.close();
 }
 }
 }
 
 
 
-void WriteResultsForLines2D() {
+void WriteResultsForLines2D(string &ProjectDir) {
 
         ResFile << "GiD Post Results File 1.0 \n\n";
 
@@ -671,31 +680,25 @@ void WriteResultsForLines2D() {
         ResFile << "Natural Coordinates: Internal\n";
         ResFile << "End GaussPoints\n\n";
 
-        ResFile << "GaussPoints \"Quadrilateral_GP\" Elemtype Quadrilateral\n";
-        ResFile << "Number Of Gauss Points: 4\n";
-        ResFile << "Nodes not included\n";
-        ResFile << "Natural Coordinates: Internal\n";
-        ResFile << "End GaussPoints\n\n";
-
         ResFile << "Result \"Axial Force\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kN\"\n\n";
         ResFile << "Values\n";
-        ReadElemForces2DFile(0);
+        ReadElemForces2DFile(0,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Shear Forces\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kN\"\n\n";
         ResFile << "Values\n";
-        ReadElemForces2DFile(1);
+        ReadElemForces2DFile(1,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Moments\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kNm\"\n\n";
         ResFile << "Values\n";
-        ReadElemForces2DFile(2);
+        ReadElemForces2DFile(2,ProjectDir);
         ResFile << "End Values\n\n";
 
 
@@ -703,7 +706,7 @@ void WriteResultsForLines2D() {
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"m\"\n\n";
         ResFile << "Values\n";
-        ReadNodesDispFile();
+        ReadNodesDispFile(ProjectDir);
         ResFile << "End Values\n\n";
 
 
@@ -716,23 +719,16 @@ void WriteResultsForLines2D() {
                 ResFile << "ComponentNames \"X-Displacement\" \"Y-Displacement\" \n";
                 ResFile << "Unit \" \" \n\n";
                 ResFile << "Values\n";
-                ReadModalDeformation(i);
+                ReadModalDeformation(i,ProjectDir);
                 ResFile << "End Values\n\n";
             }
 
         }
 
-        /*
-        ResFile << "Result \"Stresses\" \"Static\" 1 Matrix OnGaussPoints \"Quadrilateral_GP\"  \n";
-        ResFile << "ComponentNames \"Stress xx\" \"Stress yy\" \"Stress xy\" \n";
-        ResFile << "Unit \"KPa\"\n\n";
-        ResFile << "Values\n";
-        ReadPlaneGaussPointsStresses();
-        ResFile << "End Values\n\n";
-        */
+
 }
 
-void WriteResultsForLines() {
+void WriteResultsForLines(string &ProjectDir) {
 
         ResFile << "GiD Post Results File 1.0 \n\n";
 
@@ -786,7 +782,7 @@ void WriteResultsForLines() {
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kNm\"\n\n";
         ResFile << "Values\n";
-        ReadElemForcesFile(3);
+        ReadElemForcesFile(3,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Moment about local z axis\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
@@ -794,7 +790,7 @@ void WriteResultsForLines() {
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kNm\"\n\n";
         ResFile << "Values\n";
-        ReadElemForcesFile(1);
+        ReadElemForcesFile(1,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Axial Force\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
@@ -802,7 +798,7 @@ void WriteResultsForLines() {
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kN\"\n\n";
         ResFile << "Values\n";
-        ReadElemForcesFile(0);
+        ReadElemForcesFile(0,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Shear Force y-y\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
@@ -810,7 +806,7 @@ void WriteResultsForLines() {
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kN\"\n\n";
         ResFile << "Values\n";
-        ReadElemForcesFile(2);
+        ReadElemForcesFile(2,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Shear Force z-z\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
@@ -818,7 +814,7 @@ void WriteResultsForLines() {
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kN\"\n\n";
         ResFile << "Values\n";
-        ReadElemForcesFile(4);
+        ReadElemForcesFile(4,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Torsion\" \"Static\" 1 Scalar OnGaussPoints \"Line_GP\" \n";
@@ -826,7 +822,7 @@ void WriteResultsForLines() {
         ResFile << "ComponentNames\n";
         ResFile << "Unit \"kNm\"\n\n";
         ResFile << "Values\n";
-        ReadElemForcesFile(5);
+        ReadElemForcesFile(5,ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Deformation\" \"Static\" 1 Vector OnNodes\n";
@@ -834,7 +830,7 @@ void WriteResultsForLines() {
         ResFile << "ComponentNames \"X-Displacement\" \"Y-Displacement\" \"Z-Displacement\" \n"; // \"Z-Displacement\" \"X-Rotation\" \"Y-Rotation\" \"Z-Rotation\" \n";
         ResFile << "Unit \"m\"\n\n";
         ResFile << "Values\n";
-        ReadNodesDispFile();
+        ReadNodesDispFile(ProjectDir);
         ResFile << "End Values\n\n";
 
         if (NumOfEigen>=1) {
@@ -845,7 +841,7 @@ void WriteResultsForLines() {
                 ResFile << "ComponentNames \"X-Displacement\" \"Y-Displacement\" \"Z-Displacement\" \n";
                 ResFile << "Unit \" \" \n\n";
                 ResFile << "Values\n";
-                ReadModalDeformation(i);
+                ReadModalDeformation(i,ProjectDir);
                 ResFile << "End Values\n\n";
             }
 
@@ -854,9 +850,7 @@ void WriteResultsForLines() {
 }
 
 
-
-
-void WriteResultsForQuadrilateral2D() {
+void WriteResultsForQuadrilateral2D(string &ProjectDir) {
 
         ResFile << "GiD Post Results File 1.0 \n\n";
 
@@ -887,7 +881,7 @@ void WriteResultsForQuadrilateral2D() {
         ResFile << "ComponentNames \"Stress xx\" \"Stress yy\" \"Stress xy\" \n";
         ResFile << "Unit \"KPa\"\n\n";
         ResFile << "Values\n";
-        ReadPlaneGaussPointsStresses();
+        ReadPlaneGaussPointsStresses(ProjectDir);
         ResFile << "End Values\n\n";
 
         ResFile << "Result \"Deformation\" \"Static\" 1 Vector OnNodes\n";
@@ -895,70 +889,100 @@ void WriteResultsForQuadrilateral2D() {
         ResFile << "ComponentNames \"X-Displacement\" \"Y-Displacement\"  \n"; // \"Z-Displacement\" \"X-Rotation\" \"Y-Rotation\" \"Z-Rotation\" \n";
         ResFile << "Unit \"m\"\n\n";
         ResFile << "Values\n";
-        ReadNodesDispFile();
+        ReadNodesDispFile(ProjectDir);
         ResFile << "End Values\n\n";
 
 }
 
-void WriteResultsForBrick3D() {
+void WriteResultsForBrick3D(string &ProjectDir) {
+
+
         ResFile << "GiD Post Results File 1.0 \n\n";
 
         ResFile << "Result \"Deformation\" \"Static\" 1 Vector OnNodes\n";
         ResFile << "ComponentNames \"X-Displacement\" \"Y-Displacement\" \"Z-Displacement\" \n"; //  \"X-Rotation\" \"Y-Rotation\" \"Z-Rotation\" \n";
         ResFile << "Unit \"m\"\n\n";
         ResFile << "Values\n";
-        ReadNodesDispFile();
+        ReadNodesDispFile(ProjectDir);
         ResFile << "End Values\n\n";
 }
 
 
-void CheckElementType() {
+void CheckElementType(string &ProjectDir) {
+ifstream InFile;
+string filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "ElemForces.out";
 
-ElemForces.open("ElemForces.out");
-ElemForces2d.open("ElemForces2d.out");
-ElemStresses.open("ElemStresses.out");
-stdBrickStresses.open("HexahedraBrickElemStresses.out");
+InFile.open(filepath.c_str());
 
-if (ElemForces.is_open()) {
+if (InFile.is_open()) {
     ElementType="Linear";
+    InFile.close();
+}
 
-} else if (ElemStresses.is_open()) {
-    ElementType="Quadrilateral";
-} else if (stdBrickStresses.is_open()) {
-    ElementType="Hexahedra";
-} else if (ElemForces2d.is_open()) {
+filepath = ProjectDir + '\\' + "OpenSees" + '\\' + "ElemForces2d.out";
+
+InFile.open(filepath.c_str());
+
+if(InFile.is_open()) {
     ElementType="Linear2d";
+    InFile.close();
 }
 
-ElemForces.close();
-ElemForces2d.close();
-ElemStresses.close();
-stdBrickStresses.close();
+filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "ElemStresses.out";
+
+InFile.open(filepath.c_str());
+
+if(InFile.is_open()) {
+    ElementType="Quadrilateral";
+    InFile.close();
 }
 
-int main()
+filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "HexahedraBrickElemStresses.out";
+
+InFile.open(filepath.c_str());
+
+if(InFile.is_open()) {
+    ElementType="Hexahedra";
+    InFile.close();
+}
+
+}
+
+int main(int argc, char* argv[])
 {
 
-HowManyEigenValues();
-CheckElementType();
+if (argc!=3) { return 0; }
 
-    ResFile.open ("OpenSees.post.res");
+//argv[0] = OpenSeesPost.exe path
+// argv[1] = Project name
+// argv[2] = Project Dir
+string ProjectName=argv[1];
+string ProjectDir=argv[2];
 
+HowManyEigenValues(ProjectDir);
+CheckElementType(ProjectDir);
+
+   // ResFile.open ("OpenSees.post.res");
+
+        string ResultFile= ProjectName + ".post.res";
+        string ResultFilePath=ProjectDir + '\\' + ResultFile;
+
+        ResFile.open(ResultFilePath.c_str());
 
     if (ResFile.is_open()) {
 
             if (ElementType=="Linear") {
 
-            WriteResultsForLines();
+            WriteResultsForLines(ProjectDir);
             } else if (ElementType=="Quadrilateral") {
 
-            WriteResultsForQuadrilateral2D();
+            WriteResultsForQuadrilateral2D(ProjectDir);
 
             } else if (ElementType=="Hexahedra") {
 
-            WriteResultsForBrick3D();
+            WriteResultsForBrick3D(ProjectDir);
             } else if (ElementType=="Linear2d") {
-             WriteResultsForLines2D();
+             WriteResultsForLines2D(ProjectDir);
             }
 
         }
