@@ -1,4 +1,4 @@
-# GiD+OpenSees Interface
+## GiD+OpenSees Interface
 
 GiD+OpenSees Interface introduces a long-awaited full graphical interface for the popular open source finite
 element software OpenSees (opensees.berkeley.edu) by seamlessly connecting its text-only environment to the
