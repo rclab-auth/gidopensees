@@ -20,7 +20,11 @@ cd OpenSees
 
 rem run OpenSees
 
-cmd /C start /w "C:\OpenSees\OpenSees.exe" "%2\OpenSees\%1.tcl"
+cmd /C start /w "OPENSEES_PATH" "%2\OpenSees\%1.tcl"
+
+rem rename log.txt
+
+ren "%2\OpenSees\log.txt" "%1.log"
 
 rem run OpenSeesPost
 
