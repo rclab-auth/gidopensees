@@ -2,14 +2,13 @@
 *#                                  stdBrick Elements
 *#--------------------------------------------------------------------------------
 *# variable to check Standard Brick Elements existance : 1 for existance, 0 for not
-*set var StdBrickFound=0
+*set var cntStdBrick=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"stdBrick")==0)
-*set var StdBrickFound=1
-*break
+*set var cntStdBrick=operation(cntStdBrick+1)
 *endif
 *end elems
-*if(StdBrickFound==1)
+*if(cntStdBrick!=0)
 #
 # Standard Brick Elements
 #

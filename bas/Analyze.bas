@@ -9,7 +9,6 @@
 *#------------------------------------------------
 # perform eigen analysis
 
-file mkdir modes;
 set numModes *GenData(Number_of_eigenvalues,int)
 set NumOfEigenValuesFile [open "NumOfEigenValues.out" w]
 puts $NumOfEigenValuesFile "$numModes"
@@ -22,32 +21,26 @@ close $NumOfEigenValuesFile
 *end nodes
 for { set k 1 } { $k <= $numModes } { incr k } {
 *if(GenData(DOF,int)==3)
-  recorder Node -file [format "modes/mode%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2 3  "eigen $k"
+  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2 3  "eigen $k"
 *elseif(GenData(DOF,int)==6)
-  recorder Node -file [format "modes/mode%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2 3 4 5 6 "eigen $k"
+  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2 3 4 5 6 "eigen $k"
 *else 
-  recorder Node -file [format "modes/mode%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2   "eigen $k"
+  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2   "eigen $k"
 *endif
 }
 set lambda [eigen *GenData(Solver) $numModes];
 
 # calculate frequencies and periods of the structure
 
-set omega {}
-set f {}
 set T {}
-set pi 3.141593
-*set var pi=3.141593
 
 foreach lam $lambda {
-  lappend omega [expr sqrt($lam)]
-  lappend f [expr sqrt($lam)/(*operation(2*pi))]
-  lappend T [expr (*operation(2*pi))/sqrt($lam)]
+  lappend T [expr 6.283185/sqrt($lam)]
 }
 
 # write the output file cosisting of periods
 
-set period "modes/Periods.txt"
+set period "Periods.txt"
 set Periods [open $period "w"]
 foreach t $T {
   puts $Periods " $t"

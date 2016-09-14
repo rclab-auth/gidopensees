@@ -2,14 +2,13 @@
 *#                                  Shell Elements
 *#--------------------------------------------------------------------------------
 *# variable to check Shell Elements existance : 1 for existance, 0 for not
-*set var ShellFound=0
+*set var cntShell=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
-*set var ShellFound=1
-*break
+*set var cntShell=operation(cntShell+1)
 *endif
 *end elems
-*if(ShellFound==1)
+*if(cntShell!=0)
 #
 # Shell Elements
 #

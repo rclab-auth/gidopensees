@@ -2,14 +2,13 @@
 *#-----------------------Elastic Beam Column Elements---------------------------------
 *#-----------------------------------------------------------------------------
 *# variable to check Elastic Beam Column existance : 1 for existance, 0 for not
-*set var EBCFound=0
+*set var cntEBC=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
-*set var EBCFound=1
-*break
+*set var cntEBC=operation(cntEBC+1)
 *endif
 *end elems
-*if(EBCFound==1)
+*if(cntEBC!=0)
 #
 # Elastic beam-column elements
 #

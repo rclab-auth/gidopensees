@@ -137,4 +137,8 @@ model BasicBuilder -ndm 2 -ndf 3;
 *# Analysis Options
 *#
 *include bas\Analyze.bas
+*#
+*# Metadata
+*#
+*include bas\Meta.bas
 *#--------------------------------------------------------------------------------------

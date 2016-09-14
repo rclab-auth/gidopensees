@@ -2,14 +2,13 @@
 *#-----------------Elastic Timoshenko Beam Elements------------------------------
 *#-------------------------------------------------------------------------------
 *# variable to check Elastic Timoshenko Beam Elements existance : 1 for existance, 0 for not
-*set var ETBFound=0
+*set var cntETB=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
-*set var ETBFound=1
-*break
+*set var cntETB=operation(cntETB+1)
 *endif
 *end elems
-*if(ETBFound==1)
+*if(cntETB!=0)
 #
 # Elastic Timoshenko Beam Elements
 #

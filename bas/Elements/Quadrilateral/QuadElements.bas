@@ -2,14 +2,13 @@
 *#                                  Quad Elements                                -
 *#--------------------------------------------------------------------------------
 *# variable to check Quad Elements existance : 1 for existance, 0 for not
-*set var QuadFound=0
+*set var cntQuad=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
-*set var QuadFound=1
-*break
+*set var cntQuad=operation(cntQuad+1)
 *endif
 *end elems
-*if(QuadFound==1)
+*if(cntQuad!=0)
 #
 # Quad Elements
 #

@@ -937,7 +937,7 @@ if(InFile.is_open()) {
     InFile.close();
 }
 
-filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "HexahedraBrickElemStresses.out";
+filepath= ProjectDir + '\\' + "OpenSees" + '\\' + "stdBrick_stress.out";
 
 InFile.open(filepath.c_str());
 

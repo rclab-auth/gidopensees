@@ -2,14 +2,13 @@
 *#------------------  Truss Elements------------------
 *#----------------------------------------------------
 *# variable to check Truss Elements existance : 1 for existance, 0 for not
-*set var TrussFound=0
+*set var cntTruss=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
-*set var TrussFound=1
-*break
+*set var cntTruss=1
 *endif
 *end elems
-*if(TrussFound==1)
+*if(cntTruss!=0)
 #
 # Truss elements
 #

@@ -2,14 +2,13 @@
 *#------------------ Corotational Truss Elements------------------
 *#----------------------------------------------------------------
 *# variable to check Corotational Truss Elements existance : 1 for existance, 0 for not
-*set var CorotTrussFound=0
+*set var cntCorotTruss=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
-*set var CorotTrussFound=1
-*break
+*set var cntCorotTruss=operation(cntCorotTruss+1)
 *endif
 *end elems
-*if(CorotTrussFound==1)
+*if(cntCorotTruss!=0)
 #
 # Corotational Truss Elements
 #

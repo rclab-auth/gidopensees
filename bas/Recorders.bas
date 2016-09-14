@@ -1,5 +1,5 @@
 
-*if(StdBrickFound==1)
+*if(cntStdBrick!=0)
 *set var FirstBrickElemNumber=0
 *set var LastBrickElemNumber=0
 *loop elems
@@ -13,12 +13,15 @@
 *set var LastBrickElemNumber=ElemsNum
 *endif
 *end elems
-recorder Element -file HexahedraBrickElemStresses.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber stresses
-recorder Element -file HexahedraBrickElemStrains.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber strains
-recorder Element -file HexahedraBrickElemForces.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber forces
+recorder Element -file stdBrick_stress.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber stresses
+recorder Element -file stdBrick_strain.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber strains
+recorder Element -file stdBrick_force.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber forces
+recorder Element -binary stdBrick_stress.bin -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber stresses
+recorder Element -binary stdBrick_strain.bin -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber strains
+recorder Element -binary stdBrick_force.bin -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber forces
 *endif
 *#
-*if(ShellFound==1)
+*if(cntShell!=0)
 *set var FirstShellElemNumber=0
 *set var LastShellElemNumber=0
 *loop elems
@@ -32,11 +35,13 @@ recorder Element -file HexahedraBrickElemForces.out -time -eleRange *FirstBrickE
 *set var LastShellElemNumber=ElemsNum
 *endif
 *end elems
-recorder Element -file ShellForces.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber forces
-recorder Element -file ShellStresses.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber stresses
+recorder Element -file ShellMITC4_force.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber forces
+recorder Element -file ShellMITC4_stress.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber stresses
+recorder Element -binary ShellMITC4_force.bin -time -eleRange *FirstShellElemNumber *LastShellElemNumber forces
+recorder Element -binary ShellMITC4_stress.bin -time -eleRange *FirstShellElemNumber *LastShellElemNumber stresses
 *endif
 *#
-*if(QuadFound==1)
+*if(cntQuad!=0)
 *set var FirstQuadElemNumber=0
 *set var LastQuadElemNumber=0
 *loop elems
@@ -50,12 +55,21 @@ recorder Element -file ShellStresses.out -time -eleRange *FirstShellElemNumber *
 *set var LastQuadElemNumber=ElemsNum
 *endif
 *end elems
-recorder Element -file QuadForces.out -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber forces
-recorder Element -file QuadStresses.out -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber stresses
+recorder Element -file Quad_force.out -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber forces
+recorder Element -file Quad_stress.out -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber stresses
+recorder Element -binary Quad_force.bin -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber forces
+recorder Element -binary Quad_stress.bin -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber stresses
 *endif
 *#
-*if(EBCFound==1)
-recorder Element -file ElasticBeamColumnForces.out -time -ele *\ 
+*if(cntEBC!=0)
+recorder Element -file ElasticBeamColumn_force.out -time -ele *\ 
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
+*ElemsNum *\
+*endif
+*end elems
+forces
+recorder Element -binary ElasticBeamColumn_force.bin -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
 *ElemsNum *\
@@ -64,8 +78,15 @@ recorder Element -file ElasticBeamColumnForces.out -time -ele *\
 forces
 *endif
 *#
-*if(ETBFound==1)
-recorder Element -file ElasticTimoshenkoBeamForces.out -time -ele *\ 
+*if(cntETB!=0)
+recorder Element -file ElasticTimoshenkoBeam_force.out -time -ele *\ 
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
+*ElemsNum *\
+*endif
+*end elems
+forces
+recorder Element -binary ElasticTimoshenkoBeam_force.bin -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
 *ElemsNum *\
@@ -74,8 +95,15 @@ recorder Element -file ElasticTimoshenkoBeamForces.out -time -ele *\
 forces
 *endif
 *#
-*if(TrussFound==1)
-recorder Element -file TrussAxialForces.out -time -ele *\ 
+*if(cntTruss!=0)
+recorder Element -file truss_axialForce.out -time -ele *\ 
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
+*ElemsNum *\
+*endif
+*end elems
+axialForce
+recorder Element -binary truss_axialForce.bin -time -ele *\ 
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *ElemsNum *\
@@ -84,8 +112,15 @@ recorder Element -file TrussAxialForces.out -time -ele *\
 axialForce
 *endif
 *#
-*if(CorotTrussFound==1)
-recorder Element -file CorotTrussAxialForces.out -time -ele *\
+*if(cntCorotTruss!=0)
+recorder Element -file CorotTruss_axialForce.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
+*ElemsNum *\
+*endif
+*end elems
+axialForce
+recorder Element -binary CorotTruss_axialForce.bin -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
 *ElemsNum *\
@@ -93,3 +128,5 @@ recorder Element -file CorotTrussAxialForces.out -time -ele *\
 *end elems
 axialForce
 *endif
+recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes disp
+recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes disp
