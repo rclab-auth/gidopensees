@@ -94,11 +94,18 @@ analysis *GenData(Analysis);  # define type of analysis
 
 logFile log.txt
 
+puts "OpenSees Analysis\n"
+
+set time_start [clock seconds]
+puts "Analysis started  : [clock format $time_start -format %H:%M:%S]"
+
 *set var steps=operation(1.0/GenData(Load_factor_increment,real))
 *format "%1.0f"
 analyze *steps
 
-puts "Analysis finished"
+set time_finish [clock seconds]
+puts "Analysis finished : [clock format $time_finish -format %H:%M:%S]"
+puts "Analysis time     : [expr $time_finish - $time_start] seconds"
 
 *if(GenData(Dimensions,int)==3)
 print NodesDisp3D.out -node 
