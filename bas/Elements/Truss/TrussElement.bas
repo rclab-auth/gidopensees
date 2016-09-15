@@ -5,7 +5,7 @@
 *set var cntTruss=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
-*set var cntTruss=1
+*set var cntTruss=operation(cntTruss+1)
 *endif
 *end elems
 *if(cntTruss!=0)
