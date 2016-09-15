@@ -1,8 +1,23 @@
 
+# -------------------------------
+#
+# METADATA (used by OpenSeesPost)
+#
+# -------------------------------
+#
 # Nodes
 # *cntNodes
-*if(cntEBC!=0)
 #
+# Elements 1D
+# *operation(cntEBC+cntETB+cntTruss+cntCorotTruss)
+#
+# Elements 2D
+# *operation(cntQuad+cntShell)
+#
+# Elements 3D
+# *cntStdBrick
+#
+*if(cntEBC!=0)
 # ElasticBeamColumn
 # *cntEBC 
 # *\
@@ -11,11 +26,10 @@
 *ElemsNum *\
 *endif
 *end elems 
-*# space needed
-
+*\n
+#
 *endif
 *if(cntETB!=0)
-#
 # ElasticTimoshenkoBeam
 # *cntETB *\
 *loop elems 
@@ -23,11 +37,10 @@
 *ElemsNum *\
 *endif
 *end elems 
-*# space needed
-
+*\n
+#
 *endif
 *if(cntTruss!=0)
-#
 # Truss
 # *cntTruss
 # *\
@@ -36,11 +49,10 @@
 *ElemsNum *\
 *endif
 *end elems 
-*# space needed
-
+*\n
+#
 *endif
 *if(cntCorotTruss!=0)
-#
 # CorotTruss
 # *cntCorotTruss
 # *\
@@ -49,11 +61,10 @@
 *ElemsNum *\
 *endif
 *end elems 
-*# space needed
-
+*\n
+#
 *endif
 *if(cntQuad!=0)
-#
 # Quad
 # *cntQuad
 # *\
@@ -62,11 +73,10 @@
 *ElemsNum *\
 *endif
 *end elems 
-*# space needed
-
+*\n
+#
 *endif
 *if(cntShell!=0)
-#
 # ShellMITC4
 # *cntShell
 # *\
@@ -75,11 +85,10 @@
 *ElemsNum *\
 *endif
 *end elems 
-*# space needed
-
+*\n
+#
 *endif
 *if(cntStdBrick!=0)
-#
 # stdBrick
 # *cntStdBrick
 # *\
@@ -88,8 +97,7 @@
 *ElemsNum *\
 *endif
 *end elems 
-*# space needed
-
+*\n
+#
 *endif
-
-
+#
