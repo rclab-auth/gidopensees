@@ -128,5 +128,20 @@ recorder Element -binary CorotTruss_axialForce.bin -time -ele *\
 *end elems
 axialForce
 *endif
-recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes disp
-recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes disp
+*if(GenData(Dimensions,int)==3)
+*if(GenData(DOF,int)==3)
+recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
+recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
+*else
+recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 disp
+recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 disp
+*endif
+*else
+*if(GenData(DOF,int)==2)
+recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 disp
+recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 disp
+*else
+recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 6 disp
+recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 6 disp
+*endif
+*endif

@@ -16,16 +16,19 @@ close $NumOfEigenValuesFile
 
 # record eigenvectors
 
-*loop nodes
-*set var nodeRangeLastNode=NodesNum
-*end nodes
 for { set k 1 } { $k <= $numModes } { incr k } {
+*if(GenData(Dimensions,int)==3)
 *if(GenData(DOF,int)==3)
-  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2 3  "eigen $k"
-*elseif(GenData(DOF,int)==6)
-  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2 3 4 5 6 "eigen $k"
-*else 
-  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *nodeRangeLastNode -dof 1 2   "eigen $k"
+  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 3  "eigen $k"
+*else
+  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 "eigen $k"
+*endif
+*else
+*if(GenData(DOF,int)==2)
+  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2   "eigen $k"
+*else
+  recorder Node -file [format "mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 6  "eigen $k" 
+*endif
 *endif
 }
 set lambda [eigen *GenData(Solver) $numModes];
