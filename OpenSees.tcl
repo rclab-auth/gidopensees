@@ -74,7 +74,7 @@ proc Toolbar { dir { type "DEFAULT INSIDELEFT"} } {
 		[list -np- GidOpenConditions Constraints] \
 	    [list -np- GidOpenConditions Masses] \
 		[list -np- GidOpenConditions Assign_Loads] "" \
-		"-np- VisitWeb http://gidopensees.rclab.civil.auth"
+		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr"
              ]
     set ToolbarHelp(0) { "Define Standard Unixaxial Materials" "Define Steel Uniaxial Materials" \
 		"Define Concrete Uniaxial Materials" "Define Multidimensional Materials" "Define Section Force-Deformation" "" \
