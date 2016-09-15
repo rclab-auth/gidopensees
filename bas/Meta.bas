@@ -26,7 +26,7 @@
 *ElemsNum *\
 *endif
 *end elems 
-*\n
+
 #
 *endif
 *if(cntETB!=0)
@@ -37,7 +37,7 @@
 *ElemsNum *\
 *endif
 *end elems 
-*\n
+
 #
 *endif
 *if(cntTruss!=0)
@@ -49,7 +49,7 @@
 *ElemsNum *\
 *endif
 *end elems 
-*\n
+
 #
 *endif
 *if(cntCorotTruss!=0)
@@ -61,7 +61,7 @@
 *ElemsNum *\
 *endif
 *end elems 
-*\n
+
 #
 *endif
 *if(cntQuad!=0)
@@ -73,7 +73,7 @@
 *ElemsNum *\
 *endif
 *end elems 
-*\n
+
 #
 *endif
 *if(cntShell!=0)
@@ -85,7 +85,7 @@
 *ElemsNum *\
 *endif
 *end elems 
-*\n
+
 #
 *endif
 *if(cntStdBrick!=0)
@@ -97,7 +97,6 @@
 *ElemsNum *\
 *endif
 *end elems 
-*\n
+
 #
 *endif
-#
