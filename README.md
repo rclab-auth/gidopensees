@@ -9,5 +9,5 @@ The interface currently provides linear elastic solutions for 1D, 2D and 3D elem
 extended to nonlinear static and dynamic problems as well.
 
 It has been developed in the Lab of R/C and Masonry Structures, School of Civil Engineering, 
-Aristotle University of Thessaloniki, by T. Kartalis-Kaounis, V. Protopapadakis and T. Papadopoulos,
+Aristotle University of Thessaloniki, Greece, by T. Kartalis-Kaounis, V. Protopapadakis and T. Papadopoulos,
 Dipl. Civil Engineers, under the supervision of V.K. Papanikolaou, Assistant Professor.
