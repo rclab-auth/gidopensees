@@ -207,7 +207,7 @@ proc HelpOnOpenSees { dir } {
 
 proc Splash { dir } {
 
-	set VersionNumber "v1.3.3"
+	set VersionNumber "v1.3.4"
 
     global GIDDEFAULT
 	global keepsplash

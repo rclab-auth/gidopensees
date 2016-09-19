@@ -28,6 +28,17 @@ V E R S I O N   H I S T O R Y
 
 ----------------------------------------------------------
 
+Version 1.3.4 (19/09/2016)
+
+- Meta.bas created
+- Node counter added in node.bas
+- Elements counters added 
+- proc TK_CheckModelingOptionsForShellElems was created in tkWidgets.tcl
+- TKWIDGET for shell elements added in OpenSees.mat
+- Check Element type (in mesh) for Quad, Shell and Brick Elements. If invalid suitable error message is displayed.
+
+----------------------------------------------------------
+
 Version 1.3.3 (13/09/2016)
 
 - OpenSees.exe was removed from installation

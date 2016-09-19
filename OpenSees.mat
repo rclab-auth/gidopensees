@@ -866,6 +866,7 @@ TITLE: General
 QUESTION: Element_type:#CB#(Shell)
 VALUE: Shell
 IMAGE: img/Materials/Quad_Shell.png
+TKWIDGET: TK_CheckModelingOptionsForShellElems
 
 QUESTION: Compatible_materials:#CB#(PlateFiber/ElasticMembranePlate)
 VALUE: PlateFiber/ElasticMembranePlate

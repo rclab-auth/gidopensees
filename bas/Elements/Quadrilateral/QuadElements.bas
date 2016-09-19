@@ -1,10 +1,13 @@
 *#--------------------------------------------------------------------------------
 *#                                  Quad Elements                                -
 *#--------------------------------------------------------------------------------
-*# variable to check Quad Elements existance : 1 for existance, 0 for not
+*# variable to count Quad elements
 *set var cntQuad=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
+*if(ElemsType!=3)
+*MessageBox Error: Quad elements must be quadrilateral.
+*endif
 *set var cntQuad=operation(cntQuad+1)
 *endif
 *end elems

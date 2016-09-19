@@ -1,7 +1,7 @@
 *#-------------------------------------------------------------------------------
 *#-----------------Elastic Timoshenko Beam Elements------------------------------
 *#-------------------------------------------------------------------------------
-*# variable to check Elastic Timoshenko Beam Elements existance : 1 for existance, 0 for not
+*# variable to count Elastic Timoshenko Beam elements
 *set var cntETB=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)

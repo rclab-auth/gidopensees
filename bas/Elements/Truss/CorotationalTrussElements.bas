@@ -1,7 +1,7 @@
 *#----------------------------------------------------------------
 *#------------------ Corotational Truss Elements------------------
 *#----------------------------------------------------------------
-*# variable to check Corotational Truss Elements existance : 1 for existance, 0 for not
+*# variable to count Corotational Truss elements
 *set var cntCorotTruss=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)

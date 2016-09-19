@@ -1,10 +1,13 @@
 *#--------------------------------------------------------------------------------
 *#                                  Shell Elements
 *#--------------------------------------------------------------------------------
-*# variable to check Shell Elements existance : 1 for existance, 0 for not
+*# variable count Shell elements
 *set var cntShell=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
+*if(ElemsType!=3)
+*MessageBox Error: Shell elements must be quadrilateral.
+*endif
 *set var cntShell=operation(cntShell+1)
 *endif
 *end elems

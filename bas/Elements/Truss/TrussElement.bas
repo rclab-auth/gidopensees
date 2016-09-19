@@ -1,7 +1,7 @@
 *#----------------------------------------------------
 *#------------------  Truss Elements------------------
 *#----------------------------------------------------
-*# variable to check Truss Elements existance : 1 for existance, 0 for not
+*# variable to count Truss elements
 *set var cntTruss=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)

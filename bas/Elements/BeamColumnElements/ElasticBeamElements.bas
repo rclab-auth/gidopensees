@@ -1,7 +1,7 @@
 *#-----------------------------------------------------------------------------
 *#-----------------------Elastic Beam Column Elements---------------------------------
 *#-----------------------------------------------------------------------------
-*# variable to check Elastic Beam Column existance : 1 for existance, 0 for not
+*# variable to count Elastic Beam Column elements
 *set var cntEBC=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)

@@ -1,10 +1,13 @@
 *#--------------------------------------------------------------------------------
 *#                                  stdBrick Elements
 *#--------------------------------------------------------------------------------
-*# variable to check Standard Brick Elements existance : 1 for existance, 0 for not
+*# variable to count stdBrick elements
 *set var cntStdBrick=0
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"stdBrick")==0)
+*if(ElemsType!=5)
+*MessageBox Error: Standard Brick Elements must be Hexahedra.
+*endif
 *set var cntStdBrick=operation(cntStdBrick+1)
 *endif
 *end elems
