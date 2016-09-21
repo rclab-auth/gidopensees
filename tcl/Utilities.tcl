@@ -92,7 +92,7 @@ proc OpenSees_Menu { dir } {
 	# Tab labes
 	set tabs [list [= "OpenSees Analysis"] [= "Create .tcl only"] [= "Create and view .tcl only"] "---" [= "Visit GiD+OpenSees Site"] [= "Visit OpenSees Wiki"] "---" [= "View version history"] [= "About"] ]
 	# Selection commands
-	set cmds { {GiD_Process Utilities Calculate} {Create_tcl_file} {Create_and_open_tcl_file} {} {VisitWeb "http://gidopensees.rclab.civil.auth"} \
+	set cmds { {GiD_Process Utilities Calculate} {Create_tcl_file} {Create_and_open_tcl_file} {} {VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
 	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} {} {View_version_history} {AboutOpenSeesProbType} }
 	# Tab icons
 	set icons {mnu_Analysis.png mnu_tcl.png mnu_tcl.png "" mnu_Site.png mnu_Wiki.png "" mnu_VersionHistory.png mnu_About.png}
