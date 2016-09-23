@@ -1,17 +1,17 @@
 ### GiD + OpenSees Interface
 
-(c) 2016-2017
+*(c) 2016-2017*
 
-Lab of R/C and Masonry Structures
-School of Civil Engineering, AUTh
+*Lab of R/C and Masonry Structures*
+*School of Civil Engineering, AUTh*
 
-Development team
+**Development team**
 
-T. Kartalis-Kaounis, Civil Engineer AUTh
-V.K. Protopapadakis, Civil Engineer AUTh
-T. Papadopoulos, Civil Engineer AUTh
+-T. Kartalis-Kaounis, Civil Engineer AUTh
+- V.K. Protopapadakis, Civil Engineer AUTh
+- T. Papadopoulos, Civil Engineer AUTh
 
-Project coordinator
+**Project coordinator**
 
 V.K. Papanikolaou, Assistant Professor AUTh
 
@@ -228,7 +228,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.0.9 **
+**Version 1.0.9**
 
 - Brick elemens window added
 - Modeling options bug fixed
@@ -237,14 +237,14 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.0.6 **
+**Version 1.0.6**
 
 - Post Processing results for Truss and Elastic Beam-Column elements 
 - Quad/shell elements properties added
 
 ---
 
-** Version 1.0.5 **
+**Version 1.0.5**
 
 - Local axes added:
    - Vertical axis: Z axis
@@ -253,7 +253,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.0.0 **
+**Version 1.0.0**
 
 - Initial release
 
