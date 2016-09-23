@@ -22,8 +22,8 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ---
 
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result :
-   Intersection joints that belong on two lines with different constraints should be constrained seperately.
-   Intersection lines that belong on two surfaces with different constraints should be constrained seperately.
+   - Intersection joints that belong on two lines with different constraints should be constrained seperately.
+   - Intersection lines that belong on two surfaces with different constraints should be constrained seperately.
 
 ---
 
@@ -94,10 +94,10 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ** Version 1.2.7 **
 
 - GiD+OpenSees menu updated:
-   Calculation
-   Create .tcl only
-   Visit OpenSees wiki
-   About
+   - Calculation
+   - Create .tcl only
+   - Visit OpenSees wiki
+   - About
 
 ---
 
@@ -228,7 +228,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-*** Version 1.0.9
+** Version 1.0.9 **
 
 - Brick elemens window added
 - Modeling options bug fixed
@@ -237,23 +237,23 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-Version 1.0.6
+** Version 1.0.6 **
 
 - Post Processing results for Truss and Elastic Beam-Column elements 
 - Quad/shell elements properties added
 
 ---
 
-*** Version 1.0.5
+** Version 1.0.5 **
 
 - Local axes added:
-   Vertical axis: Z axis
-   Vertical elements: Vecxz=(0,0,1)
-   Non-vertical elements: vecxz=(-1,0,0)
+   - Vertical axis: Z axis
+   - Vertical elements: Vecxz=(0,0,1)
+   - Non-vertical elements: vecxz=(-1,0,0)
 
 ---
 
-*** Version 1.0.0
+** Version 1.0.0 **
 
 - Initial release
 
