@@ -1,4 +1,4 @@
-G i D   +   O p e n S e e s   I n t e r f a c e
+# GiD + OpenSees Interface
 
 (c) 2016-2017
 
@@ -17,7 +17,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ----------------------------------------------------------
 
-K N O W N   I S S U E S
+# KNOWN ISSUES
 
 ----------------------------------------------------------
 
@@ -27,7 +27,7 @@ K N O W N   I S S U E S
 
 ----------------------------------------------------------
 
-V E R S I O N    H I S T O R Y
+# VERSION HISTORY
 
 ----------------------------------------------------------
 
