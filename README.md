@@ -31,7 +31,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.3.4 (19/09/2016) **
+**Version 1.3.4 (19/09/2016)**
 
 - Meta.bas created
 - Node counter added in node.bas
@@ -42,21 +42,21 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.3.3 (13/09/2016) **
+**Version 1.3.3 (13/09/2016)**
 
 - OpenSees.exe was removed from installation
 - Existing OpenSees.exe location is now asked during installation (recommended is C:\OpenSees\OpenSees.exe)
 
 ---
 
-** Version 1.3.2 (12/09/2016) **
+**Version 1.3.2 (12/09/2016)**
 
 - Recorders added for every element type
 - Dependency about Vertical axis in OpenSees.prb removed
 
 ---
 
-** Version 1.3.1 (10/09/2016) **
+**Version 1.3.1 (10/09/2016)**
 
 - Recorders added for shell and quad elements
 - Question field names updated in problem data menu
@@ -66,7 +66,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.3.0 (09/09/2016) **
+**Version 1.3.0 (09/09/2016)**
 
 - Brick element recorder commands updated
 - Splash icon updated
@@ -78,20 +78,20 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.2.9 **
+**Version 1.2.9**
 
 - tcl file format improved
 
 ---
 
-** Version 1.2.8 **
+**Version 1.2.8**
 
 - OpenSees menu icons added: 4 new icons
 - Section icon added on toolbar
 
 ---
 
-** Version 1.2.7 **
+**Version 1.2.7**
 
 - GiD+OpenSees menu updated:
    - Calculation
@@ -101,7 +101,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.2.6 **
+**Version 1.2.6**
 
 - Batch file deletes previous OpenSees folder in project directory
 - Restraints.bas updated
@@ -110,14 +110,14 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.2.5 **
+**Version 1.2.5**
 
 - Error Messages added for Beam Column elements in case of wrong modeling options
 - Geometric transformations are printed once now, even you have both Elastic Beam column and Timoshenko beam elements 
 
 ---
 
-** Version 1.2.4 **
+**Version 1.2.4**
 
 - Print Format updated for nodes and brick elements
 - OpenSees.exe updated to version 2.5.0
@@ -128,7 +128,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.2.3 **
+**Version 1.2.3**
 
 - Conditions Line_Restraints/Surface_Restraints added (transferred to the nodes of the geometric entity)
 - Condition Line_Body_Constraint added
@@ -138,13 +138,13 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.2.2 **
+**Version 1.2.2**
 
 - Icons updated
 
 ---
 
-** Version 1.2.1 **
+**Version 1.2.1**
 
 - Elastic Timoshenko Beam elements postprocess results for 2D and 3D models supported
 - Corotational Truss elements postprocess results for 2D and 3D models supported
@@ -155,7 +155,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.2.0 **
+**Version 1.2.0**
 
 - Zero length elements updated: You can assign this condition on more than 2 nodes and command is printed per 2 nodes.
 - Truss postprocess results in 2D model are supported
@@ -163,7 +163,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.1.9 **
+**Version 1.1.9**
 
 - Modal analysis supported in postprocessing for 2D models
 - Bug fixed: Body constraints now work in 2D models
@@ -171,43 +171,43 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.1.8 **
+**Version 1.1.8**
 
 - Corotational Truss Element supported
 
 ---
 
-** Version 1.1.7 **
+**Version 1.1.7**
 
 - Timoshenko Elastic Beam elements supported
 
 ---
 
-** Version 1.1.6 **
+**Version 1.1.6**
 
 - Shell elements supported
 
 ---
 
-** Version 1.1.5 **
+**Version 1.1.5**
 
 - Rigid diaphragm fixed
 
 ---
 
-** Version 1.1.4 **
+**Version 1.1.4**
 
 - Modal analysis is supported in postprocessing for 3D models
 
 ---
 
-** Version 1.1.3 **
+**Version 1.1.3**
 
 - ZeroLength Elemenets supported
 
 ---
 
-** Version 1.1.2 **
+**Version 1.1.2**
 
 - 2D / 3DOF supported for Beam-Column problems
 - Requirements was addeed for Truss and Beam-Column Elements in general tab
@@ -215,13 +215,13 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-** Version 1.1.1 **
+**Version 1.1.1**
 
 - Mass density supported for Truss and Beam-Column elements
 
 ---
 
-** Version 1.1.0 **
+**Version 1.1.0**
 
 - Sections Force-Deformation Platefibre and ElasticMembranePlate added
 - You can use any elastic isotropic material for Elastic Beam-Column elements not only the template one
