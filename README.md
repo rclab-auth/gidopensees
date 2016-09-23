@@ -1,6 +1,4 @@
-### GiD + OpenSees Interface
-
----
+# GiD + OpenSees Interface
 
 *(c) 2016-2017*
 
