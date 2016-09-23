@@ -1,13 +1,13 @@
 ### GiD + OpenSees Interface
 
 *(c) 2016-2017*
-
 *Lab of R/C and Masonry Structures*
-*School of Civil Engineering, AUTh*
+*School of Civil Engineering*
+*Aristotle University of Thessaloniki, Greece*
 
 **Development team**
 
--T. Kartalis-Kaounis, Civil Engineer AUTh
+- T. Kartalis-Kaounis, Civil Engineer AUTh
 - V.K. Protopapadakis, Civil Engineer AUTh
 - T. Papadopoulos, Civil Engineer AUTh
 
