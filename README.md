@@ -1,6 +1,8 @@
 ### GiD + OpenSees Interface
 
-*(c) 2016-2017  Lab of R/C and Masonry Structures  School of Civil Engineering  Aristotle University of Thessaloniki, Greece*
+*(c) 2016-2017
+
+*Lab of R/C and Masonry Structures, School of Civil Engineering, Aristotle University of Thessaloniki, Greece*
 
 **Development team**
 
