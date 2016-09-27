@@ -159,6 +159,44 @@ switch $event {
 }
 
 
+proc TK_CheckModelingOptionsForShellElems { event args } {
+switch $event {
+   INIT {
+   #...
+    return ""
+   }
+   SYNC {
+   
+  set GDN [lindex $args 0]
+  set STRUCT [lindex $args 1]
+  set QUESTION [lindex $args 2]
+
+   	
+ 
+   # Dimensions : the question name 
+ set ndm [GiD_AccessValue get gendata "Dimensions"]
+ set dof [GiD_AccessValue get gendata "DOF"]
+ # ndm : number of dimensions of the project
+ # dof : degrees of freedom per node
+ 
+  if { $ndm != "3" || $dof != "6"} {
+  WarnWinText "WARNING: Shell elements require 3D model with 6 DOFs per node !"
+                      }
+     return ""
+   }
+   DEPEND {
+   # ...
+    return ""
+   }
+   CLOSE {
+   # ...
+    return ""
+   }
+ }
+ return ""
+}
+
+
 proc TK_CheckModelingOptions { event args } {
 switch $event {
    INIT {
