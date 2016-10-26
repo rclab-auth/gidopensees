@@ -447,6 +447,9 @@ MATERIAL: Fiber
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Section:#CB#(Fiber)
 VALUE: Fiber
 TKWIDGET: TK_CheckMaterialsForFiber
@@ -455,6 +458,9 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Concrete01/Concrete02/Steel01
 
 TITLE: Section_properties
+
+QUESTION: __#CB#(_)
+VALUE: 
 
 QUESTION: Cross_Section#CB#(Rectangular,Circular)
 VALUE: Rectangular
@@ -527,6 +533,9 @@ VALUE: 8
 
 TITLE: Materials
 
+QUESTION: ___#CB#(_)
+VALUE: 
+
 QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
 
@@ -592,8 +601,14 @@ MATERIAL: Elastic_Beam-Column
 
 TITLE: General
 
+QUESTION: ___#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(ElasticBeamColumn)
 VALUE: ElasticBeamColumn
+
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_materials:#CB#(Elastic_Isotropic)
 VALUE: Elastic Isotropic
@@ -603,6 +618,9 @@ VALUE: 3D model with 6 DOFs per node or 2D model with 3 DOFs per node
 TKWIDGET: TK_CheckModelingOptionsForBeamColumnElems
 
 TITLE: Material
+
+QUESTION: ____#CB#(_)
+VALUE: 
 
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
@@ -614,6 +632,9 @@ STATE: DISABLED
 HELP: All nD materials are listed here! \n You can use ONLY an Elastic Isotropic material for this element.
 
 TITLE: Section_properties
+
+QUESTION: _____#CB#(_)
+VALUE: 
 
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
@@ -666,8 +687,10 @@ HELP: Axes shown in figure are local axes for a 2D problem\nIn every case, local
 
 TITLE: Element_Geometry
 
-QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
+QUESTION: ______#CB#(_)
+VALUE: 
 
+QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
 
 END MATERIAL 
@@ -678,10 +701,15 @@ MATERIAL: Elastic_Timoshenko_Beam-Column
 
 TITLE: General
 
+QUESTION: ___#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(ElasticTimoshenkoBeamColumn)
 VALUE: ElasticTimoshenkoBeamColumn
 HELP: A Timoshenko beam is a frame member that accounts for shear deformations.
 
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_materials:#CB#(Elastic_Isotropic)
 VALUE: Elastic Isotropic
@@ -691,6 +719,9 @@ VALUE: 3D model with 6 DOFs per node or 2D model with 3 DOFs per node
 TKWIDGET: TK_CheckModelingOptionsForBeamColumnElems
 
 TITLE: Material
+
+QUESTION: ____#CB#(_)
+VALUE: 
 
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
@@ -703,6 +734,9 @@ HELP: All nD materials are listed here! \n You can use ONLY an Elastic Isotropic
 
 
 TITLE: Section_properties
+
+QUESTION: _____#CB#(_)
+VALUE: 
 
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
@@ -760,6 +794,9 @@ HELP: Axes shown in figure are local axes for a 2D problem\nIn every case, local
 
 TITLE: Element_Geometry
 
+QUESTION: ______#CB#(_)
+VALUE: 
+
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
 
@@ -770,8 +807,14 @@ MATERIAL: Force-Based_Beam-Column
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(forceBeamColumn)
 VALUE: forceBeamColumn
+
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_Sections:#CB#(_)
 VALUE: Fiber
@@ -782,6 +825,9 @@ TKWIDGET: TK_CheckModelingOptionsForBeamColumnElems
 
 TITLE: Integration
 
+QUESTION: __#CB#(_)
+VALUE: 
+
 QUESTION: Integration_type#CB#(Lobatto)
 VALUE: Lobatto
 
@@ -790,12 +836,15 @@ VALUE: 3
 HELP: number of Gauss-Lobatto integration points along the element
 STATE: DISABLED
 
-QUESTION: ___The_number_of_integration#CB#(_)
+QUESTION: The_number_of_integration#CB#(_)
 VALUE: points per element is currently fixed to three points per element.
 QUESTION: To_increase_analysis_accuracy,#CB#(_)
 VALUE: a finer mesh is recommended for modeling structural members instead of one element per member
 
 TITLE: Section
+
+QUESTION: ___#CB#(_)
+VALUE: 
 
 QUESTION: Section#MAT#(Section_Force-Deformation)
 VALUE: Fiber
@@ -803,10 +852,16 @@ TKWIDGET: TK_CheckSectionForFBC
 
 TITLE: Element_Geometry
 
+QUESTION: ____#CB#(_)
+VALUE: 
+
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
 
 TITLE: Iterations
+
+QUESTION: _____#CB#(_)
+VALUE: 
 
 QUESTION: Activate_iterative_scheme_for_satisfying_element_compatibility#CB#(1,0)
 VALUE: 1
@@ -831,8 +886,14 @@ MATERIAL: Truss
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(Truss)
 VALUE: Truss
+
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_materials:#CB#(Elastic/Elastic_Perfectly_Plastic/Elastic_Perfectly_Plastic_with_Gap)
 VALUE: Elastic/Elastic Perfectly Plastic/Elastic Perfectly Plastic with Gap
@@ -840,11 +901,14 @@ VALUE: Elastic/Elastic Perfectly Plastic/Elastic Perfectly Plastic with Gap
 QUESTION: Requirements:#CB#(Unused_DOFs_must_be_restrained)
 VALUE: Unused DOFs must be restrained
 
-QUESTION: _#CB#(In_3D_model_with_6_DOF_it_happens_automatically)
+QUESTION: __#CB#(for_Truss_only)
 VALUE: (for Truss only models use 3D / 3DOF or 2D / 2DOF)
 
 
 TITLE: Material
+
+QUESTION: ___#CB#(_)
+VALUE: 
 
 QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials)
 VALUE: Elastic
@@ -854,6 +918,9 @@ QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
 
 TITLE: Section_properties
+
+QUESTION: ____#CB#(_)
+VALUE: 
 
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: General
@@ -895,8 +962,14 @@ MATERIAL: Corotational_Truss
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(CorotationalTruss)
 VALUE: CorotationalTruss
+
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_materials:#CB#(Elastic/Elastic_Perfectly_Plastic/Elastic_Perfectly_Plastic_with_Gap/Steel01)
 VALUE: Elastic/Elastic Perfectly Plastic/Elastic Perfectly Plastic with Gap/Steel01
@@ -904,10 +977,13 @@ VALUE: Elastic/Elastic Perfectly Plastic/Elastic Perfectly Plastic with Gap/Stee
 QUESTION: Requirements:#CB#(Unused_DOFs_must_be_restrained) 
 VALUE: Unused DOFs must be restrained
 
-QUESTION: _#CB#(for_truss_only_models)
+QUESTION: __#CB#(for_truss_only)
 VALUE: (for Truss only models use 3D / 3DOF or 2D / 2DOF)
 
 TITLE: Material
+
+QUESTION: ___#CB#(space)
+VALUE: 
 
 QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials)
 VALUE: Elastic
@@ -917,6 +993,9 @@ QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
 
 TITLE: Section_properties
+
+QUESTION: ____#CB#(space!)
+VALUE: 
 
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: General
@@ -959,11 +1038,18 @@ MATERIAL: Quad
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(Quad)
 VALUE: Quad
+
 HELP: FourNodeQuad element object which uses a bilinear isoparametric formulation.
 IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckModelingOptionsForQuadElems
+
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
@@ -973,6 +1059,9 @@ VALUE: 2D model and 2 DOFs per node
 
 TITLE: Material
 
+QUESTION: __#CB#(_)
+VALUE: 
+
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 
@@ -981,16 +1070,28 @@ VALUE: PlaneStress
 
 TITLE: Section_properties
 
+QUESTION: ___#CB#(_)
+VALUE: 
+
 QUESTION: Thickness#UNITS#
 VALUE: 0.2m
 
 
 TITLE : Pressure
 
+QUESTION: ____#CB#(_)
+VALUE: 
+
 QUESTION: Surface_pressure#UNITS#
 VALUE: 0.0kPa
 
 TITLE: Body_Forces
+
+QUESTION: _____#CB#(_)
+VALUE: 
+
+QUESTION: Applied_on_the_global_axes#CB#(_)
+VALUE:
 
 QUESTION: X-Direction#UNITS#
 VALUE: 0.0kN
@@ -1008,10 +1109,16 @@ MATERIAL: Shell
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(Shell)
 VALUE: Shell
 IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckModelingOptionsForShellElems
+
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_materials:#CB#(PlateFiber/ElasticMembranePlate)
 VALUE: PlateFiber/ElasticMembranePlate
@@ -1021,17 +1128,27 @@ VALUE: 3D model and 6 DOFs per node
 
 TITLE: Section
 
+QUESTION: __#CB#(_)
+VALUE: 
+
 QUESTION: Type#MAT#(Section_Force-Deformation)
 VALUE: Elastic_Membrane_Plate
 
 END MATERIAL
 
+
 MATERIAL: Tri31
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(Tri31)
 VALUE: Tri31
+
+QUESTION: ______#CB#(_)
+VALUE: 
 
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: nD Materials
@@ -1041,6 +1158,9 @@ VALUE: 2D model and 2 DOFs per node
 
 TITLE: Material
 
+QUESTION: __#CB#(_)
+VALUE: 
+
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 
@@ -1049,15 +1169,27 @@ VALUE: PlaneStress
 
 TITLE: Section_properties
 
+QUESTION: ___#CB#(_)
+VALUE: 
+
 QUESTION: Thickness#UNITS#
 VALUE: 0.2 m
 
 TITLE : Pressure
 
+QUESTION: ____#CB#(_)
+VALUE: 
+
 QUESTION: Surface_pressure#UNITS#
 VALUE: 0.0 kPa
 
 TITLE: Body_Forces
+
+QUESTION: _____#CB#(_)
+VALUE: 
+
+QUESTION: Applied_on_the_global_axes#CB#(_)
+VALUE:
 
 QUESTION: X-Direction#UNITS#
 VALUE: 0.0kN
@@ -1078,11 +1210,17 @@ MATERIAL: Standard_Brick_Element
 
 TITLE: General
 
+QUESTION: _#CB#(_)
+VALUE: 
+
 QUESTION: Element_type:#CB#(stdBrick)
 VALUE: stdBrick
 HELP: This element is used to construct an eight-node brick element object, which uses a trilinear isoparametric formulation.
 IMAGE: img/Materials/Brick.png
 TKWIDGET: TK_CheckModelingOptionsForBrickElems
+
+QUESTION: ______#CB#(_)
+VALUE:
 
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
@@ -1093,12 +1231,18 @@ VALUE: 3D model with 3 DOFs per node
 
 TITLE: Material
 
+QUESTION: __#CB#(_)
+VALUE: 
+
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 
 TITLE: Body_Forces
 
-QUESTION: They_refer_to_the_global_axes.#CB#(_)
+QUESTION: ___#CB#(_)
+VALUE: 
+
+QUESTION: Applied_on_the_global_axes#CB#(_)
 VALUE: 
 
 QUESTION: X-Direction#UNITS#

@@ -51,7 +51,7 @@ VALUE: 0
 DEPENDENCIES: (0,HIDE,Number_of_eigenvalues,#CURRENT#,HIDE,Solver,#CURRENT#) (1,RESTORE,Number_of_eigenvalues,#CURRENT#,RESTORE,Solver,#CURRENT#)
 
 QUESTION: Number_of_eigenvalues
-VALUE: 0
+VALUE: 3
 
 QUESTION: Solver#CB#(genBandArpack,fullGenLapack,symmBandLapack)
 VALUE: fullGenLapack
@@ -71,6 +71,7 @@ DEPENDENCIES: (Gravity,SET,Loading_Path,Monotonic,SET,Loading_Type,Linear,SET,In
 DEPENDENCIES: (Pushover,SET,Loading_Path,Monotonic,SET,Loading_Type,Linear,SET,Integrator_Type,Displacement_Control)
 DEPENDENCIES: (Cyclic,SET,Loading_Path,Cyclic,SET,Loading_Type,Linear,SET,Integrator_Type,Displacement_Control)
 DEPENDENCIES: (Custom,RESTORE,Loading_Path,#CURRENT#,RESTORE,Loading_Type,#CURRENT#,RESTORE,Integrator_Type,#CURRENT#)
+TKWIDGET: TK_EditInterval
 
 QUESTION: System_of_Equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM)
 VALUE: BandGeneral

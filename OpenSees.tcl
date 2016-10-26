@@ -368,7 +368,7 @@ proc InitGIDProject { dir } {
 	
     GiDMenu::UpdateMenus
 
-	after 500 "{UpdateInfoBar}"
+	after 1000 "{UpdateInfoBar}"
 }
 
 proc AfterRunCalculation { basename dir problemtypedir where error errorfilename } {
@@ -519,16 +519,14 @@ proc Splash { dir } {
     label .splash.lv -text $VersionNumber -background #292929 -foreground #FFFFD4  -font "calibri 11"
     place .splash.lv -x 324 -y 69
 
-    bind .splash <1> "destroy .splash"
-    bind .splash <KeyPress> "destroy .splash"
+    #bind .splash <Button-1> "destroy .splash"
+    #bind .splash <KeyPress> "destroy .splash"
 
-    raise .splash .gid.central.s
-
-	focus .splash
-    update
+    raise .splash
 
     after 3000 "if { (!$keepsplash) && [winfo exist .splash] } { 
-	destroy .splash
+		destroy .splash
+		raise .gid
     }"
 }
 
@@ -536,10 +534,10 @@ proc UpdateInfoBar { } {
 
 	# remove bindings
 
-	bind .gid <Configure> {}
-	bind .gid <FocusIn>   {}
-	bind .gid <FocusOut>  {}
-    bind .gid <Map>       {}
+	bind .gid <Configure>  {}
+	bind .gid <Activate>   {}
+	bind .gid <Deactivate> {}
+    bind .gid <Map>        {}
 
 	global problem_dir
 	global VersionNumber
@@ -597,12 +595,12 @@ proc UpdateInfoBar { } {
 
 	# add bindings
 
-	bind .gid <Configure> {RefreshInfoBar}
-	bind .gid <FocusIn>   {UpdateInfoBar}
-	bind .gid <FocusOut>  {HideInfoBar}
-    bind .gid <Map>       {UpdateInfoBar}
+	bind .gid <Configure>  {RefreshInfoBar}
+	bind .gid <Activate>   {RefreshInfoBar}
+	bind .gid <Deactivate> {HideInfoBar}
+    bind .gid <Map>        {UpdateInfoBar}
 
-	focus .gid
+	focus .gid.central.s
 	update
 }
 

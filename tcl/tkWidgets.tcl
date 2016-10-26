@@ -1017,6 +1017,8 @@ proc TK_CheckModelingOptions { event args } {
 
 		CLOSE {
 
+			UpdateInfoBar
+
 			return ""
 		}
 	}
@@ -1064,6 +1066,8 @@ proc TK_ActiveIntervalinLoads { event args } {
 
 		CLOSE {
 
+			UpdateInfoBar
+
 			return ""
 		}
 	}
@@ -1071,4 +1075,17 @@ proc TK_ActiveIntervalinLoads { event args } {
 	return ""
 }
 
+proc TK_EditInterval { event args } {
 
+	switch $event {
+
+		CLOSE {
+
+			UpdateInfoBar
+
+			return ""
+		}
+	}
+
+	return ""
+}
