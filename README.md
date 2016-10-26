@@ -20,14 +20,35 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-- OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result :
-   - Intersection joints that belong on two lines with different constraints should be constrained seperately.
-   - Intersection lines that belong on two surfaces with different constraints should be constrained seperately.
+- OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
+   - Intersection joints that belong to two lines with different constraints should be handled seperately.
+   - Intersection lines that belong to two surfaces with different constraints should be handled seperately.
 
 ---
 
 ### VERSION HISTORY
 
+---
+
+###**Version 1.5.0 (20/10/2016)**
+
+**Major feature : Nonlinear static analysis for frame elements**
+
+- Now supported : **Force-Based Beam-Column**
+- Now supported : **Tri31 Element**
+- Now supported : **Fiber Section**
+- Now supported : **Pushover and Cyclic analysis**
+- New information bar
+- Toolbar : Interval data
+- Toolbar : Show/hide elements and conditions
+- Toolbar : Select active interval
+- OpenSeesPost.exe rewritten
+- Icons/images updated
+- Output data file (.tcl) format improved
+- OpenSeesSP and OpenSeesMP supported on installation
+- Error message windows for unsuccessful analysis
+- Minor bug fixes
+ 
 ---
 
 **Version 1.3.4 (19/09/2016)**
@@ -59,7 +80,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 - Recorders added for shell and quad elements
 - Question field names updated in problem data menu
-- OpenSees.bat updated : moves more files in OpenSees folder in Project Directory
+- OpenSees.bat updated: moves more files in OpenSees folder in Project Directory
 - OpenSees menu changed to "GiD+OpenSees"
 - GiD+OpenSees menu choice added: View version history
 

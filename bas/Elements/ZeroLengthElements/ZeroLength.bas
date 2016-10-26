@@ -8,38 +8,41 @@
 *end elems
 *#--------------------------
 *# We save the ID numbers (cond(1) ) on a List
-*tcl(ClearZeroLengthLists )
+*set var dummy=tcl(ClearZeroLengthLists)
 *set var IDExists=-1
 *set Cond ZeroLength *nodes
 *loop nodes *OnlyInCond
 *if(LoopVar!=1)
-*set var IDExists=tcl(CheckZeroLengthID *Cond(1,int) )
+*set var IDExists=tcl(CheckZeroLengthID *Cond(1,int))
 *endif
 *if(IDExists==-1)
-*tcl(AddZeroLengthID *Cond(1,int) )
+*set var dummy=tcl(AddZeroLengthID *Cond(1,int))
 *endif
 *end nodes
-*set var HowManyZeroLengthID=tcl(HowManyZeroLengthID  )
+*set var HowManyZeroLengthID=tcl(HowManyZeroLengthID)
 *if(HowManyZeroLengthID>=1)
-#
-# Zero Length Elements
-#
+
+# --------------------------------------------------------------------------------------------------------------
+# Z E R O   L E N G T H   E L E M E N T S
+# --------------------------------------------------------------------------------------------------------------
 
 *#--------------------for every zeroLength ID do the following: ----------------------
 *for(i=1;i<=HowManyZeroLengthID;i=i+1)
 *#---------------------- DEFINING THE MATERIALS THAT ZeroLength ELEMENTS MAY USE-----------------------
 *if(VarCount==1)
-# Uniaxial materials that may be used by ZeroLength elements
+# Uniaxial materials used by ZeroLength elements
+
 *loop nodes *OnlyInCond
 *for(k=3;k<=8;k=k+1)
 *set var SelMatID=tcl(FindMaterialNumber *Cond(*k) )
 *set var MaterialExists=tcl(CheckUsedMaterials *SelMatID )
 *if(MaterialExists==-1)
-*tcl(AddUsedMaterials *SelMatID )
+*set var dummy=tcl(AddUsedMaterials *SelMatID)
 *loop materials *NotUsed
 *set Var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
 *if(MaterialID==SelMatID)
-*if(strcmp(MatProp(1),"Elastic")==0)
+*if(strcmp(MatProp(1),"Elastic")==0)\
+*format "%d%g"
 uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real) 
 *endif
 *break
@@ -50,13 +53,12 @@ uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real)
 *end nodes
 
 # ZeroLength Element Definition: element zeroLength $eleTag $iNode $jNode -mat $matTag1 $matTag2 ... -dir $dir1 $dir2 ...
+
 *endif
-*#--------------------------------------------
 *#set var ExtraElem=ExtraElem+1
 *#set var ZeroLengthElemTag=operation(NumberOfElements+ExtraElem)
 *set var ZeroLengthID=tcl(ZeroLengthIDnumber *i)
 *set var ZLNodes=0
-
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==ZeroLengthID)
 *if(ZLNodes==0)
@@ -65,7 +67,7 @@ uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real)
 *set var ZLNodes=ZLNodes+1
 *endif
 *end nodes
-*#-----------------------Defining the second NodeTag in case we assign the condition on more than 2 nodes!-------------
+*# Defining the second NodeTag in case we assign the condition on more than 2 nodes
 *for(k=1;k<=operation(ZLNodes-1);k=k+1)
 *set var CountLoop=0
 *loop nodes *OnlyInCond
@@ -78,8 +80,8 @@ uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real)
 *set var CountLoop=CountLoop+1
 *endif
 *end nodes
-*#-------------------------------
-*#-----------------------Printing the ZeroLength Command-----------------
+*# Printing the ZeroLength Command
+*format = "%6d%6d%6d"
 element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode *\
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==ZeroLengthID)

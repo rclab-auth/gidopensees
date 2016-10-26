@@ -1,13 +1,10 @@
-
 proc AddbodyconstraintIDList { IDnum } {
 global BodyConstraintIDList 
 
-
 lappend BodyConstraintIDList $IDnum 
 
-return ""
+return 0
 }
-
 
 proc HowmanyBCID { } {
 global BodyConstraintIDList
@@ -22,6 +19,7 @@ proc BCIDnumber { index } {
 global BodyConstraintIDList
 
 set IDnum [lindex $BodyConstraintIDList [expr $index-1]]
+
 return $IDnum
 }
 
@@ -35,21 +33,22 @@ if {$myvalue!=0} {
 lappend BodyConstraintConditions $myvalue
 }
 }
-return ""
+
+return 0
 }
 
 proc importBCConditions { } {
 global BodyConstraintConditions
 
 return $BodyConstraintConditions
-
 }
 
 proc RestartBCconditions { } {
 global BodyConstraintConditions
 
 set BodyConstraintConditions " "
-return ""
+
+return 0
 }
 
 proc CheckIDbodyconstraintList { IDnum } {
@@ -65,5 +64,6 @@ global BodyConstraintIDList
 
 set BodyConstraintConditions " "
 set BodyConstraintIDList " "
-return ""
+
+return 0
 }

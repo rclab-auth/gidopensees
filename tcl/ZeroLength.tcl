@@ -3,7 +3,8 @@ proc ClearZeroLengthLists { } {
 global ZeroLengthIDList
 
 set ZeroLengthIDList " "
-return ""
+
+return 0
 }
 
 # Check if ID of the ZeroLength is already assigned to the ZeroLengthIDList List.
@@ -21,7 +22,7 @@ global ZeroLengthIDList
 
 lappend ZeroLengthIDList $IDnum
 
-return ""
+return 0
 }
 
 # Procedure that return the number of unique zeroLength ID numbers, to use it in FOR-Loop Statement.

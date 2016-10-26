@@ -9,71 +9,66 @@
 *endif
 *end elems
 *if(cntTruss!=0)
-#
-# Truss elements
-#
+
+# --------------------------------------------------------------------------------------------------------------
+# T R U S S   E L E M E N T S
+# --------------------------------------------------------------------------------------------------------------
 
 *Set Var VarCount=1
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *if(VarCount==1)
 *set var file=2
-
-# Uniaxial Materials Definition for Truss Elements
+# Uniaxial Materials Definition
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Truss")==0)
 *# We set the variable oMujMat the IDnumber of the material that user choosed from the Material field , in the element that he/she assigned!
-*Set Var oMujMat=tcl(FindMaterialNumber *MatProp(Material) )
+*set Var oMujMat=tcl(FindMaterialNumber *MatProp(Material) )
 *set var MaterialExists=tcl(CheckUsedMaterials *oMujMat)
 *if(MaterialExists==-1)
-*tcl(AddUsedMaterials *oMujMat)
-uniaxialMaterial  *\
+*set var dummy=tcl(AddUsedMaterials *oMujMat)
 *loop materials *NotUsed
 *# We set the variable oMat the IDnumber of each material(NotUsed) and we check which is the material that user choosed in Material field in element definition.
-*Set Var oMat=tcl(FindMaterialNumber *MatProp(0) )
+*set var oMat=tcl(FindMaterialNumber *MatProp(0) )
 *#we check which is the material that user choosed in Material field in element definition.
 *if(oMat==oMujMat)
 *if(strcmp(MatProp(1),"Elastic")==0)
-Elastic *\
-*oMat *\
-*MatProp(Elastic_modulus_E,real)
+*format "%d%g"
+uniaxialMaterial Elastic *oMat *MatProp(Elastic_modulus_E,real)
 *elseif(strcmp(MatProp(1),"ElasticPerfectlyPlastic")==0)
-ElasticPP *\
-*oMat *\
-*set var E=MatProp(Elastic_modulus_E,real)
-*E *\
-*set var Fyt=MatProp(Yield_Stress_in_tension,real)
-*set var Fyc=MatProp(Yield_Stress_in_compression,real)
-*set var epsyP=Fyt/E
-*set var epsyN=Fyc/E
+*format "%d%g"
+uniaxialMaterial ElasticPP *oMat *MatProp(Elastic_modulus_E,real) *\
+*set var epsyP=MatProp(Strain_epsP,real)
+*set var epsyN=MatProp(Strain_epsN,real)
 *set var eps0=MatProp(Initial_strain_eps0,real)
-*epsyP *\
-*epsyN *\
-*eps0
+*format "%g%g%g"
+*epsyP *epsyN *eps0
 *elseif(strcmp(MatProp(1),"Steel01")==0)
-Steel01 *oMat *\
-*format "%1.1f%1.1f"
+*format "%d"
+uniaxialMaterial Steel01 *oMat *\
 *set var Fy=MatProp(Yield_Stress_Fy,real)
 *set var E0=MatProp(Initial_elastic_tangent_E0,real)
 *set var b=MatProp(Strain-hardening_ratio_b,real)
+*format "%g%g%g"
 *Fy *E0 *b
+*elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
+*format "%d%g%g%g"
+uniaxialMaterial ElasticPPGap *oMat *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Gap,real)
 *endif
 *break
 *endif
 *end materials
-*Set Var VarCount=2
 *endif
 *endif
 *end materials
-*endif
-*#
-*if(VarCount==2)
 
 # Truss Definition : element truss $eleTag $inode $jnode $A $matTag
-
 *set var VarCount=operation(VarCount+1)
+
 *endif
+*#
+*#-------------Section Properties--------------------
 *#
 *if(strcmp(elemsMatProp(Cross_Section),"Rectangular")==0)
 *set var height=ElemsMatProp(Height_H,real)
@@ -99,10 +94,11 @@ Steel01 *oMat *\
 *#--------------------------------------------
 *#Create truss elements - command: element truss trussID node1 node2 A matID
 *#--------------------------------------------
+*format "%6d%6d%6d"
 element truss *ElemsNum *elemsConec *\
-*format "%1.4f"
-*A *tcl(FindMaterialNumber *ElemsMatProp(Material) ) -rho *\
-*format "%1.3f"
+*format "%8.3f"
+*A *tcl(FindMaterialNumber *ElemsMatProp(Material) )   -rho *\
+*format "%8.3f"
 *MassPerLength
 *endif
 *end elems

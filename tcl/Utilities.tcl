@@ -69,12 +69,6 @@ exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
 return ""
 }
 
-proc View_version_history { } {
-global problem_dir
-
-exec {*}[auto_execok start] "" "$problem_dir/VersionHistory.txt"
-return ""
-}
 
 proc AboutOpenSeesProbType { } {
 	global splashdir
@@ -90,12 +84,12 @@ proc OpenSees_Menu { dir } {
 # Create the Menu named GiD+OpenSees in PRE processing
 	GiDMenu::Create "GiD+OpenSees" PRE -1
 	# Tab labes
-	set tabs [list [= "OpenSees Analysis"] [= "Create .tcl only"] [= "Create and view .tcl only"] "---" [= "Visit GiD+OpenSees Site"] [= "Visit OpenSees Wiki"] "---" [= "View version history"] [= "About"] ]
+	set tabs [list [= "OpenSees Analysis"] [= "Create .tcl only"] [= "Create and view .tcl only"] "---" [= "Visit GiD+OpenSees Site"] [= "Visit OpenSees Wiki"] [= "About"] ]
 	# Selection commands
 	set cmds { {GiD_Process Utilities Calculate} {Create_tcl_file} {Create_and_open_tcl_file} {} {VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
-	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} {} {View_version_history} {AboutOpenSeesProbType} }
+	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} {AboutOpenSeesProbType} }
 	# Tab icons
-	set icons {mnu_Analysis.png mnu_tcl.png mnu_tcl.png "" mnu_Site.png mnu_Wiki.png "" mnu_VersionHistory.png mnu_About.png}
+	set icons {mnu_Analysis.png mnu_tcl.png mnu_tcl.png "" mnu_Site.png mnu_Wiki.png mnu_About.png}
 	
 	set position 0
 	foreach tab $tabs command $cmds  icon $icons {
@@ -104,4 +98,16 @@ proc OpenSees_Menu { dir } {
                 incr position
     }
 	GiDMenu::UpdateMenus
+	}
+	
+	
+	proc roundUp { num } {
+		set roundedNum [expr {round($num)}]
+	
+		if { $roundedNum>=$num} {
+			return $roundedNum
+		} else {
+			return [expr {round($num+1)}]
+		}
+	
 	}

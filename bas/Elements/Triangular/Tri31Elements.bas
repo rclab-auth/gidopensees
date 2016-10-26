@@ -1,26 +1,26 @@
 *#--------------------------------------------------------------------------------
-*#                                  Quad Elements                                -
+*#                                  Tri31 Elements                                -
 *#--------------------------------------------------------------------------------
 *# variable to count Quad elements
-*set var cntQuad=0
+*set var cntTri31=0
 *loop elems 
-*if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
-*if(ElemsType!=3)
-*MessageBox Error: Quad elements must be quadrilateral.
+*if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
+*if(ElemsType!=2)
+*MessageBox Error: Tri31 elements must be triangular.
 *endif
-*set var cntQuad=operation(cntQuad+1)
+*set var cntTri31=operation(cntTri31+1)
 *endif
 *end elems
-*if(cntQuad!=0)
+*if(cntTri31!=0)
 
 # --------------------------------------------------------------------------------------------------------------
-# Q U A D   E L E M E N T S
+# T R I 3 1   E L E M E N T S
 # --------------------------------------------------------------------------------------------------------------
 
 *set var VarCount=1
 *if(GenData(Dimensions,int)==2 && GenData(DOF,int)==2)
 *loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
+*if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
 *set var thickness=ElemsMatProp(Thickness,real)
 *if(VarCount==1)
 *if(file!=2)
@@ -29,7 +29,7 @@
 # nDMaterial Definition
 
 *loop materials
-*if(strcmp(MatProp(Element_type:),"Quad")==0)
+*if(strcmp(MatProp(Element_type:),"Tri31")==0)
 *set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
@@ -51,11 +51,11 @@ nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_Modulus_Ex,real) *Mat
 *endif
 *end materials
 
-# Quad elements Definition : element quad $EleTag $Nodei $Nodej Nodek $Nodel $thick $type $MatTag
+# Tri31 elements Definition : element tri31 $eleTag $iNode $jNode $kNode $thick $type $matTag <$pressure $rho $b1 $b2>
 
 *endif
-*format "%6d%6d%6d%6d%6d%8.3f"
-element quad *ElemsNum *ElemsConec *thickness  *\
+*format "%6d%6d%6d%6d%8.3f"
+element tri31 *ElemsNum *ElemsConec *thickness  *\
 *if(strcmp(ElemsMatProp(Plane_behavior),"PlaneStrain")==0)
 *format "%8.3f%8.3f%8.3f%8.3f"
 PlaneStrain   *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
@@ -67,6 +67,6 @@ PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(Sur
 *endif
 *end elems
 *else
-*MessageBox Error: Quad elements require 2D model and 2 DOFs
+*MessageBox Error: Tri31 elements require 2D model and 2 DOFs
 *endif
 *endif

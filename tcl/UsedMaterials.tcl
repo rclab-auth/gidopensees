@@ -4,7 +4,7 @@ global UsedMaterialsList
 
 set UsedMaterialsList " "
 
-return ""
+return 0
 }
 
 #Add to UsedMaterialsList list, so to know that is has been defined(printed)
@@ -13,7 +13,7 @@ global UsedMaterialsList
 
 lappend UsedMaterialsList $MatID
 
-return ""
+return 0
 }
 
 # It returns -1 if the materials has been defined before.

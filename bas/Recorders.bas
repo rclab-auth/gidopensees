@@ -1,4 +1,9 @@
 
+# --------------------------------------------------------------------------------------------------------------
+# R E C O R D E R S
+# --------------------------------------------------------------------------------------------------------------
+
+*# Brick
 *if(cntStdBrick!=0)
 *set var FirstBrickElemNumber=0
 *set var LastBrickElemNumber=0
@@ -13,14 +18,11 @@
 *set var LastBrickElemNumber=ElemsNum
 *endif
 *end elems
+recorder Element -file stdBrick_force.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber forces
 recorder Element -file stdBrick_stress.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber stresses
 recorder Element -file stdBrick_strain.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber strains
-recorder Element -file stdBrick_force.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber forces
-recorder Element -binary stdBrick_stress.bin -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber stresses
-recorder Element -binary stdBrick_strain.bin -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber strains
-recorder Element -binary stdBrick_force.bin -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber forces
 *endif
-*#
+*# Shell
 *if(cntShell!=0)
 *set var FirstShellElemNumber=0
 *set var LastShellElemNumber=0
@@ -37,73 +39,95 @@ recorder Element -binary stdBrick_force.bin -time -eleRange *FirstBrickElemNumbe
 *end elems
 recorder Element -file ShellMITC4_force.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber forces
 recorder Element -file ShellMITC4_stress.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber stresses
-recorder Element -binary ShellMITC4_force.bin -time -eleRange *FirstShellElemNumber *LastShellElemNumber forces
-recorder Element -binary ShellMITC4_stress.bin -time -eleRange *FirstShellElemNumber *LastShellElemNumber stresses
 *endif
-*#
+*# Quad
 *if(cntQuad!=0)
-*set var FirstQuadElemNumber=0
-*set var LastQuadElemNumber=0
+recorder Element -file Quad_force.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
-*set var FirstQuadElemNumber=ElemsNum
-*break
+*ElemsNum *\
 *endif
 *end elems
+forces 
+recorder Element -file Quad_stress.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
-*set var LastQuadElemNumber=ElemsNum
+*ElemsNum *\
 *endif
 *end elems
-recorder Element -file Quad_force.out -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber forces
-recorder Element -file Quad_stress.out -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber stresses
-recorder Element -binary Quad_force.bin -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber forces
-recorder Element -binary Quad_stress.bin -time -eleRange *FirstQuadElemNumber *LastQuadElemNumber stresses
+stresses
+recorder Element -file Quad_strain.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
+*ElemsNum *\
 *endif
-*#
+*end elems
+strains
+*endif
+*# Tri
+*if(cntTri31!=0)
+recorder Element -file Tri31_force.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
+*ElemsNum *\
+*endif
+*end elems
+forces
+recorder Element -file Tri31_stress.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
+*ElemsNum *\
+*endif
+*end elems
+stresses
+*endif
+*# Elastic beam-column
 *if(cntEBC!=0)
-recorder Element -file ElasticBeamColumn_force.out -time -ele *\ 
+recorder Element -file ElasticBeamColumn_localForce.out -time -ele *\ 
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
 *ElemsNum *\
 *endif
 *end elems
-forces
-recorder Element -binary ElasticBeamColumn_force.bin -time -ele *\
-*loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
-*ElemsNum *\
+localForce
 *endif
-*end elems
-forces
-*endif
-*#
+*# Elastic Timoshenko beam-column
 *if(cntETB!=0)
-recorder Element -file ElasticTimoshenkoBeam_force.out -time -ele *\ 
+recorder Element -file ElasticTimoshenkoBeam_localForce.out -time -ele *\ 
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
 *ElemsNum *\
 *endif
 *end elems
-forces
-recorder Element -binary ElasticTimoshenkoBeam_force.bin -time -ele *\
+localForce
+*endif
+*# Force beam-column
+*if(cntFBC!=0)
+recorder Element -file ForceBeamColumn_localForce.out -time -ele *\
 *loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
+*if(strcmp(ElemsMatProp(Element_type:),"forceBeamColumn")==0)
 *ElemsNum *\
 *endif
 *end elems
-forces
+localForce
+recorder Element -file ForceBeamColumn_basicDeformation.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"forceBeamColumn")==0)
+*ElemsNum *\
 *endif
-*#
+*end elems
+basicDeformation
+recorder Element -file ForceBeamColumn_plasticDeformation.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"forceBeamColumn")==0)
+*ElemsNum *\
+*endif
+*end elems
+plasticDeformation
+*endif
+*# Truss
 *if(cntTruss!=0)
-recorder Element -file truss_axialForce.out -time -ele *\ 
-*loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
-*ElemsNum *\
-*endif
-*end elems
-axialForce
-recorder Element -binary truss_axialForce.bin -time -ele *\ 
+recorder Element -file Truss_axialForce.out -time -ele *\ 
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *ElemsNum *\
@@ -111,7 +135,7 @@ recorder Element -binary truss_axialForce.bin -time -ele *\
 *end elems
 axialForce
 *endif
-*#
+*# Corotational truss
 *if(cntCorotTruss!=0)
 recorder Element -file CorotTruss_axialForce.out -time -ele *\
 *loop elems
@@ -120,28 +144,18 @@ recorder Element -file CorotTruss_axialForce.out -time -ele *\
 *endif
 *end elems
 axialForce
-recorder Element -binary CorotTruss_axialForce.bin -time -ele *\
-*loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
-*ElemsNum *\
 *endif
-*end elems
-axialForce
-*endif
+*# Displacements
 *if(GenData(Dimensions,int)==3)
 *if(GenData(DOF,int)==3)
-recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
-recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
+recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
 *else
-recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 disp
-recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 disp
+recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 disp
 *endif
 *else
 *if(GenData(DOF,int)==2)
-recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 disp
-recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 disp
+recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 disp
 *else
-recorder Node -file Nodes_disp.out -time -nodeRange 1 *cntNodes -dof 1 2 6 disp
-recorder Node -binary Nodes_disp.bin -time -nodeRange 1 *cntNodes -dof 1 2 6 disp
+recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 6 disp
 *endif
 *endif

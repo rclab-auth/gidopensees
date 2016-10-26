@@ -28,4 +28,4 @@ ren "%2\OpenSees\log.txt" "%1.log"
 
 rem run OpenSeesPost
 
-%3\exe\OpenSeesPost.exe "%1" "%2"
+cmd /C start /w "%3\exe\OpenSeesPost.exe" "%2"

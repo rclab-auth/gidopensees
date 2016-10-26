@@ -12,16 +12,16 @@
 *endif
 *end elems
 *if(cntShell!=0)
-#
-# Shell Elements
-#
+
+# --------------------------------------------------------------------------------------------------------------
+# S H E L L   E L E M E N T S
+# --------------------------------------------------------------------------------------------------------------
 
 *set var VarCount=1
 *if(GenData(Dimensions,int)==3 && GenData(DOF,int)==6)
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
 *if(VarCount==1)
-
 *if(file!=2)
 *set var file=4
 *endif
@@ -41,24 +41,31 @@
 *set var oMat2=tcl(FindMaterialNumber *MatProp(0) )
 *if(oMat2==oMujMat2)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
+*format "%d%g%g"
 nDMaterial ElasticIsotropic *oMat2 *MatProp(Elastic_Modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Mass_density,real)
 *elseif(strcmp(MatProp(Material:),"ElastiOrthotropic")==0)
+*format "%d%g%g%g%g%g%g%g%g%g"
 nDMaterial ElasticOrthotropic *oMat *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
 *endif
+*format "%d%d%g"
 section PlateFiber *PlateFiberTag *oMat2 *PlateThickness
 *break
 *endif
 *end materials
 *elseif(strcmp(MatProp(Section:),"ElasticMembranePlate")==0)
 *set var ElasticMembranePlateTag=oMat
+*format "%d%g%g%g%g"
 section ElasticMembranePlateSection *ElasticMembranePlateTag *MatProp(Elastic_Modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Section_depth_h,real) *MatProp(Mass_density,real)
 *endif
 *endif
 *end materials
 *endif
 *end materials
+
 # Shell Elements Definition: element ShellMITC4 $eleTag $iNode $jNode $kNode $lNode $secTag
+
 *endif
+*format "%6d%6d%6d%6d%6d   "
 element ShellMITC4 *ElemsNum *ElemsConec *tcl(FindMaterialNumber *ElemsMatProp(Type) )
 *set var VarCount=VarCount+1
 *endif

@@ -1,5 +1,5 @@
 *#-----------------------------------------------------------------------------
-*#-----------------------Elastic Beam Column Elements---------------------------------
+*#---------------------- Elastic Beam Column Elements -------------------------
 *#-----------------------------------------------------------------------------
 *# variable to count Elastic Beam Column elements
 *set var cntEBC=0
@@ -9,9 +9,10 @@
 *endif
 *end elems
 *if(cntEBC!=0)
-#
-# Elastic beam-column elements
-#
+
+# --------------------------------------------------------------------------------------------------------------
+# E L A S T I C   B E A M - C O L U M N   E L E M E N T S
+# --------------------------------------------------------------------------------------------------------------
 
 *# variable to count the loops
 *set var VarCount=1
@@ -27,23 +28,26 @@
 *#------------Geometric Transformation------------
 *#------------------------------------------------
 # Geometric Transformation
+
 *#-------------------- Z AXIS AS VERTICAL AXIS-------------------------
 *if(strcmp(GenData(Vertical_Axis),"Z")==0)
 *# Vertical elements
 geomTransf *elemsMatProp(Geometric_transformation) *TransfTag1 -1 0 0 
 *# Not vertical elements
-geomTransf *elemsMatProp(Geometric_transformation) *TransfTag2 0 0 1
+geomTransf *elemsMatProp(Geometric_transformation) *TransfTag2  0 0 1
 
 *#-------------------- Y AXIS AS VERTICAL AXIS-------------------------
 *elseif(strcmp(GenData(Vertical_Axis),"Y")==0)
 *# Vertical elements
 geomTransf *elemsMatProp(Geometric_transformation) *TransfTag1 -1 0 0
 *# Not vertical elements
-geomTransf *elemsMatProp(Geometric_transformation) *TransfTag2 0 1 0
+geomTransf *elemsMatProp(Geometric_transformation) *TransfTag2  0 1 0
 
 *endif
-# Elastic Beam Column Definition : 
-#element elasticBeamColumn $eleTag $iNode $jNode $A $E $G $J $Iy $Iz $transfTag <-mass $MassPerUnitLength>
+# Elastic Beam Column Definition
+ 
+# element elasticBeamColumn $eleTag $iNode $jNode $A $E $G $J $Iy $Iz $transfTag <-mass $MassPerUnitLength>
+
 *set var GeomTransfPrinted=1
 *endif
 *#----------- Cross Section Properties ---------------
@@ -95,38 +99,42 @@ geomTransf *elemsMatProp(Geometric_transformation) *TransfTag2 0 1 0
 *if(strcmp(GenData(Vertical_Axis),"Z")==0)
 *# VERTICAL ELEMENTS //Z AXIS
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,2)==NodesCoord(2,2))
+*format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%1.4f%1.2f%1.2f%1.4f%1.4f%1.4f"
-*A *E *G *J *Iy *Iz *TransfTag1 *\
+*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*A *E *G *J *Iy *Iz *TransfTag1   *\
 -mass *\
-*format "%1.3f"
+*format "%8.3f"
 *MassPerLength
 *else
 *# NOT VERTICAL ELEMENTS
+*format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%1.4f%1.2f%1.2f%1.4f%1.4f%1.4f"
-*A *E *G *J *Iy *Iz *TransfTag2 *\
+*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*A *E *G *J *Iy *Iz *TransfTag2   *\
 -mass *\
-*format "%1.3f"
+*format "%8.3f"
 *MassPerLength
 *endif
 *#-----------------Y axis as Vertical Axis--------------
 *else
 *# Vertical elements // Y AXIS
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
+*format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%1.4f%1.2f%1.2f%1.4f%1.4f%1.4f"
-*A *E *G *J *Iy *Iz *TransfTag1 *\
+*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*A *E *G *J *Iy *Iz *TransfTag1   *\
 -mass *\
-*format "%1.3f"
+*format "%8.3f"
 *MassPerLength
 *# Not Vertical Elements
 *else
+*format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%1.4f%1.2f%1.2f%1.4f%1.4f%1.4f"
-*A *E *G *J *Iy *Iz *TransfTag2 *\
+*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*A *E *G *J *Iy *Iz *TransfTag2   *\
 -mass *\
-*format "%1.3f"
+*format "%8.3f"
 *MassPerLength
 *endif
 *endif
@@ -150,8 +158,9 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 geomTransf *elemsMatProp(Geometric_transformation) *TransfTag1 
 
 *set var GeomTransfPrinted=1
-# Elastic Beam Column Definition : 
-#element elasticBeamColumn $eleTag $iNode $jNode $A $E $G $J $Iy $Iz $transfTag <-mass $MassPerUnitLength>
+# Elastic Beam Column Definition
+ 
+# element elasticBeamColumn $eleTag $iNode $jNode $A $E $G $J $Iy $Iz $transfTag <-mass $MassPerUnitLength>
 
 *endif
 *if(strcmp(elemsMatProp(Cross_Section),"Rectangular")==0)
@@ -187,11 +196,12 @@ geomTransf *elemsMatProp(Geometric_transformation) *TransfTag1
 *endif
 *end materials
 *set var MassPerLength=operation(A*MassDens)
+*format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%1.4f%1.2f%1.4f"
-*A *E *Iz *TransfTag1 *\
+*format "%10.6f%10.0f%10.6f   "
+*A *E *Iz *TransfTag1   *\
 -mass *\
-*format "%1.3f"
+*format "%8.3f"
 *MassPerLength
 *set var VarCount=VarCount+1
 *endif

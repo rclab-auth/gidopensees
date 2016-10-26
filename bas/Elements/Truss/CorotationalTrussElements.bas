@@ -9,63 +9,63 @@
 *endif
 *end elems
 *if(cntCorotTruss!=0)
-#
-# Corotational Truss Elements
-#
+
+# --------------------------------------------------------------------------------------------------------------
+# C O R O T A T I O N A L   T R U S S   E L E M E N T S
+# --------------------------------------------------------------------------------------------------------------
 
 *set var VarCount=1
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
 *if(VarCount==1)
 *set var file=2
-
-# Uniaxial Materials definition 
+# Uniaxial Materials definition
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"CorotationalTruss")==0)
 *# We set the variable oMujMat the IDnumber of the material that user choosed from the Material field , in the element that he/she assigned!
-*Set Var oMujMat=tcl(FindMaterialNumber *MatProp(Material) )
+*set Var oMujMat=tcl(FindMaterialNumber *MatProp(Material) )
 *set var MaterialExists=tcl(CheckUsedMaterials *oMujMat)
 *if(MaterialExists==-1)
-*tcl(AddUsedMaterials *oMujMat)
-uniaxialMaterial  *\
+*set var dummy=tcl(AddUsedMaterials *oMujMat)
 *loop materials *NotUsed
 *# We set the variable oMat the IDnumber of each material(NotUsed) and we check which is the material that user choosed in Material field in element definition.
-*Set Var oMat=tcl(FindMaterialNumber *MatProp(0) )
+*set var oMat=tcl(FindMaterialNumber *MatProp(0) )
 *#we check which is the material that user choosed in Material field in element definition.
 *if(oMat==oMujMat)
 *if(strcmp(MatProp(1),"Elastic")==0)
-Elastic *\
-*oMat *\
-*MatProp(Elastic_modulus_E,real)
+uniaxialMaterial Elastic *oMat *MatProp(Elastic_modulus_E,real)
 *elseif(strcmp(MatProp(1),"ElasticPerfectlyPlastic")==0)
-ElasticPP *\
+uniaxialMaterial ElasticPP *\
+*format "%d"
 *oMat *\
 *set var E=MatProp(Elastic_modulus_E,real)
+*format "%g"
 *E *\
-*set var Fyt=MatProp(Yield_Stress_in_tension,real)
-*set var Fyc=MatProp(Yield_Stress_in_compression,real)
-*set var epsyP=Fyt/E
-*set var epsyN=Fyc/E
+*set var epsyP=MatProp(Strain_epsP,real)
+*set var epsyN=MatProp(Strain_epsN,real)
 *set var eps0=MatProp(Initial_strain_eps0,real)
-*epsyP *\
-*epsyN *\
-*eps0
+*format "%g%g%g"
+*epsyP *epsyN *eps0
 *elseif(strcmp(MatProp(1),"Steel01")==0)
-Steel01 *oMat *\
-*format "%1.1f%1.1f"
+*format "%d"
+uniaxialMaterial Steel01 *oMat *\
 *set var Fy=MatProp(Yield_Stress_Fy,real)
 *set var E0=MatProp(Initial_elastic_tangent_E0,real)
 *set var b=MatProp(Strain-hardening_ratio_b,real)
+*format "%g%g%g"
 *Fy *E0 *b
+*elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
+*format "%d%g%g%g"
+uniaxialMaterial ElasticPPGap *oMat *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Gap,real)
 *endif
 *break
 *endif
 *end materials
-
 *endif
 *endif
 *end materials
+
 # Corotational Truss Definition : element corotTruss $eleTag $iNode $jNode $A $matTag <-rho $rho> <-cMass $cFlag> <-doRayleigh $rFlag>
 *set var VarCount=operation(VarCount+1)
 
@@ -93,10 +93,11 @@ Steel01 *oMat *\
 *#--------------------------------------------
 *# Create Corotational truss elements - command: element corotTruss $eleTag $iNode $jNode $A $matTag <-rho $rho> <-cMass $cFlag> <-doRayleigh $rFlag>
 *#--------------------------------------------
+*format "%6d%6d%6d"
 element corotTruss *ElemsNum *elemsConec *\
-*format "%1.4f"
-*A *tcl(FindMaterialNumber *ElemsMatProp(Material) ) -rho *\
-*format "%1.3f"
+*format "%8.3f"
+*A *tcl(FindMaterialNumber *ElemsMatProp(Material) )   -rho *\
+*format "%8.3f"
 *MassPerLength
 *endif
 *end elems
