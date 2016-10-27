@@ -9,9 +9,9 @@
 *if(GenData(DOF,int)==6)
 # fix $NodeTag x-transl y-transl z-transl x-rot y-rot z-rot 
 
-*set Cond Point_Restraints *nodes
+*set Cond Surface_Restraints *nodes
 *add Cond Line_Restraints *nodes
-*add Cond Surface_Restraints *nodes
+*add Cond Point_Restraints *nodes
 *loop nodes *OnlyInCond
 *format "%6d%3d%3d%3d%3d%3d%3d"
 fix *NodesNum *Cond(1,int) *Cond(2,int) *Cond(3,int) *Cond(4,int) *Cond(5,int) *Cond(6,int)
@@ -19,9 +19,9 @@ fix *NodesNum *Cond(1,int) *Cond(2,int) *Cond(3,int) *Cond(4,int) *Cond(5,int) *
 *else
 # fix $NodeTag x-transl y-transl z-transl
 
-*set Cond Point_Restraints *nodes
+*set Cond Surface_Restraints *nodes
 *add Cond Line_Restraints *nodes
-*add Cond Surface_Restraints *nodes
+*add Cond Point_Restraints *nodes
 *loop nodes *OnlyInCond
 *format "%6d%3d%3d%3d"
 fix *NodesNum *Cond(1,int) *Cond(2,int) *Cond(3,int)
@@ -33,18 +33,18 @@ fix *NodesNum *Cond(1,int) *Cond(2,int) *Cond(3,int)
 *if(GenData(DOF,int)==2)
 # fix $NodeTag x-transl y-transl 
 
-*set Cond Point_Restraints *nodes
+*set Cond Surface_Restraints *nodes
 *add Cond Line_Restraints *nodes
-*add Cond Surface_Restraints *nodes
+*add Cond Point_Restraints *nodes
 *loop nodes *OnlyInCond
 *format "%6d%3d%3d"
 fix *NodesNum *Cond(1,int) *Cond(2,int)
 *end nodes
 *else
 *#----------------------------- 2D model 3 DOF ----------------------------------
-*set Cond Point_Restraints *nodes
+*set Cond Surface_Restraints *nodes
 *add Cond Line_Restraints *nodes
-*add Cond Surface_Restraints *nodes
+*add Cond Point_Restraints *nodes
 # fix $NodeTag x-transl y-transl z-rot 
 
 *loop nodes *OnlyInCond

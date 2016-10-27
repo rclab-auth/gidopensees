@@ -223,10 +223,23 @@ END CONDITION
 
 
 
-CONDITION: Rigid_diaphragm
+CONDITION: Point_Rigid_diaphragm
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tEach rigid diaphragm must have a unique positive ID number.\n\tMaster node should be selected in meshed model.\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n
+COMMENT: \n\tThis condition is assigned on points and will be transferred to all respective nodes.\n\tEach rigid diaphragm must have a unique positive ID number.\n\tMaster node should be selected in meshed model.\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n
+QUESTION: Diaphragm_ID_number
+VALUE: 1
+QUESTION: Rigid_plane#CB#(XY,YZ,ZX)
+VALUE: XY
+QUESTION: MasterNode
+VALUE:
+TKWIDGET: GidUtils::TkwidgetPickNode
+END CONDITION
+
+CONDITION: Line_Rigid_diaphragm
+CONDTYPE: over lines
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is assigned on lines and will be transferred to all respective line nodes.\n\tEach rigid diaphragm must have a unique positive ID number.\n\tMaster node should be selected in meshed model.\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n
 QUESTION: Diaphragm_ID_number
 VALUE: 1
 QUESTION: Rigid_plane#CB#(XY,YZ,ZX)

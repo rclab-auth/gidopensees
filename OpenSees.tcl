@@ -106,7 +106,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 	    [list -np- Opt1_8] \
 		[list -np- Opt1_9] \
 		"" \
-		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr"
+		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr" \
 	]
 
     set ToolbarHelp1(0) { \
@@ -121,7 +121,8 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		"Assign Masses" \
 		"Assign Loads" \
 		"" \
-		"GiD+OpenSees website" }
+		"GiD+OpenSees website" \
+		}
 
     set prefix Pre
 	
@@ -271,7 +272,7 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
     global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 problem_dir
 
-    set ToolbarNames2(0) "
+    set ToolbarNames2(0) " \
 		img/Toolbar/btn_Elem_ZeroLength.png \
 		img/Toolbar/btn_Elem_Truss.png \
 		img/Toolbar/btn_Elem_Beam.png \
@@ -303,7 +304,7 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		[list -np- Opt2_10] \
 		[list -np- Opt2_11] \
 		[list -np- Opt2_12] \
-		[list -np- Opt2_13]
+		[list -np- Opt2_13] \
 	]
 
     set ToolbarHelp2(0) { \
@@ -321,7 +322,7 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		"Show/Hide Line local axes" \
 		"Show/Hide Elements" \
 		"Show/Hide all Conditions for active interval" \
-		"Select active Interval"
+		"Select active Interval" \
 	    }
 
     set prefix Pre

@@ -103,6 +103,9 @@ switch $event {
  
   if { $ndm != "2" || $dof != "2"} {
   WarnWinText "Quad elements require a 2D model with 2 DOFs per node."
+  
+  #set warn [tk_dialog .warnWin "Warning" "Quad elements require a 2D model with 2 DOFs per node." warning 0 "OK" ]
+	
                       }
      return ""
    }
@@ -220,14 +223,14 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 	set temp2 [GidConvertValueUnit $InterSizeUnit]
 	set temp2 [ParserNumberUnit $temp2 InterSize InterUnit]
 	
-	set CornerArea [expr $pi*($CornerSize*$CornerSize)/4.0]
+	set CornerArea [format "%1.3e" [expr $pi*($CornerSize*$CornerSize)/4.0]]
 	set CornerArea $CornerArea$CornerUnit^2
 	
-	set InterArea [expr $pi*($InterSize*$InterSize)/4.0]
+	set InterArea [format "%1.3e" [expr $pi*($InterSize*$InterSize)/4.0]]
 	set InterArea $InterArea$InterUnit^2
 	
-	DWLocalSetValue $GDN $STRUCT Corner_Bar_Area $CornerArea
-	DWLocalSetValue $GDN $STRUCT Middle_Bar_Area $InterArea
+	set ok [DWLocalSetValue $GDN $STRUCT Corner_Bar_Area $CornerArea]
+	set ok [DWLocalSetValue $GDN $STRUCT Middle_Bar_Area $InterArea]
 	return ""
 	
 	} elseif { $Shape=="Circular" } {
@@ -236,9 +239,9 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 	set temp [GidConvertValueUnit $SizeUnit]
 	set temp [ParserNumberUnit $temp Size Unit]
 	
-	set Area [expr $pi*($Size*$Size)/4.0]
+	set Area [format "%1.3e" [expr $pi*($Size*$Size)/4.0]]
 	set Area $Area$Unit^2
-	DWLocalSetValue $GDN $STRUCT Bar_Area $Area 
+	set ok [DWLocalSetValue $GDN $STRUCT Bar_Area $Area]
 	return ""
 	}
 	

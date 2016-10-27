@@ -158,7 +158,8 @@ equalDOF *MasterNode *SlaveNode *Transly
 *if(GenData(Dimensions,int)==3 && GenData(DOF,int)==6)
 *set var dummy=tcl(RigidDiaphragmClear)
 *set var RDIDExists=-1
-*set Cond Rigid_diaphragm
+*set Cond Line_Rigid_diaphragm *nodes
+*add Cond Point_Rigid_diaphragm *nodes
 *loop nodes *OnlyInCond
 *if(LoopVar!=1)
 *set var RDIDExists=tcl(CheckrigidDiaphragmID *Cond(1,int))
@@ -181,7 +182,8 @@ equalDOF *MasterNode *SlaveNode *Transly
 *for(i=1;i<=howmanyRDID;i=i+1)
 *set var RDID=tcl(RDID *i)
 *set var perpendicularAxis=0
-*set Cond Rigid_diaphragm
+*set Cond Line_Rigid_diaphragm *nodes
+*add Cond Point_Rigid_diaphragm *nodes
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==RDID)
 *if(strcmp(Cond(2),"XY")==0)
@@ -216,7 +218,8 @@ rigidDiaphragm *perpendicularAxis *RDMasterNodeTag *\
 *endif
 *#----------------NOT 3D Model and 6 DOF ----------------------
 *else
-*set Cond Rigid_diaphragm
+*set Cond Line_Rigid_diaphragm *nodes
+*add Cond Point_Rigid_diaphragm *nodes
 *loop nodes *OnlyInCond
 *if(LoopVar==1)
 *WarningBox Warning: Rigid Diaphragm can be used only in a 3D model with 6 Degrees of Freedom.Therefore, it is omitted.
