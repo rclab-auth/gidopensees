@@ -16,7 +16,9 @@
 # Conditions file
 #
 
+
 BOOK: Restraints
+
 
 CONDITION: Line_Restraints
 CONDTYPE: over lines
@@ -105,6 +107,7 @@ END CONDITION
 
 BOOK: Loads
 
+
 CONDITION: point_Loads 
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
@@ -175,15 +178,14 @@ END CONDITION
 
 BOOK: Constraints
 
+
 CONDITION: Point_Body_constraints
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
 COMMENT: \n\tYou can assign this condition on at least 2 nodes, for each body constraint.\n\tEach body constraint should have a unique positive integer ID number.\n\t\It is recommended to apply body constraints in the FIRST interval only.\n
-
 QUESTION: Body_constraint_ID_number
 VALUE: 1
 HELP: Give a positive integer number body constraint.
-
 QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
 QUESTION: Y-Translation#CB#(1,0)
@@ -202,11 +204,9 @@ CONDITION: Line_Body_constraints
 CONDTYPE: over lines
 CONDMESHTYPE: over nodes
 COMMENT: \n\tLine constraints will be transferred to all respective line nodes.\n\t\It is recommended to apply line constraints in the FIRST interval only.\n
-
 QUESTION: Line_constraint_ID_number
 VALUE: 1
 HELP: Enter a positive integer number for the body constraint.
-
 QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
 QUESTION: Y-Translation#CB#(1,0)
@@ -220,8 +220,6 @@ VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
 END CONDITION
-
-
 
 CONDITION: Point_Rigid_diaphragm
 CONDTYPE: over points
@@ -252,6 +250,7 @@ END CONDITION
 
 BOOK: Masses
 
+
 CONDITION: Point_Mass
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
@@ -270,84 +269,47 @@ QUESTION: Y-Rotation#UNITS#
 VALUE: 0.0ton
 QUESTION: Z-Rotation#UNITS#
 VALUE: 0.0ton
-
 END CONDITION
 
+
 BOOK: ZeroLength_Elements
+
 
 CONDITION: ZeroLength
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
 COMMENT: \n\tEach group of ZeroLength elements must have a unique integer ID number.\n\tEach ZeroLength ID must be assigned on at least 2 points/nodes with same coordinates.\n
-
 QUESTION: ZeroLength_ID_number
 VALUE: 1
-
-QUESTION: Active_directions#CB#(1,2,3,4,5,6)
+QUESTION: Activate_Ux#CB#(0,1)
 VALUE: 1
-DEPENDENCIES: (1,RESTORE,Material_1,#CURRENT#,HIDE,Material_2,#CURRENT#,HIDE,Material_3,#CURRENT#,HIDE,Material_4,#CURRENT#,HIDE,Material_5,#CURRENT#,HIDE,Material_6,#CURRENT#,RESTORE,Direction_1,#CURRENT#,HIDE,Direction_2,#CURRENT#,HIDE,Direction_3,#CURRENT#,HIDE,Direction_4,#CURRENT#,HIDE,Direction_5,#CURRENT#,HIDE,Direction_6,#CURRENT#)
-DEPENDENCIES: (2,RESTORE,Material_1,#CURRENT#,RESTORE,Material_2,#CURRENT#,HIDE,Material_3,#CURRENT#,HIDE,Material_4,#CURRENT#,HIDE,Material_5,#CURRENT#,HIDE,Material_6,#CURRENT#,RESTORE,Direction_1,#CURRENT#,RESTORE,Direction_2,#CURRENT#,HIDE,Direction_3,#CURRENT#,HIDE,Direction_4,#CURRENT#,HIDE,Direction_5,#CURRENT#,HIDE,Direction_6,#CURRENT#)
-DEPENDENCIES: (3,RESTORE,Material_1,#CURRENT#,RESTORE,Material_2,#CURRENT#,RESTORE,Material_3,#CURRENT#,HIDE,Material_4,#CURRENT#,HIDE,Material_5,#CURRENT#,HIDE,Material_6,#CURRENT#,RESTORE,Direction_1,#CURRENT#,RESTORE,Direction_2,#CURRENT#,RESTORE,Direction_3,#CURRENT#,HIDE,Direction_4,#CURRENT#,HIDE,Direction_5,#CURRENT#,HIDE,Direction_6,#CURRENT#)
-DEPENDENCIES: (4,RESTORE,Material_1,#CURRENT#,RESTORE,Material_2,#CURRENT#,RESTORE,Material_3,#CURRENT#,RESTORE,Material_4,#CURRENT#,HIDE,Material_5,#CURRENT#,HIDE,Material_6,#CURRENT#,RESTORE,Direction_1,#CURRENT#,RESTORE,Direction_2,#CURRENT#,RESTORE,Direction_3,#CURRENT#,RESTORE,Direction_4,#CURRENT#,HIDE,Direction_5,#CURRENT#,HIDE,Direction_6,#CURRENT#)
-DEPENDENCIES: (5,RESTORE,Material_1,#CURRENT#,RESTORE,Material_2,#CURRENT#,RESTORE,Material_3,#CURRENT#,RESTORE,Material_4,#CURRENT#,RESTORE,Material_5,#CURRENT#,HIDE,Material_6,#CURRENT#,RESTORE,Direction_1,#CURRENT#,RESTORE,Direction_2,#CURRENT#,RESTORE,Direction_3,#CURRENT#,RESTORE,Direction_4,#CURRENT#,RESTORE,Direction_5,#CURRENT#,HIDE,Direction_6,#CURRENT#)
-DEPENDENCIES: (6,RESTORE,Material_1,#CURRENT#,RESTORE,Material_2,#CURRENT#,RESTORE,Material_3,#CURRENT#,RESTORE,Material_4,#CURRENT#,RESTORE,Material_5,#CURRENT#,RESTORE,Material_6,#CURRENT#,RESTORE,Direction_1,#CURRENT#,RESTORE,Direction_2,#CURRENT#,RESTORE,Direction_3,#CURRENT#,RESTORE,Direction_4,#CURRENT#,RESTORE,Direction_5,#CURRENT#,RESTORE,Direction_6,#CURRENT#)
-
-QUESTION: Material_1#MAT#(Standard_Uniaxial_Materials)
+QUESTION: Ux_Material#MAT#(Standard_Uniaxial_Materials)
 VALUE: Elastic
-
-QUESTION: Material_2#MAT#(Standard_Uniaxial_Materials)
+QUESTION: Activate_Uy#CB#(0,1)
+VALUE: 0
+QUESTION: Uy_Material#MAT#(Standard_Uniaxial_Materials)
 VALUE: Elastic
-STATE: HIDDEN
-
-QUESTION: Material_3#MAT#(Standard_Uniaxial_Materials)
+QUESTION: Activate_Uz#CB#(0,1)
+VALUE: 0
+QUESTION: Uz_Material#MAT#(Standard_Uniaxial_Materials)
 VALUE: Elastic
-STATE: HIDDEN
-
-QUESTION: Material_4#MAT#(Standard_Uniaxial_Materials)
+QUESTION: Activate_Rx#CB#(0,1)
+VALUE: 0
+QUESTION: Rx_Material#MAT#(Standard_Uniaxial_Materials)
 VALUE: Elastic
-STATE: HIDDEN
-
-QUESTION: Material_5#MAT#(Standard_Uniaxial_Materials)
+QUESTION: Activate_Ry#CB#(0,1)
+VALUE: 0
+QUESTION: Ry_Material#MAT#(Standard_Uniaxial_Materials)
 VALUE: Elastic
-STATE: HIDDEN
-
-QUESTION: Material_6#MAT#(Standard_Uniaxial_Materials)
+QUESTION: Activate_Rz#CB#(0,1)
+VALUE: 0
+QUESTION: Rz_Material#MAT#(Standard_Uniaxial_Materials)
 VALUE: Elastic
-STATE: HIDDEN
-
-QUESTION: Material_Directions:#CB#(_)
-VALUE:  
-
-QUESTION: Direction_1#CB#(Translation_along_global_X,Translation_along_global_Y,Translation_along_global_Z,Rotation_about_global_X,Rotation_about_global_Y,Rotation_about_global_Z)
-VALUE: Translation along global X
-
-QUESTION: Direction_2#CB#(Translation_along_global_X,Translation_along_global_Y,Translation_along_global_Z,Rotation_about_global_X,Rotation_about_global_Y,Rotation_about_global_Z)
-VALUE: Translation along global X
-STATE: HIDDEN
-
-QUESTION: Direction_3#CB#(Translation_along_global_X,Translation_along_global_Y,Translation_along_global_Z,Rotation_about_global_X,Rotation_about_global_Y,Rotation_about_global_Z)
-VALUE: Translation along global X
-STATE: HIDDEN
-
-QUESTION: Direction_4#CB#(Translation_along_global_X,Translation_along_global_Y,Translation_along_global_Z,Rotation_about_global_X,Rotation_about_global_Y,Rotation_about_global_Z)
-VALUE: Translation along global X
-STATE: HIDDEN
-
-QUESTION: Direction_5#CB#(Translation_along_global_X,Translation_along_global_Y,Translation_along_global_Z,Rotation_about_global_X,Rotation_about_global_Y,Rotation_about_global_Z)
-VALUE: Translation along global X
-STATE: HIDDEN
-
-QUESTION: Direction_6#CB#(Translation_along_global_X,Translation_along_global_Y,Translation_along_global_Z,Rotation_about_global_X,Rotation_about_global_Y,Rotation_about_global_Z)
-VALUE: Translation along global X
-STATE: HIDDEN
-
-
 END CONDITION
 
 
-#PRESCRIBED DISPLACEMENTS 
-
 BOOK: Displacements
+
 
 NUMBER: 8 CONDITION: point_Displacement
 CONDTYPE: over points 

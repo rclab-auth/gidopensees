@@ -43,6 +43,8 @@ V.K. Papanikolaou, Assistant Professor AUTh
 - Toolbar : Interval data
 - Toolbar : Show/hide elements and conditions
 - Toolbar : Select active interval
+- ZeroLength element form updated
+- Check for problemtype version mismatch
 - OpenSeesPost.exe rewritten
 - Icons/images updated
 - Output data file (.tcl) format improved

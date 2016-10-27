@@ -18,6 +18,8 @@
 
 set VersionNumber "v1.5.0"
 
+set InfoWin .gid.win_example
+
 #
 # Toolbar 1 commands
 #
@@ -501,7 +503,7 @@ proc AnalysisErrorInformationWindow { analError } {
 				ttk::frame $w.top
 				ttk::label $w.top.title_text -text [= "\n\t\t\tAnalysis finished with errors !"]
 				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "Errors were reported during analysis, please check generated .log file for more information"]
+				ttk::label $w.information.errormessage -text [= "Errors were reported during analysis, please check generated .log file for more information."]
 				ttk::frame $w.bottom
 				ttk::button $w.bottom.continue -text [= "Continue"] -command "destroy $w"
 				ttk::button $w.bottom.readlog -text [= "Open Log file"] -command "OpenLogFile"
@@ -525,7 +527,7 @@ proc EndGIDProject {} {
 	bind .gid <Deactivate> {}
     bind .gid <Map>        {}
 
-	destroy .ibar
+	if {[winfo exist .ibar]} {destroy .ibar}
 
 	EndToolbar1
     EndToolbar2
@@ -690,3 +692,73 @@ proc HideInfoBar { } {
     lower .ibar
 	update
 }
+
+# check problemtype version mismatch
+
+proc LoadGIDProject { filespd } {
+
+	global VersionNumber
+	global InfoWin
+
+	if { $filespd != "" } {
+
+		set spd_exist [file exist $filespd]
+
+		if {$spd_exist} {
+
+			set spd [open $filespd r]
+
+			set spd_data [read $spd]
+			set spd_data [string trim $spd_data]
+
+			close $spd
+
+		} else {
+
+			set spd_data "Unknown"
+		}
+
+		set cmp [string compare "$spd_data" "$VersionNumber"]
+
+		if { $cmp != 0 } {
+
+			InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
+			if { ![winfo exists $InfoWin] } return ;
+			ttk::frame $InfoWin.top
+			ttk::label $InfoWin.top.title_text -text [= ""]
+			ttk::frame $InfoWin.information -relief raised
+			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is newer than saved model version ($spd_data). Please transform your model first."]
+			ttk::frame $InfoWin.bottom
+			ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "TransformAndClose"
+			ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
+			grid $InfoWin.top.title_text -sticky ew
+			grid $InfoWin.top -sticky new
+			grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
+			grid $InfoWin.information -sticky new
+			grid $InfoWin.bottom.continue $InfoWin.bottom.readlog -padx 10
+			grid $InfoWin.bottom -sticky sew -padx 10 -pady 10
+			if { $::tcl_version >= 8.5 } { grid anchor $InfoWin.bottom center }
+			grid rowconfigure $InfoWin 1 -weight 1
+			grid columnconfigure $InfoWin 0 -weight 1
+		}
+	}
+}
+
+proc TransformAndClose { } {
+
+	global InfoWin
+
+	destroy $InfoWin
+
+	GiD_Process escape escape escape escape data defaults TransfProblem OpenSees
+}
+
+proc SaveGIDProject { filespd } {
+
+	global VersionNumber
+
+	set spd [open $filespd w]
+	puts $spd $VersionNumber
+	close $spd
+}
+

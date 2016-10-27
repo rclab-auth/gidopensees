@@ -19,6 +19,7 @@
 
 BOOK: Standard_Uniaxial_Materials
 
+
 NUMBER: 1 MATERIAL: Elastic
 
 QUESTION: _#CB#(_)
@@ -56,7 +57,6 @@ VALUE: 30 GPa
 HELP: Young modulus of elasticity E 
 
 END MATERIAL
-
 
 
 NUMBER: 2 MATERIAL: Elastic_Perfectly_Plastic
@@ -108,7 +108,6 @@ HELP: strain or deformation at which material reaches plastic state in compressi
 
 QUESTION: Initial_strain_eps0
 VALUE: 0.0
-
 
 END MATERIAL
 
@@ -163,10 +162,8 @@ HELP: Initial gap(strain or deformation).Negative value for compression.
 END MATERIAL
 
 
-
-
-
 BOOK: Uniaxial_Steel_Materials
+
 
 NUMBER: 4 MATERIAL: Steel01
 
@@ -208,8 +205,8 @@ HELP: Ratio between post-yield tangent and initial elastic tangent.
 END MATERIAL
 
 
-
 BOOK: Uniaxial_Concrete_Materials
+
 
 NUMBER: 5 MATERIAL: Concrete01_(Zero_tensile_strength)
 
@@ -263,7 +260,6 @@ VALUE: -17.0 MPa
 
 QUESTION: Strain_at_crushing_strength_epscU
 VALUE: -3.5e-3
-
 
 END MATERIAL
 
@@ -402,7 +398,9 @@ VALUE: 7.700e-004
 
 END MATERIAL
 
+
 BOOK: Multidimensional_(nD)_Materials
+
 
 NUMBER: 8 MATERIAL: Elastic_Isotropic
 
@@ -441,6 +439,7 @@ QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
 
 END MATERIAL
+
 
 NUMBER: 9 MATERIAL: Elastic_Orthotropic
 
@@ -484,6 +483,7 @@ END MATERIAL
 
 
 BOOK: Section_Force-Deformation
+
 
 MATERIAL: Fiber
 
@@ -572,7 +572,6 @@ VALUE: 10
 QUESTION: Fibers_in_the_radial_direction
 VALUE: 10
 
-
 TITLE: Materials
 
 QUESTION: ___#CB#(___)
@@ -588,6 +587,7 @@ QUESTION: Reinforcing_Bar_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel01
 
 END MATERIAL 
+
 
 MATERIAL: Plate_fiber
 
@@ -619,7 +619,6 @@ VALUE:
 QUESTION: Plate_thickness_h#UNITS#
 VALUE: 0.25m
 
-
 END MATERIAL
 
 
@@ -643,12 +642,11 @@ VALUE: 0.25m
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
 
-
 END MATERIAL
 
 
-
 BOOK: Beam-Column_Elements
+
 
 MATERIAL: Elastic_Beam-Column
 
@@ -742,6 +740,7 @@ VALUE: Linear
 
 END MATERIAL 
 
+
 MATERIAL: Elastic_Timoshenko_Beam-Column
 
 TITLE: General
@@ -773,7 +772,6 @@ QUESTION: ___#CB#(Hover_for_material_info)
 VALUE: Hover for material info
 STATE: DISABLED
 HELP: All nD materials are listed here! \n You can use ONLY an Elastic Isotropic material for this element.
-
 
 TITLE: Section_properties
 
@@ -855,7 +853,6 @@ VALUE:
 QUESTION: Element_type:#CB#(forceBeamColumn)
 VALUE: forceBeamColumn
 
-
 QUESTION: Compatible_Sections:#CB#(_)
 VALUE: Fiber
 
@@ -920,6 +917,7 @@ END MATERIAL
 
 BOOK: Truss_Elements
 
+
 MATERIAL: Truss
 
 TITLE: General
@@ -938,7 +936,6 @@ VALUE: Unused DOFs must be restrained
 
 QUESTION: __#CB#(for_Truss_only)
 VALUE: (for Truss only models use 3D / 3DOF or 2D / 2DOF)
-
 
 TITLE: Material
 
@@ -990,6 +987,7 @@ VALUE: 1.0 m^2
 IMAGE: img/Sections/sec_General.png
 
 END MATERIAL
+
 
 MATERIAL: Corotational_Truss
 
@@ -1064,6 +1062,7 @@ END MATERIAL
 
 BOOK: Surface_Elements
 
+
 MATERIAL: Quad
 
 TITLE: General
@@ -1102,7 +1101,6 @@ VALUE:
 
 QUESTION: Thickness#UNITS#
 VALUE: 0.2m
-
 
 TITLE : Pressure
 
@@ -1224,8 +1222,8 @@ VALUE: 0.0ton/m^3
 END MATERIAL
 
 
-
 BOOK: Solid_Elements
+
 
 MATERIAL: Standard_Brick_Element
 
@@ -1240,13 +1238,11 @@ HELP: This element is used to construct an eight-node brick element object, whic
 IMAGE: img/Materials/Brick.png
 TKWIDGET: TK_CheckModelingOptionsForBrickElems
 
-
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
 
 QUESTION: Requirements:#CB#(3D_Model_with_3_DOF_per_node)
 VALUE: 3D model with 3 DOFs per node
-
 
 TITLE: Material
 
