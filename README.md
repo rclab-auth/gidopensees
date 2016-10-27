@@ -39,6 +39,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 - Now supported : **Fiber Section**
 - Now supported : **Pushover and Cyclic analysis**
 - New information bar
+- Toolbar : Show/hide line local axes
 - Toolbar : Interval data
 - Toolbar : Show/hide elements and conditions
 - Toolbar : Select active interval

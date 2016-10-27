@@ -78,12 +78,23 @@ proc Opt1_9 { } {
 
 proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
-    global ToolbarNames ToolbarCommands ToolbarHelp OpenSees problem_dir
+    global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir
 
-    set ToolbarNames(0) "img/Toolbar/btn_Mat_Uni.png img/Toolbar/btn_Mat_UniC.png img/Toolbar/btn_Mat_UniS.png img/Toolbar/btn_Mat_ND.png img/Toolbar/btn_Mat_Section.png \
-		img/Toolbar/btn_Separator.png img/Toolbar/btn_Restraints.png img/Toolbar/btn_Constraints.png img/Toolbar/btn_Mass.png img/Toolbar/btn_Loads.png \
-		img/Toolbar/btn_Separator.png img/Toolbar/btn_About.png"
-    set ToolbarCommands(0) [list \
+    set ToolbarNames1(0) " \
+		img/Toolbar/btn_Mat_Uni.png \
+		img/Toolbar/btn_Mat_UniC.png \
+		img/Toolbar/btn_Mat_UniS.png \
+		img/Toolbar/btn_Mat_ND.png \
+		img/Toolbar/btn_Mat_Section.png \
+		img/Toolbar/btn_Separator.png \
+		img/Toolbar/btn_Restraints.png \
+		img/Toolbar/btn_Constraints.png \
+		img/Toolbar/btn_Mass.png \
+		img/Toolbar/btn_Loads.png \
+		img/Toolbar/btn_Separator.png \
+		img/Toolbar/btn_About.png \
+		"
+    set ToolbarCommands1(0) [list \
 		[list -np- Opt1_1] \
 		[list -np- Opt1_2] \
 	    [list -np- Opt1_3] \
@@ -98,7 +109,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr"
 	]
 
-    set ToolbarHelp(0) { \
+    set ToolbarHelp1(0) { \
 		"Define Standard Unixaxial Materials" \
 		"Define Concrete Uniaxial Materials" \
 		"Define Steel Uniaxial Materials" \
@@ -114,8 +125,13 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
     set prefix Pre
 	
-    set OpenSees(pretoolbarwin) [CreateOtherBitmaps MyPreBar "OpenSees Pre-Processor Toolbar 1" \
-	    ToolbarNames ToolbarCommands ToolbarHelp $problem_dir Toolbar1 $type $prefix]
+    set OpenSees1(toolbarwin) \
+		[CreateOtherBitmaps MyPreBar "OpenSees Pre-Processor Toolbar 1" \
+	    ToolbarNames1 \
+		ToolbarCommands1 \
+		ToolbarHelp1 \
+		$problem_dir \
+		Toolbar1 $type $prefix]
 		AddNewToolbar "OpenSees 1 toolbar" ${prefix}MyBarWindowGeom Toolbar1 
 }
 
@@ -125,7 +141,7 @@ proc EndToolbar1 {} {
     ReleaseToolbar "OpenSees 1 toolbar"
     rename Toolbar1 ""
     
-    catch { destroy $OpenSees1(pretoolbarwin) }
+    catch { destroy $OpenSees1(toolbarwin) }
 }
 
 #
@@ -185,9 +201,29 @@ proc Opt2_9 { } {
 	GiD_Process Mescape Utilities calculate
 }
 
+set NormalsDrawStatus 0
+
+proc Opt2_10 { } {
+
+	global NormalsDrawStatus
+
+	switch $NormalsDrawStatus {
+
+	0 {
+		GiD_Process Mescape Utilities DrawNormals lines 1:100000
+		set NormalsDrawStatus 1
+	}
+
+	1 {
+		GiD_Process escape escape escape escape
+		set NormalsDrawStatus 0
+	}
+	}
+}
+
 set ElemDrawStatus 0
 
-proc Opt2_10 { } { # Switch draw elements
+proc Opt2_11 { } { # Switch draw elements
 
 	global ElemDrawStatus
 
@@ -207,7 +243,7 @@ proc Opt2_10 { } { # Switch draw elements
 
 set ConditionsDrawStatus 0
 
-proc Opt2_11 { } { # Switch draw conditions
+proc Opt2_12 { } { # Switch draw conditions
 
 	global ConditionsDrawStatus
 
@@ -225,7 +261,7 @@ proc Opt2_11 { } { # Switch draw conditions
 	}
 }
 
-proc Opt2_12 { } {
+proc Opt2_13 { } {
 
 	GiD_Process Mescape Data Intervals ChangeInterval
 	UpdateInfoBar
@@ -235,9 +271,23 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
     global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 problem_dir
 
-    set ToolbarNames2(0) "img/Toolbar/btn_Elem_ZeroLength.png img/Toolbar/btn_Elem_Truss.png img/Toolbar/btn_Elem_Beam.png img/Toolbar/btn_Elem_Quad.png img/Toolbar/btn_Elem_Brick.png \
-	    img/Toolbar/btn_Separator.png img/Toolbar/btn_Data.png img/Toolbar/btn_Interval.png img/Toolbar/btn_Mesh.png img/Toolbar/btn_Calc.png img/Toolbar/btn_Separator.png img/Toolbar/btn_ViewElem.png img/Toolbar/btn_ViewCond.png \
-		img/Toolbar/btn_ActiveInterval.png"
+    set ToolbarNames2(0) "
+		img/Toolbar/btn_Elem_ZeroLength.png \
+		img/Toolbar/btn_Elem_Truss.png \
+		img/Toolbar/btn_Elem_Beam.png \
+		img/Toolbar/btn_Elem_Quad.png \
+		img/Toolbar/btn_Elem_Brick.png \
+	    img/Toolbar/btn_Separator.png \
+		img/Toolbar/btn_Data.png \
+		img/Toolbar/btn_Interval.png \
+		img/Toolbar/btn_Mesh.png \
+		img/Toolbar/btn_Calc.png \
+		img/Toolbar/btn_Separator.png \
+		img/Toolbar/btn_LocalAxes.png \
+		img/Toolbar/btn_ViewElem.png \
+		img/Toolbar/btn_ViewCond.png \
+		img/Toolbar/btn_ActiveInterval.png \
+		"
     set ToolbarCommands2(0) [list \
 		[list -np- Opt2_1] \
 	    [list -np- Opt2_2] \
@@ -252,7 +302,8 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		"" \
 		[list -np- Opt2_10] \
 		[list -np- Opt2_11] \
-		[list -np- Opt2_12]
+		[list -np- Opt2_12] \
+		[list -np- Opt2_13]
 	]
 
     set ToolbarHelp2(0) { \
@@ -267,6 +318,7 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		"Generate Mesh" \
 		"Calculate" \
 		"" \
+		"Show/Hide Line local axes" \
 		"Show/Hide Elements" \
 		"Show/Hide all Conditions for active interval" \
 		"Select active Interval"
@@ -274,8 +326,13 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
     set prefix Pre
 
-    set OpenSees2(toolbarwin) [CreateOtherBitmaps MyBar "OpenSees Pre-Processor Toolbar 2" \
-	    ToolbarNames2 ToolbarCommands2 ToolbarHelp2 $problem_dir Toolbar2 $type $prefix]
+    set OpenSees2(toolbarwin) \
+		[CreateOtherBitmaps MyBar "OpenSees Pre-Processor Toolbar 2" \
+	    ToolbarNames2 \
+		ToolbarCommands2 \
+		ToolbarHelp2 \
+		$problem_dir \
+		Toolbar2 $type $prefix]
 		AddNewToolbar "OpenSees 2 toolbar" ${prefix}MyBarWindowGeom Toolbar2
 }
 
@@ -460,6 +517,19 @@ proc AnalysisErrorInformationWindow { analError } {
 	}
 }
 
+proc EndGIDProject {} {
+
+	bind .gid <Configure>  {}
+	bind .gid <Activate>   {}
+	bind .gid <Deactivate> {}
+    bind .gid <Map>        {}
+
+	destroy .ibar
+
+	EndToolbar1
+    EndToolbar2
+}
+
 proc OpenLogFile { } {
 
 	loadProjectDirPath { "" }
@@ -471,11 +541,6 @@ proc OpenLogFile { } {
 	if { $fexists==1 } {
 		exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.log"
 	}
-}
-
-proc EndGIDProject {} {
-    EndToolbar1
-	EndToolbar2
 }
 
 proc HelpOnOpenSees { dir } {
@@ -492,8 +557,6 @@ proc getGiDProjectName {} {
 
 proc Splash { dir } {
 
-    global GIDDEFAULT
-	global keepsplash
 	global VersionNumber
 
     if { [.gid.central.s disable windows] } { return }
@@ -513,21 +576,24 @@ proc Splash { dir } {
     wm geom .splash +$x+$y
 
     wm transient .splash .gid.central.s
+
     wm overrideredirect .splash 1
+
     pack [label .splash.l -image $im -bd 0]
     
     label .splash.lv -text $VersionNumber -background #292929 -foreground #FFFFD4  -font "calibri 11"
     place .splash.lv -x 324 -y 69
 
-    #bind .splash <Button-1> "destroy .splash"
-    #bind .splash <KeyPress> "destroy .splash"
-
     raise .splash
+	focus .splash
 
-    after 3000 "if { (!$keepsplash) && [winfo exist .splash] } { 
-		destroy .splash
-		raise .gid
-    }"
+    bind .splash <Button-1> "{raise .gid}"
+    bind .splash <Button-1> "{focus .gid}"
+    bind .splash <Button-1> "if {[winfo exist .splash]} {destroy .splash}"
+
+    after 3000 "if {[winfo exist .splash]} {raise .gid}"
+    after 3000 "if {[winfo exist .splash]} {focus .gid}"
+    after 3000 "if {[winfo exist .splash]} {destroy .splash}"
 }
 
 proc UpdateInfoBar { } {
@@ -542,22 +608,22 @@ proc UpdateInfoBar { } {
 	global problem_dir
 	global VersionNumber
 
-    if { [winfo exist .info]} {
-	    destroy .info
+    if { [winfo exist .ibar]} {
+	    destroy .ibar
 	    update
     }
 
 	# create toplevel
 
-	toplevel .info
+	toplevel .ibar
 	
-	wm attributes .info -topmost 1
-	wm overrideredirect .info 1
+	wm attributes .ibar -topmost 1
+	wm overrideredirect .ibar 1
 
-	wm transient .info .gid
+	wm transient .ibar .gid
 
-	.info configure -background #292929 
-	.info configure -bd 0
+	.ibar configure -background #292929 
+	.ibar configure -bd 0
 
 	# set infobar geometry
 
@@ -567,7 +633,7 @@ proc UpdateInfoBar { } {
 
 	set geom "[winfo width .gid.central.s]x25+$x+$y"
 
-	wm geometry .info $geom
+	wm geometry .ibar $geom
 
 	# set infobar rext
 
@@ -578,20 +644,20 @@ proc UpdateInfoBar { } {
 
 	# create infobar canvas
 
-	canvas .info.c -width $w -height 25 -background #292929
+	canvas .ibar.c -width $w -height 25 -background #292929
 
-	.info.c create line  0  24  $w 24 -fill #1A5B6B
-	.info.c create line  60  0  60 52 -fill #1A5B6B
-	.info.c create line 140  0 140 24 -fill #1A5B6B
-	.info.c create line 280  0 280 24 -fill #1A5B6B
+	.ibar.c create line  0  24  $w 24 -fill #1A5B6B
+	.ibar.c create line  60  0  60 52 -fill #1A5B6B
+	.ibar.c create line 140  0 140 24 -fill #1A5B6B
+	.ibar.c create line 280  0 280 24 -fill #1A5B6B
 
-	.info.c create text  30 12 -text $VersionNumber -font "calibri 12" -fill #C2C5CA -anchor center 
-	.info.c create text 100 12 -text $dim           -font "calibri 12" -fill #C2C5CA -anchor center 
-	.info.c create text 210 12 -text $act           -font "calibri 12" -fill #C2C5CA -anchor center
+	.ibar.c create text  30 12 -text $VersionNumber -font "calibri 12" -fill #C2C5CA -anchor center 
+	.ibar.c create text 100 12 -text $dim           -font "calibri 12" -fill #C2C5CA -anchor center 
+	.ibar.c create text 210 12 -text $act           -font "calibri 12" -fill #C2C5CA -anchor center
 
-	pack .info.c
+	pack .ibar.c
 
-	raise .info .gid
+	raise .ibar .gid
 
 	# add bindings
 
@@ -612,14 +678,14 @@ proc RefreshInfoBar { } {
 
 	set geom "[winfo width .gid.central.s]x25+$x+$y"
 
-	wm geometry .info $geom
+	wm geometry .ibar $geom
 
-    raise .info
+    raise .ibar
 	update
 }
 
 proc HideInfoBar { } {
 
-    lower .info
+    lower .ibar
 	update
 }
