@@ -372,11 +372,13 @@ begin
     //
     //
 
+    // displacements
+
     OutFile := Path+'\OpenSees\Node_displacements.out';
 
     if FileExists(OutFile) then
     begin
-        write('Reading node displacements ');
+        write('Reading nodal displacements ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -391,7 +393,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Displacement" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnNodes');
+            MSH.Add('Result "Nodes//Displacements" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnNodes');
 
             s := 'ComponentNames "Ux" "Uy"';
 
@@ -403,6 +405,65 @@ begin
             MSH.Add(s);
 
             MSH.Add('Unit "m"');
+            MSH.Add('Values');
+
+            StrToArray(RES[i],Str,n*ndf,true);  // read all values from current step (ndf values per node)
+
+            for j := 0 to n-1 do
+            begin
+                s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + Str[ndf*j]+' '+Str[ndf*j+1];
+
+                if ndm <> 2 then
+                    s := s + ' '+Str[ndf*j+2];
+
+                MSH.Add(s);
+            end;
+
+            MSH.Add('End Values');
+
+            write('.');
+        end;
+
+        writeln;
+
+        Sleep(200);
+
+        FreeAndNil(RES);
+    end;
+
+    // reactions
+
+    OutFile := Path+'\OpenSees\Node_reactions.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading nodal reactions ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
+
+        RES := TStringList.Create;
+        RES.LoadFromFile(OutFile);
+
+        // ndm=2, ndf=2 -> Ux,Uy
+        // ndm=2, ndf=3 -> Ux,Uy,(Rz)
+        // ndm=3, ndf=3 -> Ux,Uy,Uz
+        // ndm=3, ndf=6 -> Ux,Uy,Uz,(Rx),(Ry),(Rz)
+
+        for i := 0 to RES.Count-1 do  // for all steps
+        begin
+            MSH.Add('');
+            MSH.Add('Result "Nodes//Reactions" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnNodes');
+
+            s := 'ComponentNames "Rx" "Ry"';
+
+            if ndm <> 2 then
+                s := s+' "Rz"'
+            else
+                s := s+' "Rz (zero)"';
+
+            MSH.Add(s);
+
+            MSH.Add('Unit "kN"');
             MSH.Add('Values');
 
             StrToArray(RES[i],Str,n*ndf,true);  // read all values from current step (ndf values per node)
@@ -457,7 +518,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_stdBrick//Force" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "stdbrick_Node"');
+            MSH.Add('Result "Elements_:_stdBrick//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "stdbrick_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -508,7 +569,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_stdBrick//Stress" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
+            MSH.Add('Result "Elements_:_stdBrick//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33" "s12" "s23" "s13"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -559,7 +620,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_stdBrick//Strain" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
+            MSH.Add('Result "Elements_:_stdBrick//Strains" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
             MSH.Add('ComponentNames "e11" "e22" "e33" "e12" "e23" "e13"');
             MSH.Add('Unit "m-1"');
             MSH.Add('Values');
@@ -614,7 +675,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Force" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
+            MSH.Add('Result "Elements_:_ShellMITC4//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -648,7 +709,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Moment" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
+            MSH.Add('Result "Elements_:_ShellMITC4//Moments" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
             MSH.Add('ComponentNames "Mx" "My" "Mz"');
             MSH.Add('Unit "kNm"');
             MSH.Add('Values');
@@ -699,7 +760,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Stress-Membrane" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
+            MSH.Add('Result "Elements_:_ShellMITC4//Stresses-Membrane" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -733,7 +794,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Stress-Bending" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
+            MSH.Add('Result "Elements_:_ShellMITC4//Stresses-Bending" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
             MSH.Add('ComponentNames "m11" "m22" "m33 (zero)" "m12" "m23 (zero)" "m13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -767,7 +828,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Stress-Shear" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_GP"');
+            MSH.Add('Result "Elements_:_ShellMITC4//Stresses-Shear" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_GP"');
             MSH.Add('ComponentNames "q1" "q2" "q3 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -822,7 +883,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Quad//Force" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Quad_Node"');
+            MSH.Add('Result "Elements_:_Quad//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Quad_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz (zero)"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -873,7 +934,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Quad//Stress" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
+            MSH.Add('Result "Elements_:_Quad//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -924,7 +985,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Quad//Strain" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
+            MSH.Add('Result "Elements_:_Quad//Strains" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
             MSH.Add('ComponentNames "e11" "e22" "e33 (zero)" "e12" "e23 (zero)" "e13 (zero)"');
             MSH.Add('Unit "m-1"');
             MSH.Add('Values');
@@ -979,7 +1040,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Triangular//Force" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Tri31_Node"');
+            MSH.Add('Result "Elements_:_Triangular//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Tri31_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz (zero)"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -1030,7 +1091,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Triangular//Stress" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Tri31_GP"');
+            MSH.Add('Result "Elements_:_Triangular//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Tri31_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');

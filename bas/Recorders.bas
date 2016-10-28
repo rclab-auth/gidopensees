@@ -149,13 +149,17 @@ axialForce
 *if(GenData(Dimensions,int)==3)
 *if(GenData(DOF,int)==3)
 recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
+recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 3 reaction
 *else
 recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 disp
+recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 reaction
 *endif
 *else
 *if(GenData(DOF,int)==2)
 recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 disp
+recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 reaction
 *else
 recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 6 disp
+recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 6 reaction
 *endif
 *endif

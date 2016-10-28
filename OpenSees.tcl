@@ -770,3 +770,23 @@ proc SaveGIDProject { filespd } {
 	close $spd
 }
 
+proc BeforeInitGIDPostProcess {} {
+
+	# remove bindings
+
+	bind .gid <Configure>  {}
+	bind .gid <Activate>   {}
+	bind .gid <Deactivate> {}
+    bind .gid <Map>        {}
+
+    if { [winfo exist .ibar]} {
+	    destroy .ibar
+	    update
+    }
+}
+
+proc EndGIDPostProcess {} {
+
+	after 1000 "{UpdateInfoBar}"
+}
+
