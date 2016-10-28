@@ -700,10 +700,15 @@ proc LoadGIDProject { filespd } {
 	global VersionNumber
 	global InfoWin
 
-	if { $filespd != "" } {
+	
+	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
+	
+	#loading the problemtype itself, not a model
 
+	} else {
+		
 		set spd_exist [file exist $filespd]
-
+		
 		if {$spd_exist} {
 
 			set spd [open $filespd r]
@@ -717,7 +722,8 @@ proc LoadGIDProject { filespd } {
 
 			set spd_data "Unknown"
 		}
-
+			
+		
 		set cmp [string compare "$spd_data" "$VersionNumber"]
 
 		if { $cmp != 0 } {
@@ -742,7 +748,9 @@ proc LoadGIDProject { filespd } {
 			grid columnconfigure $InfoWin 0 -weight 1
 		}
 	}
+	
 }
+
 
 proc TransformAndClose { } {
 

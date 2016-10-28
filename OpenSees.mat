@@ -22,9 +22,6 @@ BOOK: Standard_Uniaxial_Materials
 
 NUMBER: 1 MATERIAL: Elastic
 
-QUESTION: _#CB#(_)
-VALUE:
-
 QUESTION: Material:#CB#(Elastic)
 VALUE: Elastic
 HELP: Elastic uniaxial material object
@@ -60,9 +57,6 @@ END MATERIAL
 
 
 NUMBER: 2 MATERIAL: Elastic_Perfectly_Plastic
-
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Material:#CB#(ElasticPerfectlyPlastic)
 VALUE: ElasticPerfectlyPlastic
@@ -114,8 +108,6 @@ END MATERIAL
 
 NUMBER 3: MATERIAL: Elastic_Perfectly_Plastic_with_Gap
 
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Material:#CB#(ElasticPerfectlyPlasticwithGap)
 VALUE: ElasticPerfectlyPlasticwithGap
@@ -167,9 +159,6 @@ BOOK: Uniaxial_Steel_Materials
 
 NUMBER: 4 MATERIAL: Steel01
 
-QUESTION: _#CB#(_)
-VALUE:
-
 QUESTION: Material:#CB#(Steel01)
 VALUE: Steel01
 HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
@@ -209,9 +198,6 @@ BOOK: Uniaxial_Concrete_Materials
 
 
 NUMBER: 5 MATERIAL: Concrete01_(Zero_tensile_strength)
-
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Material:#CB#(Concrete01)
 VALUE: Concrete01
@@ -265,9 +251,6 @@ END MATERIAL
 
 
 NUMBER: 6 MATERIAL: Concrete02_(Linear_tension_softening)
-
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Material:#CB#(Concrete02)
 VALUE: Concrete02
@@ -329,9 +312,6 @@ END MATERIAL
 
 
 NUMBER: 7 MATERIAL: Concrete06
-
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Material:#CB#(Concrete06)
 VALUE: Concrete06
@@ -404,8 +384,6 @@ BOOK: Multidimensional_(nD)_Materials
 
 NUMBER: 8 MATERIAL: Elastic_Isotropic
 
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Material:#CB#(ElasticIsotropic)
 VALUE: ElasticIsotropic
@@ -443,8 +421,6 @@ END MATERIAL
 
 NUMBER: 9 MATERIAL: Elastic_Orthotropic
 
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Material:#CB#(ElasticOrthotropic)
 VALUE: ElasticOrthotropic
@@ -489,15 +465,12 @@ MATERIAL: Fiber
 
 TITLE: General
 
-QUESTION: _#CB#(_)
-VALUE:
-
 QUESTION: Section:#CB#(Fiber)
 VALUE: Fiber
 TKWIDGET: TK_CheckMaterialsForFiber
 
 QUESTION: Compatible_materials:#CB#(_)
-VALUE: Concrete01/Concrete02/Steel01
+VALUE: Concrete01/Concrete02/Concrete06/Steel01
 
 TITLE: Section_properties
 
@@ -555,7 +528,7 @@ QUESTION: Middle_Bar_Area#UNITS#
 VALUE: 5.027e-005 m^2
 
 QUESTION: Bar_Area#UNITS#
-VALUE: 5.026e-005 mm^2
+VALUE: 5.027e-005 mm^2
 
 QUESTION: Fibers:#CB#(_)
 VALUE:
@@ -593,8 +566,6 @@ MATERIAL: Plate_fiber
 
 TITLE: General
 
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Section:#CB#(PlateFiber)
 VALUE: PlateFiber
@@ -624,8 +595,6 @@ END MATERIAL
 
 MATERIAL: Elastic_Membrane_Plate
 
-QUESTION: _#CB#(_)
-VALUE:
 
 QUESTION: Section:#CB#(ElasticMembranePlate)
 VALUE: ElasticMembranePlate
@@ -652,8 +621,6 @@ MATERIAL: Elastic_Beam-Column
 
 TITLE: General
 
-QUESTION: _#CB#(_)
-VALUE: 
 
 QUESTION: Element_type:#CB#(ElasticBeamColumn)
 VALUE: ElasticBeamColumn
@@ -744,9 +711,6 @@ END MATERIAL
 MATERIAL: Elastic_Timoshenko_Beam-Column
 
 TITLE: General
-
-QUESTION: _#CB#(_)
-VALUE: 
 
 QUESTION: Element_type:#CB#(ElasticTimoshenkoBeamColumn)
 VALUE: ElasticTimoshenkoBeamColumn
@@ -847,9 +811,6 @@ MATERIAL: Force-Based_Beam-Column
 
 TITLE: General
 
-QUESTION: _#CB#(_)
-VALUE: 
-
 QUESTION: Element_type:#CB#(forceBeamColumn)
 VALUE: forceBeamColumn
 
@@ -922,9 +883,6 @@ MATERIAL: Truss
 
 TITLE: General
 
-QUESTION: _#CB#(_)
-VALUE: 
-
 QUESTION: Element_type:#CB#(Truss)
 VALUE: Truss
 
@@ -992,9 +950,6 @@ END MATERIAL
 MATERIAL: Corotational_Truss
 
 TITLE: General
-
-QUESTION: _#CB#(_)
-VALUE: 
 
 QUESTION: Element_type:#CB#(CorotationalTruss)
 VALUE: CorotationalTruss
@@ -1067,9 +1022,6 @@ MATERIAL: Quad
 
 TITLE: General
 
-QUESTION: _#CB#(_)
-VALUE: 
-
 QUESTION: Element_type:#CB#(Quad)
 VALUE: Quad
 
@@ -1134,9 +1086,6 @@ MATERIAL: Shell
 
 TITLE: General
 
-QUESTION: _#CB#(_)
-VALUE: 
-
 QUESTION: Element_type:#CB#(Shell)
 VALUE: Shell
 IMAGE: img/Materials/Quad_Shell.png
@@ -1162,9 +1111,6 @@ END MATERIAL
 MATERIAL: Tri31
 
 TITLE: General
-
-QUESTION: _#CB#(_)
-VALUE: 
 
 QUESTION: Element_type:#CB#(Tri31)
 VALUE: Tri31
@@ -1228,9 +1174,6 @@ BOOK: Solid_Elements
 MATERIAL: Standard_Brick_Element
 
 TITLE: General
-
-QUESTION: _#CB#(_)
-VALUE: 
 
 QUESTION: Element_type:#CB#(stdBrick)
 VALUE: stdBrick

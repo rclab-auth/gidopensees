@@ -209,7 +209,7 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 	set QUESTION [lindex $args 2]
 	
 	set check [DWLocalGetValue $GDN $STRUCT $QUESTION]
-	set Shape [DWLocalGetValue $GDN $STRUCT Cross_Section]
+	set Shape [DWLocalGetValue $GDN $STRUCT "Cross_Section"]
 	
 	if { $check==1 } {
 	
@@ -326,20 +326,6 @@ switch $event {
  
  #CoreMatType is the value of the field: material: of the chosen material from the combo box!
  
-	if { $CoreMatType == "Concrete06" } {
-	WarnWinText "ERROR : Material $ChoosedCoreMaterial ($CoreMatType material) can not be used for fiber sections in this version."
-	WarnWinText "It has been changed to Concrete01_(Zero_tensile_strength) material."
-	 			  
-	 DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete01_(Zero_tensile_strength)"	
-    }
-	
-	if { $CoverMatType == "Concrete06" } {
-	WarnWinText "ERROR : Material $ChoosedCoverMaterial ($CoverMatType material) can not be used for fiber sections in this version."
-	WarnWinText "It has been changed to Concrete01_(Zero_tensile_strength) material."
-	 				  
-	 DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete01_(Zero_tensile_strength)"	
-    }
-	
 	if { $BarMatType != "Steel01" } {
 	WarnWinText "ERROR : Material $ChoosedBarMaterial ($BarMatType material) can not be used for fiber sections in this version."
 	WarnWinText "It has been changed to Steel01 material."
@@ -937,12 +923,27 @@ return ""
 }
 
 global Description_text
-set Description_text " "
+set Description_text ""
 proc TK_DescriptionField { event args } {
-			global Description_text
-			global Description_Parent
+			global Description_text 
+			global Description_Parent GiDProjectDir GiDProjectName
 	switch $event {
 		INIT {
+			set data [GiD_Info Project]
+			set ProjectName [lindex $data 1]
+		
+			if { $ProjectName != "UNNAMED" } {
+			loadProjectDirPath { "" }
+
+			set filename [file join $GiDProjectDir "$GiDProjectName.txt"]
+			set fexist [file exist $filename]
+			
+			if { $fexist == 1 } {
+			set fp [open $filename r]
+			set Description_text [read $fp]
+			close $fp
+			}
+			}
 			set PARENT [lindex $args 0]
 			set Description_Parent $PARENT
 			upvar [lindex $args 1] ROW
@@ -966,11 +967,12 @@ return ""
 }
 
 proc SaveProjectDescriptionFile { } {
-set aa [GiD_Info Project]
-set ProjectName [lindex $aa 1]
+set data [GiD_Info Project]
+set ProjectName [lindex $data 1]
 global GiDProjectDir GiDProjectName
-
 global Description_text
+
+	set Description_text [string trim $Description_text]	
 	if { $ProjectName != "UNNAMED" } {
 	loadProjectDirPath { "" }
 

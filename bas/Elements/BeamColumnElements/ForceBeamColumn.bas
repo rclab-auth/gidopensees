@@ -23,8 +23,12 @@
 *if(VarCount==1)
 *if(GeomTransfPrinted==0)
 *set var file=2
+*# Linear geomTransf tags 
 *set var TransfTag1=1
 *set var TransfTag2=2
+*# Pdelta geomTransf tags
+*set var TransfTag3=3
+*set var TransfTag4=4
 *#------------------------------------------------
 *#-----------Geometric Transformation-------------
 *#------------------------------------------------
@@ -33,16 +37,21 @@
 *#-------------------- Z AXIS AS VERTICAL AXIS-------------------------
 *if(strcmp(GenData(Vertical_Axis),"Z")==0)
 *# Vertical elements
-geomTransf *elemsMatProp(Geometric_transformation) *TransfTag1 -1 0 0 
+*# Vertical elements
+geomTransf Linear *TransfTag1 -1 0 0 
+geomTransf PDelta *TransfTag3 -1 0 0 
 *# Not vertical elements
-geomTransf *elemsMatProp(Geometric_transformation) *TransfTag2  0 0 1
+geomTransf Linear *TransfTag2  0 0 1
+geomTransf PDelta *TransfTag4  0 0 1
 
 *#-------------------- Y AXIS AS VERTICAL AXIS-------------------------
 *elseif(strcmp(GenData(Vertical_Axis),"Y")==0)
 *# Vertical elements
-geomTransf *elemsMatProp(Geometric_transformation) *TransfTag1 -1 0 0
+geomTransf Linear *TransfTag1 -1 0 0
+geomTransf Pdelta *TransfTag3 -1 0 0
 *# Not vertical elements
-geomTransf *elemsMatProp(Geometric_transformation) *TransfTag2  0 1 0
+geomTransf Linear *TransfTag2  0 1 0
+geomTransf Pdelta *TransfTag4  0 1 0
 
 *endif
 *set var GeomTransfPrinted=1
@@ -79,6 +88,9 @@ uniaxialMaterial Concrete01 *SelectedCoreMaterial *MatProp(Compressive_strength_
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
 *format "%d%g%g%g%g%g%g"
 uniaxialMaterial Concrete02 *SelectedCoreMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
+*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
+*format "%d%g%g%g%g%g%g%g%g"
+uniaxialMaterial Concrete06 *SelectedCoreMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
 *else
 *MessageBox *MatProp(0) is not ready for forceBeamColumn elements
 *endif
@@ -99,6 +111,9 @@ uniaxialMaterial Concrete01 *SelectedCoverMaterial *MatProp(Compressive_strength
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
 *format "%d%g%g%g%g%g%g"
 uniaxialMaterial Concrete02 *SelectedCoverMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
+*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
+*format "%d%g%g%g%g%g%g%g%g"
+uniaxialMaterial Concrete06 *SelectedCoverMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
 *else
 *MessageBox *MatProp(0) is not ready for forceBeamColumn elements
 *endif
@@ -289,8 +304,13 @@ layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,re
 *if(strcmp(GenData(Vertical_Axis),"Z")==0)
 *#Vertical elements
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,2)==NodesCoord(2,2))
+*if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
+*set var TransfTag=TransfTag1
+*elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
+*set var TransfTag=TransfTag3
+*endif
 *format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag1 *\
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e"
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real)
@@ -298,8 +318,13 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 
 *endif
 *else
+*if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
+*set var TransfTag=TransfTag2
+*elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
+*set var TransfTag=TransfTag4
+*endif
 *format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag2 *\
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e"
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real)
@@ -311,8 +336,13 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *elseif(strcmp(GenData(Vertical_Axis),"Y")==0)
 *#Vertical elements
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
+*if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
+*set var TransfTag=TransfTag1
+*elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
+*set var TransfTag=TransfTag3
+*endif
 *format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag1 *\
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e"
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real)
@@ -320,8 +350,13 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 
 *endif
 *else
+*if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
+*set var TransfTag=TransfTag2
+*elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
+*set var TransfTag=TransfTag4
+*endif
 *format "%6d%6d%6d%3d%3d%4d%10.2e"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag2 *\
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e"
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real)
@@ -343,12 +378,14 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *if(GeomTransfPrinted==0)
 *set var file=2
 *set var TransfTag1=1
+*set var TransfTag2=2
 *#------------------------------------------------
 *#-----------Geometric Transformation-------------
 *#------------------------------------------------
 # Geometric Transformation
 
-geomTransf *elemsMatProp(Geometric_transformation) *TransfTag1
+geomTransf Linear *TransfTag1 
+geomTransf PDelta *TransfTag2
  
 *set var GeomTransfPrinted=1
 *endif
@@ -550,7 +587,7 @@ patch circ *SelectedCoreMaterial *circmdivision *operation(raddivision-coverFibe
 # Create the cover fibers
 
 #patch circ $matTag $numSubdivCirc $numSubdivRad $yCenter $zCenter $intRad $extRad $startAng $endAng
-*format "%3d%3d %8.3f%8.3f "
+*format "%3d%3d%3d %8.3f%8.3f "
 patch circ *SelectedCoverMaterial *circmdivision *coverFibers 0.0 0.0 *CoreExternalRadius *radius 0 360
 
 # Create the reinforcing bars
@@ -580,8 +617,13 @@ layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,re
 
 *set var VarCount=VarCount+1
 *endif
+*if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
+*set var TransfTag=TransfTag1
+*elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
+*set var TransfTag=TransfTag2
+*endif
 *format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag1 *\
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e"
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real)
