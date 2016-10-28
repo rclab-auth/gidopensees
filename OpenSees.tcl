@@ -94,7 +94,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/btn_Mass.png \
 		img/Toolbar/btn_Loads.png \
 		img/Toolbar/btn_Separator.png \
-		img/Toolbar/btn_About.png \
+		img/Toolbar/btn_About_Black.png \
 		"
     set ToolbarCommands1(0) [list \
 		[list -np- Opt1_1] \
