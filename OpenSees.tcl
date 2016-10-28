@@ -20,6 +20,61 @@ set VersionNumber "v1.5.0"
 
 set InfoWin .gid.win_example
 
+set AboutImage 0
+set ibarBackgroundColor 0
+set ibarTextColor 0
+
+#
+# set interface theme
+#
+
+proc GetAppDataDir { } {
+
+	global env
+
+	if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
+
+		package require registry 1.0
+
+		set env_home [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders} {AppData}]
+
+	} else {
+
+		set env_home $env(HOME)
+	}
+
+	return $env_home
+}
+
+proc SetImagesAndColors {} {
+
+	global AboutImage
+	global ibarBackgroundColor ibarTextColor
+
+	set INI [file join [GetAppDataDir] "GiD" "gid.ini"]
+
+	set f [open $INI r]
+	set data [read $f]
+	close $f
+
+	set AboutImage "img/Toolbar/btn_About_Classic.png"
+	set ibarBackgroundColor "#F0F0F0"
+	set ibarTextColor "black"
+
+	set lines [split $data "\n"]
+
+	foreach line $lines {
+		if { $line == "Theme(Current) GiD_black" } {
+
+			set AboutImage "img/Toolbar/btn_About_Black.png"
+			set ibarBackgroundColor "#292929"
+			set ibarTextColor "#C2C5CA"
+
+			break
+		}
+	}
+}
+
 #
 # Toolbar 1 commands
 #
@@ -80,7 +135,7 @@ proc Opt1_9 { } {
 
 proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
-    global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir
+    global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir AboutImage
 
     set ToolbarNames1(0) " \
 		img/Toolbar/btn_Mat_Uni.png \
@@ -94,7 +149,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/btn_Mass.png \
 		img/Toolbar/btn_Loads.png \
 		img/Toolbar/btn_Separator.png \
-		img/Toolbar/btn_About_Black.png \
+		$AboutImage \
 		"
     set ToolbarCommands1(0) [list \
 		[list -np- Opt1_1] \
@@ -399,6 +454,8 @@ proc InitGIDProject { dir } {
 		set MenuAccelerP($ipos) [linsert $MenuAccelerP($ipos) 0 ""]
     }
 
+	SetImagesAndColors
+
     Toolbar1
     Toolbar2 
     
@@ -461,9 +518,13 @@ proc CheckLogFile { projectDir projectName } {
 	set file_data [read $fp]
 	close $fp 
 	set data [split $file_data " "]
+
 	foreach word $data {
+
 		if { $word=="error" } {
 			AnalysisErrorInformationWindow "Error2"
+
+			break
 		}
 	}
 	return 
@@ -601,6 +662,8 @@ proc Splash { dir } {
 
 proc UpdateInfoBar { } {
 
+	global ibarBackgroundColor ibarTextColor
+
 	# remove bindings
 
 	bind .gid <Configure>  {}
@@ -647,16 +710,16 @@ proc UpdateInfoBar { } {
 
 	# create infobar canvas
 
-	canvas .ibar.c -width $w -height 25 -background #292929
+	canvas .ibar.c -width $w -height 25 -background $ibarBackgroundColor
 
 	.ibar.c create line  0  24  $w 24 -fill #1A5B6B
 	.ibar.c create line  60  0  60 52 -fill #1A5B6B
 	.ibar.c create line 140  0 140 24 -fill #1A5B6B
 	.ibar.c create line 280  0 280 24 -fill #1A5B6B
 
-	.ibar.c create text  30 12 -text $VersionNumber -font "calibri 12" -fill #C2C5CA -anchor center 
-	.ibar.c create text 100 12 -text $dim           -font "calibri 12" -fill #C2C5CA -anchor center 
-	.ibar.c create text 210 12 -text $act           -font "calibri 12" -fill #C2C5CA -anchor center
+	.ibar.c create text  30 12 -text $VersionNumber -font "calibri 12" -fill $ibarTextColor -anchor center 
+	.ibar.c create text 100 12 -text $dim           -font "calibri 12" -fill $ibarTextColor -anchor center 
+	.ibar.c create text 210 12 -text $act           -font "calibri 12" -fill $ibarTextColor -anchor center
 
 	pack .ibar.c
 
@@ -700,7 +763,6 @@ proc LoadGIDProject { filespd } {
 	global VersionNumber
 	global InfoWin
 
-	
 	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
 	
 	#loading the problemtype itself, not a model
@@ -750,7 +812,6 @@ proc LoadGIDProject { filespd } {
 	}
 	
 }
-
 
 proc TransformAndClose { } {
 
