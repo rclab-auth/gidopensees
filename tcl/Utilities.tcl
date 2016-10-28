@@ -24,16 +24,15 @@ proc loadProjectDirPath { filename } {
    set GiDProjectDir [string range $ProjectName 0 $pos-1]
    
    append GiDProjectDir "/$GiDProjectName.gid"
-  
 }
 
-
 proc Create_tcl_file { } {
-global GidProcWin
-set aa [GiD_Info Project]
-set ProjectName [lindex $aa 1]
 
-if { ![info exists GidProcWin(w)] || \
+	global GidProcWin
+	set aa [GiD_Info Project]
+	set ProjectName [lindex $aa 1]
+
+	if { ![info exists GidProcWin(w)] || \
         ![winfo exists $GidProcWin(w).listbox#1] } {
         set wbase .gid
         set w ""
@@ -41,36 +40,37 @@ if { ![info exists GidProcWin(w)] || \
         set wbase $GidProcWin(w)
         set w $GidProcWin(w).listbox#1
     }
-	
-if { $ProjectName == "UNNAMED" } {
-    tk_dialogRAM $wbase.tmpwin [_ "Error"] \
-                [_ "Before creating .tcl file, a project name is needed. Save project to get it." ] \
-                error 0 [_ "OK"]
- } else {
- 
- loadProjectDirPath { "" }
 
-global problem_dir GiDProjectDir GiDProjectName
+	if { $ProjectName == "UNNAMED" } {
+		tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "Before creating .tcl file, a project name is needed. Save project to get it." ] \
+                error 0 [_ "OK"]
+	} else {
  
-file mkdir $GiDProjectDir/OpenSees
-GiD_Process escape escape escape escape Files WriteForBAS "$problem_dir/../OpenSees.gid/OpenSees.bas" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
-}
-return ""
+		loadProjectDirPath { "" }
+
+		global problem_dir GiDProjectDir GiDProjectName
+ 
+		file mkdir $GiDProjectDir/OpenSees
+		GiD_Process escape escape escape escape Files WriteForBAS "$problem_dir/../OpenSees.gid/OpenSees.bas" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
+	}
+
+	return ""
 }
 
 proc Create_and_open_tcl_file { } {
-global problem_dir GiDProjectDir GiDProjectName
 
-Create_tcl_file
+	global problem_dir GiDProjectDir GiDProjectName
 
-exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
-#[file nativename [file normalize $theFilename]]
+	Create_tcl_file
 
-return ""
+	exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
+	#[file nativename [file normalize $theFilename]]
+
+	return ""
 }
 
-
 proc AboutOpenSeesProbType { } {
+
 	global splashdir
 	global keepsplash
 	# 1!=0 to keep the Splash 
@@ -81,25 +81,35 @@ proc AboutOpenSeesProbType { } {
 
 
 proc OpenSees_Menu { dir } {
-# Create the Menu named GiD+OpenSees in PRE processing
+
+	# Create the Menu named GiD+OpenSees in PRE processing
+
 	GiDMenu::Create "GiD+OpenSees" PRE -1
+
 	# Tab labes
+
 	set tabs [list [= "OpenSees Analysis"] [= "Create .tcl only"] [= "Create and view .tcl only"] "---" [= "Visit GiD+OpenSees Site"] [= "Visit OpenSees Wiki"] [= "About"] ]
+	
 	# Selection commands
+
 	set cmds { {GiD_Process Utilities Calculate} {Create_tcl_file} {Create_and_open_tcl_file} {} {VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
 	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} {AboutOpenSeesProbType} }
+
 	# Tab icons
+
 	set icons {mnu_Analysis.png mnu_tcl.png mnu_tcl.png "" mnu_Site.png mnu_Wiki.png mnu_About.png}
 	
 	set position 0
+
 	foreach tab $tabs command $cmds  icon $icons {
                 set full_path_icon [file normalize [file join $dir img Menu $icon]]
                 GiDMenu::InsertOption "GiD+OpenSees" [list $tab] $position PRE $command "" $full_path_icon
                 incr position
-    }
-	GiDMenu::UpdateMenus
+			}
+
+		GiDMenu::UpdateMenus
+
 	}
-	
 	
 	proc roundUp { num } {
 		set roundedNum [expr {round($num)}]
@@ -109,32 +119,36 @@ proc OpenSees_Menu { dir } {
 		} else {
 			return [expr {round($num+1)}]
 		}
-	
 	}
 
-	
-	
-	
-	proc ModelessDialog {w title text bitmap default args} {
+proc ModelessDialog {w title text bitmap default args} {
+
     global tcl_platform
     variable ::tk::Priv
 
     # Check that $default was properly given
+
     if {[string is integer -strict $default]} {
 	if {$default >= [llength $args]} {
 	    return -code error "default button index greater than number of\
 		    buttons specified for tk_dialog"
-	}
+		}
+
     } elseif {"" eq $default} {
-	set default -1
+
+		set default -1
+
     } else {
-	set default [lsearch -exact $args $default]
+
+		set default [lsearch -exact $args $default]
     }
 
     set windowingsystem [tk windowingsystem]
+
     if {$windowingsystem eq "aqua"} {
-	option add *Dialog*background systemDialogBackgroundActive widgetDefault
-	option add *Dialog*Button.highlightBackground \
+
+		option add *Dialog*background systemDialogBackgroundActive widgetDefault
+		option add *Dialog*Button.highlightBackground \
 		systemDialogBackgroundActive widgetDefault
     }
 
@@ -153,23 +167,27 @@ proc OpenSees_Menu { dir } {
     # window is withdrawn or iconified.  Combined with the grab we put on the
     # window, this can hang the entire application.  Therefore we only make
     # the dialog transient if the parent is viewable.
-    #
+
     if {[winfo viewable [winfo toplevel [winfo parent $w]]] } {
-	wm transient $w [winfo toplevel [winfo parent $w]]
+		wm transient $w [winfo toplevel [winfo parent $w]]
     }
 
     if {$windowingsystem eq "aqua"} {
-	::tk::unsupported::MacWindowStyle style $w moveableModal {}
+		::tk::unsupported::MacWindowStyle style $w moveableModal {}
+
     } elseif {$windowingsystem eq "x11"} {
-	wm attributes $w -type dialog
+
+		wm attributes $w -type dialog
     }
 
     frame $w.bot
     frame $w.top
+
     if {$windowingsystem eq "x11"} {
-	$w.bot configure -relief raised -bd 1
-	$w.top configure -relief raised -bd 1
+		$w.bot configure -relief raised -bd 1
+		$w.top configure -relief raised -bd 1
     }
+
     pack $w.bot -side bottom -fill both
     pack $w.top -side top -fill both -expand 1
     grid anchor $w.bot center
@@ -194,25 +212,31 @@ proc OpenSees_Menu { dir } {
     # 3. Create a row of buttons at the bottom of the dialog.
 
     set i 0
+
     foreach but $args {
-	button $w.button$i -text $but -command [list set ::tk::Priv(button) $i]
-	if {$i == $default} {
-	    $w.button$i configure -default active
-	} else {
-	    $w.button$i configure -default normal
-	}
-	grid $w.button$i -in $w.bot -column $i -row 0 -sticky ew \
-		-padx 10 -pady 4
-	grid columnconfigure $w.bot $i
-	# We boost the size of some Mac buttons for l&f
-	if {$windowingsystem eq "aqua"} {
-	    set tmp [string tolower $but]
-	    if {$tmp eq "ok" || $tmp eq "cancel"} {
-		grid columnconfigure $w.bot $i -minsize 90
-	    }
-	    grid configure $w.button$i -pady 7
-	}
-	incr i
+
+		button $w.button$i -text $but -command [list set ::tk::Priv(button) $i]
+
+		if {$i == $default} {
+			$w.button$i configure -default active
+		} else {
+			$w.button$i configure -default normal
+		}
+		grid $w.button$i -in $w.bot -column $i -row 0 -sticky ew \
+			-padx 10 -pady 4
+		grid columnconfigure $w.bot $i
+
+		# We boost the size of some Mac buttons for l&f
+
+		if {$windowingsystem eq "aqua"} {
+			set tmp [string tolower $but]
+			if {$tmp eq "ok" || $tmp eq "cancel"} {
+				grid columnconfigure $w.bot $i -minsize 90
+			}
+			grid configure $w.button$i -pady 7
+		}
+
+		incr i
     }
 
     # 4. Create a binding for <Return> on the dialog if there is a
@@ -221,10 +245,12 @@ proc OpenSees_Menu { dir } {
     # the buttons that the <Return> binding affects the button with the focus.
 
     if {$default >= 0} {
-	bind $w <Return> [list $w.button$default invoke]
-    }
-    bind $w <<PrevWindow>> [list bind $w <Return> {[tk_focusPrev %W] invoke}]
-    bind $w <Tab> [list bind $w <Return> {[tk_focusNext %W] invoke}]
+
+		bind $w <Return> [list $w.button$default invoke]
+		}
+
+	bind $w <<PrevWindow>> [list bind $w <Return> {[tk_focusPrev %W] invoke}]
+	bind $w <Tab> [list bind $w <Return> {[tk_focusNext %W] invoke}]
 
     # 5. Create a <Destroy> binding for the window that sets the
     # button variable to -1;  this is needed in case something happens
