@@ -30,7 +30,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-###**Version 1.5.0 (Scheduled release : 30/10/2016)**
+###**Version 1.5.0**
 
 **Major feature : Nonlinear static analysis for frame elements**
 
