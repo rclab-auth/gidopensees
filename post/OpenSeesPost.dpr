@@ -1279,11 +1279,11 @@ begin
                     MSH.Add(s);
                 end;
 
-                if ndf = 6 then // end1                                     Í                         Vy                     Vz                     T                      My                    Mz
+                if ndf = 6 then // end1                                     N                         Vy                     Vz                     T                      My                    Mz
                 begin
                     s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
-                    MSH.Add(s); // end2              Í                      Vy                            Vz                            T                             My                           Mz
+                    MSH.Add(s); // end2              N                      Vy                            Vz                            T                             My                           Mz
 
                     s := StringOfChar(' ',INDENT) +  Str[6*(2*j+1)] + ' ' + Inv(Str[6*(2*j+1)+1]) + ' ' + Inv(Str[6*(2*j+1)+2]) + ' ' + Inv(Str[6*(2*j+1)+3]) + ' ' + Inv(Str[6*(2*j+1)+4]) + ' '+ Inv(Str[6*(2*j+1)+5]);
 
@@ -1365,11 +1365,11 @@ begin
                     MSH.Add(s);
                 end;
 
-                if ndf = 6 then // end1                                     Í                         Vy                     Vz                     T                      My                    Mz
+                if ndf = 6 then // end1                                     N                         Vy                     Vz                     T                      My                    Mz
                 begin
                     s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
-                    MSH.Add(s); // end2              Í                      Vy                            Vz                            T                             My                           Mz
+                    MSH.Add(s); // end2              N                      Vy                            Vz                            T                             My                           Mz
 
                     s := StringOfChar(' ',INDENT) +  Str[6*(2*j+1)] + ' ' + Inv(Str[6*(2*j+1)+1]) + ' ' + Inv(Str[6*(2*j+1)+2]) + ' ' + Inv(Str[6*(2*j+1)+3]) + ' ' + Inv(Str[6*(2*j+1)+4]) + ' '+ Inv(Str[6*(2*j+1)+5]);
 
@@ -1453,11 +1453,11 @@ begin
                     MSH.Add(s);
                 end;
 
-                if ndf = 6 then // end1                                     Í                         Vy                     Vz                     T                      My                    Mz
+                if ndf = 6 then // end1                                     N                         Vy                     Vz                     T                      My                    Mz
                 begin
                     s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
-                    MSH.Add(s); // end2              Í                      Vy                            Vz                            T                             My                           Mz
+                    MSH.Add(s); // end2                                    Vy                            Vz                            T                             My                           Mz
 
                     s := StringOfChar(' ',INDENT) +  Str[6*(2*j+1)] + ' ' + Inv(Str[6*(2*j+1)+1]) + ' ' + Inv(Str[6*(2*j+1)+2]) + ' ' + Inv(Str[6*(2*j+1)+3]) + ' ' + Inv(Str[6*(2*j+1)+4]) + ' '+ Inv(Str[6*(2*j+1)+5]);
 
