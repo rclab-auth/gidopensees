@@ -23,6 +23,8 @@ set InfoWin .gid.win_example
 set AboutImage 0
 set ibarBackgroundColor 0
 set ibarTextColor 0
+set ibarLineColor 0
+
 
 #
 # set interface theme
@@ -49,7 +51,7 @@ proc GetAppDataDir { } {
 proc SetImagesAndColors {} {
 
 	global AboutImage
-	global ibarBackgroundColor ibarTextColor
+	global ibarBackgroundColor ibarTextColor ibarLineColor
 
 	set INI [file join [GetAppDataDir] "GiD" "gid.ini"]
 
@@ -60,6 +62,7 @@ proc SetImagesAndColors {} {
 	set AboutImage "img/Toolbar/btn_About_Classic.png"
 	set ibarBackgroundColor "#F0F0F0"
 	set ibarTextColor "black"
+	set ibarLineColor "#CFC5C3"
 
 	set lines [split $data "\n"]
 
@@ -69,6 +72,7 @@ proc SetImagesAndColors {} {
 			set AboutImage "img/Toolbar/btn_About_Black.png"
 			set ibarBackgroundColor "#292929"
 			set ibarTextColor "#C2C5CA"
+			set ibarLineColor "#1A5B6B"
 
 			break
 		}
@@ -85,11 +89,13 @@ proc Opt1_1 { } {
 	HideInfoBar
 }
 
+
 proc Opt1_2 { } {
 
 	GidOpenMaterials Uniaxial_Concrete_Materials
 	HideInfoBar
 }
+
 
 proc Opt1_3 { } {
 
@@ -133,11 +139,12 @@ proc Opt1_9 { } {
 	HideInfoBar
 }
 
+
 proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
-    global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir AboutImage
+	global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir AboutImage
 
-    set ToolbarNames1(0) " \
+	set ToolbarNames1(0) " \
 		img/Toolbar/btn_Mat_Uni.png \
 		img/Toolbar/btn_Mat_UniC.png \
 		img/Toolbar/btn_Mat_UniS.png \
@@ -151,22 +158,22 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/btn_Separator.png \
 		$AboutImage \
 		"
-    set ToolbarCommands1(0) [list \
+	set ToolbarCommands1(0) [list \
 		[list -np- Opt1_1] \
 		[list -np- Opt1_2] \
-	    [list -np- Opt1_3] \
+		[list -np- Opt1_3] \
 		[list -np- Opt1_4] \
 		[list -np- Opt1_5] \
 		"" \
 		[list -np- Opt1_6] \
 		[list -np- Opt1_7] \
-	    [list -np- Opt1_8] \
+		[list -np- Opt1_8] \
 		[list -np- Opt1_9] \
 		"" \
 		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr" \
 	]
 
-    set ToolbarHelp1(0) { \
+	set ToolbarHelp1(0) { \
 		"Define Standard Unixaxial Materials" \
 		"Define Concrete Uniaxial Materials" \
 		"Define Steel Uniaxial Materials" \
@@ -181,11 +188,11 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		"GiD+OpenSees website" \
 		}
 
-    set prefix Pre
+	set prefix Pre
 	
-    set OpenSees1(toolbarwin) \
+	set OpenSees1(toolbarwin) \
 		[CreateOtherBitmaps MyPreBar "OpenSees Pre-Processor Toolbar 1" \
-	    ToolbarNames1 \
+		ToolbarNames1 \
 		ToolbarCommands1 \
 		ToolbarHelp1 \
 		$problem_dir \
@@ -194,12 +201,12 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 }
 
 proc EndToolbar1 {} {
-    global OpenSees1
-    
-    ReleaseToolbar "OpenSees 1 toolbar"
-    rename Toolbar1 ""
-    
-    catch { destroy $OpenSees1(toolbarwin) }
+	global OpenSees1
+
+	ReleaseToolbar "OpenSees 1 toolbar"
+	rename Toolbar1 ""
+
+	catch { destroy $OpenSees1(toolbarwin) }
 }
 
 #
@@ -242,6 +249,7 @@ proc Opt2_6 { } {
 	HideInfoBar
 }
 
+
 proc Opt2_7 { } {
 
 	GiD_Process Mescape Data IDataWindow
@@ -267,15 +275,15 @@ proc Opt2_10 { } {
 
 	switch $NormalsDrawStatus {
 
-	0 {
-		GiD_Process Mescape Utilities DrawNormals lines 1:100000
-		set NormalsDrawStatus 1
-	}
+		0 {
+			GiD_Process Mescape Utilities DrawNormals lines 1:100000
+			set NormalsDrawStatus 1
+		}
 
-	1 {
-		GiD_Process escape escape escape escape
-		set NormalsDrawStatus 0
-	}
+		1 {
+			GiD_Process escape escape escape escape
+			set NormalsDrawStatus 0
+		}
 	}
 }
 
@@ -287,15 +295,15 @@ proc Opt2_11 { } { # Switch draw elements
 
 	switch $ElemDrawStatus {
 
-	0 {
-		GiD_Process Mescape Data Materials DrawMaterial -DrawAll-
-		set ElemDrawStatus 1
-	}
+		0 {
+			GiD_Process Mescape Data Materials DrawMaterial -DrawAll-
+			set ElemDrawStatus 1
+		}
 
-	1 {
-		GiD_Process escape escape escape escape
-		set ElemDrawStatus 0
-	}
+		1 {
+			GiD_Process escape escape escape escape
+			set ElemDrawStatus 0
+		}
 	}
 }
 
@@ -307,15 +315,15 @@ proc Opt2_12 { } { # Switch draw conditions
 
 	switch $ConditionsDrawStatus {
 
-	0 {
-		GiD_Process Mescape Data Conditions DrawCond -DrawAll-
-		set ConditionsDrawStatus 1
-	}
+		0 {
+			GiD_Process Mescape Data Conditions DrawCond -DrawAll-
+			set ConditionsDrawStatus 1
+		}
 
-	1 {
-		GiD_Process escape escape escape escape
-		set ConditionsDrawStatus 0
-	}
+		1 {
+			GiD_Process escape escape escape escape
+			set ConditionsDrawStatus 0
+		}
 	}
 }
 
@@ -327,15 +335,15 @@ proc Opt2_13 { } {
 
 proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
-    global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 problem_dir
+	global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 problem_dir
 
-    set ToolbarNames2(0) " \
+	set ToolbarNames2(0) " \
 		img/Toolbar/btn_Elem_ZeroLength.png \
 		img/Toolbar/btn_Elem_Truss.png \
 		img/Toolbar/btn_Elem_Beam.png \
 		img/Toolbar/btn_Elem_Quad.png \
 		img/Toolbar/btn_Elem_Brick.png \
-	    img/Toolbar/btn_Separator.png \
+		img/Toolbar/btn_Separator.png \
 		img/Toolbar/btn_Data.png \
 		img/Toolbar/btn_Interval.png \
 		img/Toolbar/btn_Mesh.png \
@@ -346,9 +354,9 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/btn_ViewCond.png \
 		img/Toolbar/btn_ActiveInterval.png \
 		"
-    set ToolbarCommands2(0) [list \
+	set ToolbarCommands2(0) [list \
 		[list -np- Opt2_1] \
-	    [list -np- Opt2_2] \
+		[list -np- Opt2_2] \
 		[list -np- Opt2_3] \
 		[list -np- Opt2_4] \
 		[list -np- Opt2_5] \
@@ -364,7 +372,7 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		[list -np- Opt2_13] \
 	]
 
-    set ToolbarHelp2(0) { \
+	set ToolbarHelp2(0) { \
 		"Define Zero Length Elements" \
 		"Define Truss Elements" \
 		"Define Beam-Column_Elements" \
@@ -380,13 +388,13 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		"Show/Hide Elements" \
 		"Show/Hide all Conditions for active interval" \
 		"Select active Interval" \
-	    }
+		}
 
-    set prefix Pre
+	set prefix Pre
 
-    set OpenSees2(toolbarwin) \
+	set OpenSees2(toolbarwin) \
 		[CreateOtherBitmaps MyBar "OpenSees Pre-Processor Toolbar 2" \
-	    ToolbarNames2 \
+		ToolbarNames2 \
 		ToolbarCommands2 \
 		ToolbarHelp2 \
 		$problem_dir \
@@ -394,19 +402,20 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		AddNewToolbar "OpenSees 2 toolbar" ${prefix}MyBarWindowGeom Toolbar2
 }
 
+
 proc EndToolbar2 {} {
-    global OpenSees2
-    
-    ReleaseToolbar "OpenSees 2 toolbar"
-    rename Toolbar2 ""
-    
-    catch { destroy $OpenSees2(toolbarwin) }
+	global OpenSees2
+
+	ReleaseToolbar "OpenSees 2 toolbar"
+	rename Toolbar2 ""
+
+	catch { destroy $OpenSees2(toolbarwin) }
 }
 
 proc InitGIDProject { dir } {
 
-    global MenuNames MenuEntries MenuCommands MenuAcceler
-    global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
+	global MenuNames MenuEntries MenuCommands MenuAcceler
+	global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
 	global InterfaceName
 	global GidPriv
 	global problem_dir
@@ -415,63 +424,63 @@ proc InitGIDProject { dir } {
 
 	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl} {
 		source [file join $dir tcl $filename]
-    }
-	
+	}
+
 	set InterfaceName [_ "GiD+OpenSees Interface"]
 
-    set num [lsearch $MenuNamesP [_ "View results"]]
+	set num [lsearch $MenuNamesP [_ "View results"]]
 
-    if { $num == -1 } {
+	if { $num == -1 } {
 		WarnWin "OpenSees is not compatible with this GiD version"
 		return
-    }
-	
+	}
+
 	global splashdir
-    set splashdir 0
+	set splashdir 0
 	global keepsplash
-    set keepsplash 0 
+	set keepsplash 0 
 	
-    Splash $dir
+	Splash $dir
 	set splashdir $dir
 
 	OpenSees_Menu $dir
 
 	set ipos [lsearch $MenuNames [_ "Help"]]
 
-    if { $ipos != -1 } {
+	if { $ipos != -1 } {
 		set MenuEntries($ipos) [linsert $MenuEntries($ipos) 0 "Help on OpenSees"]
 		set MenuCommands($ipos) [linsert $MenuCommands($ipos) 0 [list -np- HelpOnOpenSees $dir]]
 		set MenuAcceler($ipos) [linsert $MenuAcceler($ipos) 0 ""]
 
 		CreateTopMenus
-    }
+	}
 
-    set ipos [lsearch $MenuNamesP Help]
+	set ipos [lsearch $MenuNamesP Help]
 
-    if { $ipos != -1 } {
+	if { $ipos != -1 } {
 		set MenuEntriesP($ipos) [linsert $MenuEntriesP($ipos) 0 "Help on OpenSees"]
 		set MenuCommandsP($ipos) [linsert $MenuCommandsP($ipos) 0 [list -np- HelpOnOpenSees $dir]]
 		set MenuAccelerP($ipos) [linsert $MenuAccelerP($ipos) 0 ""]
-    }
+	}
 
 	SetImagesAndColors
 
-    Toolbar1
-    Toolbar2 
-    
+	Toolbar1
+	Toolbar2 
+	
 	set GidPriv(ProgName) $InterfaceName
 	
-    GidChangeDataLabel "Conditions" ""
-    GidChangeDataLabel "Local Axes" ""
+	GidChangeDataLabel "Conditions" ""
+	GidChangeDataLabel "Local Axes" ""
 	GidChangeDataLabel "Materials" "Materials/Elements Definition" 
-    
-    GidAddUserDataOptions "Loads" "GidOpenConditions Loads" 2
-    GidAddUserDataOptions "Restraints" "GidOpenConditions Restraints" 3
+	
+	GidAddUserDataOptions "Loads" "GidOpenConditions Loads" 2
+	GidAddUserDataOptions "Restraints" "GidOpenConditions Restraints" 3
 	GidAddUserDataOptions "Constraints" "GidOpenConditions Constraints" 4
 	GidAddUserDataOptions "Masses" "GidOpenConditions Masses" 5
 	GidAddUserDataOptions "ZeroLength Elements" "GidOpenConditions ZeroLength_Elements" 6
-    GidAddUserDataOptions "---" "" 8
-    
+	GidAddUserDataOptions "---" "" 8
+	
 	GiD_DataBehaviour materials Standard_Uniaxial_Materials disable {assign unassign}
 	GiD_DataBehaviour materials Uniaxial_Steel_Materials disable {assign unassign}
 	GiD_DataBehaviour materials Uniaxial_Concrete_Materials disable {assign unassign}
@@ -483,7 +492,7 @@ proc InitGIDProject { dir } {
 	GiD_DataBehaviour materials Solid_Elements geomlist {volumes}
 	GiD_DataBehaviour materials "Section_Force-Deformation" disable {assign unassign}	
 	
-    GiDMenu::UpdateMenus
+	GiDMenu::UpdateMenus
 
 	after 1000 "{UpdateInfoBar}"
 }
@@ -501,14 +510,16 @@ proc AfterRunCalculation { basename dir problemtypedir where error errorfilename
 	set fexists [file exist $filename]
 
 	switch $fexists {
-	1 {
-		CheckLogFile $GiDProjectDir $GiDProjectName
+
+		1 {
+			CheckLogFile $GiDProjectDir $GiDProjectName
+			}
+		0 {
+			AnalysisErrorInformationWindow "Error1"
+			}
 		}
-	0 {
-		AnalysisErrorInformationWindow "Error1"
-		}
-	}
 }
+
 
 proc CheckLogFile { projectDir projectName } {
 
@@ -537,6 +548,7 @@ proc AnalysisErrorInformationWindow { analError } {
 	}
 	
 	switch $analError {
+
 		"Error1" {
 				set w .gid.win_example
 				InitWindow $w [= "Analysis Error"] ErrorInfo "" "" 1
@@ -557,6 +569,7 @@ proc AnalysisErrorInformationWindow { analError } {
 				grid rowconfigure $w 1 -weight 1
 				grid columnconfigure $w 0 -weight 1
 		}
+
 		"Error2" {
 				set w .gid.win_example
 				InitWindow $w [= "Analysis Error"] ErrorInfo "" "" 1
@@ -586,13 +599,14 @@ proc EndGIDProject {} {
 	bind .gid <Configure>  {}
 	bind .gid <Activate>   {}
 	bind .gid <Deactivate> {}
-    bind .gid <Map>        {}
+	bind .gid <Map>		{}
 
 	if {[winfo exist .ibar]} {destroy .ibar}
 
 	EndToolbar1
-    EndToolbar2
+	EndToolbar2
 }
+
 
 proc OpenLogFile { } {
 
@@ -609,8 +623,8 @@ proc OpenLogFile { } {
 
 proc HelpOnOpenSees { dir } {
 
-    WarnWin [join [list "To obtain help for OpenSees, check the latest news in " \
-                        "http://opensees.berkeley.edu/wiki/index.php/Main_Page "]]
+	WarnWin [join [list "To obtain help for OpenSees, check the latest news in " \
+						"http://opensees.berkeley.edu/wiki/index.php/Main_Page "]]
 }
 
 proc getGiDProjectName {} {
@@ -623,66 +637,69 @@ proc Splash { dir } {
 
 	global VersionNumber
 
-    if { [.gid.central.s disable windows] } { return }
+	if { [.gid.central.s disable windows] } { return }
 
-    if { [winfo exist .splash]} {
+	if { [winfo exist .splash]} {
 		destroy .splash
 		update
-    }
+	}
 
-    toplevel .splash
-    
-    set im [image create photo -file [file join $dir img/Toolbar/Splash.png]]
+	toplevel .splash
 
-    set x [expr [winfo rootx .gid.central.s] + [winfo width .gid.central.s] / 2 - [image width $im] / 2]
-    set y [expr [winfo rooty .gid.central.s] + [winfo height .gid.central.s] / 2 - [image height $im] / 2 ]
+	set im [image create photo -file [file join $dir img/Toolbar/Splash.png]]
 
-    wm geom .splash +$x+$y
+	set x [expr [winfo rootx .gid.central.s] + [winfo width .gid.central.s] / 2 - [image width $im] / 2]
+	set y [expr [winfo rooty .gid.central.s] + [winfo height .gid.central.s] / 2 - [image height $im] / 2 ]
 
-    wm transient .splash .gid.central.s
+	wm geom .splash +$x+$y
 
-    wm overrideredirect .splash 1
+	wm transient .splash .gid.central.s
 
-    pack [label .splash.l -image $im -bd 0]
-    
-    label .splash.lv -text $VersionNumber -background #292929 -foreground #FFFFD4  -font "calibri 11"
-    place .splash.lv -x 324 -y 69
+	wm overrideredirect .splash 1
 
-    raise .splash
+	pack [label .splash.l -image $im -bd 0]
+
+	label .splash.lv -text $VersionNumber -background #292929 -foreground "white"  -font "calibri 11"
+	place .splash.lv -x 330 -y 70
+
+	raise .splash
 	focus .splash
 
-    bind .splash <Button-1> "{raise .gid}"
-    bind .splash <Button-1> "{focus .gid}"
-    bind .splash <Button-1> "if {[winfo exist .splash]} {destroy .splash}"
+	#bind .splash <ButtonRelease> "{raise .gid}"
+	#bind .splash <ButtonRelease> "{focus .gid}"
+	#bind .splash <ButtonRelease> "if {[winfo exist .splash]} {destroy .splash}"
 
-    after 3000 "if {[winfo exist .splash]} {raise .gid}"
-    after 3000 "if {[winfo exist .splash]} {focus .gid}"
-    after 3000 "if {[winfo exist .splash]} {destroy .splash}"
+	after 3000 "if {[winfo exist .splash]} {destroy .splash}"
+	after 3000 "if {[winfo exist .splash]} {raise .gid}"
+	after 3000 "if {[winfo exist .splash]} {focus .gid}"
+
+	update
 }
+
 
 proc UpdateInfoBar { } {
 
-	global ibarBackgroundColor ibarTextColor
+	global ibarBackgroundColor ibarTextColor ibarLineColor
 
 	# remove bindings
 
 	bind .gid <Configure>  {}
 	bind .gid <Activate>   {}
 	bind .gid <Deactivate> {}
-    bind .gid <Map>        {}
+	bind .gid <Map>		{}
 
 	global problem_dir
 	global VersionNumber
 
-    if { [winfo exist .ibar]} {
-	    destroy .ibar
-	    update
-    }
+	if { [winfo exist .ibar]} {
+		destroy .ibar
+		update
+	}
 
 	# create toplevel
 
 	toplevel .ibar
-	
+
 	wm attributes .ibar -topmost 1
 	wm overrideredirect .ibar 1
 
@@ -693,8 +710,8 @@ proc UpdateInfoBar { } {
 
 	# set infobar geometry
 
-    set x [winfo rootx .gid.central.s]
-    set y [winfo rooty .gid.central.s]
+	set x [winfo rootx .gid.central.s]
+	set y [winfo rooty .gid.central.s]
 	set w [winfo width .gid.central.s] 
 
 	set geom "[winfo width .gid.central.s]x25+$x+$y"
@@ -712,14 +729,14 @@ proc UpdateInfoBar { } {
 
 	canvas .ibar.c -width $w -height 25 -background $ibarBackgroundColor
 
-	.ibar.c create line  0  24  $w 24 -fill #1A5B6B
-	.ibar.c create line  60  0  60 52 -fill #1A5B6B
-	.ibar.c create line 140  0 140 24 -fill #1A5B6B
-	.ibar.c create line 280  0 280 24 -fill #1A5B6B
+	.ibar.c create line  0  24  $w 24 -fill $ibarLineColor
+	.ibar.c create line  60  0  60 52 -fill $ibarLineColor
+	.ibar.c create line 140  0 140 24 -fill $ibarLineColor
+	.ibar.c create line 280  0 280 24 -fill $ibarLineColor
 
-	.ibar.c create text  30 12 -text $VersionNumber -font "calibri 12" -fill $ibarTextColor -anchor center 
-	.ibar.c create text 100 12 -text $dim           -font "calibri 12" -fill $ibarTextColor -anchor center 
-	.ibar.c create text 210 12 -text $act           -font "calibri 12" -fill $ibarTextColor -anchor center
+	.ibar.c create text  30 12 -text $VersionNumber	-font "calibri 12" -fill $ibarTextColor -anchor center 
+	.ibar.c create text 100 12 -text $dim			-font "calibri 12" -fill $ibarTextColor -anchor center 
+	.ibar.c create text 210 12 -text $act			-font "calibri 12" -fill $ibarTextColor -anchor center
 
 	pack .ibar.c
 
@@ -727,10 +744,10 @@ proc UpdateInfoBar { } {
 
 	# add bindings
 
-	bind .gid <Configure>  {RefreshInfoBar}
-	bind .gid <Activate>   {RefreshInfoBar}
-	bind .gid <Deactivate> {HideInfoBar}
-    bind .gid <Map>        {UpdateInfoBar}
+	bind .gid <Configure>	{RefreshInfoBar}
+	bind .gid <Activate>	{RefreshInfoBar}
+	bind .gid <Deactivate>	{HideInfoBar}
+	bind .gid <Map>			{UpdateInfoBar}
 
 	focus .gid.central.s
 	update
@@ -738,21 +755,21 @@ proc UpdateInfoBar { } {
 
 proc RefreshInfoBar { } {
 
-    set x [winfo rootx .gid.central.s]
-    set y [winfo rooty .gid.central.s]
+	set x [winfo rootx .gid.central.s]
+	set y [winfo rooty .gid.central.s]
 	set w [winfo width .gid.central.s]
 
 	set geom "[winfo width .gid.central.s]x25+$x+$y"
 
 	wm geometry .ibar $geom
 
-    raise .ibar
+	raise .ibar
 	update
 }
 
 proc HideInfoBar { } {
 
-    lower .ibar
+	lower .ibar
 	update
 }
 
@@ -764,7 +781,7 @@ proc LoadGIDProject { filespd } {
 	global InfoWin
 
 	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
-	
+
 	#loading the problemtype itself, not a model
 
 	} else {
@@ -784,8 +801,7 @@ proc LoadGIDProject { filespd } {
 
 			set spd_data "Unknown"
 		}
-			
-		
+
 		set cmp [string compare "$spd_data" "$VersionNumber"]
 
 		if { $cmp != 0 } {
@@ -810,8 +826,8 @@ proc LoadGIDProject { filespd } {
 			grid columnconfigure $InfoWin 0 -weight 1
 		}
 	}
-	
 }
+
 
 proc TransformAndClose { } {
 
@@ -821,6 +837,7 @@ proc TransformAndClose { } {
 
 	GiD_Process escape escape escape escape data defaults TransfProblem OpenSees
 }
+
 
 proc SaveGIDProject { filespd } {
 
@@ -835,15 +852,15 @@ proc BeforeInitGIDPostProcess {} {
 
 	# remove bindings
 
-	bind .gid <Configure>  {}
-	bind .gid <Activate>   {}
-	bind .gid <Deactivate> {}
-    bind .gid <Map>        {}
+	bind .gid <Configure>	{}
+	bind .gid <Activate>	{}
+	bind .gid <Deactivate>	{}
+	bind .gid <Map>			{}
 
-    if { [winfo exist .ibar]} {
-	    destroy .ibar
-	    update
-    }
+	if { [winfo exist .ibar]} {
+		destroy .ibar
+		update
+	}
 }
 
 proc EndGIDPostProcess {} {

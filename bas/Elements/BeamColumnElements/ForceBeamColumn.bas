@@ -26,7 +26,7 @@
 *# Linear geomTransf tags 
 *set var TransfTag1=1
 *set var TransfTag2=2
-*# Pdelta geomTransf tags
+*# PDelta geomTransf tags
 *set var TransfTag3=3
 *set var TransfTag4=4
 *#------------------------------------------------
@@ -48,10 +48,10 @@ geomTransf PDelta *TransfTag4  0 0 1
 *elseif(strcmp(GenData(Vertical_Axis),"Y")==0)
 *# Vertical elements
 geomTransf Linear *TransfTag1 -1 0 0
-geomTransf Pdelta *TransfTag3 -1 0 0
+geomTransf PDelta *TransfTag3 -1 0 0
 *# Not vertical elements
 geomTransf Linear *TransfTag2  0 1 0
-geomTransf Pdelta *TransfTag4  0 1 0
+geomTransf PDelta *TransfTag4  0 1 0
 
 *endif
 *set var GeomTransfPrinted=1

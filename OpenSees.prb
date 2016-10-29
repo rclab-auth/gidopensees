@@ -76,13 +76,13 @@ QUESTION: System_of_Equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPa
 VALUE: BandGeneral
 
 QUESTION: DOF_Numberer#CB#(Plain,RCM,AMD)
-VALUE: RCM
+VALUE: AMD
 
 QUESTION: Constraint_Handler#CB#(Plain,Lagrange,Penalty,Transformation)
 VALUE: Transformation
 
 QUESTION: Solution_Algorithm#CB#(Linear,Newton)
-VALUE: Newton
+VALUE: Linear
 
 QUESTION: Analysis_Type#CB#(Static,Transient,VariableTransient)
 VALUE: Static

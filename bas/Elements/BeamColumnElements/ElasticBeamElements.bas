@@ -25,7 +25,7 @@
 *# Linear geomTransf tags 
 *set var TransfTag1=1
 *set var TransfTag2=2
-*# Pdelta geomTransf tags
+*# PDelta geomTransf tags
 *set var TransfTag3=3
 *set var TransfTag4=4
 *#------------------------------------------------
@@ -46,10 +46,10 @@ geomTransf PDelta *TransfTag4  0 0 1
 *elseif(strcmp(GenData(Vertical_Axis),"Y")==0)
 *# Vertical elements
 geomTransf Linear *TransfTag1 -1 0 0
-geomTransf Pdelta *TransfTag3 -1 0 0
+geomTransf PDelta *TransfTag3 -1 0 0
 *# Not vertical elements
 geomTransf Linear *TransfTag2  0 1 0
-geomTransf Pdelta *TransfTag4  0 1 0
+geomTransf PDelta *TransfTag4  0 1 0
 
 *endif
 # Elastic Beam Column Definition
@@ -115,8 +115,7 @@ geomTransf Pdelta *TransfTag4  0 1 0
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
-*A *E *G *J *Iy *Iz *TransfTag   *\
--mass *\
+*A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
 *else
@@ -129,8 +128,7 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
-*A *E *G *J *Iy *Iz *TransfTag *\
--mass *\
+*A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
 *endif
@@ -146,8 +144,7 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
-*A *E *G *J *Iy *Iz *TransfTag *\
--mass *\
+*A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
 *# Not Vertical Elements
@@ -160,8 +157,7 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
-*A *E *G *J *Iy *Iz *TransfTag   *\
--mass *\
+*A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
 *endif
@@ -234,8 +230,7 @@ geomTransf PDelta *TransfTag2
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10.6f%10.0f%10.6f   "
-*A *E *Iz *TransfTag *\
--mass *\
+*A *E *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
 *set var VarCount=VarCount+1

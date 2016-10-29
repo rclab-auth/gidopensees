@@ -29,7 +29,7 @@ var
     MSH,
     RES,
     PER        : TStringList;
-    Period     : double;
+    Period     : string;
 
 // get full path
 
@@ -322,7 +322,7 @@ begin
             RES := TStringList.Create;
             RES.LoadFromFile(OutFile);
 
-            Period := StrToFloat(PER.Strings[i-1]);
+            Period := Copy(PER.Strings[i-1],1,LastDelimiter('.',PER.Strings[i-1])+6);
 
             // ndm=2, ndf=2 -> Ux,Uy
             // ndm=2, ndf=3 -> Ux,Uy,(Rz)
@@ -330,7 +330,7 @@ begin
             // ndm=3, ndf=6 -> Ux,Uy,Uz,(Rx),(Ry),(Rz)
 
             MSH.Add('');
-            MSH.Add('Result "Mode_'+IntToStr(i)+' (T'+IntToStr(i)+' = '+Format('%0.6f',[Period])+' s)" "Modal" 1 Vector OnNodes');
+            MSH.Add('Result "Mode_'+IntToStr(i)+' (T'+IntToStr(i)+' = '+Period+' s)" "Modal" 1 Vector OnNodes');
 
             s := 'ComponentNames "Ux" "Uy"';
 
@@ -518,7 +518,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_stdBrick//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "stdbrick_Node"');
+            MSH.Add('Result "Elements//stdBrick//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "stdbrick_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -569,7 +569,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_stdBrick//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
+            MSH.Add('Result "Elements//stdBrick//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33" "s12" "s23" "s13"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -620,7 +620,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_stdBrick//Strains" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
+            MSH.Add('Result "Elements//stdBrick//Strains" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "stdbrick_GP"');
             MSH.Add('ComponentNames "e11" "e22" "e33" "e12" "e23" "e13"');
             MSH.Add('Unit "m-1"');
             MSH.Add('Values');
@@ -675,7 +675,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
+            MSH.Add('Result "Elements//ShellMITC4//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -709,7 +709,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Moments" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
+            MSH.Add('Result "Elements//ShellMITC4//Moments" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_Node"');
             MSH.Add('ComponentNames "Mx" "My" "Mz"');
             MSH.Add('Unit "kNm"');
             MSH.Add('Values');
@@ -760,7 +760,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Stresses-Membrane" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
+            MSH.Add('Result "Elements//ShellMITC4//Stresses-Membrane" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -794,7 +794,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Stresses-Bending" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
+            MSH.Add('Result "Elements//ShellMITC4//Stresses-Bending" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "ShellMITC4_GP"');
             MSH.Add('ComponentNames "m11" "m22" "m33 (zero)" "m12" "m23 (zero)" "m13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -828,7 +828,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_ShellMITC4//Stresses-Shear" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_GP"');
+            MSH.Add('Result "Elements//ShellMITC4//Stresses-Shear" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "ShellMITC4_GP"');
             MSH.Add('ComponentNames "q1" "q2" "q3 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -883,7 +883,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Quad//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Quad_Node"');
+            MSH.Add('Result "Elements//Quad//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Quad_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz (zero)"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -934,7 +934,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Quad//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
+            MSH.Add('Result "Elements//Quad//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -985,7 +985,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Quad//Strains" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
+            MSH.Add('Result "Elements//Quad//Strains" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Quad_GP"');
             MSH.Add('ComponentNames "e11" "e22" "e33 (zero)" "e12" "e23 (zero)" "e13 (zero)"');
             MSH.Add('Unit "m-1"');
             MSH.Add('Values');
@@ -1040,7 +1040,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Triangular//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Tri31_Node"');
+            MSH.Add('Result "Elements//Triangular//Forces" "'+AnalType+'" '+IntToStr(i+1)+' Vector OnGaussPoints "Tri31_Node"');
             MSH.Add('ComponentNames "Fx" "Fy" "Fz (zero)"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
@@ -1091,7 +1091,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Triangular//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Tri31_GP"');
+            MSH.Add('Result "Elements//Triangular//Stresses" "'+AnalType+'" '+IntToStr(i+1)+' Matrix OnGaussPoints "Tri31_GP"');
             MSH.Add('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
             MSH.Add('Unit "kPa"');
             MSH.Add('Values');
@@ -1137,7 +1137,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Truss//Axial" "'+AnalType+'" '+IntToStr(i+1)+' Scalar OnGaussPoints "Line_Nodes"');
+            MSH.Add('Result "Elements//Truss//Axial" "'+AnalType+'" '+IntToStr(i+1)+' Scalar OnGaussPoints "Line_Nodes"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
 
@@ -1188,7 +1188,7 @@ begin
         for i := 0 to RES.Count-1 do  // for all steps
         begin
             MSH.Add('');
-            MSH.Add('Result "Elements_:_Corotational_Truss//Axial" "'+AnalType+'" '+IntToStr(i+1)+' Scalar OnGaussPoints "Line_Nodes"');
+            MSH.Add('Result "Elements//Corotational_Truss//Axial" "'+AnalType+'" '+IntToStr(i+1)+' Scalar OnGaussPoints "Line_Nodes"');
             MSH.Add('Unit "kN"');
             MSH.Add('Values');
 
@@ -1243,9 +1243,9 @@ begin
             if ndf = 3 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//N" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//V" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//M" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//N" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//V" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//M" Scalar');
 
                 StrToArray(RES[i],Str,2*3*n,true);  // read all values from current step (3 values per node)
             end;
@@ -1253,12 +1253,12 @@ begin
             if ndf = 6 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//N" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//Vy" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//Vz" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//T" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//My" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Beam-Column//Actions//Mz" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//N" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//Vy" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//Vz" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//T" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//My" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Beam-Column//Actions//Mz" Scalar');
 
                 StrToArray(RES[i],Str,2*6*n,true);  // read all values from current step (6 values per node)
             end;
@@ -1329,9 +1329,9 @@ begin
             if ndf = 3 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//V" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//M" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//V" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//M" Scalar');
 
                 StrToArray(RES[i],Str,2*3*n,true);  // read all values from current step (3 values per node)
             end;
@@ -1339,12 +1339,12 @@ begin
             if ndf = 6 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//Vy" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//Vz" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//T" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//My" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Elastic_Timoshenko_Beam-Column//Actions//Mz" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Vy" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Vz" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//T" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//My" Scalar');
+                MSH.Add('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Mz" Scalar');
 
                 StrToArray(RES[i],Str,2*6*n,true);  // read all values from current step (6 values per node)
             end;
@@ -1417,9 +1417,9 @@ begin
             if ndf = 3 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//N" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//V" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//M" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//N" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//V" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//M" Scalar');
 
                 StrToArray(RES[i],Str,2*3*n,true);  // read all values from current step (3 values per node)
             end;
@@ -1427,12 +1427,12 @@ begin
             if ndf = 6 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//N" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//Vy" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//Vz" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//T" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//My" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Actions//Mz" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//N" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//Vy" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//Vz" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//T" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//My" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Actions//Mz" Scalar');
 
                 StrToArray(RES[i],Str,2*6*n,true);  // read all values from current step (6 values per node)
             end;
@@ -1501,8 +1501,8 @@ begin
             if ndf = 3 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Total//Axial" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Total//Rotation" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Axial" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation" Scalar');
 
                 StrToArray(RES[i],Str,3*n,true);  // read all values from current step (3 values per element)
             end;
@@ -1510,10 +1510,10 @@ begin
             if ndf = 6 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Total//Axial" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Total//Rotation_z" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Total//Rotation_y" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Total//Torsional" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Axial" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation_z" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation_y" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Torsional" Scalar');
 
                 StrToArray(RES[i],Str,6*n,true);  // read all values from current step (6 values per element)
             end;
@@ -1582,8 +1582,8 @@ begin
             if ndf = 3 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Plastic//Rotation" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation" Scalar');
 
                 StrToArray(RES[i],Str,3*n,true);  // read all values from current step (3 values per element)
             end;
@@ -1591,10 +1591,10 @@ begin
             if ndf = 6 then
             begin
                 MSH.Add('ResultGroup "'+AnalType+'" '+IntToStr(i+1)+' OnGaussPoints "Line_Nodes"');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Plastic//Rotation_z" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Plastic//Rotation_y" Scalar');
-                MSH.Add('ResultDescription "Elements_:_Force_Beam-Column//Deformations_Plastic//Torsional" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation_z" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation_y" Scalar');
+                MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Torsional" Scalar');
 
                 StrToArray(RES[i],Str,6*n,true);  // read all values from current step (4 values per element)
             end;
