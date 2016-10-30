@@ -92,7 +92,6 @@ uniaxialMaterial Concrete06 *MaterialID *MatProp(Concrete_compressive_strength_f
 *#set var ZeroLengthElemTag=operation(NumberOfElements+ExtraElem)
 *set var ZeroLengthID=tcl(ZeroLengthIDnumber *i)
 *set var ZLNodes=0
-
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==ZeroLengthID)
 *if(ZLNodes==0)
@@ -101,7 +100,6 @@ uniaxialMaterial Concrete06 *MaterialID *MatProp(Concrete_compressive_strength_f
 *set var ZLNodes=ZLNodes+1
 *endif
 *end nodes
-
 *# Counting in how many directions current ZeroLength is active
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==ZeroLengthID)
@@ -159,3 +157,4 @@ element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode
 *set var VarCount=operation(VarCount+1)
 *endfor
 *endif
+
