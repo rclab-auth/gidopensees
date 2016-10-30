@@ -20,15 +20,14 @@ set VersionNumber "v1.5.0"
 
 set InfoWin .gid.win_example
 
-set AboutImage 0
-set ibarBackgroundColor 0
-set ibarTextColor 0
-set ibarLineColor 0
-
-
 #
-# set interface theme
+# theme settings
 #
+
+set ibarBackgroundColor "#F0F0F0"
+set ibarTextColor "black"
+set ibarLineColor "#CFC5C3"
+set GiDtheme "Classic"
 
 proc GetAppDataDir { } {
 
@@ -50,8 +49,7 @@ proc GetAppDataDir { } {
 
 proc SetImagesAndColors {} {
 
-	global AboutImage
-	global ibarBackgroundColor ibarTextColor ibarLineColor
+	global ibarBackgroundColor ibarTextColor ibarLineColor GiDtheme
 
 	set INI [file join [GetAppDataDir] "GiD" "gid.ini"]
 
@@ -59,20 +57,16 @@ proc SetImagesAndColors {} {
 	set data [read $f]
 	close $f
 
-	set AboutImage "img/Toolbar/btn_About_Classic.png"
-	set ibarBackgroundColor "#F0F0F0"
-	set ibarTextColor "black"
-	set ibarLineColor "#CFC5C3"
-
 	set lines [split $data "\n"]
 
 	foreach line $lines {
 		if { $line == "Theme(Current) GiD_black" } {
 
-			set AboutImage "img/Toolbar/btn_About_Black.png"
 			set ibarBackgroundColor "#292929"
-			set ibarTextColor "#C2C5CA"
+			set ibarTextColor "white"
 			set ibarLineColor "#1A5B6B"
+
+			set GiDtheme "Black"
 
 			break
 		}
@@ -142,21 +136,21 @@ proc Opt1_9 { } {
 
 proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
-	global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir AboutImage
+	global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir GiDtheme
 
 	set ToolbarNames1(0) " \
-		img/Toolbar/btn_Mat_Uni.png \
-		img/Toolbar/btn_Mat_UniC.png \
-		img/Toolbar/btn_Mat_UniS.png \
-		img/Toolbar/btn_Mat_ND.png \
-		img/Toolbar/btn_Mat_Section.png \
-		img/Toolbar/btn_Separator.png \
-		img/Toolbar/btn_Restraints.png \
-		img/Toolbar/btn_Constraints.png \
-		img/Toolbar/btn_Mass.png \
-		img/Toolbar/btn_Loads.png \
-		img/Toolbar/btn_Separator.png \
-		$AboutImage \
+		img/Toolbar/$GiDtheme/btn_Mat_Uni.png \
+		img/Toolbar/$GiDtheme/btn_Mat_UniC.png \
+		img/Toolbar/$GiDtheme/btn_Mat_UniS.png \
+		img/Toolbar/$GiDtheme/btn_Mat_ND.png \
+		img/Toolbar/$GiDtheme/btn_Mat_Section.png \
+		img/Toolbar/$GiDtheme/btn_Separator.png \
+		img/Toolbar/$GiDtheme/btn_Restraints.png \
+		img/Toolbar/$GiDtheme/btn_Constraints.png \
+		img/Toolbar/$GiDtheme/btn_Mass.png \
+		img/Toolbar/$GiDtheme/btn_Loads.png \
+		img/Toolbar/$GiDtheme/btn_Separator.png \
+		img/Toolbar/$GiDtheme/btn_About.png \
 		"
 	set ToolbarCommands1(0) [list \
 		[list -np- Opt1_1] \
@@ -335,24 +329,24 @@ proc Opt2_13 { } {
 
 proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
-	global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 problem_dir
+	global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 problem_dir GiDtheme
 
 	set ToolbarNames2(0) " \
-		img/Toolbar/btn_Elem_ZeroLength.png \
-		img/Toolbar/btn_Elem_Truss.png \
-		img/Toolbar/btn_Elem_Beam.png \
-		img/Toolbar/btn_Elem_Quad.png \
-		img/Toolbar/btn_Elem_Brick.png \
-		img/Toolbar/btn_Separator.png \
-		img/Toolbar/btn_Data.png \
-		img/Toolbar/btn_Interval.png \
-		img/Toolbar/btn_Mesh.png \
-		img/Toolbar/btn_Calc.png \
-		img/Toolbar/btn_Separator.png \
-		img/Toolbar/btn_LocalAxes.png \
-		img/Toolbar/btn_ViewElem.png \
-		img/Toolbar/btn_ViewCond.png \
-		img/Toolbar/btn_ActiveInterval.png \
+		img/Toolbar/$GiDtheme/btn_Elem_ZeroLength.png \
+		img/Toolbar/$GiDtheme/btn_Elem_Truss.png \
+		img/Toolbar/$GiDtheme/btn_Elem_Beam.png \
+		img/Toolbar/$GiDtheme/btn_Elem_Quad.png \
+		img/Toolbar/$GiDtheme/btn_Elem_Brick.png \
+		img/Toolbar/$GiDtheme/btn_Separator.png \
+		img/Toolbar/$GiDtheme/btn_Data.png \
+		img/Toolbar/$GiDtheme/btn_Interval.png \
+		img/Toolbar/$GiDtheme/btn_Mesh.png \
+		img/Toolbar/$GiDtheme/btn_Calc.png \
+		img/Toolbar/$GiDtheme/btn_Separator.png \
+		img/Toolbar/$GiDtheme/btn_LocalAxes.png \
+		img/Toolbar/$GiDtheme/btn_ViewElem.png \
+		img/Toolbar/$GiDtheme/btn_ViewCond.png \
+		img/Toolbar/$GiDtheme/btn_ActiveInterval.png \
 		"
 	set ToolbarCommands2(0) [list \
 		[list -np- Opt2_1] \
@@ -439,7 +433,9 @@ proc InitGIDProject { dir } {
 	set splashdir 0
 	global keepsplash
 	set keepsplash 0 
-	
+
+	SetImagesAndColors
+
 	Splash $dir
 	set splashdir $dir
 
@@ -462,8 +458,6 @@ proc InitGIDProject { dir } {
 		set MenuCommandsP($ipos) [linsert $MenuCommandsP($ipos) 0 [list -np- HelpOnOpenSees $dir]]
 		set MenuAccelerP($ipos) [linsert $MenuAccelerP($ipos) 0 ""]
 	}
-
-	SetImagesAndColors
 
 	Toolbar1
 	Toolbar2 
@@ -635,7 +629,7 @@ proc getGiDProjectName {} {
 
 proc Splash { dir } {
 
-	global VersionNumber
+	global VersionNumber ibarBackgroundColor ibarTextColor GiDtheme
 
 	if { [.gid.central.s disable windows] } { return }
 
@@ -646,7 +640,7 @@ proc Splash { dir } {
 
 	toplevel .splash
 
-	set im [image create photo -file [file join $dir img/Toolbar/Splash.png]]
+	set im [image create photo -file [file join $dir img/Toolbar/$GiDtheme/Splash.png]]
 
 	set x [expr [winfo rootx .gid.central.s] + [winfo width .gid.central.s] / 2 - [image width $im] / 2]
 	set y [expr [winfo rooty .gid.central.s] + [winfo height .gid.central.s] / 2 - [image height $im] / 2 ]
@@ -659,8 +653,8 @@ proc Splash { dir } {
 
 	pack [label .splash.l -image $im -bd 0]
 
-	label .splash.lv -text $VersionNumber -background #292929 -foreground "white"  -font "calibri 11"
-	place .splash.lv -x 330 -y 70
+	label .splash.lv -text $VersionNumber -background $ibarBackgroundColor -foreground $ibarTextColor  -font "calibri 11"
+	place .splash.lv -x 316 -y 72
 
 	raise .splash
 	focus .splash

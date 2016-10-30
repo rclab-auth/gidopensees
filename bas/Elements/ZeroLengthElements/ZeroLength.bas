@@ -48,7 +48,7 @@
 uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real) 
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlastic")==0)
 *format "%d%g"
-uniaxialMaterial ElasticPP *oMat *MatProp(Elastic_modulus_E,real) *\
+uniaxialMaterial ElasticPP *MaterialID *MatProp(Elastic_modulus_E,real) *\
 *set var epsyP=MatProp(Strain_epsP,real)
 *set var epsyN=MatProp(Strain_epsN,real)
 *set var eps0=MatProp(Initial_strain_eps0,real)
@@ -92,6 +92,7 @@ uniaxialMaterial Concrete06 *MaterialID *MatProp(Concrete_compressive_strength_f
 *#set var ZeroLengthElemTag=operation(NumberOfElements+ExtraElem)
 *set var ZeroLengthID=tcl(ZeroLengthIDnumber *i)
 *set var ZLNodes=0
+
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==ZeroLengthID)
 *if(ZLNodes==0)
@@ -100,6 +101,7 @@ uniaxialMaterial Concrete06 *MaterialID *MatProp(Concrete_compressive_strength_f
 *set var ZLNodes=ZLNodes+1
 *endif
 *end nodes
+
 *# Counting in how many directions current ZeroLength is active
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==ZeroLengthID)
@@ -109,8 +111,10 @@ uniaxialMaterial Concrete06 *MaterialID *MatProp(Concrete_compressive_strength_f
 *endif
 *endfor
 *endif
-*break
 *end nodes
+*if(ZLActiveDirections==0)
+*MessageBox Error: Assigned ZeroLength Elements without Active Directions.
+*endif
 *# Defining the second NodeTag in case we assign the condition on more than 2 nodes
 *for(k=1;k<=operation(ZLNodes-1);k=k+1)
 *set var CountLoop=0
@@ -127,7 +131,6 @@ uniaxialMaterial Concrete06 *MaterialID *MatProp(Concrete_compressive_strength_f
 *# Printing the ZeroLength Command
 *format "%d%d%d"
 element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode *\
-*if(ZLActiveDirections>=1)
 -mat *\
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==ZeroLengthID)
@@ -137,8 +140,8 @@ element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode
 *tcl(FindMaterialNumber *Cond(*operation(j+1)) ) *\
 *endif
 *endfor
-*endif
 *break
+*endif
 *end nodes
 -dir *\
 *loop nodes *OnlyInCond
@@ -149,14 +152,10 @@ element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode
 *operation(j/2) *\
 *endif
 *endfor
-*endif
 *break
-*end nodes
-*else
-*MessageBox Error: Assigned ZeroLength Elements without Active Directions.
 *endif
+*end nodes
 *endfor
 *set var VarCount=operation(VarCount+1)
 *endfor
-
 *endif

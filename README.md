@@ -23,6 +23,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
    - Intersection joints that belong to two lines with different constraints should be handled seperately.
    - Intersection lines that belong to two surfaces with different constraints should be handled seperately.
+- The horizontal information bar stays in front of GiD material/condition windows when the respective menu options are used; please use the toolbar buttons instead. However, there's no way at the moment to hide the information bar behind the GiD Layer and Copy windows.
 
 ---
 
@@ -38,15 +39,15 @@ V.K. Papanikolaou, Assistant Professor AUTh
 - Now supported : **Tri31 Element**
 - Now supported : **Fiber Section**
 - Now supported : **Pushover and Cyclic analysis**
+- Fully themed (classic and black)
 - New information bar
 - Toolbar : Show/hide line local axes
 - Toolbar : Interval data
 - Toolbar : Show/hide elements and conditions
 - Toolbar : Select active interval
 - ZeroLength element form updated
-- Check for problemtype version mismatch
+- Prompt for model transform when needed
 - OpenSeesPost.exe rewritten
-- Icons/images updated
 - Output data file (.tcl) format improved
 - OpenSeesSP and OpenSeesMP supported on installation
 - Error message windows for unsuccessful analysis
