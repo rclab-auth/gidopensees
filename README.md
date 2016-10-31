@@ -32,9 +32,15 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-###**Version 1.5.0**
+**Version 1.5.1 (31/10/2016)**
 
-**Major feature : Nonlinear static analysis for frame elements**
+- Modified Newton-Raphson algorithm added
+- Interval data updated
+- Step/iteration output during analysis
+
+---
+
+**Version 1.5.0  (30/10/2016)**
 
 - Now supported : **Force-Based Beam-Column**
 - Now supported : **Tri31 Element**

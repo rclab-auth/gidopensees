@@ -88,16 +88,32 @@ integrator DisplacementControl *IntvData(Control_Node) *NodeCtrlDOF *DispIncr
 integrator Newmark *IntvData(gamma_factor,real) *IntvData(beta_factor,real)
 *endif
 *endif
-*if(IntvData(Convergence_criteria,int)==1)
+*if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
 *if(strcmp(IntvData(Convergence_Criteria_Type),"Energy_Increment")==0)
 *format "%g%g"
-test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 
+test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
 *elseif(strcmp(IntvData(Convergence_Criteria_Type),"Norm_Displacement_Increment")==0)
 *format "%g%g"
-test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step)
+test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
 *endif
 *endif
-algorithm *IntvData(Solution_Algorithm)
+*if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0)
+algorithm Newton *\
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+-initial 
+*else
+
+*endif
+*elseif(strcmp(IntvData(Solution_Algorithm),"Linear")==0)
+algorithm Linear 
+*elseif(strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
+algorithm ModifiedNewton *\
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+-initial 
+*else
+
+*endif
+*endif
 analysis *IntvData(Analysis_Type)
 *# For integrator command check if the loading is cyclic 
 *# For cyclic loading

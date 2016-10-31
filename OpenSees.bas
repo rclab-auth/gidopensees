@@ -143,6 +143,7 @@ logFile log.txt
 
 set time_start [clock seconds]
 puts "\nAnalysis started  : [clock format $time_start -format %H:%M:%S]"
+puts ""
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
