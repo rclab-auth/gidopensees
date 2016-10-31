@@ -20,163 +20,119 @@
 BOOK: Standard_Uniaxial_Materials
 
 
-NUMBER: 1 MATERIAL: Elastic
-
+MATERIAL: Elastic
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n
-
 QUESTION: Material:#CB#(Elastic)
 VALUE: Elastic
 HELP: Elastic uniaxial material object
 IMAGE: img/Materials/Elastic.png
-
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
 VALUE: Custom
 TKWIDGET: TK_GenerateUniaxialMaterialsProperties
 DEPENDENCIES: (Concrete,RESTORE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_Class,#CURRENT#,RESTORE,Steel_Grade,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#)
-
 QUESTION: Concrete_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105)
 VALUE: C20/25
-
 QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500)
 VALUE: S235
-
 QUESTION: Elastic_modulus_E#UNITS#
 VALUE: 30 GPa
 HELP: Young modulus of elasticity E 
-
 END MATERIAL
 
-
-NUMBER: 2 MATERIAL: Elastic_Perfectly_Plastic
-
+MATERIAL: Elastic_Perfectly_Plastic
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n
-
 QUESTION: Material:#CB#(ElasticPerfectlyPlastic)
 VALUE: ElasticPerfectlyPlastic
 HELP: elastic perfectly-plastic uniaxial material object.
 IMAGE: img/Materials/ElasticPP.png
-
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
 VALUE: Steel
 TKWIDGET: TK_GenerateUniaxialMaterialsProperties
 DEPENDENCIES: (Concrete,RESTORE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_Class,#CURRENT#,RESTORE,Steel_Grade,#CURRENT#,HIDE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#,HIDE,Strength_Type,#CURRENT#)
-
 QUESTION: Concrete_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105)
 VALUE: C20/25
-
 QUESTION: Strength_Type#CB#(Mean,Characteristic)
 VALUE: Characteristic
-
 QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500)
 VALUE: B500
-
 QUESTION: Elastic_modulus_E#UNITS#
 VALUE: 200 GPa
 HELP: young modulus of elasticity E
-
 QUESTION: Strain_epsP
 VALUE:  2.5e-3
 HELP: strain or deformation at which material reaches plastic state in tension
-
 QUESTION: Strain_epsN
 VALUE: -2.5e-3
 HELP: strain or deformation at which material reaches plastic state in compression
-
 QUESTION: Initial_strain_eps0
 VALUE: 0.0
-
 END MATERIAL
 
-
-NUMBER 3: MATERIAL: Elastic_Perfectly_Plastic_with_Gap
-
+MATERIAL: Elastic_Perfectly_Plastic_with_Gap
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n
-
 QUESTION: Material:#CB#(ElasticPerfectlyPlasticwithGap)
 VALUE: ElasticPerfectlyPlasticwithGap
 HELP: elastic perfectly-plastic gap uniaxial material object.
 IMAGE: img/Materials/ElasticPPGap.png
-
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
 VALUE: Steel
 TKWIDGET: TK_GenerateUniaxialMaterialsProperties
 DEPENDENCIES: (Concrete,RESTORE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_Class,#CURRENT#,RESTORE,Steel_Grade,#CURRENT#,RESTORE,Yield_Stress_Fy,#CURRENT#,HIDE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#,RESTORE,Yield_Stress_Fy,#CURRENT#,HIDE,Strength_Type,#CURRENT#)
-
 QUESTION: Concrete_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105)
 VALUE: C20/25
-
 QUESTION: Strength_Type#CB#(Mean,Characteristic)
 VALUE: Characteristic 
-
 QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500)
 VALUE: B500
-
 QUESTION: Elastic_modulus_E#UNITS#
 VALUE: 200GPa
 HELP: young modulus of elasticity E
-
 QUESTION: Yield_Stress_Fy#UNITS#
 VALUE: 500MPa
 HELP: Yield stress at which material reaches the plastic plate. Negative value for compression.
-
 QUESTION: Gap
 VALUE: 0.0
 HELP: Initial gap(strain or deformation).Negative value for compression.
-
 END MATERIAL
 
 
 BOOK: Uniaxial_Steel_Materials
 
 
-NUMBER: 4 MATERIAL: Steel01
-
+MATERIAL: Steel01
 COMMENT: \n\tUpdate material window to assign selected Grade\n
-
 QUESTION: Material:#CB#(Steel01)
 VALUE: Steel01
 HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
 IMAGE: img/Materials/Steel01.png
-
 QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500,Custom)
 VALUE: B500
 TKWIDGET: TK_GenerateUniaxialSteelProperties
-
 QUESTION: Yield_Stress_Fy#UNITS#
 VALUE: 500 MPa
-
 QUESTION: Initial_elastic_tangent_E0#UNITS#
 VALUE: 200 GPa
-
 QUESTION: Strain-hardening_ratio_b
 VALUE: 0.15
 HELP: Ratio between post-yield tangent and initial elastic tangent.
-
-#QUESTION: Isotropic_hardening_parameters#CB#(1,0)
-#VALUE: 0
-#HELP: Optional choice, if you want to take under consideration these parameters.
-
 END MATERIAL
 
 
 BOOK: Uniaxial_Concrete_Materials
 
 
-NUMBER: 5 MATERIAL: Concrete01_(Zero_tensile_strength)
-
+MATERIAL: Concrete01_(Zero_tensile_strength)
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n
-
 QUESTION: Material:#CB#(Concrete01)
 VALUE: Concrete01
 HELP: uniaxial Kent-Scott-Park concrete material object with degraded linear unloading/reloading stiffness according to the work of Karsan-Jirsa and no tensile strength
 IMAGE: img/Materials/Concrete01.png
-
 QUESTION: Strength_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
 VALUE: C20/25
 TKWIDGET: TK_GenerateUniaxialConcreteProperties
@@ -195,33 +151,23 @@ DEPENDENCIES: (C80/95,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (C90/105,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Strength_Type,#CURRENT#)
 HELP: Choose concrete strength category, to take some standard values in the following fields.
-
 QUESTION: Strength_Type#CB#(Mean,Characteristic)
 VALUE: Characteristic
-
 QUESTION: Compressive_strength_fpc#UNITS#
 VALUE: -20 MPa
-
 QUESTION: Strain_at_maximum_strength_epsc0
 VALUE: -2.0e-3
-
 QUESTION: Crushing_strength_fpcu#UNITS#
 VALUE: -17.0 MPa
-
 QUESTION: Strain_at_crushing_strength_epscU
 VALUE: -3.5e-3
-
 END MATERIAL
 
-
-NUMBER: 6 MATERIAL: Concrete02_(Linear_tension_softening)
-
+MATERIAL: Concrete02_(Linear_tension_softening)
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n
-
 QUESTION: Material:#CB#(Concrete02)
 VALUE: Concrete02
 IMAGE: img/Materials/Concrete02.png
-
 QUESTION: Strength_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
 VALUE: C20/25
 TKWIDGET: TK_GenerateUniaxialConcreteProperties
@@ -240,43 +186,30 @@ DEPENDENCIES: (C80/95,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (C90/105,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Strength_Type,#CURRENT#)
 HELP: Choose concrete strength category, to generate fast properties in the following fields.
-
 QUESTION: Strength_Type#CB#(Mean,Characteristic)
 VALUE: Characteristic
-
 QUESTION: Compressive_strength_fpc#UNITS#
 VALUE: -20 MPa
-
 QUESTION: Strain_at_maximum_strength_epsc0
 VALUE: -2.0e-3
-
 QUESTION: Crushing_strength_fpcu#UNITS#
 VALUE: -17.0 MPa
-
 QUESTION: Strain_at_crushing_strength_epscU
 VALUE: -3.5e-3
-
 QUESTION: ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba
 VALUE: 0.5
-
 QUESTION: Tensile_strength_ft#UNITS#
 VALUE: 2.2 MPa
-
 QUESTION: Tension_softening_stiffness_Ets#UNITS#
 VALUE: 2 GPa
-
 END MATERIAL 
 
-
-NUMBER: 7 MATERIAL: Concrete06
-
+MATERIAL: Concrete06
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n
-
 QUESTION: Material:#CB#(Concrete06)
 VALUE: Concrete06
 HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
 IMAGE: img/Materials/Concrete06C.png
-
 QUESTION: Strength_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
 VALUE: C20/25
 TKWIDGET: TK_GenerateUniaxialConcreteProperties
@@ -295,109 +228,76 @@ DEPENDENCIES: (C80/95,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (C90/105,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Strength_Type,#CURRENT#)
 HELP: Choose concrete strength category, to generate fast properties in the following fields.
-
 QUESTION: Strength_Type#CB#(Mean,Characteristic)
 VALUE: Characteristic
-
 QUESTION: Concrete_compressive_strength_fc#UNITS#
 VALUE: -20 MPa
-
 QUESTION: Strain_at_compressive_strength_e0
 VALUE: -2.0e-3
-
 QUESTION: Compressive_shape_factor_n
 VALUE: 1
-
 QUESTION: Post-peak_compressive_shape_factor_k
 VALUE: 1
-
 QUESTION: Parameter_a1_for_compressive_plastic_strain_definition
 VALUE: -2.500e-003
-
 QUESTION: Tensile_strength_fcr#UNITS#
 VALUE: 2.2 MPa
-
 QUESTION: Tensile_strain_at_peak_stress_ecr
 VALUE: 1.100e-004
-
 QUESTION: Exponent_of_the_tension_stiffering_curve_b
 VALUE: 1
-
 QUESTION: Parameter_a2_for_tensile_plastic_strain_definition
 VALUE: 7.700e-004
-
 END MATERIAL
 
 
 BOOK: Multidimensional_(nD)_Materials
 
 
-NUMBER: 8 MATERIAL: Elastic_Isotropic
-
+MATERIAL: Elastic_Isotropic
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n
-
 QUESTION: Material:#CB#(ElasticIsotropic)
 VALUE: ElasticIsotropic
-
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
 VALUE: Concrete
 TKWIDGET: TK_GenerateNDMaterialsProperties
 DEPENDENCIES: (Concrete,RESTORE,Concrete_Class,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_Class,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_Class,#CURRENT#)
-
 QUESTION: Concrete_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105)
 VALUE: C20/25 
-
 QUESTION: Elastic_Modulus_E#UNITS#
 VALUE: 30GPa
-
 QUESTION: Poisson's_ratio
 VALUE: 0.20
-
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
-
 END MATERIAL
 
-
-NUMBER: 9 MATERIAL: Elastic_Orthotropic
-
+MATERIAL: Elastic_Orthotropic
 COMMENT: \n
-
 QUESTION: Material:#CB#(ElasticOrthotropic)
 VALUE: ElasticOrthotropic
-
 QUESTION: Elastic_Modulus_Ex#UNITS#
 VALUE: 30GPa
-
 QUESTION: Elastic_Modulus_Ey#UNITS#
 VALUE: 30GPa
-
 QUESTION: Elastic_Modulus_Ez#UNITS#
 VALUE: 30GPa
-
 QUESTION: Poisson's_ratio_vxy
 VALUE: 0.20
-
 QUESTION: Poisson's_ratio_vyz
 VALUE: 0.20
-
 QUESTION: Poisson's_ratio_vzx
 VALUE: 0.20
-
 QUESTION: Shear_modulus_Gxy#UNITS#
 VALUE: 11GPa
-
 QUESTION: Shear_modulus_Gyz#UNITS#
 VALUE: 11GPa
-
 QUESTION: Shear_modulus_Gzx#UNITS#
 VALUE: 11GPa
-
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
-
 END MATERIAL
 
 
@@ -405,147 +305,98 @@ BOOK: Section_Force-Deformation
 
 
 MATERIAL: Fiber
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Section:#CB#(Fiber)
 VALUE: Fiber
 TKWIDGET: TK_CheckMaterialsForFiber
-
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: Concrete01/Concrete02/Concrete06/Steel01
-
 TITLE: Section_properties
-
 QUESTION: Cross_Section#CB#(Rectangular,Circular)
 VALUE: Rectangular
 DEPENDENCIES: (Rectangular,HIDE,Bar_Area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_Bar_size,#CURRENT#,RESTORE,Middle_Bar_size,#CURRENT#,RESTORE,Corner_Bar_Area,#CURRENT#,RESTORE,Middle_Bar_Area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#) 
 DEPENDENCIES: (Circular,RESTORE,Bar_Area,#CURRENT#,HIDE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,RESTORE,Bars_along_arc,#CURRENT#,RESTORE,Bar_size,#CURRENT#,RESTORE,Fibers_in_the_circumferential_direction,#CURRENT#,RESTORE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Corner_Bar_size,#CURRENT#,HIDE,Middle_Bar_size,#CURRENT#,HIDE,Corner_Bar_Area,#CURRENT#,HIDE,Middle_Bar_Area,#CURRENT#,HIDE,Fibers_in_local_z_direction,#CURRENT#,HIDE,Fibers_in_local_y_direction,#CURRENT#)
-
 QUESTION: Height_h#UNITS#
 VALUE: 0.5 m
 IMAGE: img/Sections/sec_Rect_RC.png
-
 QUESTION: Width_b#UNITS#
 VALUE: 0.25 m
-
 QUESTION: Diameter_d#UNITS#
 VALUE: 0.5 m
 IMAGE: img/Sections/sec_Circular_RC.png
-
 QUESTION: Reinforcement:#CB#(_)
 VALUE: 
-
 QUESTION: Cover_depth_for_bars#UNITS#
 VALUE: 0.05 m
-
 QUESTION: Bars_along_z_axis_face
 VALUE: 2
-
 QUESTION: Bars_along_y_axis_face
 VALUE: 2
-
 QUESTION: Bars_along_arc
 VALUE: 6
-
 QUESTION: Calculate_(update_to_recalculate)#CB#(0,1)
 VALUE: 1
 TKWIDGET: Calculate_Reinf_Areas_for_Fiber
-
 QUESTION: Corner_Bar_size#UNITS#
 VALUE: 8 mm
-
 QUESTION: Middle_Bar_size#UNITS#
 VALUE: 8 mm
-
 QUESTION: Bar_size#UNITS#
 VALUE: 8 mm
-
 QUESTION: Corner_Bar_Area#UNITS#
 VALUE: 5.027e-005 m^2
-
 QUESTION: Middle_Bar_Area#UNITS#
 VALUE: 5.027e-005 m^2
-
 QUESTION: Bar_Area#UNITS#
 VALUE: 5.027e-005 mm^2
-
 QUESTION: Fibers:#CB#(_)
 VALUE:
-
 QUESTION: Fibers_in_local_z_direction
 VALUE: 15
-
 QUESTION: Fibers_in_local_y_direction
 VALUE: 15
-
 QUESTION: Fibers_in_the_circumferential_direction
 VALUE: 10
-
 QUESTION: Fibers_in_the_radial_direction
 VALUE: 10
-
 TITLE: Materials
-
 QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
-
 QUESTION: Cover_material#MAT#(Uniaxial_Concrete_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
-
 QUESTION: Reinforcing_Bar_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel01
-
 END MATERIAL 
 
-
 MATERIAL: Plate_fiber
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Section:#CB#(PlateFiber)
 VALUE: PlateFiber
-
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
-
 TITLE: Material
-
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 HELP: All nD materials are listed here.
-
 TITLE: Thickness
-
 QUESTION: Plate_thickness_h#UNITS#
 VALUE: 0.25m
-
 END MATERIAL
 
-
 MATERIAL: Elastic_Membrane_Plate
-
 COMMENT: \n
-
 QUESTION: Section:#CB#(ElasticMembranePlate)
 VALUE: ElasticMembranePlate
-
 QUESTION: Elastic_Modulus_E#UNITS#
 VALUE: 28GPa
-
 QUESTION: Poisson's_ratio
 VALUE: 0.2
-
 QUESTION: Section_depth_h#UNITS#
 VALUE: 0.25m
-
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
-
 END MATERIAL
 
 
@@ -553,243 +404,166 @@ BOOK: Beam-Column_Elements
 
 
 MATERIAL: Elastic_Beam-Column
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(ElasticBeamColumn)
 VALUE: ElasticBeamColumn
-
 QUESTION: Compatible_materials:#CB#(Elastic_Isotropic)
 VALUE: Elastic Isotropic
-
 QUESTION: Requirements:#CB#(3D_model_with_6_DOF_per_node_or_2D_model_with_3_DOF_per_node)
 VALUE: 3D model with 6 DOFs per node or 2D model with 3 DOFs per node
 TKWIDGET: TK_CheckModelingOptionsForBeamColumnElems
-
 TITLE: Material
-
-
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: TK_CheckMaterialForElasticBeamColumn
-
 QUESTION: ___#CB#(Hover_for_material_info)
 VALUE: Hover for material info
 STATE: DISABLED
 HELP: All nD materials are listed here! \n You can use ONLY an Elastic Isotropic material for this element.
-
 TITLE: Section_properties
- 
-
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
 DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
 DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
 DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
 DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,RESTORE,Area_A,#CURRENT#,RESTORE,Polar_moment_of_inertia_J,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_y,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_z,#CURRENT#)
-
 QUESTION: Height_h#UNITS#
 VALUE: 0.5m
-
 QUESTION: Width_b#UNITS#
 VALUE: 0.3m
 IMAGE: img/Sections/sec_Rect.png
-
 QUESTION: Diameter_d#UNITS#
 VALUE: 0.5m
 IMAGE: img/Sections/sec_Circular.png
-
 QUESTION: Width_bf#UNITS#
 VALUE: 0.4m
 IMAGE: img/Sections/sec_Tee.png
-
 QUESTION: Height_hf#UNITS#
 VALUE: 0.15m
-
 QUESTION: Width_bw#UNITS#
 VALUE: 0.25m
-
 QUESTION: Area_A#UNITS#
 VALUE: 1.0 m^2
 IMAGE: img/Sections/sec_General.png
-
 QUESTION: Polar_moment_of_inertia_J#UNITS#
 VALUE: 1.0 m^4
-
 QUESTION: Moment_of_Inertia_about_local_y#UNITS#
 VALUE: 0.5 m^4
-
 QUESTION: Moment_of_Inertia_about_local_z#UNITS#
 VALUE: 0.5 m^4
-
 QUESTION: _____#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info 
 STATE: DISABLED
 HELP: Axes shown in figure are local axes for a 2D problem\nIn every case, local x axis is specified by the design direction and the two nodes of the linear element\n\nIN A 2D PROBLEM:\n\nVertical axis is by default the global Y axis\nLocal x axis is the direction of element design(View->Normals->Lines)\nLocal z axis is always the direction of global Z axis\nLocal y axis is easily found by the right hand rule\nHeight fields refer to local y axis direction\nWidth fields refer along local z axis direction\n\nIN A 3D PROBLEM:\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non vertical element (whatever design direction):\n\nVecxz is the direction of global Vertical(Y or Z) axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a Horizontal element: local z is always the direction of Vertical axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis\nWidth fields refer to local y axis\n\nFor a vertical element (whatever design direction):\n\nVeczx is the direction of global -X axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a vertical element: local z is always the direction of -X axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis=Global -X axis direction\nWidth fields refer to local y axis
-        
 TITLE: Element_Geometry
-
-
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
-
 END MATERIAL 
 
-
 MATERIAL: Elastic_Timoshenko_Beam-Column
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(ElasticTimoshenkoBeamColumn)
 VALUE: ElasticTimoshenkoBeamColumn
 HELP: A Timoshenko beam is a frame member that accounts for shear deformations.
-
 QUESTION: Compatible_materials:#CB#(Elastic_Isotropic)
 VALUE: Elastic Isotropic
-
 QUESTION: Requirements:#CB#(3D_model_with_6_DOF_per_node_or_2D_model_with_3_DOF_per_node)
 VALUE: 3D model with 6 DOFs per node or 2D model with 3 DOFs per node
 TKWIDGET: TK_CheckModelingOptionsForBeamColumnElems
-
 TITLE: Material
-
-
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: TK_CheckMaterialForElasticBeamColumn
-
 QUESTION: ___#CB#(Hover_for_material_info)
 VALUE: Hover for material info
 STATE: DISABLED
 HELP: All nD materials are listed here! \n You can use ONLY an Elastic Isotropic material for this element.
-
 TITLE: Section_properties
- 
-
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
 DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
 DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
 DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
 DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,RESTORE,Area_A,#CURRENT#,RESTORE,Polar_moment_of_inertia_J,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_y,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_z,#CURRENT#)
-
 QUESTION: Height_h#UNITS#
 VALUE: 0.5m
-
 QUESTION: Width_b#UNITS#
 VALUE: 0.3m
 IMAGE: img/Sections/sec_Rect.png
-
 QUESTION: Diameter_d#UNITS#
 VALUE: 0.5m
 IMAGE: img/Sections/sec_Circular.png
-
 QUESTION: Width_bf#UNITS#
 VALUE: 0.4m
 IMAGE: img/Sections/sec_Tee.png
-
 QUESTION: Height_hf#UNITS#
 VALUE: 0.15m
-
 QUESTION: Width_bw#UNITS#
 VALUE: 0.25m
-
 QUESTION: Area_A#UNITS#
 VALUE: 1.0 m^2
 IMAGE: img/Sections/sec_General.png
-
 QUESTION: Polar_moment_of_inertia_J#UNITS#
 VALUE: 1.0 m^4
-
 QUESTION: Moment_of_Inertia_about_local_y#UNITS#
 VALUE: 0.5 m^4
-
 QUESTION: Moment_of_Inertia_about_local_z#UNITS#
 VALUE: 0.5 m^4
-
 QUESTION: Area_coefficient_for_shear_area_for_local_y-axis
 VALUE: 0.8333
 HELP: This value will be multiplied by the Area A for Shear Area for local y axis
-
 QUESTION: Area_coefficient_for_shear_area_for_local_z-axis
 VALUE: 0.8333
 HELP: This value will be multiplied by the Area A for Shear Area for local z axis
-
 QUESTION: _____#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info
 STATE: DISABLED
 HELP: Axes shown in figure are local axes for a 2D problem\nIn every case, local x axis is specified by the design direction and the two nodes of the linear element\n\nIN A 2D PROBLEM:\n\nVertical axis is by default the global Y axis\nLocal x axis is the direction of element design(View->Normals->Lines)\nLocal z axis is always the direction of global Z axis\nLocal y axis is easily found by the right hand rule\nHeight fields refer to local y axis direction\nWidth fields refer along local z axis direction\n\nIN A 3D PROBLEM:\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non vertical element (whatever design direction):\n\nVecxz is the direction of global Vertical(Y or Z) axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a Horizontal element: local z is always the direction of Vertical axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis=Vertical axis direction\nWidth fields refer to local y axis direction\n\nFor a vertical element (whatever design direction):\n\nVeczx is the direction of global -X axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a vertical element: local z is always the direction of -X axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis=Global X axis direction\nWidth fields refer to local y axis
-
 TITLE: Element_Geometry
-
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
-
 END MATERIAL
 
-
 MATERIAL: Force-Based_Beam-Column
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(forceBeamColumn)
 VALUE: forceBeamColumn
-
 QUESTION: Compatible_Sections:#CB#(_)
 VALUE: Fiber
-
 QUESTION: Requirements:#CB#(_)
 VALUE: Force-Based Beam Column elements require 2D/3DOF or 3D/6DOF model
 TKWIDGET: TK_CheckModelingOptionsForBeamColumnElems
-
 TITLE: Integration 
-
 QUESTION: Integration_type#CB#(Lobatto)
 VALUE: Lobatto
-
 QUESTION: Number_of_integration_points
 VALUE: 3
 HELP: number of Gauss-Lobatto integration points along the element
 STATE: DISABLED
-
 QUESTION: The_number_of_integration#CB#(_)
 VALUE: points per element is currently fixed to three points per element.
 QUESTION: To_increase_analysis_accuracy,#CB#(_)
 VALUE: a finer mesh is recommended for modeling structural members instead of one element per member
-
 TITLE: Section
-
 QUESTION: Section#MAT#(Section_Force-Deformation)
 VALUE: Fiber
 TKWIDGET: TK_CheckSectionForFBC
-
 TITLE: Element_Geometry
-
-
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
-
 TITLE: Iterations
-
-
 QUESTION: Activate_iterative_scheme_for_satisfying_element_compatibility#CB#(1,0)
 VALUE: 1
 DEPENDENCIES: (1,RESTORE,Maximum_Iterations,#CURRENT#,RESTORE,Tolerance,#CURRENT#) (0,HIDE,Maximum_Iterations,#CURRENT#,HIDE,Tolerance,#CURRENT#)
-
 QUESTION: Maximum_Iterations
 VALUE: 10
 HELP: 	maximum number of iterations to undertake to satisfy element compatibility
-
 QUESTION: Tolerance
 VALUE: 1.0e-6
 HELP: tolerance for satisfaction of element compatibility
-
 END MATERIAL
 
 
@@ -797,132 +571,91 @@ BOOK: Truss_Elements
 
 
 MATERIAL: Truss
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(Truss)
 VALUE: Truss
-
 QUESTION: Compatible_materials:#CB#(Elastic/Elastic_Perfectly_Plastic/Elastic_Perfectly_Plastic_with_Gap)
 VALUE: Elastic/Elastic Perfectly Plastic/Elastic Perfectly Plastic with Gap
-
 QUESTION: Requirements:#CB#(Unused_DOFs_must_be_restrained)
 VALUE: Unused DOFs must be restrained
-
 QUESTION: __#CB#(for_Truss_only)
 VALUE: (for Truss only models use 3D / 3DOF or 2D / 2DOF)
-
 TITLE: Material
-
-
 QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use it's parameters.
-
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
-
 TITLE: Section_properties
-
-
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: General
 DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#)
 DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#)
 DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#)
 DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,RESTORE,Area_A,#CURRENT#)
-
 QUESTION: Height_h#UNITS#
 VALUE: 0.5m
-
 QUESTION: Width_b#UNITS#
 VALUE: 0.3m
 IMAGE: img/Sections/sec_Rect.png
-
 QUESTION: Diameter_d#UNITS#
 VALUE: 0.5m
 IMAGE: img/Sections/sec_Circular.png
-
 QUESTION: Width_bf#UNITS#
 VALUE: 0.4m
 IMAGE: img/Sections/sec_Tee.png
-
 QUESTION: Height_hf#UNITS#
 VALUE: 0.15m
-
 QUESTION: Width_bw#UNITS#
 VALUE: 0.25m
-
 QUESTION: Area_A#UNITS#
 VALUE: 1.0 m^2
 IMAGE: img/Sections/sec_General.png
-
 END MATERIAL
 
-
 MATERIAL: Corotational_Truss
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(CorotationalTruss)
 VALUE: CorotationalTruss
-
 QUESTION: Compatible_materials:#CB#(Elastic/Elastic_Perfectly_Plastic/Elastic_Perfectly_Plastic_with_Gap/Steel01)
 VALUE: Elastic/Elastic Perfectly Plastic/Elastic Perfectly Plastic with Gap/Steel01
-
 QUESTION: Requirements:#CB#(Unused_DOFs_must_be_restrained) 
 VALUE: Unused DOFs must be restrained
-
 QUESTION: __#CB#(for_truss_only)
 VALUE: (for Truss only models use 3D / 3DOF or 2D / 2DOF)
-
 TITLE: Material
-
 QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use it's parameters.
-
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
-
 TITLE: Section_properties
-
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: General
 DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#)
 DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#)
 DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#)
 DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,RESTORE,Area_A,#CURRENT#)
-
 QUESTION: Height_h#UNITS#
 VALUE: 0.5m
-
 QUESTION: Width_b#UNITS#
 VALUE: 0.3m
 IMAGE: img/Sections/sec_Rect.png
-
 QUESTION: Diameter_d#UNITS#
 VALUE: 0.5m
 IMAGE: img/Sections/sec_Circular.png
-
 QUESTION: Width_bf#UNITS#
 VALUE: 0.4m
 IMAGE: img/Sections/sec_Tee.png
-
 QUESTION: Height_hf#UNITS#
 VALUE: 0.15m
-
 QUESTION: Width_bw#UNITS#
 VALUE: 0.25m
-
 QUESTION: Area_A#UNITS#
 VALUE: 1 m^2
 IMAGE: img/Sections/sec_General.png
-
 END MATERIAL
 
 
@@ -930,133 +663,84 @@ BOOK: Surface_Elements
 
 
 MATERIAL: Quad
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(Quad)
 VALUE: Quad
-
 HELP: FourNodeQuad element object which uses a bilinear isoparametric formulation.
 IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckModelingOptionsForQuadElems
-
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
-
 QUESTION: Requirements:#CB#(2D_Model_and_2_DOF_per_node)
 VALUE: 2D model and 2 DOFs per node
-
 TITLE: Material
-
-
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
-
 QUESTION: Plane_behavior#CB#(PlaneStrain,PlaneStress)
 VALUE: PlaneStress
-
 TITLE: Section_properties
-
 QUESTION: Thickness#UNITS#
 VALUE: 0.2m
-
-TITLE : Pressure
-
-
+TITLE: Pressure
 QUESTION: Surface_pressure#UNITS#
 VALUE: 0.0kPa
-
 TITLE: Body_Forces
-
 QUESTION: Applied_on_the_global_axes#CB#(_)
 VALUE:
-
 QUESTION: X-Direction#UNITS#
 VALUE: 0.0kN
-
 QUESTION: Y-Direction#UNITS#
 VALUE: 0.0kN
-
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
-
 END MATERIAL
 
-
 MATERIAL: Shell
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(Shell)
 VALUE: Shell
 IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckModelingOptionsForShellElems
-
 QUESTION: Compatible_materials:#CB#(PlateFiber/ElasticMembranePlate)
 VALUE: PlateFiber/ElasticMembranePlate
-
 QUESTION: Requirements:#CB#(3D_Model_and_6_DOF_per_node)
 VALUE: 3D model and 6 DOFs per node
-
 TITLE: Section 
-
 QUESTION: Type#MAT#(Section_Force-Deformation)
 VALUE: Elastic_Membrane_Plate
-
 END MATERIAL
 
-
 MATERIAL: Tri31
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(Tri31)
 VALUE: Tri31
-
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: nD Materials
-
 QUESTION: Requirements:#CB#(_)
 VALUE: 2D model and 2 DOFs per node
-
 TITLE: Material
-
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
-
 QUESTION: Plane_behavior#CB#(PlaneStrain,PlaneStress)
 VALUE: PlaneStress
-
 TITLE: Section_properties
-
 QUESTION: Thickness#UNITS#
 VALUE: 0.2 m
-
-TITLE : Pressure 
-
+TITLE: Pressure 
 QUESTION: Surface_pressure#UNITS#
 VALUE: 0.0 kPa
-
 TITLE: Body_Forces 
-
 QUESTION: Applied_on_the_global_axes#CB#(_)
 VALUE:
-
 QUESTION: X-Direction#UNITS#
 VALUE: 0.0kN
-
 QUESTION: Y-Direction#UNITS#
 VALUE: 0.0kN
-
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
-
 END MATERIAL
 
 
@@ -1064,40 +748,27 @@ BOOK: Solid_Elements
 
 
 MATERIAL: Standard_Brick_Element
-
 COMMENT: \n
-
 TITLE: General
-
 QUESTION: Element_type:#CB#(stdBrick)
 VALUE: stdBrick
 HELP: This element is used to construct an eight-node brick element object, which uses a trilinear isoparametric formulation.
 IMAGE: img/Materials/Brick.png
 TKWIDGET: TK_CheckModelingOptionsForBrickElems
-
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
-
 QUESTION: Requirements:#CB#(3D_Model_with_3_DOF_per_node)
 VALUE: 3D model with 3 DOFs per node
-
 TITLE: Material
-
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
-
 TITLE: Body_Forces
-
 QUESTION: Applied_on_the_global_axes#CB#(_)
 VALUE: 
-
 QUESTION: X-Direction#UNITS#
 VALUE: 0.0kN
-
 QUESTION: Y-Direction#UNITS#
 VALUE: 0.0kN
-
 QUESTION: Z-Direction#UNITS#
 VALUE: 0.0kN
-
 END MATERIAL

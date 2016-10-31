@@ -1596,7 +1596,7 @@ begin
                 MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation_y" Scalar');
                 MSH.Add('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Torsional" Scalar');
 
-                StrToArray(RES[i],Str,6*n,true);  // read all values from current step (4 values per element)
+                StrToArray(RES[i],Str,6*n,true);  // read all values from current step (6 values per element)
             end;
 
             MSH.Add('Unit "m & rad"');

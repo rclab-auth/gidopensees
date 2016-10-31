@@ -126,8 +126,8 @@ QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
 VALUE: 
-# QUESTION: Active_Interval:#CB#(_)
-# VALUE: 
+#QUESTION: Active_Interval:#CB#(_)
+#VALUE: 
 TKWIDGET: TK_ActiveIntervalinLoads
 END CONDITION
 
@@ -149,8 +149,8 @@ QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
 VALUE: 
-# QUESTION: Active_Interval:#CB#(_)
-# VALUE: 
+#QUESTION: Active_Interval:#CB#(_)
+#VALUE: 
 TKWIDGET: TK_ActiveIntervalinLoads
 END CONDITION
 
@@ -170,8 +170,8 @@ STATE: DISABLED
 HELP: The local x axis is always specified by the two line nodes and its positive direction is defined from the first to the second selected node.\n\nIN A 2D MODEL:\n\nLocal z axis field is IGNORED\nThe global Y axis is the vertical axis by default\nLocal x axis has the line drawing direction (View -> Normals -> Lines)\nLocal z axis coincides with the global Z axis\nLocal y axis has the right hand rule\n\nIN A 3D MODEL:\n\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non-vertical element (in any line drawing direction):\n\nVecxz has the direction of the selected global vertical (Y or Z) axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy\nIf the element is horizontal: local z has the direction of the vertical axis, local x axis is specified by the two line nodes (View->Normals->Lines) and local y axis is found by the right hand rule\n\nFor a vertical element (in any line drawing direction):\n\nVeczx has the direction of global -X axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy
 QUESTION: __#CB#(_)
 VALUE: 
-# QUESTION: Active_Interval:#CB#(_)
-# VALUE: 
+#QUESTION: Active_Interval:#CB#(_)
+#VALUE: 
 TKWIDGET: TK_ActiveIntervalinLoads
 END CONDITION
 
@@ -316,26 +316,4 @@ DEPENDENCIES: (0,SET,Rz_Material,#CURRENT#) (1,RESTORE,Rz_Material,#CURRENT#)
 QUESTION: Rz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
 VALUE: Elastic
 STATE: DISABLED
-END CONDITION
-
-
-BOOK: Displacements
-
-
-NUMBER: 8 CONDITION: point_Displacement
-CONDTYPE: over points 
-CONDMESHTYPE: over nodes
-COMMENT: Not ready yet
-QUESTION: X-Displacement
-VALUE: 0.0
-QUESTION: Y-Displacement
-VALUE: 0.0
-QUESTION: Z-Displacement 
-VALUE: 0.0
-QUESTION: About_X-Rotation
-VALUE: 0.0
-QUESTION: About_Y-Rotation
-VALUE: 0.0
-QUESTION: About_Z-Rotation 
-VALUE: 0.0
 END CONDITION
