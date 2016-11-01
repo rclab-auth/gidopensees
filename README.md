@@ -32,6 +32,13 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 1.5.2 (xx/11/2016)**
+
+- Added more convergence criteria for NR and mNR algorithms
+- Added Rayleigh damping
+
+---
+
 **Version 1.5.1 (31/10/2016)**
 
 - Modified Newton-Raphson algorithm added

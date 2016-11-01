@@ -50,6 +50,13 @@ foreach t $T {
 }
 close $Periods
 *endif
+*if(IntvNum==1 && GenData(Activate_Reyleigh_damping,int)==1)
+
+# Rayleigh damping
+
+*format "%g%g%g%g"
+rayleigh *GenData(alphaM,real) *GenData(betaK,real) *GenData(betaKinit,real) *GenData(betaKcomm,real)
+*endif
 *#
 *# Analysis Options
 *#
@@ -89,23 +96,35 @@ integrator Newmark *IntvData(gamma_factor,real) *IntvData(beta_factor,real)
 *endif
 *endif
 *if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
-*if(strcmp(IntvData(Convergence_Criteria_Type),"Energy_Increment")==0)
+*if(strcmp(IntvData(Convergence_Criteria_Type),"Absolute_force_error")==0)
 *format "%g%g"
-test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Norm_Displacement_Increment")==0)
+test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Absolute_displacement_error")==0)
 *format "%g%g"
 test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Absolute_energy_error")==0)
+*format "%g%g"
+test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_force_error")==0)
+*format "%g%g"
+test RelativeNormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_displacement_error")==0)
+*format "%g%g"
+test RelativeNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_energy_error")==0)
+*format "%g%g"
+test RelativeEnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
 *endif
 *endif
-*if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0)
+*if(strcmp(IntvData(Solution_Algorithm),"Linear")==0)
+algorithm Linear 
+*elseif(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0)
 algorithm Newton *\
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
 -initial 
 *else
 
 *endif
-*elseif(strcmp(IntvData(Solution_Algorithm),"Linear")==0)
-algorithm Linear 
 *elseif(strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
 algorithm ModifiedNewton *\
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)

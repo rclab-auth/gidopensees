@@ -43,6 +43,20 @@ QUESTION: Number_of_eigenvalues
 VALUE: 3
 QUESTION: Solver#CB#(genBandArpack,fullGenLapack,symmBandLapack)
 VALUE: fullGenLapack
+TITLE: Rayleigh_damping
+QUESTION: ____#CB#(_)
+VALUE: 
+QUESTION: Activate_Reyleigh_damping#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,alphaM,#CURRENT#,HIDE,betaK,#CURRENT#,HIDE,betaKinit,#CURRENT#,HIDE,betaKcomm,#CURRENT#) (1,RESTORE,alphaM,#CURRENT#,RESTORE,betaK,#CURRENT#,RESTORE,betaKinit,#CURRENT#,RESTORE,betaKcomm,#CURRENT#) 
+QUESTION: alphaM
+VALUE: 0.0
+QUESTION: betaK
+VALUE: 0.0
+QUESTION: betaKinit
+VALUE: 0.0
+QUESTION: betaKcomm
+VALUE: 0.0
 
 END PROBLEM DATA
  
@@ -50,11 +64,11 @@ END PROBLEM DATA
 INTERVAL DATA
 
 TITLE: Analysis_Options
-QUESTION: System_of_Equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM)
+QUESTION: System_of_Equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM,Mumps_(Parallel))
 VALUE: BandGeneral
 TKWIDGET: TK_EditInterval
-QUESTION: DOF_Numberer#CB#(Plain,RCM,AMD)
-VALUE: AMD
+QUESTION: DOF_Numberer#CB#(Plain,RCM,AMD,ParallelPlain)
+VALUE: RCM
 QUESTION: Constraint_Handler#CB#(Plain,Lagrange,Penalty,Transformation)
 VALUE: Transformation
 QUESTION: Solution_Algorithm#CB#(Linear,Full_Newton-Raphson,Modified_Newton-Raphson)
@@ -64,25 +78,28 @@ QUESTION: Use_initial_stiffness_iterations#CB#(1,0)
 VALUE: 0
 QUESTION: Analysis_Type#CB#(Static,Transient,VariableTransient)
 VALUE: Static
-QUESTION: Integrator_Type#CB#(Load_Control,Displacement_Control,Newmark)
+QUESTION: Integrator_Type#CB#(Load_Control,Displacement_Control,Newmark,Hilber-Hughes-Taylor)
 VALUE: Load_Control
-DEPENDENCIES: (Load_Control,RESTORE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#,HIDE,gamma_factor,#CURRENT#,HIDE,beta_factor,#CURRENT#)
-DEPENDENCIES: (Displacement_Control,RESTORE,Analysis_Steps,#CURRENT#,RESTORE,Total_Displacement,#CURRENT#,RESTORE,Control_Node,#CURRENT#,RESTORE,Control_Node_Direction,#CURRENT#,HIDE,gamma_factor,#CURRENT#,HIDE,beta_factor,#CURRENT#)
-DEPENDENCIES: (Newmark,RESTORE,gamma_factor,#CURRENT#,RESTORE,beta_factor,#CURRENT#,HIDE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#)
+DEPENDENCIES: (Load_Control,RESTORE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
+DEPENDENCIES: (Displacement_Control,RESTORE,Analysis_Steps,#CURRENT#,RESTORE,Total_Displacement,#CURRENT#,RESTORE,Control_Node,#CURRENT#,RESTORE,Control_Node_Direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
+DEPENDENCIES: (Newmark,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#,HIDE,alpha,#CURRENT#)
+DEPENDENCIES: (Hilber-Hughes-Taylor,RESTORE,alpha,#CURRENT#,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#)
 QUESTION: Control_Node
 VALUE: 
-HELP: node whose response controls solution. Select on meshed Model
+HELP: Control node, select on meshed model
 TKWIDGET: GidUtils::TkwidgetPickNode
 QUESTION: Control_Node_Direction#CB#(X-Displacement,Y-Displacement,Z-Displacement,X-Rotation,Y-Rotation,Z-Rotation)
 VALUE: X-Displacement
-HELP: degree of freedom at the node, valid options: 1 through ndf at node.
+HELP: Control node degree of freedom, select 1 to ndf
 QUESTION: Analysis_Steps
 VALUE: 1
 QUESTION: Total_Displacement#UNITS#
 VALUE: 0.1 m
-QUESTION: gamma_factor
+QUESTION: alpha
+VALUE: 1.0
+QUESTION: gamma
 VALUE: 0.5
-QUESTION: beta_factor
+QUESTION: beta
 VALUE: 0.25
 QUESTION: Loading_Type#CB#(Constant,Linear)
 VALUE: Linear
@@ -91,17 +108,22 @@ VALUE: Monotonic
 DEPENDENCIES: (Cyclic,RESTORE,Number_of_Cycles,#CURRENT#) (Monotonic,HIDE,Number_of_Cycles,#CURRENT#)
 QUESTION: Number_of_Cycles
 VALUE: 1
-QUESTION: Convergence_Criteria_Type#CB#(Energy_Increment,Norm_Displacement_Increment)
-VALUE: Norm_Displacement_Increment
-#DEPENDENCIES: (Norm_Displacement_Increment,RESTORE,Tolerance,1.0e-3) (Energy_Increment,RESTORE,Tolerance,1.0e-6)
+QUESTION: Convergence_Criteria_Type#CB#(Absolute_force_error,Absolute_displacement_error,Absolute_energy_error,Relative_force_error,Relative_displacement_error,Relative_energy_error)
+VALUE: Relative_energy_error
+DEPENDENCIES: (Absolute_force_error,RESTORE,Tolerance,0.01)
+DEPENDENCIES: (Absolute_displacement_error,RESTORE,Tolerance,0.001)
+DEPENDENCIES: (Absolute_energy_error,RESTORE,Tolerance,1.0e-5)
+DEPENDENCIES: (Relative_force_error,RESTORE,Tolerance,0.001)
+DEPENDENCIES: (Relative_displacement_error,RESTORE,Tolerance,0.001)
+DEPENDENCIES: (Relative_energy_error,RESTORE,Tolerance,1.0e-6)
 QUESTION: Tolerance
 VALUE: 1.0e-6
-HELP: 	the tolerance criteria used to check for convergence
+HELP: 	Tolerance criteria for checking convergence
 QUESTION: Max_Iterations_per_Step
 VALUE: 50
-HELP: the max number of iterations to check before returning failure condition
+HELP: Maximum number of iterations per step
 QUESTION: Keep_this_loading_active_until_the_end_of_analysis#CB#(1,0)
 VALUE: 0
-HELP: maintains the load constant for the remainder of the the analyses and resets the current time to zero.
+HELP: Maintains the load constant for the remainder of the the analysis and resets the current time to zero
 
 END INTERVAL DATA
