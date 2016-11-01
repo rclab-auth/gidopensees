@@ -1,11 +1,107 @@
-cond point_Loads 
+cond Point_Restraints
+5
+global
+cond(int,1)+cond(int,2)+cond(int,3)+cond(int,4)+cond(int,5)+cond(int,6)==6
+1
+0
+0
+geo/FixXYZ.geo
+global
+cond(int,1)+(cond(int,2))+cond(int,3)==2 && (cond(int,1)+cond(int,2)+cond(int,6)==3 || cond(int,1)+cond(int,3)+cond(int,5)==3 || cond(int,2)+cond(int,3)+cond(int,4)==3)
+cond(int,2)*cond(int,3)
+cond(int,1)*cond(int,3)*(-1)
+cond(int,1)*cond(int,2)
+geo/FixYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==3 && cond(int,4)+cond(int,5)+cond(int,6)==0
+1
+0
+0
+geo/PinXYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==2
+cond(int,2)*cond(int,3)
+cond(int,1)*cond(int,3)*(-1)
+cond(int,1)*cond(int,2)
+geo/PinYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==1
+cond(int,1)
+cond(int,2)
+cond(int,3)
+geo/PinX.geo
+cond Line_Restraints
+5
+global
+cond(int,1)+cond(int,2)+cond(int,3)+cond(int,4)+cond(int,5)+cond(int,6)==6
+1
+0
+0
+geo/FixXYZ.geo
+global
+cond(int,1)+(cond(int,2))+cond(int,3)==2 && (cond(int,1)+cond(int,2)+cond(int,6)==3 || cond(int,1)+cond(int,3)+cond(int,5)==3 || cond(int,2)+cond(int,3)+cond(int,4)==3)
+cond(int,2)*cond(int,3)
+cond(int,1)*cond(int,3)*(-1)
+cond(int,1)*cond(int,2)
+geo/FixYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==3 && cond(int,4)+cond(int,5)+cond(int,6)==0
+1
+0
+0
+geo/PinXYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==2
+cond(int,2)*cond(int,3)
+cond(int,1)*cond(int,3)*(-1)
+cond(int,1)*cond(int,2)
+geo/PinYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==1
+cond(int,1)
+cond(int,2)
+cond(int,3)
+geo/PinX.geo
+cond Surface_Restraints
+5
+global
+cond(int,1)+cond(int,2)+cond(int,3)+cond(int,4)+cond(int,5)+cond(int,6)==6
+1
+0
+0
+geo/FixXYZ.geo
+global
+cond(int,1)+(cond(int,2))+cond(int,3)==2 && (cond(int,1)+cond(int,2)+cond(int,6)==3 || cond(int,1)+cond(int,3)+cond(int,5)==3 || cond(int,2)+cond(int,3)+cond(int,4)==3)
+cond(int,2)*cond(int,3)
+cond(int,1)*cond(int,3)*(-1)
+cond(int,1)*cond(int,2)
+geo/FixYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==3 && cond(int,4)+cond(int,5)+cond(int,6)==0
+1
+0
+0
+geo/PinXYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==2
+cond(int,2)*cond(int,3)
+cond(int,1)*cond(int,3)*(-1)
+cond(int,1)*cond(int,2)
+geo/PinYZ.geo
+global
+cond(int,1)+cond(int,2)+cond(int,3)==1
+cond(int,1)
+cond(int,2)
+cond(int,3)
+geo/PinX.geo
+cond Point_Loads 
 1
 global
 fabs(cond(real,1))!=0.0 || fabs(cond(real,2))!=0.0 || fabs(cond(real,3))!=0.0
 cond(real,1)
 cond(real,2)
 cond(real,3)
-geo/Forces.geo
+geo/Force.geo
 cond Line_Loads 
 1
 global
@@ -13,82 +109,52 @@ fabs(cond(real,1))!=0.0 || fabs(cond(real,2))!=0.0 || fabs(cond(real,3))!=0.0
 cond(real,1)
 cond(real,2)
 cond(real,3)
-geo/Forces.geo
-cond Point_Restraints
-4
-global
-fabs(cond(real,1))!=0.0 && fabs(cond(real,2))!=0.0 && fabs(cond(real,3))!=0.0 && fabs(cond(real,4))!=0.0 && fabs(cond(real,5))!=0.0 && fabs(cond(real,6))!=0.0 
-0
-0
+geo/Force.geo
+cond Point_Mass 
 1
-geo/Elem_Activity_Create.geo
 global
-fabs(cond(int,1))!=0 && fabs(cond(int,2))!=0 && fabs(cond(int,3))!=0
+1
 1
 0
 0
-geo/SuppXYZ+.geo
-global
-fabs(cond(int,1)+(cond(int,2))+cond(int,3))==2
-cond(int,2)*cond(int,3)
-cond(int,1)*cond(int,3)*(-1)
-cond(int,1)*cond(int,2)
-geo/SuppYZ+.geo
-global
-fabs(cond(int,1)+cond(int,2)+cond(int,3))==1
-cond(int,1)
-cond(int,2)
-cond(int,3)
-geo/SuppX+.geo
-cond Line_Restraints
-4
-global
-fabs(cond(real,1))!=0.0 && fabs(cond(real,2))!=0.0 && fabs(cond(real,3))!=0.0 && fabs(cond(real,4))!=0.0 && fabs(cond(real,5))!=0.0 && fabs(cond(real,6))!=0.0 
-0
-0
+geo/Mass.geo
+cond Point_Body_constraints 
 1
-geo/Elem_Activity_Create.geo
 global
-fabs(cond(int,1))!=0 && fabs(cond(int,2))!=0 && fabs(cond(int,3))!=0
+1
 1
 0
 0
-geo/SuppXYZ+.geo
-global
-fabs(cond(int,1)+(cond(int,2))+cond(int,3))==2
-cond(int,2)*cond(int,3)
-cond(int,1)*cond(int,3)*(-1)
-cond(int,1)*cond(int,2)
-geo/SuppYZ+.geo
-global
-fabs(cond(int,1)+cond(int,2)+cond(int,3))==1
-cond(int,1)
-cond(int,2)
-cond(int,3)
-geo/SuppX+.geo
-cond Surface_Restraints
-4
-global
-fabs(cond(real,1))!=0.0 && fabs(cond(real,2))!=0.0 && fabs(cond(real,3))!=0.0 && fabs(cond(real,4))!=0.0 && fabs(cond(real,5))!=0.0 && fabs(cond(real,6))!=0.0 
-0
-0
+geo/Constraint.geo
+cond Line_Body_constraints 
 1
-geo/Elem_Activity_Create.geo
 global
-fabs(cond(int,1))!=0 && fabs(cond(int,2))!=0 && fabs(cond(int,3))!=0
+1
 1
 0
 0
-geo/SuppXYZ+.geo
+geo/Constraint.geo
+cond Point_Rigid_diaphragm 
+1
 global
-fabs(cond(int,1)+(cond(int,2))+cond(int,3))==2
-cond(int,2)*cond(int,3)
-cond(int,1)*cond(int,3)*(-1)
-cond(int,1)*cond(int,2)
-geo/SuppYZ+.geo
+1
+1
+0
+0
+geo/Diaphragm.geo
+cond Line_Rigid_diaphragm 
+1
 global
-fabs(cond(int,1)+cond(int,2)+cond(int,3))==1
-cond(int,1)
-cond(int,2)
-cond(int,3)
-geo/SuppX+.geo
+1
+1
+0
+0
+geo/Diaphragm.geo
+cond ZeroLength 
+1
+global
+1
+1
+0
+0
+geo/ZeroLength.geo

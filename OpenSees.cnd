@@ -20,10 +20,10 @@
 BOOK: Restraints
 
 
-CONDITION: Line_Restraints
-CONDTYPE: over lines
+CONDITION: Point_Restraints
+CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on lines and is transferred on line nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n
+COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n
 QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
 QUESTION: Y-Translation#CB#(1,0)
@@ -48,10 +48,10 @@ DEPENDENCIES: (Pin_XZ,RESTORE,X-Translation,1,RESTORE,Z-Translation,1,RESTORE,Y-
 DEPENDENCIES: (Pin_YZ,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
 END CONDITION
 
-CONDITION: Point_Restraints
-CONDTYPE: over points
+CONDITION: Line_Restraints
+CONDTYPE: over lines
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n
+COMMENT: \n\tThis condition is assigned on lines and is transferred on line nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n
 QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
 QUESTION: Y-Translation#CB#(1,0)
@@ -108,7 +108,7 @@ END CONDITION
 BOOK: Loads
 
 
-CONDITION: point_Loads 
+CONDITION: Point_Loads 
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
 COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\tLoads are always applied in the ACTIVE interval.\n

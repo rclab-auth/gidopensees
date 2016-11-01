@@ -36,6 +36,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 - Added more convergence criteria for NR and mNR algorithms
 - Added Rayleigh damping
+- Condition symbols (.geo) updated
 
 ---
 
