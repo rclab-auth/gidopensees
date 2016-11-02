@@ -360,6 +360,10 @@ QUESTION: Fibers_in_the_circumferential_direction
 VALUE: 10
 QUESTION: Fibers_in_the_radial_direction
 VALUE: 10
+QUESTION: _#CB#(Hover_for_local_axes_info)
+VALUE: Hover for local axes info 
+STATE: DISABLED
+HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nIN A 2D PROBLEM :\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Problem data options\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule
 TITLE: Materials
 QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
@@ -417,10 +421,6 @@ TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: TK_CheckMaterialForElasticBeamColumn
-QUESTION: ___#CB#(Hover_for_material_info)
-VALUE: Hover for material info
-STATE: DISABLED
-HELP: All nD materials are listed here! \n You can use ONLY an Elastic Isotropic material for this element.
 TITLE: Section_properties
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
@@ -452,10 +452,10 @@ QUESTION: Moment_of_Inertia_about_local_y#UNITS#
 VALUE: 0.5 m^4
 QUESTION: Moment_of_Inertia_about_local_z#UNITS#
 VALUE: 0.5 m^4
-QUESTION: _____#CB#(Hover_for_local_axes_info)
+QUESTION: _#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info 
 STATE: DISABLED
-HELP: Axes shown in figure are local axes for a 2D problem\nIn every case, local x axis is specified by the design direction and the two nodes of the linear element\n\nIN A 2D PROBLEM:\n\nVertical axis is by default the global Y axis\nLocal x axis is the direction of element design(View->Normals->Lines)\nLocal z axis is always the direction of global Z axis\nLocal y axis is easily found by the right hand rule\nHeight fields refer to local y axis direction\nWidth fields refer along local z axis direction\n\nIN A 3D PROBLEM:\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non vertical element (whatever design direction):\n\nVecxz is the direction of global Vertical(Y or Z) axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a Horizontal element: local z is always the direction of Vertical axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis\nWidth fields refer to local y axis\n\nFor a vertical element (whatever design direction):\n\nVeczx is the direction of global -X axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a vertical element: local z is always the direction of -X axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis=Global -X axis direction\nWidth fields refer to local y axis
+HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nIN A 2D PROBLEM :\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Problem data options\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule
 TITLE: Element_Geometry
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
@@ -476,10 +476,6 @@ TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: TK_CheckMaterialForElasticBeamColumn
-QUESTION: ___#CB#(Hover_for_material_info)
-VALUE: Hover for material info
-STATE: DISABLED
-HELP: All nD materials are listed here! \n You can use ONLY an Elastic Isotropic material for this element.
 TITLE: Section_properties
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
@@ -517,10 +513,10 @@ HELP: This value will be multiplied by the Area A for Shear Area for local y axi
 QUESTION: Area_coefficient_for_shear_area_for_local_z-axis
 VALUE: 0.8333
 HELP: This value will be multiplied by the Area A for Shear Area for local z axis
-QUESTION: _____#CB#(Hover_for_local_axes_info)
+QUESTION: _#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info
 STATE: DISABLED
-HELP: Axes shown in figure are local axes for a 2D problem\nIn every case, local x axis is specified by the design direction and the two nodes of the linear element\n\nIN A 2D PROBLEM:\n\nVertical axis is by default the global Y axis\nLocal x axis is the direction of element design(View->Normals->Lines)\nLocal z axis is always the direction of global Z axis\nLocal y axis is easily found by the right hand rule\nHeight fields refer to local y axis direction\nWidth fields refer along local z axis direction\n\nIN A 3D PROBLEM:\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non vertical element (whatever design direction):\n\nVecxz is the direction of global Vertical(Y or Z) axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a Horizontal element: local z is always the direction of Vertical axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis=Vertical axis direction\nWidth fields refer to local y axis direction\n\nFor a vertical element (whatever design direction):\n\nVeczx is the direction of global -X axis\nLocal y axis is found by the cross product VecxzXVx\nLocal z axis is found by the cross product VxXVy\nFor a vertical element: local z is always the direction of -X axis,local x axis is specified by the two nodes(View->Normals->Lines) and local y axis is found by the right hand rule\nHeight fields refer to local z axis=Global X axis direction\nWidth fields refer to local y axis
+HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nIN A 2D PROBLEM :\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Problem data options\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule
 TITLE: Element_Geometry
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
 VALUE: Linear
