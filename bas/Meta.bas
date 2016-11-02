@@ -1,3 +1,6 @@
+*set var elem1D=operation(cntEBC+cntETB+cntTruss+cntCorotTruss+cntFBC)
+*set var elem2D=operation(cntQuad+cntShell)
+*set var elem3D=cntStdBrick
 
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -9,13 +12,14 @@
 # *cntNodes
 
 # Elements 1D
-# *operation(cntEBC+cntETB+cntTruss+cntCorotTruss)
+
+# *elem1D
 
 # Elements 2D
-# *operation(cntQuad+cntShell)
+# *elem2D
 
 # Elements 3D
-# *cntStdBrick
+# *elem3D
 *if(cntEBC!=0)
 
 # ElasticBeamColumn
@@ -124,3 +128,149 @@
 *end elems
 
 *endif
+*if(elem1D!=0)
+
+# -------------------------------------------------------------------------------------------------------------------------------
+#
+# F R A M E   L O C A L   A X E S   O R I E N T A T I O N
+#
+# -------------------------------------------------------------------------------------------------------------------------------
+#
+#      ID                           Type                 Local-x                 Local-y                 Local-z          Literal
+#
+*loop elems
+*set var exist=0
+*#
+*# check for valid element
+*#
+*format "#  %6d"
+*if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
+*ElemsNum              ElasticBeamColumn*\
+*set var exist=1
+*elseif(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
+*ElemsNum    ElasticTimoshenkoBeamColumn*\
+*set var exist=1
+*elseif(strcmp(ElemsMatProp(Element_type:),"forceBeamColumn")==0)
+*ElemsNum                forceBeamColumn*\
+*set var exist=1
+*elseif(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
+*ElemsNum                          Truss*\
+*set var exist=1
+*elseif(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
+*ElemsNum              CorotationalTruss*\
+*set var exist=1
+*endif
+*#
+*# process element
+*#
+*if(exist)
+*# end coordinates
+*set var x1=NodesCoord(1,1)
+*set var y1=NodesCoord(1,2)
+*set var z1=NodesCoord(1,3)
+*set var x2=NodesCoord(2,1)
+*set var y2=NodesCoord(2,2)
+*set var z2=NodesCoord(2,3)
+*# vector Vx
+*set var L=operation(sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)+(z2-z1)*(z2-z1)))
+*set var Vx1=operation((x2-x1)/L)
+*set var Vx2=operation((y2-y1)/L)
+*set var Vx3=operation((z2-z1)/L)
+*# 2D Problem
+*if(GenData(Dimensions,int)==2)
+*# vector Vz
+*set var Vz1=0.0
+*set var Vz2=0.0
+*set var Vz3=1.0
+*# vector Vy = Vz x Vx (right hand rule)
+*set var Vy1=operation(Vz2*Vx3-Vz3*Vx2)
+*set var Vy2=operation(Vz3*Vx1-Vz1*Vx3)
+*set var Vy3=operation(Vz1*Vx2-Vz2*Vx1)
+*# 3D Problem
+*elseif(GenData(Dimensions,int)==3)
+*# vertical axis Y
+*if(strcmp(GenData(Vertical_Axis),"Y")==0)
+*if(x1!=x2 || z1!=z2)
+*# vertical axis Y - oblique element
+*set var Vecxz1=0.0
+*set var Vecxz2=1.0
+*set var Vecxz3=0.0
+*# Vy = Vecxz x Vx
+*set var Vy1=operation(Vecxz2*Vx3-Vecxz3*Vx2)
+*set var Vy2=operation(Vecxz3*Vx1-Vecxz1*Vx3)
+*set var Vy3=operation(Vecxz1*Vx2-Vecxz2*Vx1)
+*# Vz = Vx x Vy
+*set var Vz1=operation(Vx2*Vy3-Vx3*Vy2)
+*set var Vz2=operation(Vx3*Vy1-Vx1*Vy3)
+*set var Vz3=operation(Vx1*Vy2-Vx2*Vy1)
+*else
+*# vertical axis Y - vertical element Vz = -VX
+*set var Vz1=-1.0
+*set var Vz2=0.0
+*set var Vz3=0.0
+*# vector Vy = Vz x Vx (right hand rule)
+*set var Vy1=operation(Vz2*Vx3-Vz3*Vx2)
+*set var Vy2=operation(Vz3*Vx1-Vz1*Vx3)
+*set var Vy3=operation(Vz1*Vx2-Vz2*Vx1)
+*endif
+*endif
+*# vertical axis Z
+*if(strcmp(GenData(Vertical_Axis),"Z")==0)
+*if(x1!=x2 || y1!=y2)
+*# vertical axis Z - oblique element
+*set var Vecxz1=0.0
+*set var Vecxz2=0.0
+*set var Vecxz3=1.0
+*# Vy = Vecxz x Vx
+*set var Vy1=operation(Vecxz2*Vx3-Vecxz3*Vx2)
+*set var Vy2=operation(Vecxz3*Vx1-Vecxz1*Vx3)
+*set var Vy3=operation(Vecxz1*Vx2-Vecxz2*Vx1)
+*# Vz = Vx x Vy
+*set var Vz1=operation(Vx2*Vy3-Vx3*Vy2)
+*set var Vz2=operation(Vx3*Vy1-Vx1*Vy3)
+*set var Vz3=operation(Vx1*Vy2-Vx2*Vy1)
+*else
+*# vertical axis Z - vertical element Vz = -VX
+*set var Vz1=-1.0
+*set var Vz2=0.0
+*set var Vz3=0.0
+*# vector Vy = Vz x Vx (right hand rule)
+*set var Vy1=operation(Vz2*Vx3-Vz3*Vx2)
+*set var Vy2=operation(Vz3*Vx1-Vz1*Vx3)
+*set var Vy3=operation(Vz1*Vx2-Vz2*Vx1)
+*endif
+*endif
+*endif
+*# write axis in vector form
+*format "     {%+4.2f %+4.2f %+4.2f}     {%+4.2f %+4.2f %+4.2f}     {%+4.2f %+4.2f %+4.2f}"
+*Vx1*Vx2*Vx3*Vy1*Vy2*Vy3*Vz1*Vz2*Vz3     {*\
+*# write literal axes
+*for(i=1;i<=3;i=i+1)
+*set var check=0
+*if(i==1)
+*set var check=operation(Vx1*100+Vx2*10+Vx3)
+*elseif(i==2)
+*set var check=operation(Vy1*100+Vy2*10+Vy3)
+*elseif(i==3)
+*set var check=operation(Vz1*100+Vz2*10+Vz3)
+*endif
+*if(check==100)
+ +X*\
+*elseif(check==-100)
+ -X*\
+*elseif(check==10)
+ +Y*\
+*elseif(check==-10)
+ -Y*\
+*elseif(check==1)
+ +Z*\
+*elseif(check==-1)
+ -Z*\
+*else
+  O*\
+*endif
+*endfor
+ }
+*endif
+*end elems
+*endif 

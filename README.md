@@ -36,6 +36,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 - Added more convergence criteria for NR and mNR algorithms
 - Added Rayleigh damping
+- Added detailed local axis information for frame elements at the end of model file (.tcl)
 - Condition symbols (.geo) updated
 
 ---
