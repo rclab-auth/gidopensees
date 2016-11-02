@@ -157,4 +157,3 @@ element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode
 *set var VarCount=operation(VarCount+1)
 *endfor
 *endif
-
