@@ -76,23 +76,25 @@ integrator LoadControl *LoadIncr
 *elseif(strcmp(IntvData(Integrator_Type),"Displacement_Control")==0)
 *set var steps=IntvData(Analysis_Steps,int)
 *set var DispIncr=operation(IntvData(Total_Displacement,real)/steps)
-*if(strcmp(IntvData(Control_Node_Direction),"X-Displacement")==0)
+*if(strcmp(IntvData(Control_Node_Direction),"UX")==0)
 *set var NodeCtrlDOF=1
-*elseif(strcmp(IntvData(Control_Node_Direction),"Y-Displacement")==0)
+*elseif(strcmp(IntvData(Control_Node_Direction),"UY")==0)
 *set var NodeCtrlDOF=2
-*elseif(strcmp(IntvData(Control_Node_Direction),"Z-Displacement")==0)
+*elseif(strcmp(IntvData(Control_Node_Direction),"YZ")==0)
 *set var NodeCtrlDOF=3
-*elseif(strcmp(IntvData(Control_Node_Direction),"X-Rotation")==0)
+*elseif(strcmp(IntvData(Control_Node_Direction),"RX")==0)
 *set var NodeCtrlDOF=4
-*elseif(strcmp(IntvData(Control_Node_Direction),"Y-Rotation")==0)
+*elseif(strcmp(IntvData(Control_Node_Direction),"RY")==0)
 *set var NodeCtrlDOF=5
-*elseif(strcmp(IntvData(Control_Node_Direction),"Z-Rotation")==0)
+*elseif(strcmp(IntvData(Control_Node_Direction),"RZ")==0)
 *set var NodeCtrlDOF=6
 *endif
 *format "%g%d%g"
 integrator DisplacementControl *IntvData(Control_Node) *NodeCtrlDOF *DispIncr
 *elseif(strcmp(IntvData(Integrator_Type),"Newmark")==0)
-integrator Newmark *IntvData(gamma_factor,real) *IntvData(beta_factor,real)
+integrator Newmark *IntvData(gamma,real) *IntvData(beta,real)
+*elseif(strcmp(IntvData(Integrator_Type),"Hilber-Hughes-Taylor")==0)
+integrator Newmark *IntvData(alpha,real) *IntvData(gamma,real) *IntvData(beta,real)
 *endif
 *endif
 *if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
