@@ -1,6 +1,7 @@
 *set var elem1D=operation(cntEBC+cntETB+cntTruss+cntCorotTruss+cntFBC)
 *set var elem2D=operation(cntQuad+cntShell)
 *set var elem3D=cntStdBrick
+*set var frames=operation(cntEBC+cntETB+cntFBC)
 
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -128,7 +129,7 @@
 *end elems
 
 *endif
-*if(elem1D!=0)
+*if(frames!=0)
 
 # -------------------------------------------------------------------------------------------------------------------------------
 #
@@ -153,12 +154,6 @@
 *elseif(strcmp(ElemsMatProp(Element_type:),"forceBeamColumn")==0)
 *ElemsNum                forceBeamColumn*\
 *set var exist=1
-*elseif(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
-*ElemsNum                          Truss*\
-*set var exist=1
-*elseif(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
-*ElemsNum              CorotationalTruss*\
-*set var exist=1
 *endif
 *#
 *# process element
@@ -178,14 +173,10 @@
 *set var Vx3=operation((z2-z1)/L)
 *# 2D Problem
 *if(GenData(Dimensions,int)==2)
-*# vector Vz
-*set var Vz1=0.0
-*set var Vz2=0.0
-*set var Vz3=1.0
-*# vector Vy = Vz x Vx (right hand rule)
-*set var Vy1=operation(Vz2*Vx3-Vz3*Vx2)
-*set var Vy2=operation(Vz3*Vx1-Vz1*Vx3)
-*set var Vy3=operation(Vz1*Vx2-Vz2*Vx1)
+*# Vecxz = +Z
+*set var Vecxz1=0.0
+*set var Vecxz2=0.0
+*set var Vecxz3=1.0
 *# 3D Problem
 *elseif(GenData(Dimensions,int)==3)
 *# vertical axis Y
@@ -195,23 +186,11 @@
 *set var Vecxz1=0.0
 *set var Vecxz2=1.0
 *set var Vecxz3=0.0
-*# Vy = Vecxz x Vx
-*set var Vy1=operation(Vecxz2*Vx3-Vecxz3*Vx2)
-*set var Vy2=operation(Vecxz3*Vx1-Vecxz1*Vx3)
-*set var Vy3=operation(Vecxz1*Vx2-Vecxz2*Vx1)
-*# Vz = Vx x Vy
-*set var Vz1=operation(Vx2*Vy3-Vx3*Vy2)
-*set var Vz2=operation(Vx3*Vy1-Vx1*Vy3)
-*set var Vz3=operation(Vx1*Vy2-Vx2*Vy1)
 *else
-*# vertical axis Y - vertical element Vz = -VX
-*set var Vz1=-1.0
-*set var Vz2=0.0
-*set var Vz3=0.0
-*# vector Vy = Vz x Vx (right hand rule)
-*set var Vy1=operation(Vz2*Vx3-Vz3*Vx2)
-*set var Vy2=operation(Vz3*Vx1-Vz1*Vx3)
-*set var Vy3=operation(Vz1*Vx2-Vz2*Vx1)
+*# vertical axis Y - vertical element Vecxz = -X
+*set var Vecxz1=-1.0
+*set var Vecxz2=0.0
+*set var Vecxz3=0.0
 *endif
 *endif
 *# vertical axis Z
@@ -221,6 +200,12 @@
 *set var Vecxz1=0.0
 *set var Vecxz2=0.0
 *set var Vecxz3=1.0
+*else
+*# vertical axis Z - vertical element Vecxz = -X
+*set var Vecxz1=-1.0
+*set var Vecxz2=0.0
+*set var Vecxz3=0.0
+*endif
 *# Vy = Vecxz x Vx
 *set var Vy1=operation(Vecxz2*Vx3-Vecxz3*Vx2)
 *set var Vy2=operation(Vecxz3*Vx1-Vecxz1*Vx3)
@@ -229,16 +214,6 @@
 *set var Vz1=operation(Vx2*Vy3-Vx3*Vy2)
 *set var Vz2=operation(Vx3*Vy1-Vx1*Vy3)
 *set var Vz3=operation(Vx1*Vy2-Vx2*Vy1)
-*else
-*# vertical axis Z - vertical element Vz = -VX
-*set var Vz1=-1.0
-*set var Vz2=0.0
-*set var Vz3=0.0
-*# vector Vy = Vz x Vx (right hand rule)
-*set var Vy1=operation(Vz2*Vx3-Vz3*Vx2)
-*set var Vy2=operation(Vz3*Vx1-Vz1*Vx3)
-*set var Vy3=operation(Vz1*Vx2-Vz2*Vx1)
-*endif
 *endif
 *endif
 *# write axis in vector form
