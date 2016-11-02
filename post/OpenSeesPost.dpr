@@ -7,13 +7,14 @@ program OpenSeesPost;
 uses
     System.Classes,
     System.SysUtils,
-    Windows;
+    Windows, System.Math;
 
 type
     ArrayStr = array of string;
 
 const
     INDENT = 7;
+    EPS    = 1e-2;
 
 var
     i,j,k,n,
@@ -28,8 +29,27 @@ var
     TCL,
     MSH,
     RES,
-    PER        : TStringList;
+    PER,
+    LOC        : TStringList;
     Period     : string;
+    Vx,Vy,
+    Vz,Ang     : array[1..3] of double;
+    senb       : double;
+
+// fix separator for float conversions
+
+function FixSeparator(s : string) : string;
+begin
+    Result := s;
+
+    if (Pos('.',s) <> 0)  or (Pos(',',s) <> 0) then
+    begin
+        if (Pos('.',s) <> 0) and (FormatSettings.DecimalSeparator = ',') then
+            Result := Copy(s,1,Pos('.',s)-1)+','+Copy(s,Pos('.',s)+1,Length(s)-Pos('.',s))
+        else if (Pos(',',s) <> 0) and (FormatSettings.DecimalSeparator = '.') then
+            Result := Copy(s,1,Pos(',',s)-1)+'.'+Copy(s,Pos(',',s)+1,Length(s)-Pos(',',s));
+    end;
+end;
 
 // get full path
 
@@ -287,7 +307,7 @@ begin
 
     if FileExists(Path+'\OpenSees\Truss_axialForce.out') or FileExists(Path+'\OpenSees\CorotTruss_axialForce.out') or
        FileExists(Path+'\OpenSees\ElasticBeamColumn_localForce.out') or FileExists(Path+'\OpenSees\ElasticTimoshenkoBeamColumn_localForce.out') or
-       FileExists(Path+'\OpenSees\ForceBeamColumn_localForce.out')then
+       FileExists(Path+'\OpenSees\ForceBeamColumn_localForce.out') then
 
     begin
         MSH.Add('');
@@ -296,6 +316,108 @@ begin
         MSH.Add('Nodes included');
         MSH.Add('Natural Coordinates: Internal');
         MSH.Add('end GaussPoints');
+    end;
+
+    if FileExists(Path+'\OpenSees\ElasticBeamColumn_localForce.out') or FileExists(Path+'\OpenSees\ElasticTimoshenkoBeamColumn_localForce.out') or
+       FileExists(Path+'\OpenSees\ForceBeamColumn_localForce.out') then
+
+    begin
+        MSH.Add('');
+        MSH.Add('GaussPoints "Line_Axes" ElemType Line');
+        MSH.Add('Number Of Gauss Points: 1');
+        MSH.Add('Nodes not included');
+        MSH.Add('Natural Coordinates: Internal');
+        MSH.Add('end GaussPoints');
+    end;
+
+    //
+    //
+    // L O C A L   A X E S   F O R   F R A M E   E L E M E N T S
+    //
+    //
+
+    n := TCL.IndexOf('# F R A M E   L O C A L   A X E S   O R I E N T A T I O N');
+
+    OutFile := Path+'\OpenSees\Node_displacements.out';
+
+    if FileExists(OutFile) and (n <> 0) then
+    begin
+        write('Reading frame element local axes');
+
+        LOC := TStringList.Create;
+
+        LOC.Add('ComponentNames "Local-x" "Local-y" "Local-z"');
+        LOC.Add('Unit "kN"');
+        LOC.Add('Values');
+
+        n := n+6;
+
+        SetLength(Tag,1);
+
+        for i := n to TCL.Count-1 do
+        begin
+            Tag[0] := Trim(Copy(TCL[i],4,6));
+
+            Vx[1] := StrToFloat(FixSeparator(Copy(TCL[i],47,6)));
+            Vx[2] := StrToFloat(FixSeparator(Copy(TCL[i],54,6)));
+            Vx[3] := StrToFloat(FixSeparator(Copy(TCL[i],61,6)));
+            Vy[1] := StrToFloat(FixSeparator(Copy(TCL[i],74,6)));
+            Vy[2] := StrToFloat(FixSeparator(Copy(TCL[i],81,6)));
+            Vy[3] := StrToFloat(FixSeparator(Copy(TCL[i],88,6)));
+            Vz[1] := StrToFloat(FixSeparator(Copy(TCL[i],101,6)));
+            Vz[2] := StrToFloat(FixSeparator(Copy(TCL[i],108,6)));
+            Vz[3] := StrToFloat(FixSeparator(Copy(TCL[i],115,6)));
+
+            if (Vz[3] < 1.0-EPS) and (Vz[3] > -1.0+EPS) then
+            begin
+                senb := Sqrt(1.0-Vz[3]*Vz[3]);
+
+                Ang[2] := ArcCos(Vz[3]);
+                Ang[3] := ArcCos(Vz[2]/senb);
+
+                if Vz[1]/senb < 0 then
+                    Ang[3] := 2*PI-Ang[3];
+
+                Ang[1] := ArcCos(Vy[3]/senb);
+
+                if Vx[3]/senb < 0 then
+                    Ang[1] := 2*PI-Ang[1];
+            end
+            else
+            begin
+                Ang[2] := ArcCos(Vz[3]);
+                Ang[1] := 0.0;
+                Ang[3] := ArcCos(Vx[1]);
+
+                if -Vx[2] < 0 then
+                    Ang[3] := 2*PI-Ang[3];
+            end;
+
+            LOC.Add(Tag[0] + StringOfChar(' ',INDENT-Length(Tag[0])) + Format('%7.4f  %7.4f  %7.4f',[Ang[1],Ang[2],Ang[3]]));
+        end;
+
+        LOC.Add('End Values');
+
+        // add to all steps
+
+        RES := TStringList.Create;
+        RES.LoadFromFile(OutFile);
+
+        for i := 0 to RES.Count-1 do  // for all steps
+        begin
+            MSH.Add('');
+            MSH.Add('Result "Local_Axes" "'+AnalType+'" '+IntToStr(i+1)+' LocalAxes OnGaussPoints "Line_Axes"');
+
+
+            MSH.AddStrings(LOC);
+        end;
+
+        writeln;
+
+        Sleep(200);
+
+        FreeAndNil(LOC);
+        FreeAndNil(RES);
     end;
 
     //

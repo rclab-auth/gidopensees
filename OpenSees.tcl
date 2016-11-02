@@ -859,6 +859,6 @@ proc BeforeInitGIDPostProcess {} {
 
 proc EndGIDPostProcess {} {
 
-	after 1000 "{UpdateInfoBar}"
+	after 2000 "{UpdateInfoBar}"
 }
 

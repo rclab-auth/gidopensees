@@ -131,13 +131,13 @@
 *endif
 *if(frames!=0)
 
-# -------------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------
 #
 # F R A M E   L O C A L   A X E S   O R I E N T A T I O N
 #
-# -------------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------
 #
-#      ID                           Type                 Local-x                 Local-y                 Local-z          Literal
+#      ID                           Type                    Local-x                    Local-y                    Local-z          Literal
 #
 *loop elems
 *set var exist=0
@@ -206,18 +206,28 @@
 *set var Vecxz2=0.0
 *set var Vecxz3=0.0
 *endif
+*endif
+*endif
 *# Vy = Vecxz x Vx
 *set var Vy1=operation(Vecxz2*Vx3-Vecxz3*Vx2)
 *set var Vy2=operation(Vecxz3*Vx1-Vecxz1*Vx3)
 *set var Vy3=operation(Vecxz1*Vx2-Vecxz2*Vx1)
+*# convert to unit vector
+*set var L=operation(sqrt(Vy1*Vy1+Vy2*Vy2+Vy3*Vy3))
+*set var Vy1=operation(Vy1/L)
+*set var Vy2=operation(Vy2/L)
+*set var Vy3=operation(Vy3/L)
 *# Vz = Vx x Vy
 *set var Vz1=operation(Vx2*Vy3-Vx3*Vy2)
 *set var Vz2=operation(Vx3*Vy1-Vx1*Vy3)
 *set var Vz3=operation(Vx1*Vy2-Vx2*Vy1)
-*endif
-*endif
+*# convert to unit vector
+*set var L=operation(sqrt(Vz1*Vz1+Vz2*Vz2+Vz3*Vz3))
+*set var Væ1=operation(Vz1/L)
+*set var Væ2=operation(Vz2/L)
+*set var Væ3=operation(Vz3/L)
 *# write axis in vector form
-*format "     {%+4.2f %+4.2f %+4.2f}     {%+4.2f %+4.2f %+4.2f}     {%+4.2f %+4.2f %+4.2f}"
+*format "     {%+5.3f %+5.3f %+5.3f}     {%+5.3f %+5.3f %+5.3f}     {%+5.3f %+5.3f %+5.3f}"
 *Vx1*Vx2*Vx3*Vy1*Vy2*Vy3*Vz1*Vz2*Vz3     {*\
 *# write literal axes
 *for(i=1;i<=3;i=i+1)

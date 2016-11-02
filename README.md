@@ -32,8 +32,9 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-**Version 1.5.2 (xx/11/2016)**
+**Version 1.5.2 (02/11/2016)**
 
+- Frame element **local axes** visualization in GiD postprocessor
 - Added more convergence criteria for NR and mNR algorithms
 - Added Rayleigh damping
 - Added detailed local axis information for frame elements at the end of model file (.tcl)
