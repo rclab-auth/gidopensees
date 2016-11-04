@@ -340,7 +340,7 @@ begin
 
     OutFile := Path+'\OpenSees\Node_displacements.out';
 
-    if FileExists(OutFile) and (n <> 0) then
+    if FileExists(OutFile) and (n <> -1) then
     begin
         write('Reading frame element local axes');
 
