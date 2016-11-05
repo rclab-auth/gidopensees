@@ -32,6 +32,13 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 1.5.3 (xx/11/2016)**
+
+- Now supported : **Series and Parallel uniaxial materials**
+- ZeroLength element form updated to include series/parallel materials
+
+---
+
 **Version 1.5.2 (02/11/2016)**
 
 - Frame element **local axes** visualization in GiD postprocessor

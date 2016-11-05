@@ -251,6 +251,76 @@ VALUE: 7.700e-004
 END MATERIAL
 
 
+BOOK: Series/Parallel_Uniaxial_Materials
+
+
+MATERIAL: Series
+COMMENT: \n
+QUESTION: Material:#CB#(Series)
+VALUE: Series
+IMAGE: img/Materials/SeriesMaterial.png
+QUESTION: Activate_1st_Material#CB#(0,1)
+VALUE: 1
+IMAGE: img/Materials/SeriesMaterialExample.png
+DEPENDENCIES: (0,SET,Material_1,#CURRENT#) (1,RESTORE,Material_1,#CURRENT#)
+QUESTION: Material_1#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_2nd_Material#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (0,SET,Material_2,#CURRENT#) (1,RESTORE,Material_2,#CURRENT#)
+QUESTION: Material_2#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_3rd_Material#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,SET,Material_3,#CURRENT#) (1,RESTORE,Material_3,#CURRENT#)
+QUESTION: Material_3#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_4rd_Material#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,SET,Material_4,#CURRENT#) (1,RESTORE,Material_4,#CURRENT#)
+QUESTION: Material_4#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_5th_Material#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,SET,Material_5,#CURRENT#) (1,RESTORE,Material_5,#CURRENT#)
+QUESTION: Material_5#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+END MATERIAL
+
+MATERIAL: Parallel
+COMMENT: \n
+QUESTION: Material:#CB#(Parallel)
+VALUE: Parallel
+IMAGE: img/Materials/ParallelMaterial.png
+QUESTION: Activate_1st_Material#CB#(0,1)
+VALUE: 1
+IMAGE: img/Materials/ParallelMaterialExample.png
+DEPENDENCIES: (0,SET,Material_1,#CURRENT#) (1,RESTORE,Material_1,#CURRENT#)
+QUESTION: Material_1#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_2nd_Material#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (0,SET,Material_2,#CURRENT#) (1,RESTORE,Material_2,#CURRENT#)
+QUESTION: Material_2#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_3rd_Material#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,SET,Material_3,#CURRENT#) (1,RESTORE,Material_3,#CURRENT#)
+QUESTION: Material_3#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_4rd_Material#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,SET,Material_4,#CURRENT#) (1,RESTORE,Material_4,#CURRENT#)
+QUESTION: Material_4#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+QUESTION: Activate_5th_Material#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,SET,Material_5,#CURRENT#) (1,RESTORE,Material_5,#CURRENT#)
+QUESTION: Material_5#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+VALUE: Elastic
+END MATERIAL
+
+
 BOOK: Multidimensional_(nD)_Materials
 
 

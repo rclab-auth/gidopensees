@@ -108,7 +108,7 @@ END CONDITION
 BOOK: Loads
 
 
-CONDITION: Point_Loads 
+CONDITION: Point_Forces 
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
 COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\tLoads are always applied in the ACTIVE interval.\n
@@ -131,7 +131,7 @@ VALUE:
 TKWIDGET: TK_ActiveIntervalinLoads
 END CONDITION
 
-CONDITION: Line_Loads 
+CONDITION: Line_Forces 
 CONDTYPE: over lines
 CONDMESHTYPE: over nodes
 COMMENT: \n\tThis condition is assigned on lines and is transferred on line nodes.\n\tLoads are always applied in the ACTIVE interval.\n
@@ -154,7 +154,7 @@ VALUE:
 TKWIDGET: TK_ActiveIntervalinLoads
 END CONDITION
 
-CONDITION: Line_Uniform_Loads
+CONDITION: Line_Uniform_Forces
 CONDTYPE: over lines
 CONDMESHTYPE: over body elements 
 COMMENT: \n\tThis condition is assigned on lines and is transferred on linear elements.\n
@@ -182,7 +182,7 @@ BOOK: Constraints
 CONDITION: Point_Body_constraints
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tYou can assign this condition on at least 2 nodes, for each body constraint.\n\tEach body constraint should have a unique positive integer ID number.\n\t\It is recommended to apply body constraints in the FIRST interval only.\n
+COMMENT: \n\tYou can assign this condition on at least 2 nodes, for each body constraint.\n\tEach body constraint should have a unique positive integer ID number.\n\tFor more than 2 points/nodes, the constraint is applied in point/node pairs (first is master).\n\t\It is recommended to apply body constraints in the FIRST interval only.\n
 QUESTION: Body_constraint_ID_number
 VALUE: 1
 HELP: Give a positive integer number body constraint.
@@ -278,42 +278,42 @@ BOOK: ZeroLength_Elements
 CONDITION: ZeroLength
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tEach group of ZeroLength elements must have a unique integer ID number.\n\tEach ZeroLength ID must be assigned on at least 2 points/nodes with same coordinates.\n
+COMMENT: \n\tEach group of ZeroLength elements must have a unique integer ID number.\n\tEach ZeroLength ID must be assigned on at least 2 points/nodes with the same coordinates.\n\tFor more than 2 points/nodes, the element is applied in point/node pairs (first is master).\n\tAfter assigning new ZeroLength elements DO NOT FORGET to regenerate the mesh.\n
 QUESTION: ZeroLength_ID_number
 VALUE: 1
 QUESTION: Activate_Ux#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,SET,Ux_Material,#CURRENT#) (1,RESTORE,Ux_Material,#CURRENT#)
-QUESTION: Ux_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+QUESTION: Ux_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 QUESTION: Activate_Uy#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uy_Material,#CURRENT#) (1,RESTORE,Uy_Material,#CURRENT#)
-QUESTION: Uy_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+QUESTION: Uy_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Uz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uz_Material,#CURRENT#) (1,RESTORE,Uz_Material,#CURRENT#)
-QUESTION: Uz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+QUESTION: Uz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rx#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rx_Material,#CURRENT#) (1,RESTORE,Rx_Material,#CURRENT#)
-QUESTION: Rx_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+QUESTION: Rx_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Ry#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Ry_Material,#CURRENT#) (1,RESTORE,Ry_Material,#CURRENT#)
-QUESTION: Ry_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+QUESTION: Ry_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rz_Material,#CURRENT#) (1,RESTORE,Rz_Material,#CURRENT#)
-QUESTION: Rz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
+QUESTION: Rz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 END CONDITION

@@ -16,7 +16,7 @@
 # TCL macros
 #
 
-set VersionNumber "v1.5.2"
+set VersionNumber "v1.5.3"
 
 set InfoWin .gid.win_example
 
@@ -97,7 +97,7 @@ proc Opt1_3 { } {
 	HideInfoBar
 }
 
-proc Opt1_4 { } {
+proc Opt1_4 {} {
 
 	GidOpenMaterials "Multidimensional_(nD)_Materials"
 	HideInfoBar
@@ -111,27 +111,34 @@ proc Opt1_5 { } {
 
 proc Opt1_6 { } {
 
-	GidOpenConditions Restraints
+	GidOpenMaterials "Series/Parallel_Uniaxial_Materials"
 	HideInfoBar
 }
 
 proc Opt1_7 { } {
 
-	GidOpenConditions Constraints
+	GidOpenConditions Restraints
 	HideInfoBar
 }
 
 proc Opt1_8 { } {
 
-	GidOpenConditions Masses
+	GidOpenConditions Constraints
 	HideInfoBar
 }
 
 proc Opt1_9 { } {
 
+	GidOpenConditions Masses
+	HideInfoBar
+}
+
+proc Opt1_10 { } {
+
 	GidOpenConditions Loads
 	HideInfoBar
 }
+
 
 
 proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
@@ -144,6 +151,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/$GiDtheme/btn_Mat_UniS.png \
 		img/Toolbar/$GiDtheme/btn_Mat_ND.png \
 		img/Toolbar/$GiDtheme/btn_Mat_Section.png \
+		img/Toolbar/$GiDtheme/btn_Mat_SeriesParallel.png \
 		img/Toolbar/$GiDtheme/btn_Separator.png \
 		img/Toolbar/$GiDtheme/btn_Restraints.png \
 		img/Toolbar/$GiDtheme/btn_Constraints.png \
@@ -158,11 +166,12 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		[list -np- Opt1_3] \
 		[list -np- Opt1_4] \
 		[list -np- Opt1_5] \
-		"" \
 		[list -np- Opt1_6] \
+		"" \
 		[list -np- Opt1_7] \
 		[list -np- Opt1_8] \
 		[list -np- Opt1_9] \
+		[list -np- Opt1_10] \
 		"" \
 		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr" \
 	]
@@ -173,6 +182,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		"Define Steel Uniaxial Materials" \
 		"Define Multidimensional Materials" \
 		"Define Section Force-Deformation" \
+		"Define Series/Parallel Uniaxial Materials" \
 		"" \
 		"Assign Restraints" \
 		"Assign Constraints" \
@@ -485,6 +495,7 @@ proc InitGIDProject { dir } {
 	GiD_DataBehaviour materials Surface_Elements geomlist {surfaces}
 	GiD_DataBehaviour materials Solid_Elements geomlist {volumes}
 	GiD_DataBehaviour materials "Section_Force-Deformation" disable {assign unassign}	
+	GiD_DataBehaviour materials "Series/Parallel_Uniaxial_Materials" disable {assign unassign}
 	
 	GiDMenu::UpdateMenus
 

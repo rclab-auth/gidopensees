@@ -6,8 +6,7 @@
 *loop elems
 *set var NumberOfElements=NumberOfElements+1
 *end elems
-*#--------------------------
-*# We save the ID numbers (cond(1) ) on a List
+*# We save the ID numbers (cond(1) ) on a list
 *set var dummy=tcl(ClearZeroLengthLists )
 *set var IDExists=-1
 *set Cond ZeroLength *nodes
@@ -28,7 +27,9 @@
 
 *#--------------------for every zeroLength ID do the following: ----------------------
 *for(i=1;i<=HowManyZeroLengthID;i=i+1)
+*#
 *#---------------------- DEFINING THE MATERIALS THAT ZeroLength ELEMENTS MAY USE-----------------------
+*#
 *set var ZLActiveDirections=0
 *if(VarCount==1)
 # Uniaxial materials used by ZeroLength elements
@@ -74,6 +75,78 @@ uniaxialMaterial Concrete02 *MaterialID *MatProp(Compressive_strength_fpc,real) 
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *format "%d%g%g%g%g%g%g%g%g"
 uniaxialMaterial Concrete06 *MaterialID *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
+*#
+*# ------------------- Start of Series/Parallel Uniaxial Material Definition ---------------------
+*#
+*elseif(strcmp(MatProp(Material:),"Parallel")==0 || strcmp(MatProp(Material:),"Series")==0)
+*set var Nuniax=0
+*for(k=2;k<=10;k=k+2)
+*if(MatProp(*k,int)==1)
+*set var Nuniax=operation(Nuniax+1)
+*set var SelUniaxMatID=tcl(FindMaterialNumber *MatProp(*operation(k+1)) )
+*set var MaterialExists=tcl(CheckUsedMaterials *SelUniaxMatID )
+*if(MaterialExists==-1)
+*set var dummy=tcl(AddUsedMaterials *SelUniaxMatID)
+*loop materials *NotUsed
+*set Var uniaxMaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*if(uniaxMaterialID==SelUniaxMatID)
+*if(strcmp(MatProp(Material:),"Elastic")==0)
+*format "%d%g"
+uniaxialMaterial Elastic *uniaxMaterialID *MatProp(Elastic_modulus_E,real) 
+*elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlastic")==0)
+*format "%d%g"
+uniaxialMaterial ElasticPP *uniaxMaterialID *MatProp(Elastic_modulus_E,real) *\
+*set var epsyP=MatProp(Strain_epsP,real)
+*set var epsyN=MatProp(Strain_epsN,real)
+*set var eps0=MatProp(Initial_strain_eps0,real)
+*format "%g%g%g"
+*epsyP *epsyN *eps0
+*elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
+*format "%d%g%g%g"
+uniaxialMaterial ElasticPPGap *uniaxMaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Gap,real)
+*elseif(strcmp(MatProp(Material:),"Steel01")==0)
+*format "%d"
+uniaxialMaterial Steel01 *uniaxMaterialID *\
+*set var Fy=MatProp(Yield_Stress_Fy,real)
+*set var E0=MatProp(Initial_elastic_tangent_E0,real)
+*set var b=MatProp(Strain-hardening_ratio_b,real)
+*format "%g%g%g"
+*Fy *E0 *b
+*elseif(strcmp(MatProp(Material:),"Concrete01")==0)
+*format "%d%g%g%g%g"
+uniaxialMaterial Concrete01 *uniaxMaterialID *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real)
+*elseif(strcmp(MatProp(Material:),"Concrete02")==0)
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial Concrete02 *uniaxMaterialID *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
+*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
+*format "%d%g%g%g%g%g%g%g%g"
+uniaxialMaterial Concrete06 *uniaxMaterialID *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
+*endif
+*endif
+*end materials
+*endif
+*endif
+*endfor
+*if(Nuniax==0)
+*MessageBox Error: Parallel uniaxialMaterial material without Uniaxial materials 
+*else
+uniaxialMaterial *\
+*if(strcmp(MatProp(Material:),"Parallel")==0)
+Parallel *\
+*else
+Series *\
+*endif 
+*MaterialID *\
+*for(k=2;k<=10;k=k+2)
+*if(MatProp(*k,int)==1)
+*tcl(FindMaterialNumber *MatProp(*operation(k+1))) *\
+*endif
+*endfor 
+
+*endif
+*#
+*# ------------------- End of Series/Parallel Uniaxial Material Definition ---------------------
+*#
 *else
 *MessageBox *MatProp(0) is not ready for ZeroLength elements
 *endif
@@ -153,6 +226,7 @@ element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode
 *break
 *endif
 *end nodes
+
 *endfor
 *set var VarCount=operation(VarCount+1)
 *endfor
