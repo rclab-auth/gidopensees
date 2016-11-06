@@ -94,7 +94,7 @@ cond(int,1)
 cond(int,2)
 cond(int,3)
 geo/PinX.geo
-cond Point_Loads 
+cond Point_Forces 
 1
 global
 fabs(cond(real,1))!=0.0 || fabs(cond(real,2))!=0.0 || fabs(cond(real,3))!=0.0
@@ -102,7 +102,7 @@ cond(real,1)
 cond(real,2)
 cond(real,3)
 geo/Force.geo
-cond Line_Loads 
+cond Line_Forces 
 1
 global
 fabs(cond(real,1))!=0.0 || fabs(cond(real,2))!=0.0 || fabs(cond(real,3))!=0.0

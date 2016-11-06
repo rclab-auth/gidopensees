@@ -43,6 +43,8 @@ nDMaterial ElasticIsotropic *MaterialID *MatProp(Elastic_Modulus_E,real) *MatPro
 *elseif(strcmp(MatProp(1),"ElasticOrthotropic")==0)
 *format "%d%g%g%g%g%g%g%g%g%g%g"
 nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
+*else 
+*MessageBox Error: Quad Elements do not support *MatProp(1) Elements
 *endif
 *break
 *endif

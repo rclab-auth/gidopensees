@@ -370,6 +370,37 @@ QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
 END MATERIAL
 
+MATERIAL: PressureIndependMultiYield
+COMMENT: \n
+QUESTION: Material:#CB#(PressureIndependMultiYield)
+VALUE: PressureIndependMultiYield
+QUESTION: Saturated_soil_mass_density#UNITS#
+VALUE: 1.5ton/m^3
+QUESTION: Reference_Shear_Modulus_Gr#UNITS#
+VALUE: 60MPa
+QUESTION: Reference_Bulk_Modulus#UNITS#
+VALUE: 300MPa
+QUESTION: Apparent_Cohesion#UNITS#
+VALUE: 37kPa
+QUESTION: Shear_Strain_at_which_maximum_stress_is_reached
+VALUE: 0.1
+QUESTION: Friction_angle
+VALUE: 0
+QUESTION: Reference_mean_effective_confining_pressure_pr#UNITS#
+VALUE: 100kPa
+QUESTION: Positive_constant_d
+VALUE: 0.0
+QUESTION: Yield_Surfaces
+VALUE: 20
+HELP: Yield surfaces must be less than 40
+QUESTION: Automatic_surface_generation#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (0,RESTORE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#) (1,HIDE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#)
+QUESTION: Define_yield_surfaces_based_on_shear_modulus_reduction_curve(Shear_strain,Modulus_ratio)
+VALUE: #N# 2 0.005 0.1
+STATE: HIDDEN 
+END MATERIAL 
+
 
 BOOK: Section_Force-Deformation
 
@@ -807,6 +838,37 @@ QUESTION: Y-Direction#UNITS#
 VALUE: 0.0kN
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
+END MATERIAL
+
+MATERIAL: QuadUP
+COMMENT: \n
+TITLE: General
+QUESTION: Element_type:#CB#(QuadUP)
+VALUE: QuadUP
+QUESTION: Compatible_materials:#CB#(_)
+VALUE: nD Materials
+TITLE: Material
+QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
+VALUE: PressureIndependMultiYield
+TITLE: Properties
+QUESTION: Thickness#UNITS#
+VALUE: 0.2m
+QUESTION: Combined_undrained_bulk_modulus_Bc#UNITS#
+VALUE: 2GPa
+QUESTION: Fluid_mass_density#UNITS#
+VALUE: 1ton/m^3
+QUESTION: Permeability_coefficient_in_horizontal_direction#UNITS#
+VALUE: 1.0e-3 m/sec
+QUESTION: Permeability_coefficient_in_vertical_direction#UNITS#
+VALUE: 1.0e-3 m/sec
+TITLE: Pressure
+QUESTION: Uniform_normal_traction#UNITS#
+VALUE: 0.0kPa
+TITLE: Body_Forces
+QUESTION: X-acceleration#UNITS#
+VALUE: 0.0m/sec^2
+QUESTION: Y-acceleration#UNITS#
+VALUE: -9.81m/sec^2
 END MATERIAL
 
 

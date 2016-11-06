@@ -128,6 +128,10 @@ model BasicBuilder -ndm 2 -ndf 3;
 *#
 *include bas\Elements\Triangular\Tri31Elements.bas
 *#
+*# QuadUP Elements
+*#
+*include bas\Elements\Quadrilateral\QuadUPElements.bas
+*#
 *# Standard Brick Elements
 *#
 *include bas\Elements\Brick\StdBrickElement.bas

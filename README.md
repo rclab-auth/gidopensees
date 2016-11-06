@@ -32,8 +32,10 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-**Version 1.5.3 (xx/11/2016)**
+**Version 1.5.3 (in development)**
 
+- Now supported : **PressureIndependMultiYield** material for geotechnical problems
+- Now supported : **QuadUP elements** for geotechnical problems
 - Now supported : **Series and Parallel uniaxial materials**
 - ZeroLength element form updated to include series/parallel materials
 
