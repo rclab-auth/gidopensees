@@ -41,6 +41,7 @@ nDMaterial ElasticIsotropic *MaterialID *MatProp(Elastic_Modulus_E,real) *MatPro
 *format "%d%g%g%g%g%g%g%g%g%g%g"
 nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
 *elseif(strcmp(MatProp(Material:),"PressureIndependMultiYield")==0)
+*format "%d%d%g%g%g%g%g%g%g%g%g"
 nDMaterial PressureIndependMultiYield *MaterialID *GenData(Dimensions,int) *MatProp(Saturated_soil_mass_density,real) *MatProp(Reference_Shear_Modulus_Gr,real) *MatProp(Reference_Bulk_Modulus,real) *MatProp(Apparent_Cohesion,real) *MatProp(Shear_Strain_at_which_maximum_stress_is_reached,real) *MatProp(Friction_angle,real) *MatProp(Reference_mean_effective_confining_pressure_pr,real) *MatProp(Positive_constant_d,real) *\
 *if(MatProp(Automatic_surface_generation,int)==1)
 *MatProp(Yield_Surfaces,int)
@@ -71,6 +72,6 @@ element quadUP *ElemsNum *ElemsConec *thickness  *\
 *endif
 *end elems
 *else
-*MessageBox Error: QuadUP elements require 2D model and 3 DOFs
+*MessageBox Error: QuadUP elements require a 2D / 3-DOF model.
 *endif
 *endif

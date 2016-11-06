@@ -67,6 +67,6 @@ PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(Sur
 *endif
 *end elems
 *else
-*MessageBox Error: Tri31 elements require 2D model and 2 DOFs
+*MessageBox Error: Quad elements require a 2D / 2-DOF model.
 *endif
 *endif

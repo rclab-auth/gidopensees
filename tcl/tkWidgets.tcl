@@ -13,20 +13,16 @@ proc TK_CheckMaterialForElasticBeamColumn { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# i.e. ChoosedMaterial can be Elastic_Orthotropic (from combo box "Material" in beam column definition)  
-			set ChoosedMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
-
-			#GiD_AccessValue get materials : Search the value of a field of a material.
-			# $ChoosedMaterial is the material name
-			# Material: is the question name of the material $ChoosedMaterial
+			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
 			set MatType [GiD_AccessValue get materials $ChoosedMaterial "Material:"]
-			#MatType is the value of the question: Material: of the chosen material from the combo box!
-	 
+
 			if { $MatType == "ElasticOrthotropic"} {
-				WarnWinText "ERROR : Material $ChoosedMaterial ($MatType material) can not be used for beam-column elements."
+				WarnWinText "Material $ChosenMaterial ($MatType material) can not be used for beam-column elements."
 				WarnWinText "Use an elastic isotropic material instead."
-				# Change the value of the field "Material:" to Elastic_Isotropic 				  
-				DWLocalSetValue $GDN $STRUCT $QUESTION "Elastic_Isotropic"	
+
+				# Change the value of the field "Material:" to Elastic_Isotropic
+
+				DWLocalSetValue $GDN $STRUCT $QUESTION "Elastic_Isotropic"
 			}
 
 			return ""
@@ -61,18 +57,15 @@ proc TK_CheckModelingOptionsForBeamColumnElems { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# Dimensions : the question name 
 			set ndm [GiD_AccessValue get gendata "Dimensions"]
 			set dof [GiD_AccessValue get gendata "DOF"]
-			# ndm : number of dimensions of the project
-			# dof : degrees of freedom per node
  
 			if { $ndm == "2" && $dof== "2" } {
-				WarnWinText "Beam-Column elements require a 2D / 3 DOF or a 3D/6DOF model."
+				WarnWinText "Beam-Column elements require a 2D / 3-DOF or a 3D / 6-DOF model."
 			} elseif {$ndm=="2" && $dof=="6"} {
-				WarnWinText "Beam-Column elements require a 2D / 3 DOF or a 3D/6DOF model."
+				WarnWinText "Beam-Column elements require a 2D / 3-DOF or a 3D / 6-DOF model."
 			} elseif {$ndm=="3" && $dof=="3"} {
-				WarnWinText "Beam-Column elements require a 2D / 3 DOF or a 3D/6DOF model."
+				WarnWinText "Beam-Column elements require a 2D / 3-DOF or a 3D / 6-DOF model."
 			}
 
 			return ""
@@ -107,16 +100,89 @@ proc TK_CheckModelingOptionsForQuadElems { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# Dimensions : the question name 
 			set ndm [GiD_AccessValue get gendata "Dimensions"]
 			set dof [GiD_AccessValue get gendata "DOF"]
-			# ndm : number of dimensions of the project
-			# dof : degrees of freedom per node
  
 			if { $ndm != "2" || $dof != "2"} {
-				WarnWinText "Quad elements require a 2D model with 2 DOFs per node."
-  
-				#set warn [tk_dialog .warnWin "Warning" "Quad elements require a 2D model with 2 DOFs per node." warning 0 "OK" ]
+				WarnWinText "Quad elements require a 2D / 2-DOF model."
+			}
+
+			return ""
+		}
+
+		DEPEND {
+
+			return ""
+		}
+
+		CLOSE {
+
+			return ""
+		}
+	}
+
+	return ""
+}
+
+proc TK_CheckModelingOptionsForTri31Elems { event args } {
+
+	switch $event {
+
+		INIT {
+
+			return ""
+		}
+
+		SYNC {
+   
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set ndm [GiD_AccessValue get gendata "Dimensions"]
+			set dof [GiD_AccessValue get gendata "DOF"]
+ 
+			if { $ndm != "2" || $dof != "2"} {
+				WarnWinText "Triangular elements require a 2D / 2-DOF model."
+			}
+
+			return ""
+		}
+
+		DEPEND {
+
+			return ""
+		}
+
+		CLOSE {
+
+			return ""
+		}
+	}
+
+	return ""
+}
+
+proc TK_CheckModelingOptionsForQuadUPElems { event args } {
+
+	switch $event {
+
+		INIT {
+
+			return ""
+		}
+
+		SYNC {
+   
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set ndm [GiD_AccessValue get gendata "Dimensions"]
+			set dof [GiD_AccessValue get gendata "DOF"]
+ 
+			if { $ndm != "2" || $dof != "3"} {
+				WarnWinText "QuadUP elements require a 2D / 3-DOF model."
 			}
 
 			return ""
@@ -151,14 +217,11 @@ proc TK_CheckModelingOptionsForBrickElems { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# Dimensions : the question name 
 			set ndm [GiD_AccessValue get gendata "Dimensions"]
 			set dof [GiD_AccessValue get gendata "DOF"]
-			# ndm : number of dimensions of the project
-			# dof : degrees of freedom per node
  
 			if { $ndm != "3" || $dof != "3"} {
-				WarnWinText "Standard Brick elements require a 3D model with 3 DOFs per node."
+				WarnWinText "Standard Brick elements require a 3D / 3-DOF model."
 			}
 
 			return ""
@@ -200,7 +263,7 @@ proc TK_CheckModelingOptionsForShellElems { event args } {
 			# dof : degrees of freedom per node
  
 			if { $ndm != "3" || $dof != "6"} {
-				WarnWinText "Shell elements require a 3D model with 6 DOFs per node."
+				WarnWinText "Shell elements require a 3D / 6-DOF model."
 			}
 
 			return ""

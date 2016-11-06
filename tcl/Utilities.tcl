@@ -79,7 +79,6 @@ proc AboutOpenSeesProbType { } {
 	set keepsplash 0
 }
 
-
 proc OpenSees_Menu { dir } {
 
 	# Create the Menu named GiD+OpenSees in PRE processing

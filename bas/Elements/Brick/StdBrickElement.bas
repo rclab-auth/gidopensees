@@ -55,6 +55,6 @@ element stdBrick *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsConec(3) *ElemsCo
 *endif
 *end elems
 *else
-*MessageBox Error: Standard Brick Elements require 3D with 3DOF Model
+*MessageBox Error: Shell elements require a 3D / 6-DOF model.
 *endif
 *endif

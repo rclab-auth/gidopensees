@@ -71,6 +71,6 @@ element ShellMITC4 *ElemsNum *ElemsConec *tcl(FindMaterialNumber *ElemsMatProp(T
 *endif
 *end elems
 *else
-*MessageBox Error: Shell Elements require 3D model with 6 DOF
+*MessageBox Error: Shell elements require a 3D / 6-DOF model.
 *endif
 *endif

@@ -274,6 +274,6 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *endif
 *end elems
 *else
-*MessageBox Error: Elastic Timoshenko Beam Elements require 2D-3DOF OR 3D-6DOF Model.
+*MessageBox Error: Beam-Column elements require a 2D / 3-DOF or a 3D / 6-DOF model.
 *endif
 *endif

@@ -634,7 +634,7 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *endif
 *end elems
 *else
-*MessageBox Error: forceBeamColumn Element require 2D/3DOF or 3D/6DOF Model
+*MessageBox Error: Beam-Column elements require a 2D / 3-DOF or a 3D / 6-DOF model.
 *endif
 *# endif counter!=0
 *endif

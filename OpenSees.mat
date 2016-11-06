@@ -764,7 +764,7 @@ COMMENT: \n
 TITLE: General
 QUESTION: Element_type:#CB#(Quad)
 VALUE: Quad
-HELP: FourNodeQuad element object which uses a bilinear isoparametric formulation.
+HELP: Four node quadrilateral element object which uses a bilinear isoparametric formulation
 IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckModelingOptionsForQuadElems
 QUESTION: Compatible_materials:#CB#(nD_Materials)
@@ -798,6 +798,7 @@ COMMENT: \n
 TITLE: General
 QUESTION: Element_type:#CB#(Shell)
 VALUE: Shell
+HELP: A Shel element object using a bilinear isoparametric formulation with modified shear interpolation
 IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckModelingOptionsForShellElems
 QUESTION: Compatible_materials:#CB#(PlateFiber/ElasticMembranePlate)
@@ -814,6 +815,9 @@ COMMENT: \n
 TITLE: General
 QUESTION: Element_type:#CB#(Tri31)
 VALUE: Tri31
+HELP:  Constant strain triangular element
+IMAGE: img/Materials/Tri.png
+TKWIDGET: TK_CheckModelingOptionsForTri31Elems
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: nD Materials
 QUESTION: Requirements:#CB#(_)
@@ -845,6 +849,9 @@ COMMENT: \n
 TITLE: General
 QUESTION: Element_type:#CB#(QuadUP)
 VALUE: QuadUP
+HELP:  Four-node plane-strain element using bilinear isoparametric formulation
+IMAGE: img/Materials/Quad_Shell.png
+TKWIDGET: TK_CheckModelingOptionsForQuadUPElems
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: nD Materials
 TITLE: Material
@@ -852,11 +859,11 @@ QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: PressureIndependMultiYield
 TITLE: Properties
 QUESTION: Thickness#UNITS#
-VALUE: 0.2m
+VALUE: 1.0m
 QUESTION: Combined_undrained_bulk_modulus_Bc#UNITS#
-VALUE: 2GPa
+VALUE: 2.2GPa
 QUESTION: Fluid_mass_density#UNITS#
-VALUE: 1ton/m^3
+VALUE: 1.0ton/m^3
 QUESTION: Permeability_coefficient_in_horizontal_direction#UNITS#
 VALUE: 1.0e-3 m/sec
 QUESTION: Permeability_coefficient_in_vertical_direction#UNITS#
@@ -880,7 +887,7 @@ COMMENT: \n
 TITLE: General
 QUESTION: Element_type:#CB#(stdBrick)
 VALUE: stdBrick
-HELP: This element is used to construct an eight-node brick element object, which uses a trilinear isoparametric formulation.
+HELP:  An eight-node brick element using a trilinear isoparametric formulation
 IMAGE: img/Materials/Brick.png
 TKWIDGET: TK_CheckModelingOptionsForBrickElems
 QUESTION: Compatible_materials:#CB#(nD_Materials)

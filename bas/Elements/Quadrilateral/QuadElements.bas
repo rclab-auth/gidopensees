@@ -30,11 +30,11 @@
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Quad")==0)
-*set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set Var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
 *if(MaterialID==SelectedMaterial)
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(1),"ElasticIsotropic")==0)
@@ -69,6 +69,6 @@ PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(Sur
 *endif
 *end elems
 *else
-*MessageBox Error: Quad elements require 2D model and 2 DOFs
+*MessageBox Error: Quad elements require a 2D / 2-DOF model.
 *endif
 *endif
