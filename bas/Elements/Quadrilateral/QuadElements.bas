@@ -23,9 +23,6 @@
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
 *set var thickness=ElemsMatProp(Thickness,real)
 *if(VarCount==1)
-*if(file!=2)
-*set var file=4
-*endif
 # nDMaterial Definition
 
 *loop materials
@@ -56,6 +53,27 @@ nDMaterial PressureIndependMultiYield *MaterialID *GenData(Dimensions,int) *MatP
 *endfor
 
 *endif
+*elseif(strcmp(MatProp(Material:),"PressureDependMultiYield")==0)
+*format "%d%d%g%g%g%g%g%g%g%g%g%g%g%g%g%g"
+nDMaterial PressureDependMultiYield *MaterialID *GenData(Dimensions,int) *MatProp(Saturated_soil_mass_density,real) *MatProp(Reference_Shear_Modulus_Gr,real) *MatProp(Reference_Bulk_Modulus,real) *\
+*MatProp(Friction_angle,real) *MatProp(Shear_Strain_at_which_maximum_stress_is_reached,real) *MatProp(Reference_mean_effective_confining_pressure_pr,real) *MatProp(Positive_constant_d,real) *\
+*MatProp(Phase_transformation_angle,real) *MatProp(Contraction_rate_constant,real) *MatProp(Dilation_rate_constant_1,real) *MatProp(Dilation_rate_constant_2,real) *\
+*MatProp(Liquefaction_parameter_1,real) *MatProp(Liquefaction_parameter_2,real) *MatProp(Liquefaction_parameter_3,real) *\
+*if(MatProp(Automatic_surface_generation,int)==1)
+*format "%d"
+*MatProp(Yield_Surfaces,int) *\
+*else
+*format "%d"
+-*MatProp(Yield_Surfaces,int) *\
+*set var Narray=MatProp(Define_yield_surfaces_based_on_shear_modulus_reduction_curve,int)
+*for(i=1;i<=Narray;i=i+2)
+*format "%g%g"
+*MatProp(Define_yield_surfaces_based_on_shear_modulus_reduction_curve,*i) *MatProp(Define_yield_surfaces_based_on_shear_modulus_reduction_curve,*operation(i+1)) *\
+*endfor
+*endif
+*format "%g%g%g%g%g%g"
+*MatProp(Initial_void_ratio,real) *MatProp(Critical_straight_line_parameter_cs1,real) *MatProp(Critical_straight_line_parameter_cs2,real) *MatProp(Critical_straight_line_parameter_cs3,real) *\
+*MatProp(Atmospheric_pressure_for_normalization,real) *MatProp(Numerical_constant,real)
 *endif
 *break
 *endif
