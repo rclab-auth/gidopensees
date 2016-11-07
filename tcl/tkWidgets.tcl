@@ -14,7 +14,7 @@ proc TK_CheckMaterialForElasticBeamColumn { event args } {
 			set QUESTION [lindex $args 2]
 
 			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
-			set MatType [GiD_AccessValue get materials $ChoosedMaterial "Material:"]
+			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
 
 			if { $MatType == "ElasticOrthotropic"} {
 				WarnWinText "Material $ChosenMaterial ($MatType material) can not be used for beam-column elements."
@@ -374,17 +374,17 @@ proc TK_CheckSectionForFBC { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# i.e. ChoosedSection can be Plate_fiber (from combo box "Section" in force based beam column definition)  
-			set ChoosedSection [DWLocalGetValue $GDN $STRUCT $QUESTION]
+			# i.e. ChosenMaterial can be Plate_fiber (from combo box "Section" in force based beam column definition)  
+			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
    	
 			#GiD_AccessValue get materials : Search the value of a field of a material.
-			# $ChoosedSection is the material name
-			# Section: is the question name of the Section $ChoosedSection
-			set SecType [GiD_AccessValue get materials $ChoosedSection "Section:"]
+			# $ChosenMaterial is the material name
+			# Section: is the question name of the Section $ChosenMaterial
+			set SecType [GiD_AccessValue get materials $ChosenMaterial "Section:"]
 			#SecType is the value of the question: Section: of the chosen Section from the combo box!
  
 			if { $SecType == "PlateFiber" || $SecType == "ElasticMembranePlate" } {
-				WarnWinText "ERROR : Section $ChoosedSection ($SecType section) can not be used for Force-Based beam-column elements."
+				WarnWinText "ERROR : Section $ChosenMaterial ($SecType section) can not be used for Force-Based beam-column elements."
 				WarnWinText "It has been changed to Fiber section."
 				# Change the value of the field "Section:" to Fiber 				  
 				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"	
@@ -422,14 +422,14 @@ proc TK_CheckMaterialsForFiber { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# i.e. ChoosedSection can be Elastic_Orthotropic (from combo box "Material" in beam column definition)  
+			# i.e. ChosenSection can be Elastic_Orthotropic (from combo box "Material" in beam column definition)  
 			set ChoosedCoreMaterial [DWLocalGetValue $GDN $STRUCT "Core_material"]
 			set ChoosedCoverMaterial [DWLocalGetValue $GDN $STRUCT "Cover_material"]
 			set ChoosedBarMaterial [DWLocalGetValue $GDN $STRUCT "Reinforcing_Bar_material"]
 
 			#GiD_AccessValue get materials : Search the value of a field of a material.
-			# $ChoosedSection is the material name
-			# Section: is the question name of the Section $ChoosedSection
+			# $ChosenSection is the material name
+			# Section: is the question name of the Section $ChosenSection
 			set CoreMatType [GiD_AccessValue get materials $ChoosedCoreMaterial "Material:"]
 			set CoverMatType [GiD_AccessValue get materials $ChoosedCoverMaterial "Material:"]
 			set BarMatType [GiD_AccessValue get materials $ChoosedBarMaterial "Material:"]
@@ -1087,6 +1087,59 @@ proc TK_GenerateNDMaterialsProperties { event args } {
 		CLOSE {
 
 			return ""
+		}
+	}
+
+	return ""
+}
+
+proc TK_Damage2pDefaultValues { event args } {
+
+	switch $event {
+		
+		INIT {
+
+		return ""
+		}
+		
+		SYNC {
+		
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+			set unit "MPa"
+			set Eunit "GPa"
+			set AssignDefault [DWLocalGetValue $GDN $STRUCT $QUESTION]
+			
+			if {$AssignDefault==1} {
+			
+				set fccValueUnit [DWLocalGetValue $GDN $STRUCT "Concrete_compressive_strength"]
+				
+				set temp [GidConvertValueUnit $fccValueUnit]
+				set temp [ParserNumberUnit $temp fccValue fccUnit]
+				
+				set fccValue [ConvertToMPa $fccValue $fccUnit] 
+
+				set fct [expr 0.1*abs($fccValue)]
+				set E [format "%1.5g" [expr 4.75*sqrt(abs($fccValue)) ]]
+				set Gt [format "%1.3e" [expr 1840*$fct*$fct/(1000*$E)/1000]]
+				set Gc [format "%1.3e" [expr 6250*$fccValue*$fccValue/(1000*$E)/1000]]
+				set rho_bar 0.20
+				set H [format "%1.4g" [expr 0.25*$E]]
+				set theta 0.50
+				set ok [DWLocalSetValue $GDN $STRUCT Concrete_tensile_strength $fct$unit]
+				set ok [DWLocalSetValue $GDN $STRUCT Young_Modulus $E$Eunit]
+				set ok [DWLocalSetValue $GDN $STRUCT Poisson_coefficient 0.15]
+				set ok [DWLocalSetValue $GDN $STRUCT Tension_fracture_energy_density $Gt$Eunit]
+				set ok [DWLocalSetValue $GDN $STRUCT Comp._fracture_energy_density $Gc$Eunit]
+				set ok [DWLocalSetValue $GDN $STRUCT Parameter_of_plastic_volume_change $rho_bar]
+				set ok [DWLocalSetValue $GDN $STRUCT Parameter_of_plastic_volume_change $rho_bar]
+				set ok [DWLocalSetValue $GDN $STRUCT Linear_hardening_parameter $H$Eunit]
+				set ok [DWLocalSetValue $GDN $STRUCT Isotropic/kinematic_hardening_ratio $theta]
+				set ok [DWLocalSetValue $GDN $STRUCT Computational_stiffness_matrix "Computational_tangent"]
+
+				return ""
+			}
 		}
 	}
 

@@ -370,6 +370,51 @@ QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
 END MATERIAL
 
+MATERIAL: J2Plasticity
+COMMENT: \n
+QUESTION: Material:#CB#(J2Plasticity)
+VALUE: J2Plasticity
+QUESTION: Bulk_Modulus#UNITS# 
+VALUE: 300MPa
+QUESTION: Shear_Modulus#UNITS# 
+VALUE: 60MPa
+QUESTION: Initial_Yield_Stress#UNITS#
+VALUE: 0.0kPa
+QUESTION: Final_Saturation_Yield_Stress#UNITS#
+VALUE: 10kPa
+QUESTION: Exp._hardening_parameter_delta
+VALUE: 1.0
+QUESTION: Linear_hardening_parameter
+VALUE: 1.0
+END MATERIAL
+
+MATERIAL: Damage2p
+COMMENT: \n
+QUESTION: Concrete_compressive_strength#UNITS#
+VALUE: -20MPa
+QUESTION: Calculate_default_values_(update_to_apply)#CB#(1,0)
+VALUE: 1
+TKWIDGET: TK_Damage2pDefaultValues
+QUESTION: Young_Modulus#UNITS#
+VALUE: 21.243GPa
+QUESTION: Concrete_tensile_strength#UNITS#
+VALUE: 2.0MPa
+QUESTION: Poisson_coefficient
+VALUE: 0.15
+QUESTION: Tension_fracture_energy_density#UNITS#
+VALUE: 3.465e-004GPa
+QUESTION: Comp._fracture_energy_density#UNITS#
+VALUE: 1.177e-001GPa
+QUESTION: Parameter_of_plastic_volume_change
+VALUE: 0.20
+QUESTION: Linear_hardening_parameter#UNITS#
+VALUE: 5.311GPa
+QUESTION: Isotropic/kinematic_hardening_ratio
+VALUE: 0.50 
+QUESTION: Computational_stiffness_matrix#CB#(Computational_tangent,Damaged_secant_stiffness)
+VALUE: Computational_tangent
+END MATERIAL
+
 MATERIAL: PressureIndependMultiYield
 COMMENT: \n
 QUESTION: Material:#CB#(PressureIndependMultiYield)
@@ -385,11 +430,72 @@ VALUE: 37kPa
 QUESTION: Shear_Strain_at_which_maximum_stress_is_reached
 VALUE: 0.1
 QUESTION: Friction_angle
-VALUE: 0
+VALUE: 0.0
 QUESTION: Reference_mean_effective_confining_pressure_pr#UNITS#
 VALUE: 100kPa
 QUESTION: Positive_constant_d
 VALUE: 0.0
+QUESTION: Yield_Surfaces
+VALUE: 20
+HELP: Yield surfaces must be less than 40
+QUESTION: Automatic_surface_generation#CB#(0,1)
+VALUE: 1
+DEPENDENCIES: (0,RESTORE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#) (1,HIDE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#)
+QUESTION: Define_yield_surfaces_based_on_shear_modulus_reduction_curve(Shear_strain,Modulus_ratio)
+VALUE: #N# 2 0.005 0.1
+STATE: HIDDEN 
+END MATERIAL 
+
+MATERIAL: PressureDependMultiYield
+COMMENT: \n
+QUESTION: Material:#CB#(PressureDependMultiYield)
+VALUE: PressureDependMultiYield
+QUESTION: Saturated_soil_mass_density#UNITS#
+VALUE: 1.7ton/m^3
+QUESTION: Reference_Shear_Modulus_Gr#UNITS#
+VALUE: 60MPa
+QUESTION: Reference_Bulk_Modulus#UNITS#
+VALUE: 300MPa
+QUESTION: Apparent_Cohesion#UNITS#
+VALUE: 37kPa
+QUESTION: Shear_Strain_at_which_maximum_stress_is_reached
+VALUE: 0.1
+QUESTION: Friction_angle
+VALUE: 0.0
+HELP: In degrees
+QUESTION: Reference_mean_effective_confining_pressure_pr#UNITS#
+VALUE: 100kPa
+QUESTION: Positive_constant_d
+VALUE: 0.0
+QUESTION: Phase_transformation_angle
+VALUE: 29
+HELP: In degrees 
+QUESTION: Contraction_rate_constant
+VALUE: 0.21
+HELP: A non-negative constant defining the rate of shear-induced volume decrease (contraction) or pore pressure buildup. A larger value corresponds to faster contraction rate.
+QUESTION: Dilation_rate_constant_1
+VALUE: 0.0
+QUESTION: Dilation_rate_constant_2
+VALUE: 0.0
+QUESTION: Liquefaction_parameter_1
+VALUE: 0.0
+QUESTION: Liquefaction_parameter_2
+VALUE: 0.0
+QUESTION: Liquefaction_parameter_3
+VALUE: 1.5
+HELP: liquefac3 takes a value between 0.0 and 3.0. 
+QUESTION: Initial_void_ratio
+VALUE: 0.6
+QUESTION: Critical_straight_line_parameter_cs1
+VALUE: 0.9
+QUESTION: Critical_straight_line_parameter_cs2
+VALUE: 0.02
+QUESTION: Critical_straight_line_parameter_cs3
+VALUE: 0.07
+QUESTION: Atmospheric_pressure_for_normalization#UNITS#
+VALUE: 101kPa
+QUESTION: Numerical_constant#UNITS#
+VALUE: 0.3kPa
 QUESTION: Yield_Surfaces
 VALUE: 20
 HELP: Yield surfaces must be less than 40
@@ -436,15 +542,15 @@ QUESTION: Bars_along_y_axis_face
 VALUE: 2
 QUESTION: Bars_along_arc
 VALUE: 6
-QUESTION: Calculate_(update_to_recalculate)#CB#(0,1)
-VALUE: 1
-TKWIDGET: Calculate_Reinf_Areas_for_Fiber
 QUESTION: Corner_Bar_size#UNITS#
 VALUE: 8 mm
 QUESTION: Middle_Bar_size#UNITS#
 VALUE: 8 mm
 QUESTION: Bar_size#UNITS#
 VALUE: 8 mm
+QUESTION: Calculate_bar_areas_(update_to_apply)#CB#(0,1)
+VALUE: 1
+TKWIDGET: Calculate_Reinf_Areas_for_Fiber
 QUESTION: Corner_Bar_Area#UNITS#
 VALUE: 5.027e-005 m^2
 QUESTION: Middle_Bar_Area#UNITS#

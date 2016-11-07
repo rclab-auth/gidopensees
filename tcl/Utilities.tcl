@@ -120,6 +120,40 @@ proc OpenSees_Menu { dir } {
 		}
 	}
 
+proc ConvertToMPa { Value Unit } {
+
+	if {$Unit=="ksi"} {
+						
+		set Value [expr 6.89475*$Value]
+					
+		} elseif {$Unit=="psi"} {
+					
+		set Value [expr 0.00689475*$Value]
+					
+		} elseif {$Unit=="kPa" || $Unit=="kN/m^2"} {
+					
+		set Value [expr $Value/1000]
+					
+		} elseif {$Unit=="GPa"} {
+					
+		set Value [expr $Value*1000]
+					
+		} elseif {$Unit=="lbf/ft^2"} {
+					
+		set Value [expr 0.00004788025*$Value]
+						
+		} elseif {$Unit=="Pa" || $Unit=="N/m^2"} {
+	
+		set Value [expr $Value/1000000]
+		
+		} else {
+		
+		return $Value
+	}
+
+	return $Value
+}
+
 proc ModelessDialog {w title text bitmap default args} {
 
     global tcl_platform
