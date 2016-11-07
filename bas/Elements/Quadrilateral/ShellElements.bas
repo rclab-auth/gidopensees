@@ -22,38 +22,37 @@
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
 *if(VarCount==1)
-*if(file!=2)
-*set var file=4
-*endif
 # Materials/Sections Definition for shell elements
 
 *loop materials 
 *if(strcmp(MatProp(Element_type:),"Shell")==0)
-*Set Var oMujMat=tcl(FindMaterialNumber *MatProp(Type) )
+*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Type) )
 *loop materials *NotUsed
-*Set Var oMat=tcl(FindMaterialNumber *MatProp(0) )
-*if(oMat==oMujMat)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *if(strcmp(MatProp(Section:),"PlateFiber")==0)
 *set var PlateThickness=MatProp(Plate_thickness_h,real)
-*set var PlateFiberTag=oMat
-*set var oMujMat2=tcl(FindMaterialNumber *MatProp(Material) )
+*set var PlateFiberTag=SectionID
+*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
 *loop materials *NotUsed
-*set var oMat2=tcl(FindMaterialNumber *MatProp(0) )
-*if(oMat2==oMujMat2)
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
 *format "%d%g%g"
-nDMaterial ElasticIsotropic *oMat2 *MatProp(Elastic_Modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Mass_density,real)
+nDMaterial ElasticIsotropic *MaterialID *MatProp(Elastic_Modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Mass_density,real)
 *elseif(strcmp(MatProp(Material:),"ElastiOrthotropic")==0)
 *format "%d%g%g%g%g%g%g%g%g%g"
-nDMaterial ElasticOrthotropic *oMat *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
+nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
+*elseif(strcmp(MatProp(Material:),"PressureIndependMultiYield")==0)
+*MessageBox Shell Elements do not support PressureIndependMultiYield Materials
 *endif
 *format "%d%d%g"
-section PlateFiber *PlateFiberTag *oMat2 *PlateThickness
+section PlateFiber *PlateFiberTag *SelectedMaterial *PlateThickness
 *break
 *endif
 *end materials
 *elseif(strcmp(MatProp(Section:),"ElasticMembranePlate")==0)
-*set var ElasticMembranePlateTag=oMat
+*set var ElasticMembranePlateTag=SelectedSection
 *format "%d%g%g%g%g"
 section ElasticMembranePlateSection *ElasticMembranePlateTag *MatProp(Elastic_Modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Section_depth_h,real) *MatProp(Mass_density,real)
 *endif

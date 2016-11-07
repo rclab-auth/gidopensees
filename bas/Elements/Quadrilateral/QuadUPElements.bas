@@ -34,10 +34,10 @@
 *set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
 *if(MaterialID==SelectedMaterial)
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
-*if(strcmp(MatProp(1),"ElasticIsotropic")==0)
+*if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
 *format "%d%g%g%g"
 nDMaterial ElasticIsotropic *MaterialID *MatProp(Elastic_Modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Mass_density,real)
-*elseif(strcmp(MatProp(1),"ElasticOrthotropic")==0)
+*elseif(strcmp(MatProp(Material:),"ElasticOrthotropic")==0)
 *format "%d%g%g%g%g%g%g%g%g%g%g"
 nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
 *elseif(strcmp(MatProp(Material:),"PressureIndependMultiYield")==0)
