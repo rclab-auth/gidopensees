@@ -42,6 +42,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 - Now supported : **Series and Parallel uniaxial materials**
 - ZeroLength element dialog updated to include series/parallel materials
 - Added links to OpenSees wiki for all material/condition dialogs
+- Many other minor improvements
 
 ---
 

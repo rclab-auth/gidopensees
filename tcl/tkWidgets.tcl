@@ -924,11 +924,11 @@ proc TK_GenerateUniaxialMaterialsProperties { event args } {
 						set strength_type [DWLocalGetValue $GDN $STRUCT "Strength_Type"]
 						
 						if { $strength_type=="Mean" } {
-							set Ec [format "%g" [expr (2*$fcm/$ec1)/1000]]
+							set Ec [format "%1.4g" [expr (2*$fcm/$ec1)/1000]]
 						} elseif { $strength_type=="Characteristic" } {
-							set Ec [format "%g" [expr (2*$fck/$ec1)/1000]]
+							set Ec [format "%1.3g" [expr (2*$fck/$ec1)/1000]]
 						}
-						set epsP [format "%e" [expr $fctm/(1000*$Ec)]]
+						set epsP [format "%1.2e" [expr $fctm/(1000*$Ec)]]
 						set ok [DWLocalSetValue $GDN $STRUCT "Elastic_modulus_E" $Ec$Eunit]
 						set ok [DWLocalSetValue $GDN $STRUCT "Strain_epsP" $epsP]
 						set ok [DWLocalSetValue $GDN $STRUCT "Strain_epsN" $ec1]

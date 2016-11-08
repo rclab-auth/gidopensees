@@ -21,13 +21,13 @@ BOOK: Standard_Uniaxial_Materials
 
 
 MATERIAL: Elastic
-COMMENT: \n\tUpdate material window to assign selected Class/Type\n
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(Elastic)
 VALUE: Elastic
 HELP: Elastic uniaxial material object
 IMAGE: img/Materials/Elastic.png
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
-VALUE: Custom
+VALUE: Concrete
 TKWIDGET: TK_GenerateUniaxialMaterialsProperties
 DEPENDENCIES: (Concrete,RESTORE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_Class,#CURRENT#,RESTORE,Steel_Grade,#CURRENT#)
@@ -43,13 +43,13 @@ TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
 MATERIAL: Elastic_Perfectly_Plastic
-COMMENT: \n\tUpdate material window to assign selected Class/Type\n
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(ElasticPerfectlyPlastic)
 VALUE: ElasticPerfectlyPlastic
 HELP: elastic perfectly-plastic uniaxial material object.
 IMAGE: img/Materials/ElasticPP.png
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
-VALUE: Steel
+VALUE: Concrete
 TKWIDGET: TK_GenerateUniaxialMaterialsProperties
 DEPENDENCIES: (Concrete,RESTORE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_Class,#CURRENT#,RESTORE,Steel_Grade,#CURRENT#,HIDE,Strength_Type,#CURRENT#)
@@ -61,13 +61,13 @@ VALUE: Characteristic
 QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500)
 VALUE: B500
 QUESTION: Elastic_modulus_E#UNITS#
-VALUE: 200 GPa
+VALUE: 20GPa
 HELP: young modulus of elasticity E
 QUESTION: Strain_epsP
-VALUE:  2.5e-3
+VALUE:  1.10e-004
 HELP: strain or deformation at which material reaches plastic state in tension
 QUESTION: Strain_epsN
-VALUE: -2.5e-3
+VALUE: -2.0e-3
 HELP: strain or deformation at which material reaches plastic state in compression
 QUESTION: Initial_strain_eps0
 VALUE: 0.0
@@ -75,13 +75,13 @@ TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
 MATERIAL: Elastic_Perfectly_Plastic_with_Gap
-COMMENT: \n\tUpdate material window to assign selected Class/Type\n
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(ElasticPerfectlyPlasticwithGap)
 VALUE: ElasticPerfectlyPlasticwithGap
 HELP: elastic perfectly-plastic gap uniaxial material object.
 IMAGE: img/Materials/ElasticPPGap.png
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
-VALUE: Steel
+VALUE: Concrete
 TKWIDGET: TK_GenerateUniaxialMaterialsProperties
 DEPENDENCIES: (Concrete,RESTORE,Concrete_Class,#CURRENT#,HIDE,Steel_Grade,#CURRENT#,RESTORE,Strength_Type,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_Class,#CURRENT#,RESTORE,Steel_Grade,#CURRENT#,RESTORE,Yield_Stress_Fy,#CURRENT#,HIDE,Strength_Type,#CURRENT#)
@@ -93,10 +93,10 @@ VALUE: Characteristic
 QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500)
 VALUE: B500
 QUESTION: Elastic_modulus_E#UNITS#
-VALUE: 200GPa
+VALUE: 20GPa
 HELP: young modulus of elasticity E
 QUESTION: Yield_Stress_Fy#UNITS#
-VALUE: 500MPa
+VALUE: -20MPa
 HELP: Yield stress at which material reaches the plastic plate. Negative value for compression.
 QUESTION: Gap
 VALUE: 0.0
@@ -109,7 +109,7 @@ BOOK: Uniaxial_Steel_Materials
 
 
 MATERIAL: Steel01
-COMMENT: \n\tUpdate material window to assign selected Grade\n
+COMMENT: \n\tUpdate material window to assign selected Grade\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(Steel01)
 VALUE: Steel01
 HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
@@ -132,7 +132,7 @@ BOOK: Uniaxial_Concrete_Materials
 
 
 MATERIAL: Concrete01_(Zero_tensile_strength)
-COMMENT: \n\tUpdate material window to assign selected Class/Type\n
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(Concrete01)
 VALUE: Concrete01
 HELP: uniaxial Kent-Scott-Park concrete material object with degraded linear unloading/reloading stiffness according to the work of Karsan-Jirsa and no tensile strength
@@ -169,7 +169,7 @@ TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
 MATERIAL: Concrete02_(Linear_tension_softening)
-COMMENT: \n\tUpdate material window to assign selected Class/Type\n
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(Concrete02)
 VALUE: Concrete02
 IMAGE: img/Materials/Concrete02.png
@@ -201,7 +201,7 @@ QUESTION: Crushing_strength_fpcu#UNITS#
 VALUE: -17.0 MPa
 QUESTION: Strain_at_crushing_strength_epscU
 VALUE: -3.5e-3
-QUESTION: ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba
+QUESTION: Ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba
 VALUE: 0.5
 QUESTION: Tensile_strength_ft#UNITS#
 VALUE: 2.2 MPa
@@ -211,7 +211,7 @@ TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL 
 
 MATERIAL: Concrete06
-COMMENT: \n\tUpdate material window to assign selected Class/Type\n
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(Concrete06)
 VALUE: Concrete06
 HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
@@ -334,7 +334,7 @@ BOOK: Multidimensional_(nD)_Materials
 
 
 MATERIAL: Elastic_Isotropic
-COMMENT: \n\tUpdate material window to assign selected Class/Type\n
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(ElasticIsotropic)
 VALUE: ElasticIsotropic
 QUESTION: Material_Type#CB#(Concrete,Steel,Custom)
