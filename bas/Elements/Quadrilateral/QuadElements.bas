@@ -65,8 +65,8 @@ nDMaterial PressureDependMultiYield *MaterialID *GenData(Dimensions,int) *MatPro
 *else
 *format "%d"
 -*MatProp(Yield_Surfaces,int) *\
-*set var Narray=MatProp(Define_yield_surfaces_based_on_shear_modulus_reduction_curve,int)
-*for(i=1;i<=Narray;i=i+2)
+*set var Nmatrix=MatProp(Define_yield_surfaces_based_on_shear_modulus_reduction_curve,int)
+*for(i=1;i<=Nmatrix;i=i+2)
 *format "%g%g"
 *MatProp(Define_yield_surfaces_based_on_shear_modulus_reduction_curve,*i) *MatProp(Define_yield_surfaces_based_on_shear_modulus_reduction_curve,*operation(i+1)) *\
 *endfor
@@ -74,6 +74,17 @@ nDMaterial PressureDependMultiYield *MaterialID *GenData(Dimensions,int) *MatPro
 *format "%g%g%g%g%g%g"
 *MatProp(Initial_void_ratio,real) *MatProp(Critical_straight_line_parameter_cs1,real) *MatProp(Critical_straight_line_parameter_cs2,real) *MatProp(Critical_straight_line_parameter_cs3,real) *\
 *MatProp(Atmospheric_pressure_for_normalization,real) *MatProp(Numerical_constant,real)
+*elseif(strcmp(MatProp(Material:),"J2Plasticity")==0)
+*format "%d%g%g%g%g%g%g"
+nDMaterial J2Plasticity *MaterialID *MatProp(Bulk_Modulus,real) *MatProp(Shear_Modulus,real) *MatProp(Initial_Yield_Stress,real) *MatProp(Final_Saturation_Yield_Stress,real) *MatProp(Exp._hardening_parameter_delta,real) *MatProp(Linear_hardening_parameter,real)
+*elseif(strcmp(MatProp(Material:),"Damage2p")==0)
+*format "%d%g%g%g%g%g%g%g%g%g"
+nDMaterial Damage2p *MaterialID *MatProp(Concrete_compressive_strength,real) -fct *MatProp(Concrete_tensile_strength,real) -E *MatProp(Young_Modulus,real) -ni *MatProp(Poisson_coefficient,real) -Gt *MatProp(Tension_fracture_energy_density,real) -Gc *MatProp(Comp._fracture_energy_density,real) -rho_bar *MatProp(Parameter_of_plastic_volume_change,real) -H *MatProp(Linear_hardening_parameter,real) -theta *MatProp(Isotropic/kinematic_hardening_ratio,real) *\
+*if(strcmp(MatProp(Computational_stiffness_matrix),"Computational_tangent")==0)
+-tangent 0
+*else
+-tangent 1
+*endif
 *endif
 *break
 *endif

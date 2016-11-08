@@ -44,7 +44,20 @@ nDMaterial ElasticIsotropic *MaterialID *MatProp(Elastic_Modulus_E,real) *MatPro
 *format "%d%g%g%g%g%g%g%g%g%g"
 nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
 *elseif(strcmp(MatProp(Material:),"PressureIndependMultiYield")==0)
-*MessageBox Shell Elements do not support PressureIndependMultiYield Materials
+*MessageBox Shell Elements do not support Plate Fiber Section with PressureIndependMultiYield Material assigned to each fiber
+*elseif(strcmp(MatProp(Material:),"PressureDependMultiYield")==0)
+*MessageBox Shell Elements do not support Plate Fiber Section with PressureDependMultiYield Material assigned to each fiber
+*elseif(strcmp(MatProp(Material:),"J2Plasticity")==0)
+*format "%d%g%g%g%g%g%g"
+nDMaterial J2Plasticity *MaterialID *MatProp(Bulk_Modulus,real) *MatProp(Shear_Modulus,real) *MatProp(Initial_Yield_Stress,real) *MatProp(Final_Saturation_Yield_Stress,real) *MatProp(Exp._hardening_parameter_delta,real) *MatProp(Linear_hardening_parameter,real)
+*elseif(strcmp(MatProp(Material:),"Damage2p")==0)
+*format "%d%g%g%g%g%g%g%g%g%g"
+nDMaterial Damage2p *MaterialID *MatProp(Concrete_compressive_strength,real) -fct *MatProp(Concrete_tensile_strength,real) -E *MatProp(Young_Modulus,real) -ni *MatProp(Poisson_coefficient,real) -Gt *MatProp(Tension_fracture_energy_density,real) -Gc *MatProp(Comp._fracture_energy_density,real) -rho_bar *MatProp(Parameter_of_plastic_volume_change,real) -H *MatProp(Linear_hardening_parameter,real) -theta *MatProp(Isotropic/kinematic_hardening_ratio,real) *\
+*if(strcmp(MatProp(Computational_stiffness_matrix),"Computational_tangent")==0)
+-tangent 0
+*else
+-tangent 1
+*endif
 *endif
 *format "%d%d%g"
 section PlateFiber *PlateFiberTag *SelectedMaterial *PlateThickness
