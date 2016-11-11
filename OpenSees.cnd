@@ -46,6 +46,7 @@ DEPENDENCIES: (Pin_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z
 DEPENDENCIES: (Pin_XY,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
 DEPENDENCIES: (Pin_XZ,RESTORE,X-Translation,1,RESTORE,Z-Translation,1,RESTORE,Y-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
 DEPENDENCIES: (Pin_YZ,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
+TKWIDGET: TK_RestraintsWikiInfo
 END CONDITION
 
 CONDITION: Line_Restraints
@@ -74,6 +75,7 @@ DEPENDENCIES: (Pin_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z
 DEPENDENCIES: (Pin_XY,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
 DEPENDENCIES: (Pin_XZ,RESTORE,X-Translation,1,RESTORE,Z-Translation,1,RESTORE,Y-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
 DEPENDENCIES: (Pin_YZ,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
+TKWIDGET: TK_RestraintsWikiInfo
 END CONDITION
 
 CONDITION: Surface_Restraints
@@ -102,6 +104,7 @@ DEPENDENCIES: (Pin_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z
 DEPENDENCIES: (Pin_XY,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
 DEPENDENCIES: (Pin_XZ,RESTORE,X-Translation,1,RESTORE,Z-Translation,1,RESTORE,Y-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
 DEPENDENCIES: (Pin_YZ,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
+TKWIDGET: TK_RestraintsWikiInfo
 END CONDITION
 
 
@@ -126,9 +129,10 @@ QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
 VALUE: 
-#QUESTION: Active_Interval:#CB#(_)
-#VALUE: 
 TKWIDGET: TK_ActiveIntervalinLoads
+QUESTION: __#CB#(__)
+VALUE: 
+TKWIDGET: TK_LoadsWikiInfo
 END CONDITION
 
 CONDITION: Line_Forces 
@@ -149,9 +153,10 @@ QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
 VALUE: 
-#QUESTION: Active_Interval:#CB#(_)
-#VALUE: 
 TKWIDGET: TK_ActiveIntervalinLoads
+QUESTION: __#CB#(__)
+VALUE: 
+TKWIDGET: TK_LoadsWikiInfo
 END CONDITION
 
 CONDITION: Line_Uniform_Forces
@@ -170,9 +175,10 @@ STATE: DISABLED
 HELP: The local x axis is always specified by the two line nodes and its positive direction is defined from the first to the second selected node.\n\nIN A 2D MODEL:\n\nLocal z axis field is IGNORED\nThe global Y axis is the vertical axis by default\nLocal x axis has the line drawing direction (View -> Normals -> Lines)\nLocal z axis coincides with the global Z axis\nLocal y axis has the right hand rule\n\nIN A 3D MODEL:\n\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non-vertical element (in any line drawing direction):\n\nVecxz has the direction of the selected global vertical (Y or Z) axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy\nIf the element is horizontal: local z has the direction of the vertical axis, local x axis is specified by the two line nodes (View->Normals->Lines) and local y axis is found by the right hand rule\n\nFor a vertical element (in any line drawing direction):\n\nVeczx has the direction of global -X axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy
 QUESTION: __#CB#(_)
 VALUE: 
-#QUESTION: Active_Interval:#CB#(_)
-#VALUE: 
 TKWIDGET: TK_ActiveIntervalinLoads
+QUESTION: ___#CB#(___)
+VALUE: 
+TKWIDGET: TK_LineLoadsWikiInfo
 END CONDITION
 
 
@@ -198,6 +204,7 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
+TKWIDGET: TK_EqualDOFWikiInfo
 END CONDITION
 
 CONDITION: Line_Body_constraints
@@ -219,6 +226,7 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
+TKWIDGET: TK_EqualDOFWikiInfo
 END CONDITION
 
 CONDITION: Point_Rigid_diaphragm
@@ -232,6 +240,7 @@ VALUE: XY
 QUESTION: MasterNode
 VALUE:
 TKWIDGET: GidUtils::TkwidgetPickNode
+TKWIDGET: TK_RigidDiaphragmWikiInfo
 END CONDITION
 
 CONDITION: Line_Rigid_diaphragm
@@ -245,6 +254,7 @@ VALUE: XY
 QUESTION: MasterNode
 VALUE:
 TKWIDGET: GidUtils::TkwidgetPickNode
+TKWIDGET: TK_RigidDiaphragmWikiInfo
 END CONDITION
 
 
@@ -269,6 +279,7 @@ QUESTION: Y-Rotation#UNITS#
 VALUE: 0.0ton
 QUESTION: Z-Rotation#UNITS#
 VALUE: 0.0ton
+TKWIDGET: TK_MassWikiInfo
 END CONDITION
 
 
@@ -316,4 +327,5 @@ DEPENDENCIES: (0,SET,Rz_Material,#CURRENT#) (1,RESTORE,Rz_Material,#CURRENT#)
 QUESTION: Rz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
+TKWIDGET: TK_ZeroLengthWikiInfo
 END CONDITION

@@ -24,7 +24,6 @@ V.K. Papanikolaou, Assistant Professor AUTh
    - Intersection joints that belong to two lines with different constraints should be handled seperately.
    - Intersection lines that belong to two surfaces with different constraints should be handled seperately.
 - The horizontal information bar stays in front of GiD material/condition windows when the respective menu options are used; please use the toolbar buttons instead. However, there's no way at the moment to hide the information bar behind the GiD Layer and Copy windows.
-- Manual coordinate input in GiD (bottom-right of main GiD window) conflicts with the information bar. Press 'skip messages' twice to close the error message. You can use the command line to manually enter coordinates instead.
 
 ---
 

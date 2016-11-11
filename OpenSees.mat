@@ -898,6 +898,7 @@ VALUE: Quad
 HELP: Four node quadrilateral element object which uses a bilinear isoparametric formulation
 IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckModelingOptionsForQuadElems
+TKWIDGET: TK_CheckQuadFieldOptions
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
 QUESTION: Requirements:#CB#(2D_Model_and_2_DOF_per_node)
@@ -1012,7 +1013,7 @@ TITLE: Body_Forces
 QUESTION: X-acceleration#UNITS#
 VALUE: 0.0m/sec^2
 QUESTION: Y-acceleration#UNITS#
-VALUE: -9.81m/sec^2
+VALUE: 0.0m/sec^2
 END MATERIAL
 
 

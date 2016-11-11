@@ -1287,7 +1287,7 @@ proc TK_ActiveIntervalinLoads { event args } {
 			set cmd "GiD_Process Mescape Data Intervals ChangeInterval"
 			set b [Button $PARENT.btable -text [= "Change Interval"] -helptext [= "Change Interval"] -command $cmd -state normal ]
 			#set b [button $PARENT.changeintvbutton -image .actvintv -command $cmd -state normal -height 32 -width 32]
-			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5 
+			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5 
 
 			return  ""
 		}
@@ -1494,4 +1494,140 @@ proc TK_SectionWikiInfo { event args } {
 		}
 	}
 	return ""
+}
+
+proc TK_ZeroLengthWikiInfo { event args } {
+	switch $event {
+		
+		INIT {
+		
+			set PARENT [lindex $args 0]	
+			upvar [lindex $args 1] ROW			
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ZeroLength_Element"
+			
+			set b [Button $PARENT.wikiinfo -text [= "Element Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5 
+		
+		}
+	}
+	return ""
+}
+
+proc TK_MassWikiInfo { event args } {
+	switch $event {
+		
+		INIT {
+		
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Mass_Command"
+			
+			set b [Button $PARENT.wikiinfo -text [= "More Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
+		}
+	}
+	return ""
+}
+
+proc TK_RigidDiaphragmWikiInfo  { event args } {
+	switch $event {
+		
+		INIT {
+		
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/RigidDiaphragm_command"
+			
+			set b [Button $PARENT.wikiinfo -text [= "More Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
+		}
+	}
+	return ""
+}
+
+proc TK_EqualDOFWikiInfo { event args } {
+	switch $event {
+		
+		INIT {
+		
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/EqualDOF_command"
+			
+			set b [Button $PARENT.wikiinfo -text [= "More Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
+		}
+	}
+	return ""
+}
+
+proc TK_LineLoadsWikiInfo { event args } {
+	switch $event {
+		
+		INIT {
+		
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/EleLoad_Command"
+			
+			set b [Button $PARENT.wikiinfo -text [= "More Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
+		}
+	}
+	return ""
+}
+
+proc TK_LoadsWikiInfo { event args } {
+	switch $event {
+		
+		INIT {
+		
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/NodalLoad_Command"
+			
+			set b [Button $PARENT.wikiinfo -text [= "More Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
+		}
+	}
+	return ""
+}
+
+proc TK_RestraintsWikiInfo { event args } {
+	switch $event {
+		
+		INIT {
+		
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fix_command"
+			
+			set b [Button $PARENT.wikiinfo -text [= "More Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW+2] -sticky nw -pady 5
+		}
+	}
+	return ""
+}
+
+proc TK_CheckQuadFieldOptions { event args } {
+	switch $event {
+		
+		SYNC {
+		
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+			set SelMat [DWLocalGetValue $GDN $STRUCT Material]
+			set Behavior [DWLocalGetValue $GDN $STRUCT Plane_behavior]
+			set MatType [GiD_AccessValue get materials $SelMat "Material:"]
+			
+			if { $MatType=="PressureDependMultiYield" || $MatType=="PressureIndependMultiYield" } {
+				
+				if { $Behavior=="PlaneStress" } {
+					
+					WarnWinText "For PressureDependMultiYield or PressureIndependMultiYield Material use PlaneStrain behavior"
+				}
+			}
+		}
+	}
 }

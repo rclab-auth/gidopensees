@@ -485,17 +485,17 @@ proc InitGIDProject { dir } {
 	GidAddUserDataOptions "ZeroLength Elements" "GidOpenConditions ZeroLength_Elements" 6
 	GidAddUserDataOptions "---" "" 8
 	
-	GiD_DataBehaviour materials Standard_Uniaxial_Materials disable {assign unassign}
-	GiD_DataBehaviour materials Uniaxial_Steel_Materials disable {assign unassign}
-	GiD_DataBehaviour materials Uniaxial_Concrete_Materials disable {assign unassign}
-	GiD_DataBehaviour materials Other_Uniaxial_Materials disable {assign unassign}
-	GiD_DataBehaviour materials Multidimensional_(nD)_Materials disable {assign unassign}
+	GiD_DataBehaviour materials Standard_Uniaxial_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Uniaxial_Steel_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Uniaxial_Concrete_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Other_Uniaxial_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Multidimensional_(nD)_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "Section_Force-Deformation" hide {assign draw unassign impexp}	
+	GiD_DataBehaviour materials "Series/Parallel_Uniaxial_Materials" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Beam-Column_Elements" geomlist {lines}
 	GiD_DataBehaviour materials "Truss_Elements" geomlist {lines}
 	GiD_DataBehaviour materials Surface_Elements geomlist {surfaces}
 	GiD_DataBehaviour materials Solid_Elements geomlist {volumes}
-	GiD_DataBehaviour materials "Section_Force-Deformation" disable {assign unassign}	
-	GiD_DataBehaviour materials "Series/Parallel_Uniaxial_Materials" disable {assign unassign}
 	
 	GiDMenu::UpdateMenus
 
@@ -698,7 +698,6 @@ proc UpdateInfoBar { } {
 
 	if { [winfo exist .ibar]} {
 		destroy .ibar
-		update
 	}
 
 	# create toplevel
@@ -759,17 +758,19 @@ proc UpdateInfoBar { } {
 }
 
 proc RefreshInfoBar { } {
+	
+	if { [winfo exists .ibar] } {
+		set x [winfo rootx .gid.central.s]
+		set y [winfo rooty .gid.central.s]
+		set w [winfo width .gid.central.s]
 
-	set x [winfo rootx .gid.central.s]
-	set y [winfo rooty .gid.central.s]
-	set w [winfo width .gid.central.s]
+		set geom "[winfo width .gid.central.s]x25+$x+$y"
 
-	set geom "[winfo width .gid.central.s]x25+$x+$y"
+		wm geometry .ibar $geom
 
-	wm geometry .ibar $geom
-
-	raise .ibar
-	update
+		raise .ibar
+		update
+	}
 }
 
 proc HideInfoBar { } {
