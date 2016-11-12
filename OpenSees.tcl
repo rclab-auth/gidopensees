@@ -834,7 +834,6 @@ proc LoadGIDProject { filespd } {
 	}
 }
 
-
 proc TransformAndClose { } {
 
 	global InfoWin
@@ -843,7 +842,6 @@ proc TransformAndClose { } {
 
 	GiD_Process escape escape escape escape data defaults TransfProblem OpenSees
 }
-
 
 proc SaveGIDProject { filespd } {
 
