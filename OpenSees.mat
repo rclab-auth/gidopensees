@@ -431,9 +431,12 @@ TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
 MATERIAL: PressureIndependMultiYield
-COMMENT: \n
+COMMENT: \n\tUpdate material window to assign selected soil type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(PressureIndependMultiYield)
 VALUE: PressureIndependMultiYield
+QUESTION: Soil_type#CB#(Soft_Clay,Medium_Clay,Stiff_Clay,Custom)
+VALUE: Medium_Clay
+TKWIDGET: TK_PIMY_FastProperties
 QUESTION: Saturated_soil_mass_density#UNITS#
 VALUE: 1.5ton/m^3
 QUESTION: Reference_Shear_Modulus_Gr#UNITS#
@@ -463,26 +466,27 @@ TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL 
 
 MATERIAL: PressureDependMultiYield
-COMMENT: \n
+COMMENT: \n\tUpdate material window to assign selected soil type\n\tSelect 'Custom' to enter user values\n
 QUESTION: Material:#CB#(PressureDependMultiYield)
 VALUE: PressureDependMultiYield
+QUESTION: Soil_type#CB#(Loose_Sand,Medium_Sand,Medium-dense_Sand,Dense_Sand,Custom)
+VALUE: Loose_Sand
+TKWIDGET: TK_PDMY_FastProperties
 QUESTION: Saturated_soil_mass_density#UNITS#
 VALUE: 1.7ton/m^3
 QUESTION: Reference_Shear_Modulus_Gr#UNITS#
-VALUE: 60MPa
+VALUE: 55MPa
 QUESTION: Reference_Bulk_Modulus#UNITS#
-VALUE: 300MPa
-QUESTION: Apparent_Cohesion#UNITS#
-VALUE: 37kPa
+VALUE: 150MPa
 QUESTION: Shear_Strain_at_which_maximum_stress_is_reached
 VALUE: 0.1
 QUESTION: Friction_angle
 VALUE: 29
 HELP: In degrees
 QUESTION: Reference_mean_effective_confining_pressure_pr#UNITS#
-VALUE: 100kPa
+VALUE: 80kPa
 QUESTION: Positive_constant_d
-VALUE: 0.0
+VALUE: 0.5
 QUESTION: Phase_transformation_angle
 VALUE: 29
 HELP: In degrees 
@@ -493,15 +497,15 @@ QUESTION: Dilation_rate_constant_1
 VALUE: 0.0
 QUESTION: Dilation_rate_constant_2
 VALUE: 0.0
-QUESTION: Liquefaction_parameter_1
-VALUE: 0.0
+QUESTION: Liquefaction_parameter_1#UNITS#
+VALUE: 10kPa
 QUESTION: Liquefaction_parameter_2
-VALUE: 0.0
+VALUE: 0.02
 QUESTION: Liquefaction_parameter_3
-VALUE: 1.5
+VALUE: 1.0
 HELP: liquefac3 takes a value between 0.0 and 3.0. 
 QUESTION: Initial_void_ratio
-VALUE: 0.6
+VALUE: 0.85
 QUESTION: Critical_straight_line_parameter_cs1
 VALUE: 0.9
 QUESTION: Critical_straight_line_parameter_cs2

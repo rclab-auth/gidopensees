@@ -83,13 +83,11 @@ proc Opt1_1 { } {
 	HideInfoBar
 }
 
-
 proc Opt1_2 { } {
 
 	GidOpenMaterials Uniaxial_Concrete_Materials
 	HideInfoBar
 }
-
 
 proc Opt1_3 { } {
 
@@ -138,8 +136,6 @@ proc Opt1_10 { } {
 	GidOpenConditions Loads
 	HideInfoBar
 }
-
-
 
 proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
@@ -252,7 +248,6 @@ proc Opt2_6 { } {
 	GidOpenProblemData
 	HideInfoBar
 }
-
 
 proc Opt2_7 { } {
 
@@ -406,7 +401,6 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		AddNewToolbar "OpenSees 2 toolbar" ${prefix}MyBarWindowGeom Toolbar2
 }
 
-
 proc EndToolbar2 {} {
 	global OpenSees2
 
@@ -525,7 +519,6 @@ proc AfterRunCalculation { basename dir problemtypedir where error errorfilename
 		}
 }
 
-
 proc CheckLogFile { projectDir projectName } {
 
 	set file "$projectDir/OpenSees/$projectName.log"
@@ -601,17 +594,16 @@ proc AnalysisErrorInformationWindow { analError } {
 
 proc EndGIDProject {} {
 
-	bind .gid <Configure>  {}
-	bind .gid <Activate>   {}
-	bind .gid <Deactivate> {}
-	bind .gid <Map>		{}
+	bind .gid <Configure>	{}
+	bind .gid <Activate>	{}
+	bind .gid <Deactivate>	{}
+	bind .gid <Map>			{}
 
 	if {[winfo exist .ibar]} {destroy .ibar}
 
 	EndToolbar1
 	EndToolbar2
 }
-
 
 proc OpenLogFile { } {
 
@@ -681,22 +673,20 @@ proc Splash { dir } {
 	update
 }
 
-
 proc UpdateInfoBar { } {
-
-	global ibarBackgroundColor ibarTextColor ibarLineColor
 
 	# remove bindings
 
-	bind .gid <Configure>  {}
-	bind .gid <Activate>   {}
-	bind .gid <Deactivate> {}
-	bind .gid <Map>		{}
+	bind .gid <Configure>	{}
+	bind .gid <Activate>	{}
+	bind .gid <Deactivate>	{}
+	bind .gid <Map>			{}
 
+	global ibarBackgroundColor ibarTextColor ibarLineColor
 	global problem_dir
 	global VersionNumber
 
-	if { [winfo exist .ibar]} {
+	if { [winfo exist .ibar] } {
 		destroy .ibar
 	}
 
@@ -743,7 +733,6 @@ proc UpdateInfoBar { } {
 	.ibar.c create text 210 12 -text $act			-font "calibri 12" -fill $ibarTextColor -anchor center
 
 	pack .ibar.c
-
 	raise .ibar .gid
 
 	# add bindings
@@ -788,7 +777,7 @@ proc LoadGIDProject { filespd } {
 
 	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
 
-	#loading the problemtype itself, not a model
+	# loading the problemtype itself, not a model
 
 	} else {
 		
@@ -863,7 +852,6 @@ proc BeforeInitGIDPostProcess {} {
 
 	if { [winfo exist .ibar]} {
 		destroy .ibar
-		update
 	}
 }
 
@@ -871,4 +859,3 @@ proc EndGIDPostProcess {} {
 
 	after 2000 "{UpdateInfoBar}"
 }
-

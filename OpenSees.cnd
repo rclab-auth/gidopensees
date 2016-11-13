@@ -204,6 +204,10 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
+QUESTION: Fast_Constraint#CB#(Bar,Beam)
+VALUE: Bar
+DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0) 
+DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
 TKWIDGET: TK_EqualDOFWikiInfo
 END CONDITION
 
@@ -226,6 +230,10 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
+QUESTION: Fast_Constraint#CB#(Bar,Beam)
+VALUE: Bar
+DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0) 
+DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
 TKWIDGET: TK_EqualDOFWikiInfo
 END CONDITION
 

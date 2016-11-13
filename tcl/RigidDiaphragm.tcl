@@ -45,5 +45,3 @@ proc RDMasterNodeNumber { index } {
 
 	return $MNodeNumber
 }
-
-

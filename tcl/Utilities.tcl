@@ -109,8 +109,8 @@ proc OpenSees_Menu { dir } {
 		GiDMenu::UpdateMenus
 
 	}
-	
-	proc roundUp { num } {
+
+proc roundUp { num } {
 		set roundedNum [expr {round($num)}]
 	
 		if { $roundedNum>=$num} {
