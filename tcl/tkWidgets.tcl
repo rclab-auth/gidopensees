@@ -1,6 +1,3 @@
-global Description_text
-set Description_text ""
-
 proc TK_CheckMaterialForElasticBeamColumn { event args } {
 
 	switch $event {
@@ -307,7 +304,7 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 			
 			if { $check==1 } {
 			
-				if { $Shape=="Rectangular" } {
+				if { $Shape=="Rectangular_Column" } {
 
 					set CornerSizeUnit [DWLocalGetValue $GDN $STRUCT Corner_Bar_size]
 					set InterSizeUnit [DWLocalGetValue $GDN $STRUCT Middle_Bar_size]
@@ -324,11 +321,11 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 					set InterArea [format "%1.3e" [expr $pi*($InterSize*$InterSize)/4.0]]
 					set InterArea $InterArea$InterUnit^2
 					
-					set ok [DWLocalSetValue $GDN $STRUCT Corner_Bar_Area $CornerArea]
-					set ok [DWLocalSetValue $GDN $STRUCT Middle_Bar_Area $InterArea]
+					set ok [DWLocalSetValue $GDN $STRUCT Corner_bar_area $CornerArea]
+					set ok [DWLocalSetValue $GDN $STRUCT Middle_bar_area $InterArea]
 					return ""
 					
-				} elseif { $Shape=="Circular" } {
+				} elseif { $Shape=="Circular_Column" } {
 
 					set SizeUnit [DWLocalGetValue $GDN $STRUCT Bar_size]
 					
@@ -337,7 +334,7 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 					
 					set Area [format "%1.3e" [expr $pi*($Size*$Size)/4.0]]
 					set Area $Area$Unit^2
-					set ok [DWLocalSetValue $GDN $STRUCT Bar_Area $Area]
+					set ok [DWLocalSetValue $GDN $STRUCT Bar_area $Area]
 
 					return ""
 				}
@@ -1381,6 +1378,9 @@ proc TK_PDMY_FastProperties { event args } {
 	return ""
 }
 
+global Description_text
+set Description_text ""
+
 proc TK_DescriptionField { event args } {
 
 	global Description_text 
@@ -1621,6 +1621,7 @@ proc TK_ElementWikiInfo { event args } {
 	}
 	return ""
 }
+
 
 proc TK_MaterialWikiInfo { event args } {
 	switch $event {

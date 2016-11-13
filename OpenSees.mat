@@ -542,10 +542,10 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Concrete01/Concrete02/Concrete06/Steel01
 TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
-QUESTION: Cross_Section#CB#(Rectangular,Circular)
-VALUE: Rectangular
-DEPENDENCIES: (Rectangular,HIDE,Bar_Area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_Bar_size,#CURRENT#,RESTORE,Middle_Bar_size,#CURRENT#,RESTORE,Corner_Bar_Area,#CURRENT#,RESTORE,Middle_Bar_Area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#) 
-DEPENDENCIES: (Circular,RESTORE,Bar_Area,#CURRENT#,HIDE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,RESTORE,Bars_along_arc,#CURRENT#,RESTORE,Bar_size,#CURRENT#,RESTORE,Fibers_in_the_circumferential_direction,#CURRENT#,RESTORE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Corner_Bar_size,#CURRENT#,HIDE,Middle_Bar_size,#CURRENT#,HIDE,Corner_Bar_Area,#CURRENT#,HIDE,Middle_Bar_Area,#CURRENT#,HIDE,Fibers_in_local_z_direction,#CURRENT#,HIDE,Fibers_in_local_y_direction,#CURRENT#)
+QUESTION: Cross_Section#CB#(Rectangular_Column,Circular_Column)
+VALUE: Rectangular_Column
+DEPENDENCIES: (Rectangular_Column,HIDE,Bar_Area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_bar_size,#CURRENT#,RESTORE,Middle_bar_size,#CURRENT#,RESTORE,Corner_Bar_Area,#CURRENT#,RESTORE,Middle_Bar_Area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#) 
+DEPENDENCIES: (Circular_Column,RESTORE,Bar_Area,#CURRENT#,HIDE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,RESTORE,Bars_along_arc,#CURRENT#,RESTORE,Bar_size,#CURRENT#,RESTORE,Fibers_in_the_circumferential_direction,#CURRENT#,RESTORE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Corner_Bar_Area,#CURRENT#,HIDE,Middle_Bar_Area,#CURRENT#,HIDE,Fibers_in_local_z_direction,#CURRENT#,HIDE,Fibers_in_local_y_direction,#CURRENT#)
 QUESTION: Height_h#UNITS#
 VALUE: 0.5 m
 IMAGE: img/Sections/sec_Rect_RC.png
@@ -563,22 +563,22 @@ VALUE: 2
 QUESTION: Bars_along_y_axis_face
 VALUE: 2
 QUESTION: Bars_along_arc
-VALUE: 6
-QUESTION: Corner_Bar_size#UNITS#
+VALUE: 16
+QUESTION: Corner_bar_size#UNITS#
 VALUE: 8 mm
-QUESTION: Middle_Bar_size#UNITS#
+QUESTION: Middle_bar_size#UNITS#
 VALUE: 8 mm
 QUESTION: Bar_size#UNITS#
 VALUE: 8 mm
 QUESTION: Calculate_bar_areas_(update_to_apply)#CB#(0,1)
 VALUE: 1
 TKWIDGET: Calculate_Reinf_Areas_for_Fiber
-QUESTION: Corner_Bar_Area#UNITS#
+QUESTION: Corner_bar_area#UNITS#
 VALUE: 5.027e-005 m^2
-QUESTION: Middle_Bar_Area#UNITS#
+QUESTION: Middle_bar_area#UNITS#
 VALUE: 5.027e-005 m^2
-QUESTION: Bar_Area#UNITS#
-VALUE: 5.027e-005 mm^2
+QUESTION: Bar_area#UNITS#
+VALUE: 5.027e-005 m^2
 QUESTION: Fibers:#CB#(_)
 VALUE:
 QUESTION: Fibers_in_local_z_direction

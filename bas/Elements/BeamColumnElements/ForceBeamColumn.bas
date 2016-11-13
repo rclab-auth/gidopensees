@@ -141,8 +141,8 @@ uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *Mat
 *# endif material has been already defined
 *endif
 *# ------------------------FIBER definition--------------------
-*# ----------Rectangular Section-------------
-*if(strcmp(Matprop(Cross_Section),"Rectangular")==0)
+*# ----------Rectangular_Column Section-------------
+*if(strcmp(Matprop(Cross_Section),"Rectangular_Column")==0)
 *set var height=Matprop(Height_h,real)
 *set var width=MatProp(Width_b,real)
 *set var zhalf=operation(height/2.0)
@@ -249,8 +249,8 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 *MessageBox Error: Invalid number of longitudinal bars along local y face
 *endif
 }
-*#---------Circular Section-------
-*elseif(strcmp(Matprop(Cross_Section),"Circular")==0)
+*#---------Circular_Column Section-------
+*elseif(strcmp(Matprop(Cross_Section),"Circular_Column")==0)
 *set var diameter=MatProp(Diameter_d,real)
 *set var radius=operation(diameter/2.0)
 *set var cover=MatProp(Cover_depth_for_bars,real)
@@ -466,7 +466,7 @@ uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *Mat
 *# endif material has not been already defined
 *endif
 *# ------------------------FIBER definition!!!----------------
-*if(strcmp(Matprop(Cross_Section),"Rectangular")==0)
+*if(strcmp(Matprop(Cross_Section),"Rectangular_Column")==0)
 *set var height=Matprop(Height_h,real)
 *set var width=MatProp(Width_b,real)
 *set var yhalf=operation(height/2.0)
@@ -567,7 +567,7 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 *MessageBox Error: Invalid number of longitudinal bars along local y face (1)
 *endif
 }
-*elseif(strcmp(Matprop(Cross_Section),"Circular")==0)
+*elseif(strcmp(Matprop(Cross_Section),"Circular_Column")==0)
 *set var diameter=MatProp(Diameter_d,real)
 *set var radius=operation(diameter/2.0)
 *set var cover=MatProp(Cover_depth_for_bars,real)
