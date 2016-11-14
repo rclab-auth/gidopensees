@@ -31,7 +31,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-**Version 1.5.3 (in development)**
+**Version 1.5.3 (14/11/2016)**
 
 - Now supported : **Damage2p** material (von Mises yield and isotropic hardening)
 - Now supported : **J2Plasticity** material (Drucker-Prager plasticity + two-parameter damage)
