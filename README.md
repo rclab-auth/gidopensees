@@ -31,6 +31,18 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 1.5.4 (in progress)**
+
+- Added : R/C beam fiber section
+- Added : Property modification factors for
+	- Elastic beam-column elements
+	- Elastic Timoshenko beam-column elements
+	- Truss elements
+- Local axis info corrected
+- Minor bug fixes
+
+---
+
 **Version 1.5.3 (14/11/2016)**
 
 - Now supported : **Damage2p** material (von Mises yield and isotropic hardening)
