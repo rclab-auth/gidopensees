@@ -29,7 +29,7 @@
 # TCL macros
 #
 
-set VersionNumber "v1.5.4"
+set VersionNumber "v1.5.3"
 
 set InfoWin .gid.win_example
 
@@ -433,7 +433,7 @@ proc InitGIDProject { dir } {
 
 	set problem_dir $dir
 
-	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl UnusedDofs.tcl} {
+	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl} {
 		source [file join $dir tcl $filename]
 	}
 

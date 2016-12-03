@@ -18,12 +18,11 @@
 # --------------------------------------------------------------------------------------------------------------
 
 *set var VarCount=1
-*if((GenData(Dimensions,int)==3 && GenData(DOF,int)==3) || (GenData(Dimensions,int)==3 && GenData(DOF,int)==6))
+*if(GenData(Dimensions,int)==3 && GenData(DOF,int)==3)
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"stdBrick")==0)
 *if(VarCount==1)
 # nDMaterial Definition
-
 *loop materials
 *if(strcmp(MatProp(Element_type:),"stdBrick")==0)
 *set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
@@ -96,6 +95,6 @@ element stdBrick *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsConec(3) *ElemsCo
 *endif
 *end elems
 *else
-*MessageBox Error: Standard Brick elements require a 3D / 3-DOF model or 3D / 6-DOF model (unused DOFs for stdBrick nodes are automatically fixed).
+*MessageBox Error: Shell elements require a 3D / 6-DOF model.
 *endif
 *endif

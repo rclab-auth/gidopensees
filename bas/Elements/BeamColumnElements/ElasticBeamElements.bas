@@ -102,17 +102,6 @@ geomTransf PDelta *TransfTag4  0 1 0
 *endif
 *end materials
 *set var MassPerLength=operation(A*MassDens)
-*# Cross Section Properties Modification Factors
-*if(ElemsMatProp(Set_Modification_Factors,int)==1)
-*set var Amod=ElemsMatProp(Area_coefficient,real)
-*set var Izmod=ElemsMatProp(Moment_of_Inertia_about_local_z_coefficient,real)
-*set var Iymod=ElemsMatProp(Moment_of_Inertia_about_local_y_coefficient,real)
-*set var Jmod=ElemsMatProp(Polar_moment_of_inertia_J_coefficient,real)
-*set var A=operation(A*Amod)
-*set var Iz=operation(Iz*Izmod)
-*set var Iy=operation(Iy*Iymod)
-*set var J=operation(J*Jmod)
-*endif
 *#NODESCOORD(1,2) : y coordinate of the 1st node!
 *#----------------Z axis as Vertical Axis----------------
 *if(strcmp(GenData(Vertical_Axis),"Z")==0)
@@ -126,7 +115,7 @@ geomTransf PDelta *TransfTag4  0 1 0
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
-*A *E *G *J *Iy *Iz *TransfTag -mass *\
+*A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
 *else
@@ -197,7 +186,7 @@ geomTransf PDelta *TransfTag2
 *set var GeomTransfPrinted=1
 # Elastic Beam Column Definition
  
-# element elasticBeamColumn $eleTag $iNode $jNode $A $E $Iz $transfTag <-mass $MassPerUnitLength>
+# element elasticBeamColumn $eleTag $iNode $jNode $A $E $G $J $Iy $Iz $transfTag <-mass $MassPerUnitLength>
 
 *endif
 *if(strcmp(elemsMatProp(Cross_Section),"Rectangular")==0)
@@ -237,13 +226,6 @@ geomTransf PDelta *TransfTag2
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
 *set var TransfTag=TransfTag2
-*endif
-*# Cross Section Properties Modification Factors
-*if(ElemsMatProp(Set_Modification_Factors,int)==1)
-*set var Amod=ElemsMatProp(Area_coefficient,real)
-*set var Izmod=ElemsMatProp(Moment_of_Inertia_about_local_z_coefficient,real)
-*set var A=operation(A*Amod)
-*set var Iz=operation(Iz*Izmod)
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\

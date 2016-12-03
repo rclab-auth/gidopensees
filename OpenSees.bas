@@ -71,15 +71,15 @@
 
 *if(GenData(Dimensions,int)==3)
 *if(GenData(DOF,int)==6)
-model BasicBuilder -ndm 3 -ndf 6
+model BasicBuilder -ndm 3 -ndf 6;  
 *else
-model BasicBuilder -ndm 3 -ndf 3
+model BasicBuilder -ndm 3 -ndf 3;
 *endif
 *elseif(GenData(Dimensions,int)==2)
 *if(GenData(DOF,int)==2)
-model BasicBuilder -ndm 2 -ndf 2
+model BasicBuilder -ndm 2 -ndf 2;
 *else
-model BasicBuilder -ndm 2 -ndf 3
+model BasicBuilder -ndm 2 -ndf 3;
 *endif
 *endif
 *#
@@ -108,10 +108,6 @@ model BasicBuilder -ndm 2 -ndf 3
 *# Restraints
 *#
 *include bas\Restraints.bas
-*#
-*# Fix unused Dofs
-*#
-*include bas\UnusedDofs.bas
 *#
 *# Elastic Beam Column Elements
 *#
