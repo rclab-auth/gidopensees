@@ -101,7 +101,7 @@ VALUE:
 HELP: Control node, select on meshed model
 TKWIDGET: GidUtils::TkwidgetPickNode
 QUESTION: Control_Node_Direction#CB#(UX,UY,UZ,RX,RY,RZ)
-VALUE: X-Displacement
+VALUE: UX
 HELP: Control node degree of freedom, select 1 to ndf
 QUESTION: Analysis_Steps
 VALUE: 1

@@ -220,8 +220,8 @@ proc TK_CheckModelingOptionsForBrickElems { event args } {
 			set ndm [GiD_AccessValue get gendata "Dimensions"]
 			set dof [GiD_AccessValue get gendata "DOF"]
  
-			if { $ndm != "3" || $dof != "3"} {
-				WarnWinText "Standard Brick elements require a 3D / 3-DOF model."
+			if { $ndm == "2" || $dof == "2"} {
+				WarnWinText "Standard Brick elements require a 3D / 3-DOF or 3D / 6-DOF model (unused DOFs are automatically fixed)."
 			}
 
 			return ""
@@ -337,11 +337,35 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 					set ok [DWLocalSetValue $GDN $STRUCT Bar_area $Area]
 
 					return ""
-				}
-
-			} else {
-
+				} elseif { $Shape=="Rectangular_Beam" } {
+				
+				set TopBarSizeUnit [DWLocalGetValue $GDN $STRUCT Top_bar_size]
+				set BottomBarSizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_bar_size]
+				
+				set temp1 [GidConvertValueUnit $TopBarSizeUnit]
+				set temp1 [ParserNumberUnit $temp1 TopBarSize TopBarUnit]
+				
+				set temp2 [GidConvertValueUnit $BottomBarSizeUnit]
+				set temp2 [ParserNumberUnit $temp2 BottomBarSize BottomBarUnit]
+				
+				set TopBarArea [format "%1.3e" [expr $pi*($TopBarSize*$TopBarSize)/4.0]]
+				set TopBarArea $TopBarArea$TopBarUnit^2
+				
+				set BottomBarArea [format "%1.3e" [expr $pi*($BottomBarSize*$BottomBarSize)/4.0]]
+				set BottomBarArea $BottomBarArea$BottomBarUnit^2
+				
+				set ok [DWLocalSetValue $GDN $STRUCT Top_bar_Area $TopBarArea]
+				set ok [DWLocalSetValue $GDN $STRUCT Bottom_bar_Area $BottomBarArea]
+				
 				return ""
+				} else { 
+				
+					return ""
+			
+				}
+			} else {
+			
+			return "" 
 			}
 		}
 

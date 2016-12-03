@@ -152,15 +152,10 @@ uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *Mat
 section Fiber *SelectedSection {
 *set var zdivision=MatProp(Fibers_in_local_z_direction,int)
 *set var ydivision=MatProp(Fibers_in_local_y_direction,int)
-*if(strcmp(GenData(Vertical_Axis),"Z")==0)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
-*elseif(strcmp(GenData(Vertical_Axis),"Y")==0)
-*set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
-*set var zcoverFibers=tcl(NumofCoverFibers *cover *width *zdivision)
-*endif
-*# --------------Core fibers definition-----------
 
+*# --------------Core fibers definition-----------
 # Create the Core fibers
 
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
@@ -170,9 +165,9 @@ patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation
 # Create the Cover fibers
 
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(-zhalf) *yhalf *zhalf
+patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(yhalf-cover) *operation(-zhalf) *yhalf *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *zhalf
+patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
@@ -247,6 +242,58 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(cover-zhalf) *ylastcoord *operation(cover-zhalf)  
 *elseif(MatProp(Bars_along_y_axis_face,int)==1)
 *MessageBox Error: Invalid number of longitudinal bars along local y face
+*endif
+}
+*# -----------Rectangular Beam Section-----------
+*elseif(strcmp(Matprop(Cross_Section),"Rectangular_Beam")==0)
+*set var height=Matprop(Height_h,real)
+*set var width=MatProp(Width_b,real)
+*set var zhalf=operation(height/2.0)
+*set var yhalf=operation(width/2.0)
+*set var cover=MatProp(Cover_depth_for_bars,real)
+
+section Fiber *SelectedSection {
+*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
+*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
+*set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
+*set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
+
+# Create the Core fibers
+
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(zdivision-2*zcoverFibers) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(zhalf-cover) 
+*# --------------Cover fibers definition----------
+
+# Create the Cover fibers
+
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(yhalf-cover) *operation(-zhalf) *yhalf *zhalf
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *zhalf
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(-zhalf) *operation(yhalf-cover) *operation(-zhalf+cover)
+
+*if(MatProp(Top_bars,int)>=2)
+*set var HowmanyTopbars=MatProp(Top_bars,int)
+
+# Create the Top bars (face on local z positive dir)
+
+*format "%3d%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
+layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(yhalf-cover) *operation(zhalf-cover)
+
+*else
+*MessageBox Error: Invalid Number of Top bars in a Fiber Section
+*endif
+*if(MatProp(Bottom_bars,int)>=2)
+# Create the Bottom bars (face on local z negative dir)
+
+*set var HowmanyBottombars=MatProp(Bottom_bars,int)
+*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
+layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_Area,real) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(cover-zhalf)
+*else
+*MessageBox Error: Invalid Number of Bottom Bars in a Fiber Section
 *endif
 }
 *#---------Circular_Column Section-------
@@ -489,9 +536,9 @@ patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation
 # Create the Cover fibers
 
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *yhalf *operation(zhalf-cover) *operation(-yhalf) *zhalf
+patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(zhalf-cover) *operation(-yhalf) *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *yhalf *operation(-zhalf) *operation(-yhalf) *operation(cover-zhalf) 
+patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(-zhalf) *operation(-yhalf) *operation(cover-zhalf) 
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(cover-zhalf) *operation(cover-yhalf) *operation(zhalf-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
@@ -565,6 +612,58 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(cover-yhalf) *zfirstcoord *zlastcoord *operation(cover-yhalf)  
 *elseif(MatProp(Bars_along_z_axis_face,int)==1)
 *MessageBox Error: Invalid number of longitudinal bars along local y face (1)
+*endif
+}
+*elseif(strcmp(MatProp(Cross_Section),"Rectangular_Beam")==0)
+*set var height=Matprop(Height_h,real)
+*set var width=MatProp(Width_b,real)
+*set var yhalf=operation(height/2.0)
+*set var zhalf=operation(width/2.0)
+*set var cover=MatProp(Cover_depth_for_bars,real)
+
+section Fiber *SelectedSection {
+*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
+*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
+*set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
+*set var zcoverFibers=tcl(NumofCoverFibers *cover *width *zdivision)
+*# --------------Core fibers-----------
+
+# Create the Core fibers
+
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(zdivision-2*zcoverFibers) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(zhalf-cover)
+*# --------------Cover fibers----------
+
+# Create the Cover fibers
+
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(zhalf-cover) *operation(-yhalf) *zhalf
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(-zhalf) *operation(-yhalf) *operation(cover-zhalf) 
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(cover-zhalf) *operation(cover-yhalf) *operation(zhalf-cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(cover-zhalf) *yhalf *operation(zhalf-cover)
+
+*if(MatProp(Top_bars,int)>=2)
+*set var HowmanyTopbars=MatProp(Top_bars,int)
+
+# Create the Top bars (face on local y positive dir)
+
+*format "%3d%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
+layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
+
+*else
+*MessageBox Error: Invalid Number of Top bars in a Fiber Section
+*endif
+*if(MatProp(Bottom_bars,int)>=2)
+# Create the Bottom bars (face on local y negative dir)
+
+*set var HowmanyBottombars=MatProp(Bottom_bars,int)
+*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
+layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
+*else
+*MessageBox Error: Invalid Number of Bottom Bars in a Fiber Section
 *endif
 }
 *elseif(strcmp(Matprop(Cross_Section),"Circular_Column")==0)

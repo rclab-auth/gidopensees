@@ -88,11 +88,11 @@ uniaxialMaterial ElasticPPGap *oMat *MatProp(Elastic_modulus_E,real) *MatProp(Yi
 *endif
 *set var MassDens=ElemsMatProp(Mass_density,real)
 *set var MassPerLength=operation(A*MassDens)
-*# Define materials for truss elements
-*# -----------------------------------
-*# Create Elastic material prototype - command: uniaxialMaterial Elastic matID E
-*#--------------------------------------------
-*#Create truss elements - command: element truss trussID node1 node2 A matID
+*# Cross Section Area Modification Factor
+*if(ElemsMatProp(Set_Area_Modification_Factor,int)==1)
+*set var Amod=ElemsMatProp(Area_coefficient,real)
+*set var A=operation(A*Amod)
+*endif
 *#--------------------------------------------
 *format "%6d%6d%6d"
 element truss *ElemsNum *elemsConec *\
