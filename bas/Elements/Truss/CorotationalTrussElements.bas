@@ -90,8 +90,11 @@ uniaxialMaterial ElasticPPGap *oMat *MatProp(Elastic_modulus_E,real) *MatProp(Yi
 *endif
 *set var MassDens=ElemsMatProp(Mass_density,real)
 *set var MassPerLength=operation(A*MassDens)
-*#--------------------------------------------
-*# Create Corotational truss elements - command: element corotTruss $eleTag $iNode $jNode $A $matTag <-rho $rho> <-cMass $cFlag> <-doRayleigh $rFlag>
+*# Cross Section Area Modification Factor
+*if(ElemsMatProp(Set_Area_Modification_Factor,int)==1)
+*set var Amod=ElemsMatProp(Area_coefficient,real)
+*set var A=operation(A*Amod)
+*endif
 *#--------------------------------------------
 *format "%6d%6d%6d"
 element corotTruss *ElemsNum *elemsConec *\

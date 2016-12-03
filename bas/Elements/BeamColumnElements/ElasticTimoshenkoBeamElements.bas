@@ -68,10 +68,8 @@ geomTransf PDelta *TransfTag4  0 1 0
 *set var Iz=operation(width*width*width*height/12)
 *set var Iy=operation(height*height*height*width/12)
 *set var J=operation(Iz+Iy)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var coeffAz=ElemsMatProp(Area_coefficient_for_shear_area_for_local_z-axis,real)
-*set var Avy=operation(coeffAy*A)
-*set var Avz=operation(coeffAz*A)
+*set var Avy=A
+*set var Avz=A
 *elseif(strcmp(elemsMatProp(Cross_Section),"Tee")==0)
 *set var height=elemsMatProp(Height_h,real)
 *set var Bf=elemsMatProp(Width_Bf,real)
@@ -83,29 +81,23 @@ geomTransf PDelta *TransfTag4  0 1 0
 *set var Iy=operation((1/12*tf*tf*tf*Bf+(Bf*tf)*(height-tf/2-Zcm)*(height-tf/2-Zcm))+(1/12*(height-tf)*(height-tf)*(height-tf)*tw+(height-tf)*tw*(height/2-tf/2-Zcm)*(height/2-tf/2-Zcm)))
 *set var J=operation(Iz+Iy)
 *set var A=operation(Bf*tf+(height-tf)*tw)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var coeffAz=ElemsMatProp(Area_coefficient_for_shear_area_for_local_z-axis,real)
-*set var Avy=operation(coeffAy*A)
-*set var Avz=operation(coeffAz*A)
+*set var Avy=A
+*set var Avz=A
 *elseif(strcmp(elemsMatProp(Cross_Section),"Circular")==0)
 *set var D=elemsMatProp(Diameter_D,real)
 *set var A=operation(3.14*D*D/4)
 *set var Iz=operation(3.14*D*D*D*D/64)
 *set var Iy=operation(3.14*D*D*D*D/64)
 *set var J=operation(Iz+Iy)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var coeffAz=ElemsMatProp(Area_coefficient_for_shear_area_for_local_z-axis,real)
-*set var Avy=operation(coeffAy*A)
-*set var Avz=operation(coeffAz*A)
+*set var Avy=A
+*set var Avz=A
 *elseif(strcmp(ElemsMatProp(Cross_Section),"General")==0)
 *set var A=ElemsMatProp(Area_A,real)
 *set var J=ElemsMatProp(Polar_moment_of_inertia_J,real)
 *set var Iy=ElemsMatProp(Moment_of_Inertia_about_local_y,real)
 *set var Iz=ElemsMatProp(Moment_of_Inertia_about_local_z,real)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var coeffAz=ElemsMatProp(Area_coefficient_for_shear_area_for_local_z-axis,real)
-*set var Avy=operation(coeffAy*A)
-*set var Avz=operation(coeffAz*A)
+*set var Avy=A
+*set var Avz=A
 *endif
 *#-----------------------------Material Properties------------------------
 *set var SelMatID=tcl(FindMaterialNumber *elemsMatProp(Material))
@@ -120,6 +112,21 @@ geomTransf PDelta *TransfTag4  0 1 0
 *endif
 *end materials
 *set var MassPerLength=operation(A*MassDens)
+*# Cross Section Properties Modification Factors
+*if(ElemsMatProp(Set_Modification_Factors,int)==1)
+*set var Amod=ElemsMatProp(Area_coefficient,real)
+*set var Izmod=ElemsMatProp(Moment_of_Inertia_about_local_z_coefficient,real)
+*set var Iymod=ElemsMatProp(Moment_of_Inertia_about_local_y_coefficient,real)
+*set var Jmod=ElemsMatProp(Polar_moment_of_inertia_J_coefficient,real)
+*set var Avymod=ElemsMatProp(Shear_Area_in_local_y_direction,real)
+*set var Avzmod=ElemsMatProp(Shear_Area_in_local_z_direction,real)
+*set var Avy=operation(Avy*Avymod)
+*set var Avz=operation(Avz*Avzmod)
+*set var A=operation(A*Amod)
+*set var Iz=operation(Iz*Izmod)
+*set var Iy=operation(Iy*Iymod)
+*set var J=operation(J*Jmod)
+*endif
 *#NODESCOORD(1,2) : y coordinate of the 1st node!
 *#----------------Z axis as Vertical Axis----------------
 *if(strcmp(GenData(Vertical_Axis),"Z")==0)
@@ -217,8 +224,7 @@ geomTransf PDelta *TransfTag2
 *set var width=elemsMatProp(Width_b,real)
 *set var A=operation(width*height)
 *set var Iz=operation(width*height*height*height/12)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var Avy=operation(coeffAy*A)
+*set var Avy=A
 *elseif(strcmp(elemsMatProp(Cross_Section),"Tee")==0)
 *set var height=elemsMatProp(Height_h,real)
 *set var Bf=elemsMatProp(Width_Bf,real)
@@ -227,22 +233,17 @@ geomTransf PDelta *TransfTag2
 *set var Ycm=operation((Bf*tf*(height-tf/2)+(tw*(height-tf))*(height-tf)/2)/(Bf*tf+(height-tf)*tw))
 *set var Iz=operation((1/12*tf*tf*tf*Bf+(Bf*tf)*(height-tf/2-Ycm)*(height-tf/2-Ycm))+(1/12*(height-tf)*(height-tf)*(height-tf)*tw+(height-tf)*tw*(height/2-tf/2-Ycm)*(height/2-tf/2-Ycm)))
 *set var A=operation(Bf*tf+(height-tf)*tw)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var coeffAz=ElemsMatProp(Area_coefficient_for_shear_area_for_local_z-axis,real)
-*set var Avy=operation(coeffAy*A)
-*set var Avz=operation(coeffAz*A)
+*set var Avy=A
 *elseif(strcmp(elemsMatProp(Cross_Section),"Circular")==0)
 *set var D=elemsMatProp(Diameter_D,real)
 *set var A=operation(3.14*D*D/4)
 *set var Iz=operation(3.14*D*D*D*D/64)
 *set var Iy=operation(3.14*D*D*D*D/64)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var Avy=operation(coeffAy*A)
+*set var Avy=A
 *elseif(strcmp(ElemsMatProp(Cross_Section),"General")==0)
 *set var A=ElemsMatProp(Area_A,real)
 *set var Iz=ElemsMatProp(Moment_of_Inertia_about_local_z,real)
-*set var coeffAy=ElemsMatProp(Area_coefficient_for_shear_area_for_local_y-axis,real)
-*set var Avy=operation(coeffAy*A)
+*set var Avy=A
 *endif
 *#------------------------Material Properties----------------------
 *# SelMatID : Id number of the material that user selected from the ElasticBeamColumn Definition 
@@ -259,6 +260,15 @@ geomTransf PDelta *TransfTag2
 *endif
 *end materials
 *set var MassPerLength=operation(A*MassDens)
+*# Cross Section Properties Modification Factors
+*if(ElemsMatProp(Set_Modification_Factors,int)==1)
+*set var Amod=ElemsMatProp(Area_coefficient,real)
+*set var Izmod=ElemsMatProp(Moment_of_Inertia_about_local_z_coefficient,real)
+*set var Avymod=ElemsMatProp(Shear_Area_in_local_y_direction,real)
+*set var Avy=operation(Avy*Avymod)
+*set var A=operation(A*Amod)
+*set var Iz=operation(Iz*Izmod)
+*endif
 *if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
