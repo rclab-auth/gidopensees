@@ -354,8 +354,8 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 				set BottomBarArea [format "%1.3e" [expr $pi*($BottomBarSize*$BottomBarSize)/4.0]]
 				set BottomBarArea $BottomBarArea$BottomBarUnit^2
 				
-				set ok [DWLocalSetValue $GDN $STRUCT Top_bar_Area $TopBarArea]
-				set ok [DWLocalSetValue $GDN $STRUCT Bottom_bar_Area $BottomBarArea]
+				set ok [DWLocalSetValue $GDN $STRUCT Top_bar_area $TopBarArea]
+				set ok [DWLocalSetValue $GDN $STRUCT Bottom_bar_area $BottomBarArea]
 				
 				return ""
 				} else { 

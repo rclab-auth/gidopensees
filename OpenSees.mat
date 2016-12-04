@@ -557,9 +557,9 @@ TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
 QUESTION: Cross_Section#CB#(Rectangular_Column,Rectangular_Beam,Circular_Column)
 VALUE: Rectangular_Column
-DEPENDENCIES: (Rectangular_Column,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_Area,#CURRENT#,HIDE,Bottom_bar_Area,#CURRENT#,HIDE,Bar_Area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_bar_size,#CURRENT#,RESTORE,Middle_bar_size,#CURRENT#,RESTORE,Corner_Bar_Area,#CURRENT#,RESTORE,Middle_Bar_Area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#) 
-DEPENDENCIES: (Circular_Column,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_Area,#CURRENT#,HIDE,Bottom_bar_Area,#CURRENT#,RESTORE,Bar_Area,#CURRENT#,HIDE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,RESTORE,Bars_along_arc,#CURRENT#,RESTORE,Bar_size,#CURRENT#,RESTORE,Fibers_in_the_circumferential_direction,#CURRENT#,RESTORE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Corner_Bar_Area,#CURRENT#,HIDE,Middle_Bar_Area,#CURRENT#,HIDE,Fibers_in_local_z_direction,#CURRENT#,HIDE,Fibers_in_local_y_direction,#CURRENT#)
-DEPENDENCIES: (Rectangular_Beam,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_Bar_area,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,RESTORE,Top_bars,#CURRENT#,RESTORE,Bottom_bars,#CURRENT#,RESTORE,Top_bar_size,#CURRENT#,RESTORE,Bottom_bar_size,#CURRENT#,RESTORE,Top_bar_Area,#CURRENT#,RESTORE,Bottom_bar_Area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bar_area,#CURRENT#)
+DEPENDENCIES: (Rectangular_Column,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,HIDE,Bar_area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_bar_size,#CURRENT#,RESTORE,Middle_bar_size,#CURRENT#,RESTORE,Corner_bar_area,#CURRENT#,RESTORE,Middle_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#) 
+DEPENDENCIES: (Circular_Column,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,RESTORE,Bar_area,#CURRENT#,HIDE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,RESTORE,Bars_along_arc,#CURRENT#,RESTORE,Bar_size,#CURRENT#,RESTORE,Fibers_in_the_circumferential_direction,#CURRENT#,RESTORE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_bar_area,#CURRENT#,HIDE,Fibers_in_local_z_direction,#CURRENT#,HIDE,Fibers_in_local_y_direction,#CURRENT#)
+DEPENDENCIES: (Rectangular_Beam,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_bar_area,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,RESTORE,Top_bars,#CURRENT#,RESTORE,Bottom_bars,#CURRENT#,RESTORE,Top_bar_size,#CURRENT#,RESTORE,Bottom_bar_size,#CURRENT#,RESTORE,Top_bar_area,#CURRENT#,RESTORE,Bottom_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bar_area,#CURRENT#)
 QUESTION: Height_h#UNITS#
 VALUE: 0.5 m
 QUESTION: Width_b#UNITS#
@@ -625,7 +625,7 @@ QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
 QUESTION: Cover_material#MAT#(Uniaxial_Concrete_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
-QUESTION: Reinforcing_Bar_material#MAT#(Uniaxial_Steel_Materials)
+QUESTION: Reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel01
 END MATERIAL 
 
@@ -683,10 +683,10 @@ TKWIDGET: TK_CheckMaterialForElasticBeamColumn
 TITLE: Section_properties
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
-DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
-DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
-DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
-DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,RESTORE,Area_A,#CURRENT#,RESTORE,Polar_moment_of_inertia_J,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_y,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_z,#CURRENT#)
+DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bw,#CURRENT#,RESTORE,Area_A,#CURRENT#,RESTORE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,RESTORE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,RESTORE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
 QUESTION: Height_h#UNITS#
 VALUE: 0.5m
 QUESTION: Width_b#UNITS#
@@ -705,27 +705,27 @@ VALUE: 0.25m
 QUESTION: Area_A#UNITS#
 VALUE: 1.0 m^2
 IMAGE: img/Sections/sec_General.png
-QUESTION: Polar_moment_of_inertia_J#UNITS#
+QUESTION: Moment_of_inertia_about_local-y_Iyy#UNITS#
+VALUE: 0.5 m^4
+QUESTION: Moment_of_inertia_about_local-z_Izz#UNITS#
+VALUE: 0.5 m^4
+QUESTION: Torsional_moment_of_inertia_Iyz#UNITS#
 VALUE: 1.0 m^4
-QUESTION: Moment_of_Inertia_about_local_y#UNITS#
-VALUE: 0.5 m^4
-QUESTION: Moment_of_Inertia_about_local_z#UNITS#
-VALUE: 0.5 m^4
 QUESTION: _#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info 
 STATE: DISABLED
 HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Problem data options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule
 QUESTION: Set_Modification_Factors#CB#(1,0)
 VALUE: 0
-DEPENDENCIES: (1,RESTORE,Area_coefficient,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_y_coefficient,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_z_coefficient,#CURRENT#,RESTORE,Polar_moment_of_inertia_J_coefficient,#CURRENT#)
-DEPENDENCIES: (0,HIDE,Area_coefficient,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y_coefficient,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z_coefficient,#CURRENT#,HIDE,Polar_moment_of_inertia_J_coefficient,#CURRENT#)
-QUESTION: Area_coefficient
+DEPENDENCIES: (1,RESTORE,mod._A,#CURRENT#,RESTORE,mod._Iyy,#CURRENT#,RESTORE,mod._Izz,#CURRENT#,RESTORE,mod._Iyz,#CURRENT#)
+DEPENDENCIES: (0,HIDE,mod._A,#CURRENT#,HIDE,mod._Iyy,#CURRENT#,HIDE,mod._Izz,#CURRENT#,HIDE,mod._Iyz,#CURRENT#)
+QUESTION: mod._A
 VALUE: 1
-QUESTION: Moment_of_Inertia_about_local_y_coefficient
+QUESTION: mod._Iyy
 VALUE: 1
-QUESTION: Moment_of_Inertia_about_local_z_coefficient
+QUESTION: mod._Izz
 VALUE: 1
-QUESTION: Polar_moment_of_inertia_J_coefficient
+QUESTION: mod._Iyz
 VALUE: 1
 TITLE: Element_Geometry
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
@@ -751,10 +751,10 @@ TKWIDGET: TK_CheckMaterialForElasticBeamColumn
 TITLE: Section_properties
 QUESTION: Cross_Section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
-DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
-DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
-DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_Bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Polar_moment_of_inertia_J,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z,#CURRENT#)
-DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_Bw,#CURRENT#,RESTORE,Area_A,#CURRENT#,RESTORE,Polar_moment_of_inertia_J,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_y,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_z,#CURRENT#)
+DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bw,#CURRENT#,RESTORE,Area_A,#CURRENT#,RESTORE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,RESTORE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,RESTORE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
 QUESTION: Height_h#UNITS#
 VALUE: 0.5m
 QUESTION: Width_b#UNITS#
@@ -773,33 +773,33 @@ VALUE: 0.25m
 QUESTION: Area_A#UNITS#
 VALUE: 1.0 m^2
 IMAGE: img/Sections/sec_General.png
-QUESTION: Polar_moment_of_inertia_J#UNITS#
+QUESTION: Moment_of_inertia_about_local-y_Iyy#UNITS#
+VALUE: 0.5 m^4
+QUESTION: Moment_of_inertia_about_local-z_Izz#UNITS#
+VALUE: 0.5 m^4
+QUESTION: Torsional_moment_of_inertia_Iyz#UNITS#
 VALUE: 1.0 m^4
-QUESTION: Moment_of_Inertia_about_local_y#UNITS#
-VALUE: 0.5 m^4
-QUESTION: Moment_of_Inertia_about_local_z#UNITS#
-VALUE: 0.5 m^4
 QUESTION: _#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info
 STATE: DISABLED
 HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Problem data options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule
 QUESTION: Set_Modification_Factors#CB#(1,0)
 VALUE: 0
-DEPENDENCIES: (1,RESTORE,Area_coefficient,#CURRENT#,RESTORE,Shear_Area_in_local_z_direction_coefficient,#CURRENT#,RESTORE,Shear_Area_in_local_y_direction_coefficient,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_y_coefficient,#CURRENT#,RESTORE,Moment_of_Inertia_about_local_z_coefficient,#CURRENT#,RESTORE,Polar_moment_of_inertia_J_coefficient,#CURRENT#)
-DEPENDENCIES: (0,HIDE,Area_coefficient,#CURRENT#,HIDE,Shear_Area_in_local_z_direction_coefficient,#CURRENT#,HIDE,Shear_Area_in_local_y_direction_coefficient,#CURRENT#,HIDE,Moment_of_Inertia_about_local_y_coefficient,#CURRENT#,HIDE,Moment_of_Inertia_about_local_z_coefficient,#CURRENT#,HIDE,Polar_moment_of_inertia_J_coefficient,#CURRENT#)
-QUESTION: Area_coefficient
+DEPENDENCIES: (1,RESTORE,mod._A,#CURRENT#,RESTORE,mod._Sy,#CURRENT#,RESTORE,mod._Sz,#CURRENT#,RESTORE,mod._Iyy,#CURRENT#,RESTORE,mod._Izz,#CURRENT#,RESTORE,mod._Iyz,#CURRENT#)
+DEPENDENCIES: (0,HIDE,mod._A,#CURRENT#,HIDE,mod._Sy,#CURRENT#,HIDE,mod._Sz,#CURRENT#,HIDE,mod._Iyy,#CURRENT#,HIDE,mod._Izz,#CURRENT#,HIDE,mod._Iyz,#CURRENT#)
+QUESTION: mod._A
 VALUE: 1
-QUESTION: Shear_Area_in_local_y_direction_coefficient
+QUESTION: mod._Sy
 VALUE: 1
-HELP: This value will be multiplied by the Area A for Shear Area for local y axis
-QUESTION: Shear_Area_in_local_z_direction_coefficient
+HELP: This value will be multiplied by the Area (A) for local-y Shear Area (Sy)
+QUESTION: mod._Sz
 VALUE: 1
-HELP: This value will be multiplied by the Area A for Shear Area for local z axis
-QUESTION: Moment_of_Inertia_about_local_y_coefficient
+HELP: This value will be multiplied by the Area (A) for local-z Shear Area (Sz)
+QUESTION: mod._Iyy
 VALUE: 1
-QUESTION: Moment_of_Inertia_about_local_z_coefficient
+QUESTION: mod._Izz
 VALUE: 1
-QUESTION: Polar_moment_of_inertia_J_coefficient
+QUESTION: mod._Iyz
 VALUE: 1
 TITLE: Element_Geometry
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
@@ -894,10 +894,10 @@ VALUE: 0.25m
 QUESTION: Area_A#UNITS#
 VALUE: 1.0 m^2
 IMAGE: img/Sections/sec_General.png
-QUESTION: Set_Area_Modification_Factor#CB#(0,1)
+QUESTION: Set_Modification_Factors#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,HIDE,Area_coefficient,#CURRENT#) (1,RESTORE,Area_coefficient,#CURRENT#)
-QUESTION: Area_coefficient
+DEPENDENCIES: (0,HIDE,mod._A,#CURRENT#) (1,RESTORE,mod._A,#CURRENT#)
+QUESTION: mod._A
 VALUE: 1
 END MATERIAL
 
@@ -944,10 +944,10 @@ VALUE: 0.25m
 QUESTION: Area_A#UNITS#
 VALUE: 1 m^2
 IMAGE: img/Sections/sec_General.png
-QUESTION: Set_Area_Modification_Factor#CB#(0,1)
+QUESTION: Set_Modification_Factors#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,HIDE,Area_coefficient,#CURRENT#) (1,RESTORE,Area_coefficient,#CURRENT#)
-QUESTION: Area_coefficient
+DEPENDENCIES: (0,HIDE,mod._A,#CURRENT#) (1,RESTORE,mod._A,#CURRENT#)
+QUESTION: mod._A
 VALUE: 1
 END MATERIAL
 

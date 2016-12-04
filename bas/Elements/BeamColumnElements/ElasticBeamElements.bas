@@ -85,9 +85,9 @@ geomTransf PDelta *TransfTag4  0 1 0
 *set var J=operation(Iz+Iy)
 *elseif(strcmp(ElemsMatProp(Cross_Section),"General")==0)
 *set var A=ElemsMatProp(Area_A,real)
-*set var J=ElemsMatProp(Polar_moment_of_inertia_J,real)
-*set var Iy=ElemsMatProp(Moment_of_Inertia_about_local_y,real)
-*set var Iz=ElemsMatProp(Moment_of_Inertia_about_local_z,real)
+*set var Iy=ElemsMatProp(Moment_of_inertia_about_local-y_Iyy,real)
+*set var Iz=ElemsMatProp(Moment_of_inertia_about_local-z_Izz,real)
+*set var J=ElemsMatProp(Torsional_moment_of_inertia_Iyz,real)
 *endif
 *#----------------Material Properties ----------------------
 *set var SelMatID=tcl(FindMaterialNumber *elemsMatProp(Material))
@@ -104,10 +104,10 @@ geomTransf PDelta *TransfTag4  0 1 0
 *set var MassPerLength=operation(A*MassDens)
 *# Cross Section Properties Modification Factors
 *if(ElemsMatProp(Set_Modification_Factors,int)==1)
-*set var Amod=ElemsMatProp(Area_coefficient,real)
-*set var Izmod=ElemsMatProp(Moment_of_Inertia_about_local_z_coefficient,real)
-*set var Iymod=ElemsMatProp(Moment_of_Inertia_about_local_y_coefficient,real)
-*set var Jmod=ElemsMatProp(Polar_moment_of_inertia_J_coefficient,real)
+*set var Amod=ElemsMatProp(mod._A,real)
+*set var Izmod=ElemsMatProp(mod._Izz,real)
+*set var Iymod=ElemsMatProp(mod._Iyy,real)
+*set var Jmod=ElemsMatProp(mod._Iyz,real)
 *set var A=operation(A*Amod)
 *set var Iz=operation(Iz*Izmod)
 *set var Iy=operation(Iy*Iymod)
@@ -240,8 +240,8 @@ geomTransf PDelta *TransfTag2
 *endif
 *# Cross Section Properties Modification Factors
 *if(ElemsMatProp(Set_Modification_Factors,int)==1)
-*set var Amod=ElemsMatProp(Area_coefficient,real)
-*set var Izmod=ElemsMatProp(Moment_of_Inertia_about_local_z_coefficient,real)
+*set var Amod=ElemsMatProp(mod._A,real)
+*set var Izmod=ElemsMatProp(mod._Izz,real)
 *set var A=operation(A*Amod)
 *set var Iz=operation(Iz*Izmod)
 *endif

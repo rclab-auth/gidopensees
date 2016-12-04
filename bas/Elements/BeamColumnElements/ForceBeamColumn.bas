@@ -281,7 +281,7 @@ patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFi
 # Create the Top bars (face on local z positive dir)
 
 *format "%3d%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(yhalf-cover) *operation(zhalf-cover)
+layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(yhalf-cover) *operation(zhalf-cover)
 
 *else
 *MessageBox Error: Invalid Number of Top bars in a Fiber Section
@@ -291,7 +291,7 @@ layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_Area,real) *
 
 *set var HowmanyBottombars=MatProp(Bottom_bars,int)
 *format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_Area,real) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(cover-zhalf)
+layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_area,real) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(cover-zhalf)
 *else
 *MessageBox Error: Invalid Number of Bottom Bars in a Fiber Section
 *endif
@@ -651,7 +651,7 @@ patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFib
 # Create the Top bars (face on local y positive dir)
 
 *format "%3d%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
+layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
 
 *else
 *MessageBox Error: Invalid Number of Top bars in a Fiber Section
@@ -661,7 +661,7 @@ layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_Area,real) *
 
 *set var HowmanyBottombars=MatProp(Bottom_bars,int)
 *format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
+layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
 *else
 *MessageBox Error: Invalid Number of Bottom Bars in a Fiber Section
 *endif

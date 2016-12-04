@@ -89,8 +89,8 @@ uniaxialMaterial ElasticPPGap *oMat *MatProp(Elastic_modulus_E,real) *MatProp(Yi
 *set var MassDens=ElemsMatProp(Mass_density,real)
 *set var MassPerLength=operation(A*MassDens)
 *# Cross Section Area Modification Factor
-*if(ElemsMatProp(Set_Area_Modification_Factor,int)==1)
-*set var Amod=ElemsMatProp(Area_coefficient,real)
+*if(ElemsMatProp(Set_Modification_Factors,int)==1)
+*set var Amod=ElemsMatProp(mod._A,real)
 *set var A=operation(A*Amod)
 *endif
 *#--------------------------------------------
