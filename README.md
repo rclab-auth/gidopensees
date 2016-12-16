@@ -38,7 +38,8 @@ V.K. Papanikolaou, Assistant Professor AUTh
 	- Elastic beam-column elements
 	- Elastic Timoshenko beam-column elements
 	- Truss elements
-- Local axis info corrected
+- Suggest fiber mesh option
+- Local axis info updated
 - Minor bug fixes
 
 ---
