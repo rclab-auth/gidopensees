@@ -431,6 +431,124 @@ proc TK_CheckSectionForFBC { event args } {
 	return ""
 }
 
+proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
+
+	switch $event {
+		
+		INIT { 
+			
+			return ""
+			
+		} 
+		
+		SYNC {
+			
+			set GDN  [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+			set ndm [GiD_AccessValue get gendata "Dimensions"]
+			set check [DWLocalGetValue $GDN $STRUCT $QUESTION]
+			set Shape [DWLocalGetValue $GDN $STRUCT "Cross_Section"]
+			
+			if { $check==1 } {
+				
+				switch $Shape {
+				
+					"Rectangular_Column" {
+
+						set heightUnit [DWLocalGetValue $GDN $STRUCT "Height_h"]
+						set widthUnit [DWLocalGetValue $GDN $STRUCT "Width_b"]
+						set temp [GidConvertValueUnit $heightUnit]
+						set temp [ParserNumberUnit $temp height dummy]
+						set temp [GidConvertValueUnit $widthUnit]
+						set temp [ParserNumberUnit $temp width dummy]
+						
+						switch $ndm {
+						
+							"3" {
+								
+								if { $height >= $width  } {
+									set Fibers_z [roundUp [expr 10*$height/$width] ]
+									set Fibers_y 10
+									
+								} elseif { $height<$width } {
+								
+									set Fibers_y [roundUp [expr 10*$height/$width] ]
+									set Fibers_z 10
+									
+								} else {
+									return ""
+								}
+							}
+							"2" {
+								
+								if { $height >= $width  } {
+									set Fibers_y [roundUp [expr 10*$height/$width] ]
+									set Fibers_z 10
+									
+								} elseif { $height<$width } {
+								
+									set Fibers_z [roundUp [expr 10*$height/$width] ]
+									set Fibers_y 10
+									
+								} else {
+									return ""
+								}
+							}
+						}
+						
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction $Fibers_z]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction $Fibers_y]
+					}
+					"Rectangular_Beam" {
+
+						set heightUnit [DWLocalGetValue $GDN $STRUCT "Height_h"]
+						set widthUnit [DWLocalGetValue $GDN $STRUCT "Width_b"]
+						set temp [GidConvertValueUnit $heightUnit]
+						set temp [ParserNumberUnit $temp height dummy]
+						set temp [GidConvertValueUnit $widthUnit]
+						set temp [ParserNumberUnit $temp width dummy]
+						
+						set TopBars [DWLocalGetValue $GDN $STRUCT "Top_bars"]
+						set BottomBars [DWLocalGetValue $GDN $STRUCT "Bottom_bars"]
+						
+						# Height may be greater than width for Beam
+						if { $height >= $width } {
+							switch $ndm {
+						
+								"3" {
+								
+									set Fibers_y [expr {2*max($TopBars,$BottomBars)}]
+									set Fibers_z [expr $Fibers_y*$height/$width]
+							
+								}
+								"2" {
+								
+									set Fibers_z [expr {2*max($TopBars,$BottomBars)}]
+									set Fibers_y [expr $Fibers_z*$height/$width]
+									
+								}
+							}
+						}
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction [roundUp $Fibers_y]]
+					}
+					"Circular" {
+						
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_circumferential_direction 10]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_radial_direction 10]
+					
+					}	
+				}
+			}
+		}
+		CLOSE {
+			return ""
+		}
+	}
+	return ""
+}
+
 proc TK_CheckMaterialsForFiber { event args } {
 
 	switch $event {
@@ -460,7 +578,7 @@ proc TK_CheckMaterialsForFiber { event args } {
  
 			#CoreMatType is the value of the field: material: of the chosen material from the combo box!
  
-			if { $BarMatType != "Steel01" } {
+			if { $BarMatType != "Steel01"  } {
 				WarnWinText "ERROR : Material $ChoosedBarMaterial ($BarMatType material) can not be used for fiber sections in this version."
 				WarnWinText "It has been changed to Steel01 material."
 
@@ -1865,6 +1983,23 @@ proc TK_RestraintsWikiInfo { event args } {
 	return ""
 }
 
+proc TK_AnalWikiInfo { event args } {
+	switch $event {
+	
+		INIT {
+		
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Analysis_Commands"
+			
+			set b [Button $PARENT.wikiinfo -text [= "Analysis Info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW+2] -sticky nw -pady 5
+		
+	
+		}
+	}
+	return ""
+}
 proc TK_CheckQuadFieldOptions { event args } {
 	switch $event {
 		

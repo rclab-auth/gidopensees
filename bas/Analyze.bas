@@ -98,24 +98,30 @@ integrator Newmark *IntvData(alpha,real) *IntvData(gamma,real) *IntvData(beta,re
 *endif
 *endif
 *if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
-*if(strcmp(IntvData(Convergence_Criteria_Type),"Absolute_force_error")==0)
+*if(strcmp(IntvData(Convergence_Criteria_Type),"Norm_Unbalance")==0)
 *format "%g%g"
 test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Absolute_displacement_error")==0)
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Norm_Displacement_Increment")==0)
 *format "%g%g"
 test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Absolute_energy_error")==0)
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Energy_Increment")==0)
 *format "%g%g"
 test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_force_error")==0)
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_Norm_Unbalance")==0)
 *format "%g%g"
 test RelativeNormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_displacement_error")==0)
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_Norm_Displacement_Increment")==0)
 *format "%g%g"
 test RelativeNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_energy_error")==0)
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Total_Relative_Norm_Displacement_Increment")==0)
+*format "%g%g"
+test RelativeTotalNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_Energy_Increment")==0)
 *format "%g%g"
 test RelativeEnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
+*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Fixed_Number_of_Iterations")==0)
+*format "%g"
+test FixedNumIter *IntvData(Max_Iterations_per_Step) 1
 *endif
 *endif
 *if(strcmp(IntvData(Solution_Algorithm),"Linear")==0)

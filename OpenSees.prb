@@ -120,14 +120,16 @@ VALUE: Monotonic
 DEPENDENCIES: (Cyclic,RESTORE,Number_of_Cycles,#CURRENT#) (Monotonic,HIDE,Number_of_Cycles,#CURRENT#)
 QUESTION: Number_of_Cycles
 VALUE: 1
-QUESTION: Convergence_Criteria_Type#CB#(Absolute_force_error,Absolute_displacement_error,Absolute_energy_error,Relative_force_error,Relative_displacement_error,Relative_energy_error)
-VALUE: Relative_energy_error
-DEPENDENCIES: (Absolute_force_error,RESTORE,Tolerance,0.01)
-DEPENDENCIES: (Absolute_displacement_error,RESTORE,Tolerance,0.001)
-DEPENDENCIES: (Absolute_energy_error,RESTORE,Tolerance,1.0e-5)
-DEPENDENCIES: (Relative_force_error,RESTORE,Tolerance,0.001)
-DEPENDENCIES: (Relative_displacement_error,RESTORE,Tolerance,0.001)
-DEPENDENCIES: (Relative_energy_error,RESTORE,Tolerance,1.0e-6)
+QUESTION: Convergence_Criteria_Type#CB#(Norm_Unbalance,Norm_Displacement_Increment,Energy_Increment,Relative_Norm_Unbalance,Relative_Norm_Displacement_Increment,Total_Relative_Norm_Displacement_Increment,Relative_Energy_Increment,Fixed_Number_of_Iterations)
+VALUE: Relative_Energy_Increment
+DEPENDENCIES: (Norm_Unbalance,RESTORE,Tolerance,0.01)
+DEPENDENCIES: (Norm_Displacement_Increment,RESTORE,Tolerance,0.001)
+DEPENDENCIES: (Energy_Increment,RESTORE,Tolerance,1.0e-5)
+DEPENDENCIES: (Relative_Norm_Unbalance,RESTORE,Tolerance,0.001)
+DEPENDENCIES: (Relative_Norm_Displacement_Increment,RESTORE,Tolerance,0.001)
+DEPENDENCIES: (Total_Relative_Norm_Displacement_Increment,RESTORE,Tolerance,0.001)
+DEPENDENCIES: (Relative_Energy_Increment,RESTORE,Tolerance,1.0e-6)
+DEPENDENCIES: (Fixed_Number_of_Iterations,RESTORE,Max_Iterations_per_Step,50,HIDE,Tolerance,#CURRENT#)
 QUESTION: Tolerance
 VALUE: 1.0e-6
 HELP: 	Tolerance criteria for checking convergence
@@ -137,5 +139,5 @@ HELP: Maximum number of iterations per step
 QUESTION: Keep_this_loading_active_until_the_end_of_analysis#CB#(1,0)
 VALUE: 0
 HELP: Maintains the load constant for the remainder of the the analysis and resets the current time to zero
-
+TKWIDGET: TK_AnalWikiInfo
 END INTERVAL DATA
