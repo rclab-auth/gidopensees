@@ -18,27 +18,26 @@
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *if(VarCount==1)
-*set var file=2
 # Uniaxial Materials Definition
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Truss")==0)
-*# We set the variable oMujMat the IDnumber of the material that user choosed from the Material field , in the element that he/she assigned!
-*set Var oMujMat=tcl(FindMaterialNumber *MatProp(Material) )
-*set var MaterialExists=tcl(CheckUsedMaterials *oMujMat)
+*# We set the variable SelectedMaterial the IDnumber of the material that user choosed from the Material field , in the element that he/she assigned!
+*set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
-*set var dummy=tcl(AddUsedMaterials *oMujMat)
+*set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *loop materials *NotUsed
-*# We set the variable oMat the IDnumber of each material(NotUsed) and we check which is the material that user choosed in Material field in element definition.
-*set var oMat=tcl(FindMaterialNumber *MatProp(0) )
+*# We set the variable MaterialID the IDnumber of each material(NotUsed) and we check which is the material that user choosed in Material field in element definition.
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
 *#we check which is the material that user choosed in Material field in element definition.
-*if(oMat==oMujMat)
+*if(MaterialID==SelectedMaterial)
 *if(strcmp(MatProp(1),"Elastic")==0)
 *format "%d%g"
-uniaxialMaterial Elastic *oMat *MatProp(Elastic_modulus_E,real)
+uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real)
 *elseif(strcmp(MatProp(1),"ElasticPerfectlyPlastic")==0)
 *format "%d%g"
-uniaxialMaterial ElasticPP *oMat *MatProp(Elastic_modulus_E,real) *\
+uniaxialMaterial ElasticPP *MaterialID *MatProp(Elastic_modulus_E,real) *\
 *set var epsyP=MatProp(Strain_epsP,real)
 *set var epsyN=MatProp(Strain_epsN,real)
 *set var eps0=MatProp(Initial_strain_eps0,real)
@@ -46,7 +45,7 @@ uniaxialMaterial ElasticPP *oMat *MatProp(Elastic_modulus_E,real) *\
 *epsyP *epsyN *eps0
 *elseif(strcmp(MatProp(1),"Steel01")==0)
 *format "%d"
-uniaxialMaterial Steel01 *oMat *\
+uniaxialMaterial Steel01 *MaterialID *\
 *set var Fy=MatProp(Yield_Stress_Fy,real)
 *set var E0=MatProp(Initial_elastic_tangent_E0,real)
 *set var b=MatProp(Strain-hardening_ratio_b,real)
@@ -54,7 +53,7 @@ uniaxialMaterial Steel01 *oMat *\
 *Fy *E0 *b
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
 *format "%d%g%g%g"
-uniaxialMaterial ElasticPPGap *oMat *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Gap,real)
+uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Gap,real)
 *endif
 *break
 *endif

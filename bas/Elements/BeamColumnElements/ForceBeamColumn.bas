@@ -132,7 +132,7 @@ uniaxialMaterial Concrete06 *SelectedCoverMaterial *MatProp(Concrete_compressive
 *format "%d%g%g%g"
 uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
 *else
-*MessageBox *MatProp(0) is not ready for forceBeamColumn elements
+*MessageBox ERROR: Unsupported material for rebar for forceBeamColumn element.
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
 *break
@@ -504,7 +504,7 @@ uniaxialMaterial Concrete02 *SelectedCoverMaterial *MatProp(Compressive_strength
 *format "%d%g%g%g"
 uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
 *else
-*MessageBox *MatProp(0) is not ready for forceBeamColumn elements
+*MessageBox ERROR: Unsupported rebar material for forceBeamColumn element.
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
 *break
