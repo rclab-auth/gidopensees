@@ -127,8 +127,8 @@ QUESTION: Material:#CB#(Steel01)
 VALUE: Steel01
 HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
 IMAGE: img/Materials/Steel01.png
-QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500,Custom)
-VALUE: B500
+QUESTION: Steel_Grade#CB#(S235,S275,S355,S450,B500C,Custom)
+VALUE: B500C
 TKWIDGET: TK_GenerateUniaxialSteelProperties
 QUESTION: Yield_Stress_Fy#UNITS#
 VALUE: 500 MPa
@@ -140,6 +140,28 @@ HELP: Ratio between post-yield tangent and initial elastic tangent.
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
+MATERIAL: Reinforcing_steel
+COMMENT: \n\tUpdate material window to assign selected Grade\n\tSelect 'Custom' to enter user values\n
+QUESTION: Material:#CB#(_)
+VALUE: ReinforcingSteel
+IMAGE: img/Materials/ReinfSteel.png
+QUESTION: Steel_Grade#CB#(B500C,Custom)
+VALUE: B500C
+TKWIDGET: TK_GenerateUniaxialSteelProperties
+QUESTION: Yield_stress_fy#UNITS#
+VALUE: 500 MPa
+QUESTION: Ultimate_stress_fsu#UNITS#
+VALUE: 575 MPa
+QUESTION: Initial_elastic_tangent_Es#UNITS#
+VALUE: 200 GPa
+QUESTION: Tangent_at_initial_strain_hardening_Esh#UNITS#
+VALUE: 20 GPa
+QUESTION: Strain_corresponding_to_initial_strain_hardening_esh
+VALUE: 5e-3
+QUESTION: Strain_at_peak_stress_esu
+VALUE: 7.5e-2
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
 
 BOOK: Uniaxial_Concrete_Materials
 
@@ -222,6 +244,46 @@ QUESTION: Tension_softening_stiffness_Ets#UNITS#
 VALUE: 2 GPa
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL 
+
+MATERIAL: Concrete04_(Popovics_concrete)
+COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n
+QUESTION: Material:#CB#(Concrete04)
+VALUE: Concrete04
+IMAGE: img/Materials/Concrete04.png
+QUESTION: Strength_Class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
+VALUE: C20/25
+TKWIDGET: TK_GenerateUniaxialConcreteProperties
+DEPENDENCIES: (C12/15,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C16/20,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C20/25,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C25/30,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C30/37,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C35/45,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C40/50,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C45/55,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C50/60,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C60/75,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C70/85,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C80/95,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (C90/105,RESTORE,Strength_Type,#CURRENT#)
+DEPENDENCIES: (Custom,HIDE,Strength_Type,#CURRENT#)
+HELP: Choose concrete strength category, to generate fast properties in the following fields.
+QUESTION: Strength_Type#CB#(Mean,Characteristic)
+VALUE: Characteristic
+QUESTION: Compressive_strength#UNITS#
+VALUE: -20 MPa
+QUESTION: Strain_at_maximum_strength
+VALUE: -2.0e-3
+QUESTION: Strain_at_crushing_strength
+VALUE: -3.5e-3
+QUESTION: Initial_stiffness#UNITS#
+VALUE: 30 GPa
+QUESTION: Maximum_tensile_strength#UNITS#
+VALUE: 2.2 MPa
+QUESTION: Ultimate_tensile_strain
+VALUE: 1e-3
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
 
 MATERIAL: Concrete06
 COMMENT: \n\tUpdate material window to assign selected Class/Type\n\tSelect 'Custom' to enter user values\n

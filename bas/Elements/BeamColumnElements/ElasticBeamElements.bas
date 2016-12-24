@@ -179,7 +179,7 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *#--------------------------------------------------------------------------------------------------------------
 *#-----------------------------------    2D     3DOF         ---------------------------------------------------
 *#--------------------------------------------------------------------------------------------------------------
-*elseif(GenData(Dimensions,int)==2 && GenData(DOF,int)==3)
+*elseif(GenData(Dimensions,int)==2 && (GenData(DOF,int)==2 || GenData(DOF,int)==3))
 *loop elems 
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
 *if(VarCount==1)

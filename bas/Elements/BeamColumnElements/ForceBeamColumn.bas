@@ -88,11 +88,14 @@ uniaxialMaterial Concrete01 *SelectedCoreMaterial *MatProp(Compressive_strength_
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
 *format "%d%g%g%g%g%g%g"
 uniaxialMaterial Concrete02 *SelectedCoreMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
+*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial Concrete04 *SelectedCoreMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *format "%d%g%g%g%g%g%g%g%g"
 uniaxialMaterial Concrete06 *SelectedCoreMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
 *else
-*MessageBox *MatProp(0) is not ready for forceBeamColumn elements
+*MessageBox Error: Unsupported Core material for Fiber Section
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedCoreMaterial)
 *break
@@ -111,11 +114,14 @@ uniaxialMaterial Concrete01 *SelectedCoverMaterial *MatProp(Compressive_strength
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
 *format "%d%g%g%g%g%g%g"
 uniaxialMaterial Concrete02 *SelectedCoverMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
+*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial Concrete04 *SelectedCoverMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *format "%d%g%g%g%g%g%g%g%g"
 uniaxialMaterial Concrete06 *SelectedCoverMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
 *else
-*MessageBox *MatProp(0) is not ready for forceBeamColumn elements
+*MessageBox Error: Unsupported Cover material for Fiber Section
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedCoverMaterial)
 *break
@@ -131,8 +137,11 @@ uniaxialMaterial Concrete06 *SelectedCoverMaterial *MatProp(Concrete_compressive
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *format "%d%g%g%g"
 uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
+*elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial ReinforcingSteel *SelectedRBMaterial *MatProp(Yield_stress_fy,real) *MatProp(Ultimate_stress_fsu,real) *MatProp(Initial_elastic_tangent_Es,real) *MatProp(Tangent_at_initial_strain_hardening_Esh,real) *MatProp(Strain_corresponding_to_initial_strain_hardening_esh,real) *MatProp(Strain_at_peak_stress_esu,real)
 *else
-*MessageBox ERROR: Unsupported material for rebar for forceBeamColumn element.
+*MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
 *break
@@ -466,8 +475,14 @@ uniaxialMaterial Concrete01 *SelectedCoreMaterial *MatProp(Compressive_strength_
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
 *format "%d%g%g%g%g%g%g"
 uniaxialMaterial Concrete02 *SelectedCoreMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
+*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial Concrete04 *SelectedCoreMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
+*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
+*format "%d%g%g%g%g%g%g%g%g"
+uniaxialMaterial Concrete06 *SelectedCoreMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
 *else
-*MessageBox *MatProp(0) is not ready for forceBeamColumn elements
+*MessageBox Error: Unsupported Core material for Fiber Section
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedCoreMaterial)
 *break
@@ -486,8 +501,14 @@ uniaxialMaterial Concrete01 *SelectedCoverMaterial *MatProp(Compressive_strength
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
 *format "%d%g%g%g%g%g%g"
 uniaxialMaterial Concrete02 *SelectedCoverMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
+*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial Concrete04 *SelectedCoverMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
+*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
+*format "%d%g%g%g%g%g%g%g%g"
+uniaxialMaterial Concrete06 *SelectedCoreMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
 *else
-*MessageBox *MatProp(0) is not ready for forceBeamColumn elements
+*MessageBox Error: Unsupported Cover material for Fiber Section
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedCoverMaterial)
 *break
@@ -503,8 +524,11 @@ uniaxialMaterial Concrete02 *SelectedCoverMaterial *MatProp(Compressive_strength
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *format "%d%g%g%g"
 uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
+*elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial ReinforcingSteel *SelectedRBMaterial *MatProp(Yield_stress_fy,real) *MatProp(Ultimate_stress_fsu,real) *MatProp(Initial_elastic_tangent_Es,real) *MatProp(Tangent_at_initial_strain_hardening_Esh,real) *MatProp(Strain_corresponding_to_initial_strain_hardening_esh,real) *MatProp(Strain_at_peak_stress_esu,real)
 *else
-*MessageBox ERROR: Unsupported rebar material for forceBeamColumn element.
+*MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
 *set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
 *break

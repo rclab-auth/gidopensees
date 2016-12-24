@@ -175,9 +175,9 @@ puts ""
 #
 # --------------------------------------------------------------------------------------------------------------
 
-*#
-*# Loading
-*#
+puts "Interval *IntvNum"
+puts ""
+
 *include bas\Loads.bas
 *# 
 *# Analysis Options

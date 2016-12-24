@@ -578,7 +578,7 @@ proc TK_CheckMaterialsForFiber { event args } {
  
 			#CoreMatType is the value of the field: material: of the chosen material from the combo box!
  
-			if { $BarMatType != "Steel01"  } {
+			if { $BarMatType != "Steel01" && $BarMatType != "ReinforcingSteel" } {
 				WarnWinText "ERROR : Material $ChoosedBarMaterial ($BarMatType material) can not be used for fiber sections in this version."
 				WarnWinText "It has been changed to Steel01 material."
 
@@ -633,6 +633,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fcm -20
 							set ec1 -1.8e-3
 							set ecu1 -3.5e-3
+							set E 27
 						} 
 						"C16/20" {
 							set fck -16
@@ -640,6 +641,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 1.9
 							set ec1 -1.8e-3
 							set ecu1 -3.5e-3
+							set E 29
 						}
 						"C20/25" {
 							set fck -20
@@ -647,6 +649,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 2.2
 							set ec1 -2.0e-3
 							set ecu1 -3.5e-3
+							set E 30
 						}
 						"C25/30" {
 							set fck -25
@@ -654,6 +657,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 2.6
 							set ec1 -2.1e-3
 							set ecu1 -3.5e-3
+							set E 31
 						}
 						"C30/37" {
 							set fck -30
@@ -661,6 +665,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 2.9
 							set ec1 -2.2e-3
 							set ecu1 -3.5e-3
+							set E 33
 						}
 						"C35/45" {
 							set fck -35
@@ -668,6 +673,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 3.2
 							set ec1 -2.25e-3
 							set ecu1 -3.5e-3
+							set E 34
 						}
 						"C40/50" {
 							set fck -40
@@ -675,6 +681,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 3.5
 							set ec1 -2.3e-3
 							set ecu1 -3.5e-3
+							set E 35
 						}
 						"C45/55" {
 							set fck -45
@@ -682,6 +689,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 3.8
 							set ec1 -2.4e-3
 							set ecu1 -3.5e-3
+							set E 36
 						}
 						"C50/60" {
 							set fck -50
@@ -689,6 +697,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 4.1
 							set ec1 -2.45e-3
 							set ecu1 -3.5e-3
+							set E 37
 						}
 						"C55/67" {
 							set fck -55
@@ -696,6 +705,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 4.2
 							set ec1 -2.5e-3
 							set ecu1 -3.2e-3
+							set E 38
 						}
 						"C60/75" {
 							set fck -60
@@ -703,6 +713,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 4.4
 							set ec1 -2.6e-3
 							set ecu1 -3e-3
+							set E 39
 						}
 						"C70/85" {
 							set fck -70
@@ -710,6 +721,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 4.6
 							set ec1 -2.7e-3
 							set ecu1 -2.8e-3
+							set E 41
 						}
 						"C80/95" {
 							set fck -80
@@ -717,6 +729,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 4.8
 							set ec1 -2.8e-3
 							set ecu1 -2.8e-3
+							set E 42
 						}
 						"C90/105" {
 							set fck -90
@@ -724,6 +737,7 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 							set fctm 5.0
 							set ec1 -2.8e-3
 							set ecu1 -2.8e-3
+							set E 44
 						}
 					}
 					
@@ -791,6 +805,23 @@ proc TK_GenerateUniaxialConcreteProperties { event args } {
 								set ok [DWLocalSetValue $GDN $STRUCT "Tension_softening_stiffness_Ets" $Ets$Eunit]
 							}
 						}
+						"Concrete04" {
+							if {$format == "Mean" } {
+								set ok [DWLocalSetValue $GDN $STRUCT "Compressive_strength" $fcm$unit]
+								set ok [DWLocalSetValue $GDN $STRUCT "Strain_at_maximum_strength" $ec1]
+								set ok [DWLocalSetValue $GDN $STRUCT "Strain_at_crushing_strength" $ecu1]
+								set ok [DWLocalSetValue $GDN $STRUCT "Initial_stiffness" $E$Eunit]
+								set ok [DWLocalSetValue $GDN $STRUCT "Maximum_tensile_strength" $fctm$unit]
+							} elseif {$format == "Characteristic"} {
+								set ok [DWLocalSetValue $GDN $STRUCT "Compressive_strength" $fck$unit]
+								set ok [DWLocalSetValue $GDN $STRUCT "Strain_at_maximum_strength" $ec1]
+								set ok [DWLocalSetValue $GDN $STRUCT "Strain_at_crushing_strength" $ecu1]
+								set ok [DWLocalSetValue $GDN $STRUCT "Initial_stiffness" $E$Eunit]
+								set ok [DWLocalSetValue $GDN $STRUCT "Maximum_tensile_strength" $fctm$unit]
+							}
+						
+						
+						}
 				}
 			}
 
@@ -848,7 +879,7 @@ proc TK_GenerateUniaxialSteelProperties { event args } {
 						set Fy 450
 						set E 200
 					}
-					"B500" {
+					"B500C" {
 						set Fy 500
 						set E 200
 					}
@@ -857,9 +888,19 @@ proc TK_GenerateUniaxialSteelProperties { event args } {
 					}
 				}
 				
-				set ok [DWLocalSetValue $GDN $STRUCT "Yield_Stress_Fy" $Fy$unit]
-				set ok [DWLocalSetValue $GDN $STRUCT "Initial_elastic_tangent_E0" $E$Eunit]
-				return ""
+				switch $matType {
+				
+					"Steel01" {
+					set ok [DWLocalSetValue $GDN $STRUCT "Yield_Stress_Fy" $Fy$unit]
+					set ok [DWLocalSetValue $GDN $STRUCT "Initial_elastic_tangent_E0" $E$Eunit]
+					return ""
+					}
+					"ReinforcingSteel" {
+					set ok [DWLocalSetValue $GDN $STRUCT "Yield_stress_fy" $Fy$unit]
+					set ok [DWLocalSetValue $GDN $STRUCT "Initial_elastic_tangent_Es" $E$Eunit]
+					return ""
+					}
+				}
 		}
 
 		DEPEND {
@@ -1775,9 +1816,9 @@ proc TK_MaterialWikiInfo { event args } {
 			set GDN [lindex $args 2]
 			set STRUCT [lindex $args 3]
 			set QUESTION [lindex $args 4]
-			set ElemType [DWLocalGetValue $GDN $STRUCT "Material:"]
+			set MatType [DWLocalGetValue $GDN $STRUCT "Material:"]
 			
-			switch $ElemType {
+			switch $MatType {
 			
 				"Elastic" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Uniaxial_Material"
@@ -1797,8 +1838,14 @@ proc TK_MaterialWikiInfo { event args } {
 				"Concrete06" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete06_Material"
 				}
+				"Concrete04" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete04_Material_--_Popovics_Concrete_Material"
+				}
 				"Steel01" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Steel01_Material"
+				}
+				"ReinforcingSteel" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Reinforcing_Steel_Material"
 				}
 				"ElasticIsotropic" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Isotropic_Material"
@@ -1846,9 +1893,9 @@ proc TK_SectionWikiInfo { event args } {
 			set GDN [lindex $args 2]
 			set STRUCT [lindex $args 3]
 			set QUESTION [lindex $args 4]
-			set ElemType [DWLocalGetValue $GDN $STRUCT "Section:"]
+			set SecType [DWLocalGetValue $GDN $STRUCT "Section:"]
 			
-			switch $ElemType {
+			switch $SecType {
 			
 				"Fiber" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fiber_Section"

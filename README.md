@@ -33,6 +33,8 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 **Version 1.5.4 (in progress)**
 
+- Added : Concrete04 (Popovics concrete material)
+- Added : Reinforcing steel material
 - Added : R/C beam fiber section
 - Added : Property modification factors for
 	- Elastic beam-column elements
