@@ -614,7 +614,7 @@ QUESTION: Section:#CB#(Fiber)
 VALUE: Fiber
 TKWIDGET: TK_CheckMaterialsForFiber
 QUESTION: Compatible_materials:#CB#(_)
-VALUE: Concrete01/Concrete02/Concrete06/Steel01
+VALUE: Concrete01/Concrete02/Concrete04/Concrete06/Steel01/Reinforcing steel
 TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
 QUESTION: _#CB#(Hover_for_local_axes_info)
