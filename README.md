@@ -35,6 +35,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 - Added : Concrete04 (Popovics concrete material)
 - Added : Reinforcing steel material
+- Added : NR with line search, Broyden & BFGS algorithms
 - Added : R/C beam fiber section
 - Added : Property modification factors for
 	- Elastic beam-column elements

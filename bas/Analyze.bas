@@ -97,7 +97,7 @@ integrator Newmark *IntvData(gamma,real) *IntvData(beta,real)
 integrator Newmark *IntvData(alpha,real) *IntvData(gamma,real) *IntvData(beta,real)
 *endif
 *endif
-*if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
+*if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_Algorithm),"Broyden")==0 || strcmp(IntvData(Solution_Algorithm),"BFGS")==0)
 *if(strcmp(IntvData(Convergence_Criteria_Type),"Norm_Unbalance")==0)
 *format "%g%g"
 test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
@@ -140,6 +140,24 @@ algorithm ModifiedNewton *\
 *else
 
 *endif
+*elseif(strcmp(IntvData(Solution_Algorithm),"Newton-Raphson_with_line_search")==0)
+algorithm NewtonLineSearch -type *\
+*if(strcmp(IntvData(Line_search_type),"Interpolated")==0)
+InitialInterpolated *\
+*elseif(strcmp(IntvData(Line_search_type),"RegulaFalsi")==0)
+RegulaFalsi *\
+*elseif(strcmp(IntvData(Line_search_type),"Bisection")==0)
+Bisection *\
+*elseif(strcmp(IntvData(Line_search_type),"Secant")==0)
+Secant *\
+*endif
+*format "%g%d%g%g"
+-tol *IntvData(Search_tolerance,real) -maxIter *IntvData(Max_iterations_for_search,int) -minEta *IntvData(Min_eta_value,real) -maxEta *IntvData(max_eta_value,real)
+*elseif(strcmp(IntvData(Solution_Algorithm),"Broyden")==0)
+*format "%d"
+algorithm Broyden *IntvData(Iterations_until_a_new_tangent_is_formed,int)
+*elseif(strcmp(IntvData(Solution_Algorithm),"BFGS")==0)
+algorithm BFGS
 *endif
 analysis *IntvData(Analysis_Type)
 *# For integrator command check if the loading is cyclic 
@@ -164,10 +182,10 @@ analysis *IntvData(Analysis_Type)
 *endif
 *set var DispIncr=operation(IntvData(Total_Displacement,real)/steps)
 *else
-*MessageBox Error: For Cyclic loading, only Displacement Control is valid.
+*MessageBox Error: For Cyclic loading, only Displacement Control is supported.
 *endif
 *for(i=1;i<=NCycles;i=i+1)
-*format "%g%g%g)
+*format "%g%g%g"
 foreach Dincr {*DispIncr *operation(-2*DispIncr) *DispIncr} {
 *format "%6d%3d"
 integrator DisplacementControl *IntvData(Control_Node) *NodeCtrlDOF $Dincr
