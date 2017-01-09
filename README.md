@@ -31,7 +31,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-**Version 1.5.4 (in progress)**
+**Version 1.5.4 (10/01/2017)**
 
 - Added : Concrete04 (Popovics concrete material)
 - Added : Reinforcing steel material
