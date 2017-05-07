@@ -100,21 +100,6 @@ begin
         end;
 end;
 
-// fix separator for float conversions
-
-function FixSeparator(s : string) : string;
-begin
-    Result := s;
-
-    if (Pos('.',s) <> 0)  or (Pos(',',s) <> 0) then
-    begin
-        if (Pos('.',s) <> 0) and (FormatSettings.DecimalSeparator = ',') then
-            Result := Copy(s,1,Pos('.',s)-1)+','+Copy(s,Pos('.',s)+1,Length(s)-Pos('.',s))
-        else if (Pos(',',s) <> 0) and (FormatSettings.DecimalSeparator = '.') then
-            Result := Copy(s,1,Pos(',',s)-1)+'.'+Copy(s,Pos(',',s)+1,Length(s)-Pos(',',s));
-    end;
-end;
-
 // get full path
 
 function LongPathName (const ShortPathName: string): string;
@@ -238,6 +223,8 @@ end;
 //
 
 begin
+
+    FormatSettings.DecimalSeparator := '.';  // default in GiD
 
     // console
 
@@ -517,15 +504,15 @@ begin
         begin
             Tag[0] := Trim(Copy(TCL[i],4,6));
 
-            Vx[1] := StrToFloat(FixSeparator(Copy(TCL[i],47,6)));
-            Vx[2] := StrToFloat(FixSeparator(Copy(TCL[i],54,6)));
-            Vx[3] := StrToFloat(FixSeparator(Copy(TCL[i],61,6)));
-            Vy[1] := StrToFloat(FixSeparator(Copy(TCL[i],74,6)));
-            Vy[2] := StrToFloat(FixSeparator(Copy(TCL[i],81,6)));
-            Vy[3] := StrToFloat(FixSeparator(Copy(TCL[i],88,6)));
-            Vz[1] := StrToFloat(FixSeparator(Copy(TCL[i],101,6)));
-            Vz[2] := StrToFloat(FixSeparator(Copy(TCL[i],108,6)));
-            Vz[3] := StrToFloat(FixSeparator(Copy(TCL[i],115,6)));
+            Vx[1] := StrToFloat(Copy(TCL[i],47,6));
+            Vx[2] := StrToFloat(Copy(TCL[i],54,6));
+            Vx[3] := StrToFloat(Copy(TCL[i],61,6));
+            Vy[1] := StrToFloat(Copy(TCL[i],74,6));
+            Vy[2] := StrToFloat(Copy(TCL[i],81,6));
+            Vy[3] := StrToFloat(Copy(TCL[i],88,6));
+            Vz[1] := StrToFloat(Copy(TCL[i],101,6));
+            Vz[2] := StrToFloat(Copy(TCL[i],108,6));
+            Vz[3] := StrToFloat(Copy(TCL[i],115,6));
 
             if (Vz[3] < 1.0-EPS) and (Vz[3] > -1.0+EPS) then
             begin
@@ -570,7 +557,7 @@ begin
 
             MSH.Writeline('');
             MSH.Writeline('Result "Local_Axes" "'+GetIntervalTitle(i)+'" '+IntToStr(GetIntervalStep(i))+' LocalAxes OnGaussPoints "Line_Axes"');
-                                                          ô
+
             for j := 1 to LOC.Count-1 do
                 MSH.Writeline(LOC[j]);
 
