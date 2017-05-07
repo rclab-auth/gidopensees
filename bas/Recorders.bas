@@ -3,7 +3,40 @@
 # R E C O R D E R S
 # --------------------------------------------------------------------------------------------------------------
 
+*# Check if transient analysis is taking place, for recording nodal velocities and accelerations
+*set var Transient_analysis=0
+*loop intervals
+*if(strcmp(IntvData(Analysis_type),"Transient")==0)
+*set var Transient_analysis=1
+*break
+*endif
+*end intervals
+*#
+*# Nodes
+*#
+*if(ndime==2)
+recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 disp
+recorder Node -file Node_rotations.out -time -nodeRange 1 *cntNodes -dof 3 disp
+recorder Node -file Node_forceReactions.out -time -nodeRange 1 *cntNodes -dof 1 2 reaction
+recorder Node -file Node_momentReactions.out -time -nodeRange 1 *cntNodes -dof 3 reaction
+*if(Transient_analysis==1)
+recorder Node -file Node_relativeAccelerations.out -time -nodeRange 1 *cntNodes -dof 1 2 accel
+recorder Node -file Node_relativeVelocities.out -time -nodeRange 1 *cntNodes -dof 1 2 vel
+*endif
+*# 3D
+*else
+recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
+recorder Node -file Node_rotations.out -time -nodeRange 1 *cntNodes -dof 4 5 6 disp
+recorder Node -file Node_forceReactions.out -time -nodeRange 1 *cntNodes -dof 1 2 3 reaction
+recorder Node -file Node_momentReactions.out -time -nodeRange 1 *cntNodes -dof 4 5 6 reaction
+*if(Transient_analysis==1)
+recorder Node -file Node_relativeAccelerations.out -time -nodeRange 1 *cntNodes -dof 1 2 3 accel
+recorder Node -file Node_relativeVelocities.out -time -nodeRange 1 *cntNodes -dof 1 2 3 vel
+*endif
+*endif
+*#
 *# Brick
+*#
 *if(cntStdBrick!=0)
 *set var FirstBrickElemNumber=0
 *set var LastBrickElemNumber=0
@@ -22,7 +55,9 @@ recorder Element -file stdBrick_force.out -time -eleRange *FirstBrickElemNumber 
 recorder Element -file stdBrick_stress.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber stresses
 recorder Element -file stdBrick_strain.out -time -eleRange *FirstBrickElemNumber *LastBrickElemNumber strains
 *endif
+*#
 *# Shell
+*#
 *if(cntShell!=0)
 *set var FirstShellElemNumber=0
 *set var LastShellElemNumber=0
@@ -40,7 +75,9 @@ recorder Element -file stdBrick_strain.out -time -eleRange *FirstBrickElemNumber
 recorder Element -file ShellMITC4_force.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber forces
 recorder Element -file ShellMITC4_stress.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber stresses
 *endif
+*#
 *# Quad
+*#
 *if(cntQuad!=0)
 recorder Element -file Quad_force.out -time -ele *\
 *loop elems
@@ -48,7 +85,7 @@ recorder Element -file Quad_force.out -time -ele *\
 *ElemsNum *\
 *endif
 *end elems
-forces 
+forces
 recorder Element -file Quad_stress.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
@@ -64,7 +101,9 @@ recorder Element -file Quad_strain.out -time -ele *\
 *end elems
 strains
 *endif
+*#
 *# Tri
+*#
 *if(cntTri31!=0)
 recorder Element -file Tri31_force.out -time -ele *\
 *loop elems
@@ -81,9 +120,11 @@ recorder Element -file Tri31_stress.out -time -ele *\
 *end elems
 stresses
 *endif
+*#
 *# Elastic beam-column
+*#
 *if(cntEBC!=0)
-recorder Element -file ElasticBeamColumn_localForce.out -time -ele *\ 
+recorder Element -file ElasticBeamColumn_localForce.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
 *ElemsNum *\
@@ -91,9 +132,11 @@ recorder Element -file ElasticBeamColumn_localForce.out -time -ele *\
 *end elems
 localForce
 *endif
+*#
 *# Elastic Timoshenko beam-column
+*#
 *if(cntETB!=0)
-recorder Element -file ElasticTimoshenkoBeam_localForce.out -time -ele *\ 
+recorder Element -file ElasticTimoshenkoBeam_localForce.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
 *ElemsNum *\
@@ -101,7 +144,9 @@ recorder Element -file ElasticTimoshenkoBeam_localForce.out -time -ele *\
 *end elems
 localForce
 *endif
+*#
 *# Force beam-column
+*#
 *if(cntFBC!=0)
 recorder Element -file ForceBeamColumn_localForce.out -time -ele *\
 *loop elems
@@ -125,9 +170,37 @@ recorder Element -file ForceBeamColumn_plasticDeformation.out -time -ele *\
 *end elems
 plasticDeformation
 *endif
+*#
+*# Displacement beam-column
+*#
+*if(cntDBC!=0)
+recorder Element -file DispBeamColumn_localForce.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumn")==0)
+*ElemsNum *\
+*endif
+*end elems
+localForce
+recorder Element -file DispBeamColumn_basicDeformation.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumn")==0)
+*ElemsNum *\
+*endif
+*end elems
+basicDeformation
+recorder Element -file DispBeamColumn_plasticDeformation.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumn")==0)
+*ElemsNum *\
+*endif
+*end elems
+plasticDeformation
+*endif
+*#
 *# Truss
+*#
 *if(cntTruss!=0)
-recorder Element -file Truss_axialForce.out -time -ele *\ 
+recorder Element -file Truss_axialForce.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *ElemsNum *\
@@ -135,7 +208,9 @@ recorder Element -file Truss_axialForce.out -time -ele *\
 *end elems
 axialForce
 *endif
+*#
 *# Corotational truss
+*#
 *if(cntCorotTruss!=0)
 recorder Element -file CorotTruss_axialForce.out -time -ele *\
 *loop elems
@@ -144,22 +219,4 @@ recorder Element -file CorotTruss_axialForce.out -time -ele *\
 *endif
 *end elems
 axialForce
-*endif
-*# Displacements
-*if(GenData(Dimensions,int)==3)
-*if(GenData(DOF,int)==3)
-recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 3 disp
-recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 3 reaction
-*else
-recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 disp
-recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 reaction
-*endif
-*else
-*if(GenData(DOF,int)==2)
-recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 disp
-recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 reaction
-*else
-recorder Node -file Node_displacements.out -time -nodeRange 1 *cntNodes -dof 1 2 6 disp
-recorder Node -file Node_reactions.out -time -nodeRange 1 *cntNodes -dof 1 2 6 reaction
-*endif
 *endif

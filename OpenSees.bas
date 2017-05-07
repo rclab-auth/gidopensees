@@ -13,13 +13,13 @@
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
-#  
+#
 # Development team
 #
 # T. Kartalis-Kaounis, Civil Engineer AUTh
 # V. Protopapadakis, Civil Engineer AUTh
 # T. Papadopoulos, Civil Engineer AUTh
-# 
+#
 # Project coordinator
 #
 # V.K. Papanikolaou, Assistant Professor AUTh
@@ -36,82 +36,120 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*if(GenData(Dimensions,int)==3 && GenData(DOF,int)==6)
-# --------------------------------------------------------------------------------------------------------------
 #
-# OPENSEES MODEL DATA FILE (Three dimensional / Six degrees of freedom)
-#
-# --------------------------------------------------------------------------------------------------------------
-*elseif(GenData(Dimensions,int)==3 && GenData(DOF,int)==3)
-# --------------------------------------------------------------------------------------------------------------
-#
-# OPENSEES MODEL DATA FILE (Three dimensional / Three degrees of freedom)
-#
-# --------------------------------------------------------------------------------------------------------------
-*elseif(GenData(Dimensions,int)==2 && GenData(DOF,int)==2)
-# --------------------------------------------------------------------------------------------------------------
-#
-# OPENSEES MODEL DATA FILE (Two dimensional / Two degrees of freedom)
-#
-# --------------------------------------------------------------------------------------------------------------
-*elseif(GenData(Dimensions,int)==2 && GenData(DOF,int)==3)
-# --------------------------------------------------------------------------------------------------------------
-#
-# OPENSEES MODEL DATA FILE (Two dimensional / Three degrees of freedom)
-#
-# --------------------------------------------------------------------------------------------------------------
-*elseif(GenData(Dimensions,int)==2 && GenData(DOF,int)==6)
-*MessageBox Error: You CANNOT define 6 DOF in a 2D Model ! Please change the Problem Data.
-*else
-*MessageBox Error: You CANNOT define 2 DOF in a 3D Model ! Please change the Problem Data.
+*set var TwoDOF=0
+*set var ThreeDOF=0
+*set var SixDOF=0
+*set var currentDOF=0
+*#
+*# loop elements to find number of model domains
+*#
+*loop materials
+*set var ElemDOF=tcl(ReturnElemDOF *MatProp(Element_type:) *ndime)
+*if(ElemDOF==2)
+*set var TwoDOF=1
+*elseif(ElemDOF==3)
+*set var ThreeDOF=1
+*elseif(ElemDOF==6)
+*set var SixDOF=1
 *endif
-
-# Modeling environment (ndm = model dimensions, ndf = global degrees of freedom)
-
-*if(GenData(Dimensions,int)==3)
-*if(GenData(DOF,int)==6)
-model BasicBuilder -ndm 3 -ndf 6
-*else
-model BasicBuilder -ndm 3 -ndf 3
-*endif
-*elseif(GenData(Dimensions,int)==2)
-*if(GenData(DOF,int)==2)
-model BasicBuilder -ndm 2 -ndf 2
-*else
-model BasicBuilder -ndm 2 -ndf 3
-*endif
+*end materials
+*if(TwoDOF==0 && ThreeDOF==0&& SixDOF==0)
+*MessageBox Error: No Elements were assigned.
 *endif
 *#
-*#----------- General Variables ---------------
+*# Depending on modeled elements, DOF groups (domains) are created
+*#
+*set var dummy=tcl(CreateDOFGroups *TwoDOF *ThreeDOF *SixDOF)
+*#
+*# Assign  elements (with their nodes) to the corresponding groups
+*#
+*loop elems
+*set var ElemDOF=tcl(ReturnElemDOF *ElemsMatProp(Element_type:) *ndime)
+*set var dummy=tcl(AssignElemNumToDOFlist *ElemsNum *ElemDOF)
+*end elems
+*set var dummy=tcl(AssignElemsToDOFGroups *TwoDOF *ThreeDOF *SixDOF)
+*#
+*# Orphan nodes (for example : master nodes for diaphragms)
+*#
+*set var dummy=tcl(InitOrphanNodesList )
+*loop nodes
+*set var dummy=tcl(AppendOrphanNodeList *NodesNum)
+*end nodes
+*loop groups
+*if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0)
+*set Group *GroupName *nodes
+*loop nodes *OnlyInGroup
+*#
+*# Remove non-orphan nodes (have a higher entity) from the orphan nodes list
+*#
+*set var dummy=tcl(RemoveFromOrphanNodesList *NodesNum)
+*end nodes
+*endif
+*end groups
+*set var dummy=tcl(AssignOrphanNodesToDOFGroups *ndime)
+*#
+*# Initialize element counting
+*#
+*set var cntNodes=0
+*set var cntFBC=0
+*set var cntQuad=0
+*set var cntEBC=0
+*set var cntETB=0
+*set var cntDBC=0
+*set var cntQuadUP=0
+*set var cntShell=0
+*set var cntStdBrick=0
+*set var cntTri31=0
+*set var cntTruss=0
+*set var cntCorotTruss=0
+*#
+*loop groups
+*if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0)
+*#
+*# Specify the current ndf
+*#
+*set Group *GroupName *nodes
+*loop nodes *OnlyInGroup
+*set var currentDOF=tcl(ReturnNodeGroupDOF *NodesNum)
+*break
+*end nodes
+
+# Model domain *GroupName
+
+*format "%d%d"
+model BasicBuilder -ndm *ndime -ndf *currentDOF
+
+*#
+*# General Variables
 *#
 *# variable to control geometric transformation to be printed once
+*#
 *set var GeomTransfPrinted=0
-*# variable to control files to be printed
-*set var file=0
-*# procedure to clear list with used materials, because in case of recalculation, the list keeps its elements for previous calculation
+*#
+*# procedure to clear list of used materials, because in case of recalculation, the list keeps its elements from previous calculation
+*#
 *set var dummy=tcl(ClearUsedMaterials)
 *set var MaterialExists=-1
-*# 
+*set var procReadPeerFilePrinted=0
+*set var procLoadRecValuesPrinted=0
+*set var procLoadRecTimeandValuesPrinted=0
+*#
 *# Nodes
 *#
 *include bas\Nodes.bas
-*#
-*# Constraints
-*#
-*include bas\Constraints.bas
-*#
-*# Masses
-*#
-*include bas\Mass.bas
 *#
 *# Restraints
 *#
 *include bas\Restraints.bas
 *#
-*# Fix unused Dofs
+*# Rigid Diaphragms
 *#
-*include bas\UnusedDofs.bas
+*include bas\rigidDiaphragm.bas
+*#
+*# Masses
+*#
+*include bas\Mass.bas
 *#
 *# Elastic Beam Column Elements
 *#
@@ -123,7 +161,11 @@ model BasicBuilder -ndm 2 -ndf 3
 *#
 *# Force-based Beam Column Elements
 *#
-*include bas\Elements\BeamColumnElements\forceBeamColumn.bas
+*include bas\Elements\BeamColumnElements\ForceBeamColumn.bas
+*#
+*# Displacement-based Beam Column Elements
+*#
+*include bas\Elements\BeamColumnElements\DispBeamColumn.bas
 *#
 *# Truss Elements
 *#
@@ -156,12 +198,31 @@ model BasicBuilder -ndm 2 -ndf 3
 *# Zero Length Elements
 *#
 *include bas\Elements\ZeroLengthElements\ZeroLength.bas
-*include bas\recorders.bas
+*endif
+*end groups
+*#
+*# Equal DOFs
+*#
+*include bas\equalDOF.bas
+*include bas\Recorders.bas
 
 logFile log.txt
 
 # --------------------------------------------------------------------------------------------------------------
 
+puts "Analysis Summary"
+*loop intervals
+*set var IntvNum=operation(IntvNum+1)
+*format "%g"
+puts "Interval *IntvNum - *IntvData(Analysis_type) : Steps *\
+*if(strcmp(IntvData(Analysis_type),"Static")==0)
+*IntvData(Analysis_steps,int)"
+*elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
+*format "%g"
+[expr int(*IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))]"
+*endif
+*end intervals
+puts ""
 set time_start [clock seconds]
 puts "\nAnalysis started  : [clock format $time_start -format %H:%M:%S]"
 puts ""
@@ -179,7 +240,11 @@ puts "Interval *IntvNum"
 puts ""
 
 *include bas\Loads.bas
-*# 
+
+# recording the initial status
+
+record;
+*#
 *# Analysis Options
 *#
 *include bas\Analyze.bas
@@ -195,7 +260,6 @@ set time_end [clock seconds]
 set analysisTime [expr $time_end-$time_start]
 puts "Analysis finished : [clock format $time_end -format %H:%M:%S]"
 puts "Analysis time     : $analysisTime seconds"
-puts "\nAnalysis finished."
 *#
 *# Metadata
 *#

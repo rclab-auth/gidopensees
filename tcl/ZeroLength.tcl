@@ -48,5 +48,3 @@ proc ZeroLengthIDnumber { index } {
 	return $IDnum
 }
 
-
-

@@ -19,7 +19,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ### KNOWN ISSUES
 
 ---
-
+- Due to the large number of new features, transforming older models to version 2.0.0 onwards may lead to some non-updated data (loads, boundary conditions, analysis options etc.). It is highly recommended to check your transformed model thorougly, before running it in the latest version.
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
    - Intersection joints that belong to two lines with different constraints should be handled seperately.
    - Intersection lines that belong to two surfaces with different constraints should be handled seperately.
@@ -28,6 +28,33 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ---
 
 ### VERSION HISTORY
+
+---
+
+**Version 2.0.0 (08/05/2017)**
+
+- Now supported : **Multiple model domains** (defined automatically depending on element types)
+- Now supported : **Transient Analysis**
+- Now supported : **Uniform Ground Motion Excitation from record**
+- Now supported : **Multiple Ground Motion Excitation from records**
+- Now supported : **Sine Uniform Excitation**
+- Now supported : **Multiple Sine Excitation**
+- Now supported : More than one displacement peaks can be used for Static Cyclic Analysis
+- Added : **Displacement-Based Beam Column** element
+- Added : **Viscous** uniaxial material
+- Added : **Parallel** uniaxial material
+- Added : **Series** uniaxial material
+- Added : **Records** dialog window
+- Added : **Various analysis options** on GiD+OpenSees menu (for easily running and postprocessing user modified .tcl files)
+- Added : On standard uniaxial materials and Steel01 uniaxial material dialogs, new formulations are added for using these materials on a ZeroLength element
+- Added : Logging level option on interval data window
+- Added : Node relative accelerations and velocities recorders supported in postprocess
+- Added : Initial status for every interval is supported in postprocess
+- Improved : Rigid Diaphragm condition is split into two conditions, for master and slave nodes, respectively. Rigid diaphragms are now defined on the geometry model
+- Improved : Body constraint (equalDOF) condition is split into two conditions, for master and slave nodes, respectively. Body constraints are now defined on the geometry model
+- Improved : Pushover Analysis. In case of analysis divergence, **substepping** and alternative convergence criteria are automatically applied
+- Improved : Static Cyclic Analysis. In case of analysis divergence, alternative convergence criteria are automatically applied
+- Various minor improvements and corrections.
 
 ---
 
@@ -98,14 +125,14 @@ V.K. Papanikolaou, Assistant Professor AUTh
 - OpenSeesSP and OpenSeesMP supported on installation
 - Error message windows for unsuccessful analysis
 - Minor bug fixes
- 
+
 ---
 
 **Version 1.3.4 (19/09/2016)**
 
 - Meta.bas created
 - Node counter added in node.bas
-- Elements counters added 
+- Elements counters added
 - proc TK_CheckModelingOptionsForShellElems was created in tkWidgets.tcl
 - TKWIDGET for shell elements added in OpenSees.mat
 - Check Element type (in mesh) for Quad, Shell and Brick Elements. If invalid suitable error message is displayed.
@@ -183,7 +210,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 **Version 1.2.5**
 
 - Error Messages added for Beam Column elements in case of wrong modeling options
-- Geometric transformations are printed once now, even you have both Elastic Beam column and Timoshenko beam elements 
+- Geometric transformations are printed once now, even you have both Elastic Beam column and Timoshenko beam elements
 
 ---
 
@@ -309,7 +336,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 **Version 1.0.6**
 
-- Post Processing results for Truss and Elastic Beam-Column elements 
+- Post Processing results for Truss and Elastic Beam-Column elements
 - Quad/shell elements properties added
 
 ---
@@ -326,6 +353,4 @@ V.K. Papanikolaou, Assistant Professor AUTh
 **Version 1.0.0**
 
 - Initial release
-
-
 

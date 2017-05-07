@@ -29,12 +29,12 @@
 # TCL macros
 #
 
-set VersionNumber "v1.5.4"
+set VersionNumber "v2.0.0"
 
 set InfoWin .gid.win_example
 
 #
-# theme settings
+# Theme settings
 #
 
 set ibarBackgroundColor "#F0F0F0"
@@ -128,23 +128,29 @@ proc Opt1_6 { } {
 
 proc Opt1_7 { } {
 
-	GidOpenConditions Restraints
+	GidOpenMaterials "Records"
 	HideInfoBar
-}
 
+}
 proc Opt1_8 { } {
 
-	GidOpenConditions Constraints
+	GidOpenConditions Restraints
 	HideInfoBar
 }
 
 proc Opt1_9 { } {
 
-	GidOpenConditions Masses
+	GidOpenConditions Constraints
 	HideInfoBar
 }
 
 proc Opt1_10 { } {
+
+	GidOpenConditions Mass/Damping
+	HideInfoBar
+}
+
+proc Opt1_11 { } {
 
 	GidOpenConditions Loads
 	HideInfoBar
@@ -152,7 +158,7 @@ proc Opt1_10 { } {
 
 proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
-	global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 problem_dir GiDtheme
+	global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 OpenSeesProblemDir GiDtheme
 
 	set ToolbarNames1(0) " \
 		img/Toolbar/$GiDtheme/btn_Mat_Uni.png \
@@ -162,6 +168,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/$GiDtheme/btn_Mat_Section.png \
 		img/Toolbar/$GiDtheme/btn_Mat_SeriesParallel.png \
 		img/Toolbar/$GiDtheme/btn_Separator.png \
+		img/Toolbar/$GiDtheme/btn_Records.png \
 		img/Toolbar/$GiDtheme/btn_Restraints.png \
 		img/Toolbar/$GiDtheme/btn_Constraints.png \
 		img/Toolbar/$GiDtheme/btn_Mass.png \
@@ -181,6 +188,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		[list -np- Opt1_8] \
 		[list -np- Opt1_9] \
 		[list -np- Opt1_10] \
+		[list -np- Opt1_11] \
 		"" \
 		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr" \
 	]
@@ -193,24 +201,25 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		"Define Section Force-Deformation" \
 		"Define Series/Parallel Uniaxial Materials" \
 		"" \
+		"Records" \
 		"Assign Restraints" \
 		"Assign Constraints" \
-		"Assign Masses" \
+		"Assign Mass/Damping" \
 		"Assign Loads" \
 		"" \
-		"GiD+OpenSees website" \
+		"GiD+OpenSees Website" \
 		}
 
 	set prefix Pre
-	
+
 	set OpenSees1(toolbarwin) \
 		[CreateOtherBitmaps MyPreBar "OpenSees Pre-Processor Toolbar 1" \
 		ToolbarNames1 \
 		ToolbarCommands1 \
 		ToolbarHelp1 \
-		$problem_dir \
+		$OpenSeesProblemDir \
 		Toolbar1 $type $prefix]
-		AddNewToolbar "OpenSees 1 toolbar" ${prefix}MyBarWindowGeom Toolbar1 
+		AddNewToolbar "OpenSees 1 toolbar" ${prefix}MyBarWindowGeom Toolbar1
 }
 
 proc EndToolbar1 {} {
@@ -276,7 +285,7 @@ proc Opt2_8 { } {
 
 proc Opt2_9 { } {
 
-	GiD_Process Mescape Utilities calculate
+	Opt1_dialog
 }
 
 set NormalsDrawStatus 0
@@ -293,7 +302,7 @@ proc Opt2_10 { } {
 		}
 
 		1 {
-			GiD_Process escape escape escape escape
+			GiD_Process Mescape
 			set NormalsDrawStatus 0
 		}
 	}
@@ -313,7 +322,7 @@ proc Opt2_11 { } { # Switch draw elements
 		}
 
 		1 {
-			GiD_Process escape escape escape escape
+			GiD_Process Mescape
 			set ElemDrawStatus 0
 		}
 	}
@@ -333,7 +342,7 @@ proc Opt2_12 { } { # Switch draw conditions
 		}
 
 		1 {
-			GiD_Process escape escape escape escape
+			GiD_Process Mescape
 			set ConditionsDrawStatus 0
 		}
 	}
@@ -347,7 +356,7 @@ proc Opt2_13 { } {
 
 proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
-	global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 problem_dir GiDtheme
+	global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 OpenSeesProblemDir GiDtheme
 
 	set ToolbarNames2(0) " \
 		img/Toolbar/$GiDtheme/btn_Elem_ZeroLength.png \
@@ -387,19 +396,19 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 	set ToolbarHelp2(0) { \
 		"Define Zero Length Elements" \
 		"Define Truss Elements" \
-		"Define Beam-Column_Elements" \
+		"Define Beam-Column Elements" \
 		"Define Surface Elements" \
 		"Define Solid Elements" \
 		"" \
 		"Set Problem Data" \
 		"Set Interval Data" \
 		"Generate Mesh" \
-		"Calculate" \
+		"Create .tcl, run analysis and postprocess" \
 		"" \
-		"Show/Hide Line local axes" \
+		"Show/Hide Line Local Axes" \
 		"Show/Hide Elements" \
-		"Show/Hide all Conditions for active interval" \
-		"Select active Interval" \
+		"Show/Hide All Conditions for Active Interval" \
+		"Select Active Interval" \
 		}
 
 	set prefix Pre
@@ -409,7 +418,7 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		ToolbarNames2 \
 		ToolbarCommands2 \
 		ToolbarHelp2 \
-		$problem_dir \
+		$OpenSeesProblemDir \
 		Toolbar2 $type $prefix]
 		AddNewToolbar "OpenSees 2 toolbar" ${prefix}MyBarWindowGeom Toolbar2
 }
@@ -429,11 +438,11 @@ proc InitGIDProject { dir } {
 	global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
 	global InterfaceName
 	global GidPriv
-	global problem_dir
+	global OpenSeesProblemDir OpenSeesPath
 
-	set problem_dir $dir
+	set OpenSeesProblemDir $dir
 
-	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl UnusedDofs.tcl} {
+	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl} {
 		source [file join $dir tcl $filename]
 	}
 
@@ -446,10 +455,12 @@ proc InitGIDProject { dir } {
 		return
 	}
 
+	LoadOpenSeesPath
+
 	global splashdir
 	set splashdir 0
 	global keepsplash
-	set keepsplash 0 
+	set keepsplash 0
 
 	SetImagesAndColors
 
@@ -477,132 +488,37 @@ proc InitGIDProject { dir } {
 	}
 
 	Toolbar1
-	Toolbar2 
-	
+	Toolbar2
+
 	set GidPriv(ProgName) $InterfaceName
-	
+
 	GidChangeDataLabel "Conditions" ""
 	GidChangeDataLabel "Local Axes" ""
-	GidChangeDataLabel "Materials" "Materials/Elements Definition" 
-	
+	GidChangeDataLabel "Materials" "Materials/Elements Definition"
+
 	GidAddUserDataOptions "Loads" "GidOpenConditions Loads" 2
 	GidAddUserDataOptions "Restraints" "GidOpenConditions Restraints" 3
 	GidAddUserDataOptions "Constraints" "GidOpenConditions Constraints" 4
-	GidAddUserDataOptions "Masses" "GidOpenConditions Masses" 5
+	GidAddUserDataOptions "Mass/Damping" "GidOpenConditions Mass/Damping" 5
 	GidAddUserDataOptions "ZeroLength Elements" "GidOpenConditions ZeroLength_Elements" 6
 	GidAddUserDataOptions "---" "" 8
-	
+
 	GiD_DataBehaviour materials Standard_Uniaxial_Materials hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials Uniaxial_Steel_Materials hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials Uniaxial_Concrete_Materials hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials Other_Uniaxial_Materials hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials Multidimensional_(nD)_Materials hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials "Section_Force-Deformation" hide {assign draw unassign impexp}	
+	GiD_DataBehaviour materials "Section_Force-Deformation" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Series/Parallel_Uniaxial_Materials" hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "Records" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Beam-Column_Elements" geomlist {lines}
 	GiD_DataBehaviour materials "Truss_Elements" geomlist {lines}
 	GiD_DataBehaviour materials Surface_Elements geomlist {surfaces}
 	GiD_DataBehaviour materials Solid_Elements geomlist {volumes}
-	
+
 	GiDMenu::UpdateMenus
 
 	after 1000 "{UpdateInfoBar}"
-}
-
-proc AfterRunCalculation { basename dir problemtypedir where error errorfilename } {
-
-	if { [GidUtils::AreWindowsDisabled] } {
-		return
-	}
-
-	loadProjectDirPath { "" }
-
-	global GiDProjectDir GiDProjectName
-	set filename [file join $GiDProjectDir OpenSees "$GiDProjectName.log"]
-	set fexists [file exist $filename]
-
-	switch $fexists {
-
-		1 {
-			CheckLogFile $GiDProjectDir $GiDProjectName
-			}
-		0 {
-			AnalysisErrorInformationWindow "Error1"
-			}
-		}
-}
-
-proc CheckLogFile { projectDir projectName } {
-
-	set file "$projectDir/OpenSees/$projectName.log"
-	
-	set fp [open $file r]
-	set file_data [read $fp]
-	close $fp 
-	set data [split $file_data " "]
-
-	foreach word $data {
-
-		if { $word=="error" } {
-			AnalysisErrorInformationWindow "Error2"
-
-			break
-		}
-	}
-	return 
-}
-
-proc AnalysisErrorInformationWindow { analError } {
-
-	if { [GidUtils::AreWindowsDisabled] } {
-		return
-	}
-	
-	switch $analError {
-
-		"Error1" {
-				set w .gid.win_example
-				InitWindow $w [= "Analysis Error"] ErrorInfo "" "" 1
-				if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
-				ttk::frame $w.top
-				ttk::label $w.top.title_text -text [= "\n\t\tAnalysis did not run !"] 
-				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "Please check generated .tcl file and report any issues to\nhttps://github.com/rclab-auth/gidopensees/issues"]
-				ttk::frame $w.bottom
-				ttk::button $w.bottom.continue -text [= "Continue"] -command "destroy $w"
-				grid $w.top.title_text -sticky ew
-				grid $w.top -sticky new
-				grid $w.information.errormessage -sticky w -padx 6 -pady 6
-				grid $w.information -sticky nsew
-				grid $w.bottom.continue -padx 6
-				grid $w.bottom -sticky sew -padx 6 -pady 6
-				if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-				grid rowconfigure $w 1 -weight 1
-				grid columnconfigure $w 0 -weight 1
-		}
-
-		"Error2" {
-				set w .gid.win_example
-				InitWindow $w [= "Analysis Error"] ErrorInfo "" "" 1
-				if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
-				ttk::frame $w.top
-				ttk::label $w.top.title_text -text [= "\n\t\t\tAnalysis finished with errors !"]
-				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "Errors were reported during analysis, please check generated .log file for more information."]
-				ttk::frame $w.bottom
-				ttk::button $w.bottom.continue -text [= "Continue"] -command "destroy $w"
-				ttk::button $w.bottom.readlog -text [= "Open Log file"] -command "OpenLogFile"
-				grid $w.top.title_text -sticky ew
-				grid $w.top -sticky new
-				grid $w.information.errormessage -sticky w -padx 6 -pady 6
-				grid $w.information -sticky nsew
-				grid $w.bottom.continue $w.bottom.readlog -padx 6
-				grid $w.bottom -sticky sew -padx 6 -pady 6
-				if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-				grid rowconfigure $w 1 -weight 1
-				grid columnconfigure $w 0 -weight 1
-		}
-	}
 }
 
 proc EndGIDProject {} {
@@ -618,29 +534,10 @@ proc EndGIDProject {} {
 	EndToolbar2
 }
 
-proc OpenLogFile { } {
-
-	loadProjectDirPath { "" }
-
-	global GiDProjectDir GiDProjectName
-	set filename [file join $GiDProjectDir OpenSees "$GiDProjectName.log"]
-	set fexists [file exist $filename]
-
-	if { $fexists==1 } {
-		exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.log"
-	}
-}
-
 proc HelpOnOpenSees { dir } {
 
-	WarnWin [join [list "To obtain help for OpenSees, check the latest news in " \
+	WarnWin [join [list "To get help for OpenSees, check the latest news in " \
 						"http://opensees.berkeley.edu/wiki/index.php/Main_Page "]]
-}
-
-proc getGiDProjectName {} {
-
-	global GiDProjectName
-	return $GiDProjectName
 }
 
 proc Splash { dir } {
@@ -696,7 +593,7 @@ proc UpdateInfoBar { } {
 	bind .gid <Map>			{}
 
 	global ibarBackgroundColor ibarTextColor ibarLineColor
-	global problem_dir
+	global OpenSeesProblemDir
 	global VersionNumber
 
 	if { [winfo exist .ibar] } {
@@ -712,14 +609,14 @@ proc UpdateInfoBar { } {
 
 	wm transient .ibar .gid
 
-	.ibar configure -background #292929 
+	.ibar configure -background #292929
 	.ibar configure -bd 0
 
 	# set infobar geometry
 
 	set x [winfo rootx .gid.central.s]
 	set y [winfo rooty .gid.central.s]
-	set w [winfo width .gid.central.s] 
+	set w [winfo width .gid.central.s]
 
 	set geom "[winfo width .gid.central.s]x25+$x+$y"
 
@@ -727,7 +624,7 @@ proc UpdateInfoBar { } {
 
 	# set infobar rext
 
-	set dim "[GiD_AccessValue get gendata "Dimensions"]D/[GiD_AccessValue get gendata "DOF"]DOF"
+	set dim "[ReturnProjectDimensions]D"
 
 	set n [GiD_Info intvdata num]
 	set act "Active Interval : [format "%2d" [lindex $n 0]]"
@@ -738,12 +635,15 @@ proc UpdateInfoBar { } {
 
 	.ibar.c create line  0  24  $w 24 -fill $ibarLineColor
 	.ibar.c create line  60  0  60 52 -fill $ibarLineColor
-	.ibar.c create line 140  0 140 24 -fill $ibarLineColor
-	.ibar.c create line 280  0 280 24 -fill $ibarLineColor
+	.ibar.c create line 100  0 100 24 -fill $ibarLineColor
+	.ibar.c create line 240  0 240 24 -fill $ibarLineColor
 
-	.ibar.c create text  30 12 -text $VersionNumber	-font "calibri 12" -fill $ibarTextColor -anchor center 
-	.ibar.c create text 100 12 -text $dim			-font "calibri 12" -fill $ibarTextColor -anchor center 
-	.ibar.c create text 210 12 -text $act			-font "calibri 12" -fill $ibarTextColor -anchor center
+	.ibar.c create text  30 12 -text $VersionNumber	-font "calibri 12" -fill $ibarTextColor -anchor center
+	.ibar.c create text  80 12 -text $dim			-font "calibri 12" -fill $ibarTextColor -anchor center
+	.ibar.c create text 170 12 -text $act			-font "calibri 12" -fill $ibarTextColor -anchor center
+
+	set off 10
+	.ibar.c create text [expr $w-$off] 12 -text "Lab of R/C and Masonry Structures, AUTh" -font "calibri 10" -fill $ibarLineColor -anchor e
 
 	pack .ibar.c
 	raise .ibar .gid
@@ -760,7 +660,7 @@ proc UpdateInfoBar { } {
 }
 
 proc RefreshInfoBar { } {
-	
+
 	if { [winfo exists .ibar] } {
 		set x [winfo rootx .gid.central.s]
 		set y [winfo rooty .gid.central.s]
@@ -793,9 +693,9 @@ proc LoadGIDProject { filespd } {
 	# loading the problemtype itself, not a model
 
 	} else {
-		
+
 		set spd_exist [file exist $filespd]
-		
+
 		if {$spd_exist} {
 
 			set spd [open $filespd r]
@@ -842,7 +742,7 @@ proc TransformAndClose { } {
 
 	destroy $InfoWin
 
-	GiD_Process escape escape escape escape data defaults TransfProblem OpenSees
+	GiD_Process Mescape data defaults TransfProblem OpenSees
 }
 
 proc SaveGIDProject { filespd } {

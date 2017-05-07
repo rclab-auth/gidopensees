@@ -94,7 +94,7 @@ cond(int,1)
 cond(int,2)
 cond(int,3)
 geo/PinX.geo
-cond Point_Forces 
+cond Point_Forces
 1
 global
 fabs(cond(real,1))!=0.0 || fabs(cond(real,2))!=0.0 || fabs(cond(real,3))!=0.0
@@ -102,7 +102,7 @@ cond(real,1)
 cond(real,2)
 cond(real,3)
 geo/Force.geo
-cond Line_Forces 
+cond Line_Forces
 1
 global
 fabs(cond(real,1))!=0.0 || fabs(cond(real,2))!=0.0 || fabs(cond(real,3))!=0.0
@@ -110,7 +110,15 @@ cond(real,1)
 cond(real,2)
 cond(real,3)
 geo/Force.geo
-cond Point_Mass 
+cond Surface_Forces
+1
+global
+fabs(cond(real,1))!=0.0 || fabs(cond(real,2))!=0.0 || fabs(cond(real,3))!=0.0
+cond(real,1)
+cond(real,2)
+cond(real,3)
+geo/Force.geo
+cond Point_Mass
 1
 global
 1
@@ -118,7 +126,7 @@ global
 0
 0
 geo/Mass.geo
-cond Point_Body_constraints 
+cond Point_Body_constraint_master_node
 1
 global
 1
@@ -126,7 +134,7 @@ global
 0
 0
 geo/Constraint.geo
-cond Line_Body_constraints 
+cond Point_Body_constraint_slave_nodes
 1
 global
 1
@@ -134,7 +142,15 @@ global
 0
 0
 geo/Constraint.geo
-cond Point_Rigid_diaphragm 
+cond Line_Body_constraint_slave_nodes
+1
+global
+1
+1
+0
+0
+geo/Constraint.geo
+cond Point_Rigid_diaphragm_master_node
 1
 global
 1
@@ -142,7 +158,7 @@ global
 0
 0
 geo/Diaphragm.geo
-cond Line_Rigid_diaphragm 
+cond Point_Rigid_diaphragm_slave_nodes
 1
 global
 1
@@ -150,7 +166,15 @@ global
 0
 0
 geo/Diaphragm.geo
-cond ZeroLength 
+cond Line_Rigid_diaphragm_slave_nodes
+1
+global
+1
+1
+0
+0
+geo/Diaphragm.geo
+cond ZeroLength
 1
 global
 1

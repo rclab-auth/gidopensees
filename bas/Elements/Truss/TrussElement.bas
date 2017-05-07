@@ -2,20 +2,22 @@
 *#------------------  Truss Elements------------------
 *#----------------------------------------------------
 *# variable to count Truss elements
-*set var cntTruss=0
-*loop elems 
+*set var cntcurrTruss=0
+*loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *set var cntTruss=operation(cntTruss+1)
+*set var cntcurrTruss=operation(cntcurrTruss+1)
 *endif
 *end elems
-*if(cntTruss!=0)
+*if(cntcurrTruss!=0)
 
 # --------------------------------------------------------------------------------------------------------------
 # T R U S S   E L E M E N T S
 # --------------------------------------------------------------------------------------------------------------
 
-*Set Var VarCount=1
-*loop elems
+*set var VarCount=1
+*if((ndime==2 && currentDOF==2) || (ndime==3 && currentDOF==3))
+*loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *if(VarCount==1)
 # Uniaxial Materials Definition
@@ -32,28 +34,45 @@
 *set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
 *#we check which is the material that user choosed in Material field in element definition.
 *if(MaterialID==SelectedMaterial)
-*if(strcmp(MatProp(1),"Elastic")==0)
+*if(strcmp(MatProp(Material:),"Elastic")==0)
 *format "%d%g"
+*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
 uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real)
-*elseif(strcmp(MatProp(1),"ElasticPerfectlyPlastic")==0)
-*format "%d%g"
-uniaxialMaterial ElasticPP *MaterialID *MatProp(Elastic_modulus_E,real) *\
-*set var epsyP=MatProp(Strain_epsP,real)
-*set var epsyN=MatProp(Strain_epsN,real)
-*set var eps0=MatProp(Initial_strain_eps0,real)
-*format "%g%g%g"
-*epsyP *epsyN *eps0
-*elseif(strcmp(MatProp(1),"Steel01")==0)
-*format "%d"
-uniaxialMaterial Steel01 *MaterialID *\
-*set var Fy=MatProp(Yield_Stress_Fy,real)
-*set var E0=MatProp(Initial_elastic_tangent_E0,real)
-*set var b=MatProp(Strain-hardening_ratio_b,real)
-*format "%g%g%g"
-*Fy *E0 *b
+*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
+uniaxialMaterial Elastic *MaterialID *MatProp(Stiffness_K,real)
+*else
+uniaxialMaterial Elastic *MaterialID *MatProp(Moment_per_rotation_unit,real)
+*endif
+*elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlastic")==0)
+*format "%d%g%g%g%g"
+*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
+uniaxialMaterial ElasticPP *MaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Strain_epsP,real) *MatProp(Strain_epsN,real) *MatProp(Initial_strain_eps0,real)
+*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
+uniaxialMaterial ElasticPP *MaterialID *MatProp(Stiffness_K,real) *MatProp(Deformation_epsP,real) *MatProp(Deformation_epsN,real) *MatProp(Initial_deformation_eps0,real)
+*else
+uniaxialMaterial ElasticPP *MaterialID *MatProp(Moment_per_rotation_unit,real) *MatProp(Rotation_epsP,real) *MatProp(Rotation_epsN,real) *MatProp(Initial_rotation_eps0,real)
+*endif
+*elseif(strcmp(MatProp(Material:),"Steel01")==0)
+*format "%d%g%g%g"
+*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
+uniaxialMaterial Steel01 *MaterialID *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
+*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
+uniaxialMaterial Steel01 *MaterialID *MatProp(Force_Fy,real) *MatProp(Initial_stiffness_K,real) *MatProp(Strain-hardening_ratio_b,real)
+*else
+uniaxialMaterial Steel01 *MaterialID *MatProp(Moment_My,real) *MatProp(Moment_per_rotation_unit,real) *MatProp(Strain-hardening_ratio_b,real)
+*endif
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
 *format "%d%g%g%g"
-uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Gap,real)
+*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
+uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Strain_gap,real)
+*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
+uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Stiffness_K,real) *MatProp(Force_Fy,real) *MatProp(Deformation_gap,real)
+*else
+uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Moment_per_rotation_unit,real) *MatProp(Moment_My,real) *MatProp(Rotation_gap,real)
+*endif
+*elseif(strcmp(MatProp(Material:),"Viscous")==0)
+*format "%d%g%g"
+uniaxialMaterial Viscous &MaterialID *MatProp(Damping_coefficient,real) *MatProp(Power_factor,real)
 *endif
 *break
 *endif
@@ -62,33 +81,33 @@ uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Elastic_modulus_E,real) *MatP
 *endif
 *end materials
 
-# Truss Definition : element truss $eleTag $inode $jnode $A $matTag
+# Truss Definition : element truss $eleTag $inode $jnode $A $matTag -rho $rho -cMass $cFlag -doRayleigh $rFlag
 *set var VarCount=operation(VarCount+1)
 
 *endif
 *#
 *#-------------Section Properties--------------------
 *#
-*if(strcmp(elemsMatProp(Cross_Section),"Rectangular")==0)
+*if(strcmp(elemsMatProp(Cross_section),"Rectangular")==0)
 *set var height=ElemsMatProp(Height_H,real)
 *set var width=ElemsMatProp(Width_B,real)
 *set var A=operation(height*width)
-*elseif(strcmp(elemsMatProp(Cross_Section),"Tee")==0)
+*elseif(strcmp(elemsMatProp(Cross_section),"Tee")==0)
 *set var height=elemsMatProp(Height_H,real)
 *set var Bf=elemsMatProp(Width_Bf,real)
 *set var tf=elemsMatProp(Height_Hf,real)
 *set var tw=elemsMatProp(Width_Bw,real)
 *set var A=operation(Bf*tf+(height-tf)*tw)
-*elseif(strcmp(elemsMatProp(Cross_Section),"Circular")==0)
+*elseif(strcmp(elemsMatProp(Cross_section),"Circular")==0)
 *set var D=elemsMatProp(Diameter_D,real)
 *set var A=operation(3.14*D*D/4)
-*elseif(strcmp(elemsMatProp(Cross_Section),"General")==0)
+*elseif(strcmp(elemsMatProp(Cross_section),"General")==0)
 *set var A=ElemsMatProp(Area_A,real)
 *endif
 *set var MassDens=ElemsMatProp(Mass_density,real)
 *set var MassPerLength=operation(A*MassDens)
 *# Cross Section Area Modification Factor
-*if(ElemsMatProp(Set_Modification_Factors,int)==1)
+*if(ElemsMatProp(Set_modification_factors,int)==1)
 *set var Amod=ElemsMatProp(mod._A,real)
 *set var A=operation(A*Amod)
 *endif
@@ -97,8 +116,9 @@ uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Elastic_modulus_E,real) *MatP
 element truss *ElemsNum *elemsConec *\
 *format "%8.3f"
 *A *tcl(FindMaterialNumber *ElemsMatProp(Material) )   -rho *\
-*format "%8.3f"
-*MassPerLength
+*format "%8.3f%d%d"
+*MassPerLength -cMass *ElemsMatProp(Consider_consistent_mass_matrix,int) -doRayleigh *ElemsMatProp(Include_Rayleigh_damping,int)
 *endif
 *end elems
+*endif
 *endif

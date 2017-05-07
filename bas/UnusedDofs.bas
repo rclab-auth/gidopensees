@@ -49,5 +49,5 @@
 *for(i=0;i<=length-1;i=i+1)
 fix *tcl(FixstdBrickUnusedDofs *i)   0   0   0   1   1   1
 *endfor
-*endif 
+*endif
 *endif

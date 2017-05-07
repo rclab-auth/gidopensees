@@ -10,18 +10,10 @@ set numModes *GenData(Number_of_eigenvalues,int)
 # Record eigenvectors
 
 for { set k 1 } { $k <= $numModes } { incr k } {
-*if(GenData(Dimensions,int)==3)
-*if(GenData(DOF,int)==3)
-  recorder Node -file [format "Mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 3  "eigen $k"
+*if(ndime==2)
+    recorder Node -file [format "Mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 "eigen $k"
 *else
-  recorder Node -file [format "Mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 3 4 5 6 "eigen $k"
-*endif
-*else
-*if(GenData(DOF,int)==2)
-  recorder Node -file [format "Mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2   "eigen $k"
-*else
-  recorder Node -file [format "Mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 6  "eigen $k" 
-*endif
+    recorder Node -file [format "Mode_%i.out" $k] -nodeRange 1 *cntNodes -dof 1 2 3 "eigen $k"
 *endif
 }
 
@@ -38,7 +30,7 @@ set lambda [eigen *\
 
 set T {}
 foreach lam $lambda {
-  lappend T [expr 6.283185/sqrt($lam)]
+    lappend T [expr 6.283185/sqrt($lam)]
 }
 
 # Write periods file
@@ -46,16 +38,27 @@ foreach lam $lambda {
 set period "Periods.out"
 set Periods [open $period "w"]
 foreach t $T {
-  puts $Periods "$t"
+    puts $Periods "$t"
 }
 close $Periods
 *endif
-*if(IntvNum==1 && GenData(Activate_Reyleigh_damping,int)==1)
+*if(IntvNum==1)
+*if(GenData(Activate_Global_Rayleigh_damping,int)==1)
 
 # Rayleigh damping
 
 *format "%g%g%g%g"
 rayleigh *GenData(alphaM,real) *GenData(betaK,real) *GenData(betaKinit,real) *GenData(betaKcomm,real)
+*else
+*include Regions.bas
+*endif
+*endif
+*if(strcmp(IntvData(Logging_level),"Low")==0)
+*set var LoggingFlag=0
+*elseif(strcmp(IntvData(Logging_level),"Medium")==0)
+*set var LoggingFlag=2
+*elseif(strcmp(IntvData(Logging_level),"High")==0)
+*set var LoggingFlag=1
 *endif
 *#
 *# Analysis Options
@@ -63,84 +66,90 @@ rayleigh *GenData(alphaM,real) *GenData(betaK,real) *GenData(betaKinit,real) *Ge
 
 # Analysis options
 
-system *IntvData(System_of_Equations)
-numberer *IntvData(DOF_Numberer)
-constraints *IntvData(Constraint_Handler)
-*# Check for cyclic loading. If not, integrator command is written normally 
-*if(strcmp(IntvData(Loading_Path),"Monotonic")==0)
-*if(strcmp(IntvData(Integrator_Type),"Load_Control")==0)
-*set var steps=IntvData(Analysis_Steps,int)
+*#
+*# STATIC ANALYSIS
+*#
+*if(strcmp(IntvData(Analysis_type),"Static")==0)
+system *IntvData(System_of_equations)
+numberer *IntvData(DOF_numberer)
+constraints *IntvData(Constraint_handler)
+*# MONOTONIC
+*if(strcmp(IntvData(Loading_path),"Monotonic")==0)
+*# Integrator for Static Monotonic Analysis
+*if(strcmp(IntvData(Integrator_type),"Load_control")==0)
+*set var steps=IntvData(Analysis_steps,int)
 *set var LoadIncr=operation(1.0/steps)
 *format "%g"
-integrator LoadControl *LoadIncr 
-*elseif(strcmp(IntvData(Integrator_Type),"Displacement_Control")==0)
-*set var steps=IntvData(Analysis_Steps,int)
-*set var DispIncr=operation(IntvData(Total_Displacement,real)/steps)
-*if(strcmp(IntvData(Control_Node_Direction),"UX")==0)
+integrator LoadControl *LoadIncr
+*elseif(strcmp(IntvData(Integrator_type),"Displacement_control")==0)
+*set var steps=IntvData(Analysis_steps,int)
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
+*if(strcmp(IntvData(Control_node_direction),"UX")==0)
 *set var NodeCtrlDOF=1
-*elseif(strcmp(IntvData(Control_Node_Direction),"UY")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"UY")==0)
 *set var NodeCtrlDOF=2
-*elseif(strcmp(IntvData(Control_Node_Direction),"YZ")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"YZ")==0)
 *set var NodeCtrlDOF=3
-*elseif(strcmp(IntvData(Control_Node_Direction),"RX")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"RX")==0)
 *set var NodeCtrlDOF=4
-*elseif(strcmp(IntvData(Control_Node_Direction),"RY")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"RY")==0)
 *set var NodeCtrlDOF=5
-*elseif(strcmp(IntvData(Control_Node_Direction),"RZ")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"RZ")==0)
 *set var NodeCtrlDOF=6
 *endif
 *format "%g%d%g"
-integrator DisplacementControl *IntvData(Control_Node) *NodeCtrlDOF *DispIncr
-*elseif(strcmp(IntvData(Integrator_Type),"Newmark")==0)
-integrator Newmark *IntvData(gamma,real) *IntvData(beta,real)
-*elseif(strcmp(IntvData(Integrator_Type),"Hilber-Hughes-Taylor")==0)
-integrator Newmark *IntvData(alpha,real) *IntvData(gamma,real) *IntvData(beta,real)
+integrator DisplacementControl *IntvData(Control_node) *NodeCtrlDOF *DispIncr
+*else
+*MessageBox Error: Invalid Analysis Options
+*# end if Integrator type
 *endif
-*endif
-*if(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_Algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_Algorithm),"Broyden")==0 || strcmp(IntvData(Solution_Algorithm),"BFGS")==0)
-*if(strcmp(IntvData(Convergence_Criteria_Type),"Norm_Unbalance")==0)
+*# Test for convergence
+*if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0)
+*if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
 *format "%g%g"
-test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Norm_Displacement_Increment")==0)
+test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Norm_Displacement_Increment")==0)
 *format "%g%g"
-test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Energy_Increment")==0)
+test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Energy_Increment")==0)
 *format "%g%g"
-test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_Norm_Unbalance")==0)
+test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Unbalance")==0)
 *format "%g%g"
-test RelativeNormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_Norm_Displacement_Increment")==0)
+test RelativeNormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Displacement_Increment")==0)
 *format "%g%g"
-test RelativeNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Total_Relative_Norm_Displacement_Increment")==0)
+test RelativeNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Total_Relative_Norm_Displacement_Increment")==0)
 *format "%g%g"
-test RelativeTotalNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Relative_Energy_Increment")==0)
+test RelativeTotalNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Energy_Increment")==0)
 *format "%g%g"
-test RelativeEnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) 1
-*elseif(strcmp(IntvData(Convergence_Criteria_Type),"Fixed_Number_of_Iterations")==0)
+test RelativeEnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Fixed_Number_of_Iterations")==0)
 *format "%g"
-test FixedNumIter *IntvData(Max_Iterations_per_Step) 1
+test FixedNumIter *IntvData(Max_Iterations_per_Step) *LoggingFlag
 *endif
+*# end if test convergence
 *endif
-*if(strcmp(IntvData(Solution_Algorithm),"Linear")==0)
-algorithm Linear 
-*elseif(strcmp(IntvData(Solution_Algorithm),"Full_Newton-Raphson")==0)
-algorithm Newton *\
+*# Algorithm for Static Monotonic
+*if(strcmp(IntvData(Solution_algorithm),"Linear")==0)
+algorithm Linear
+*elseif(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
+algorithm Newton*\
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
--initial 
+ -initial
 *else
 
 *endif
-*elseif(strcmp(IntvData(Solution_Algorithm),"Modified_Newton-Raphson")==0)
-algorithm ModifiedNewton *\
+*elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
+algorithm ModifiedNewton*\
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
--initial 
+ -initial
 *else
 
 *endif
-*elseif(strcmp(IntvData(Solution_Algorithm),"Newton-Raphson_with_line_search")==0)
+*elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
 algorithm NewtonLineSearch -type *\
 *if(strcmp(IntvData(Line_search_type),"Interpolated")==0)
 InitialInterpolated *\
@@ -153,46 +162,228 @@ Secant *\
 *endif
 *format "%g%d%g%g"
 -tol *IntvData(Search_tolerance,real) -maxIter *IntvData(Max_iterations_for_search,int) -minEta *IntvData(Min_eta_value,real) -maxEta *IntvData(max_eta_value,real)
-*elseif(strcmp(IntvData(Solution_Algorithm),"Broyden")==0)
+*elseif(strcmp(IntvData(Solution_algorithm),"Broyden")==0)
 *format "%d"
-algorithm Broyden *IntvData(Iterations_until_a_new_tangent_is_formed,int)
-*elseif(strcmp(IntvData(Solution_Algorithm),"BFGS")==0)
+algorithm Broyden *IntvData(Iterations_for_new_tangent,int)
+*elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 algorithm BFGS
+*# end if algorithm
+*else
 *endif
-analysis *IntvData(Analysis_Type)
-*# For integrator command check if the loading is cyclic 
-*# For cyclic loading
-*if(strcmp(IntvData(Loading_Path),"Cyclic")==0)
+*#
+*# ANALYSIS
+*#
+analysis *IntvData(Analysis_type)
+*if(strcmp(IntvData(Solution_algorithm),"Linear")!=0 && strcmp(IntvData(Integrator_type),"Displacement_control")==0)
+*#
+*# Pushover analysis
+*#
+*include analysis/PushoverAnalysis.bas
+*else
+*#
+*# Linear analysis
+*#
 
-*if(strcmp(IntvData(Integrator_Type),"Displacement_Control")==0)
-*set var steps=IntvData(Analysis_Steps,int)
-*set var NCycles=IntvData(Number_of_Cycles,int)
-*if(strcmp(IntvData(Control_Node_Direction),"UX")==0)
+*format "%d"
+set AnalOk [analyze *steps]
+if {$AnalOk == 0} {
+    puts "\nAnalysis completed SUCCESSFULLY\n"
+} else {
+    puts "\nAnalysis FAILED\n"
+}
+*endif
+*#
+*# Cyclic analysis
+*#
+*elseif(strcmp(IntvData(Loading_path),"Cyclic")==0)
+*# Integrator for Static Cyclic Analysis
+*if(strcmp(IntvData(Integrator_type),"Displacement_control")==0)
+*set var steps=IntvData(Analysis_steps,int)
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
+*if(strcmp(IntvData(Control_node_direction),"UX")==0)
 *set var NodeCtrlDOF=1
-*elseif(strcmp(IntvData(Control_Node_Direction),"UY")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"UY")==0)
 *set var NodeCtrlDOF=2
-*elseif(strcmp(IntvData(Control_Node_Direction),"UZ")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"YZ")==0)
 *set var NodeCtrlDOF=3
-*elseif(strcmp(IntvData(Control_Node_Direction),"RX")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"RX")==0)
 *set var NodeCtrlDOF=4
-*elseif(strcmp(IntvData(Control_Node_Direction),"RY")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"RY")==0)
 *set var NodeCtrlDOF=5
-*elseif(strcmp(IntvData(Control_Node_Direction),"RZ")==0)
+*elseif(strcmp(IntvData(Control_node_direction),"RZ")==0)
 *set var NodeCtrlDOF=6
 *endif
-*set var DispIncr=operation(IntvData(Total_Displacement,real)/steps)
+*format "%g%d%g"
+integrator DisplacementControl *IntvData(Control_node) *NodeCtrlDOF *DispIncr
 *else
-*MessageBox Error: For Cyclic loading, only Displacement Control is supported.
+*MessageBox Error: Invalid Analysis Options
+*# end if Integrator type
 *endif
-*for(i=1;i<=NCycles;i=i+1)
-*format "%g%g%g"
-foreach Dincr {*DispIncr *operation(-2*DispIncr) *DispIncr} {
-*format "%6d%3d"
-integrator DisplacementControl *IntvData(Control_Node) *NodeCtrlDOF $Dincr
-analyze *steps
-}
-*endfor
-*# For monotonic loading
+*# Test for convergence
+*if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0)
+*if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
+*format "%g%g"
+test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Norm_Displacement_Increment")==0)
+*format "%g%g"
+test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Energy_Increment")==0)
+*format "%g%g"
+test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Unbalance")==0)
+*format "%g%g"
+test RelativeNormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Displacement_Increment")==0)
+*format "%g%g"
+test RelativeNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Total_Relative_Norm_Displacement_Increment")==0)
+*format "%g%g"
+test RelativeTotalNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Energy_Increment")==0)
+*format "%g%g"
+test RelativeEnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Fixed_Number_of_Iterations")==0)
+*format "%g"
+test FixedNumIter *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*endif
+*endif
+*# Algorithm for Static Cyclic
+*if(strcmp(IntvData(Solution_algorithm),"Linear")==0)
+*MessageBox Error: Invalid Analysis Options
+*elseif(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
+algorithm Newton*\
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+ -initial
 *else
-analyze *steps
+
+*endif
+*elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
+algorithm ModifiedNewton*\
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+ -initial
+*else
+
+*endif
+*elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
+algorithm NewtonLineSearch -type *\
+*if(strcmp(IntvData(Line_search_type),"Interpolated")==0)
+InitialInterpolated *\
+*elseif(strcmp(IntvData(Line_search_type),"RegulaFalsi")==0)
+RegulaFalsi *\
+*elseif(strcmp(IntvData(Line_search_type),"Bisection")==0)
+Bisection *\
+*elseif(strcmp(IntvData(Line_search_type),"Secant")==0)
+Secant *\
+*endif
+*format "%g%d%g%g"
+-tol *IntvData(Search_tolerance,real) -maxIter *IntvData(Max_iterations_for_search,int) -minEta *IntvData(Min_eta_value,real) -maxEta *IntvData(max_eta_value,real)
+*elseif(strcmp(IntvData(Solution_algorithm),"Broyden")==0)
+*format "%d"
+algorithm Broyden *IntvData(Iterations_for_new_tangent,int)
+*elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
+algorithm BFGS
+*# end if Algorithm
+*endif
+analysis *IntvData(Analysis_type)
+*include analysis/StaticCyclicAnalysis.bas
+*# end if path is cyclic
+*endif
+*#
+*# Transient analysis
+*#
+*elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
+system *IntvData(System_of_equations)
+numberer *IntvData(DOF_numberer)
+constraints *IntvData(Constraint_handler)
+*format "%g%g"
+*if(strcmp(IntvData(Integrator_type),"Newmark")==0)
+integrator Newmark *IntvData(gamma,real) *IntvData(beta,real)
+*elseif(strcmp(IntvData(Integrator_type),"Hilber-Hughes-Taylor")==0)
+integrator Newmark *IntvData(alpha,real) *IntvData(gamma,real) *IntvData(beta,real)
+*else
+*MessageBox Error: Invalid Analysis Options.
+*endif
+*# Test for convergence
+*if(strcmp(IntvData(Solution_algorithm),"Linear")!=0)
+*if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
+*format "%g%g"
+test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Norm_Displacement_Increment")==0)
+*format "%g%g"
+test NormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Energy_Increment")==0)
+*format "%g%g"
+test EnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Unbalance")==0)
+*format "%g%g"
+test RelativeNormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Displacement_Increment")==0)
+*format "%g%g"
+test RelativeNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Total_Relative_Norm_Displacement_Increment")==0)
+*format "%g%g"
+test RelativeTotalNormDispIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Energy_Increment")==0)
+*format "%g%g"
+test RelativeEnergyIncr *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*elseif(strcmp(IntvData(Convergence_criterion),"Fixed_Number_of_Iterations")==0)
+*format "%g"
+test FixedNumIter *IntvData(Max_Iterations_per_Step) *LoggingFlag
+*endif
+*else
+*MessageBox Error: Invalid Analysis Options.
+*endif
+*# Algorithm for Transient Analysis
+*if(strcmp(IntvData(Solution_algorithm),"Linear")==0)
+*MessageBox Error: Invalid Analysis Options
+*elseif(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
+algorithm Newton*\
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+ -initial
+*else
+
+*endif
+*elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
+algorithm ModifiedNewton*\
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+ -initial
+*else
+
+*endif
+*elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
+algorithm NewtonLineSearch -type *\
+*if(strcmp(IntvData(Line_search_type),"Interpolated")==0)
+InitialInterpolated *\
+*elseif(strcmp(IntvData(Line_search_type),"RegulaFalsi")==0)
+RegulaFalsi *\
+*elseif(strcmp(IntvData(Line_search_type),"Bisection")==0)
+Bisection *\
+*elseif(strcmp(IntvData(Line_search_type),"Secant")==0)
+Secant *\
+*endif
+*format "%g%d%g%g"
+-tol *IntvData(Search_tolerance,real) -maxIter *IntvData(Max_iterations_for_search,int) -minEta *IntvData(Min_eta_value,real) -maxEta *IntvData(max_eta_value,real)
+*elseif(strcmp(IntvData(Solution_algorithm),"Broyden")==0)
+*format "%d"
+algorithm Broyden *IntvData(Iterations_for_new_tangent,int)
+*elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
+algorithm BFGS
+*# end if Algorithm
+*endif
+analysis *IntvData(Analysis_type)
+
+*# Uniform ground motion
+*if(strcmp(IntvData(Loading_type),"Uniform_excitation")==0)
+*# Uniform sine ground motion
+*if(strcmp(IntvData(Excitation_type),"Sine")==0)
+*include analysis/UniformSine.bas
+*# Uniform ground motion from record
+*else
+*include analysis/UniformGroundMotionRecord.bas
+*endif
+*# Multiple support excitations
+*elseif(strcmp(IntvData(Loading_type),"Multiple_support_excitation")==0)
+*include analysis/MultipleSupportExcitationAnalysis.bas
+*endif
+*# end if Analysis type (Static, Transient etc.)
 *endif

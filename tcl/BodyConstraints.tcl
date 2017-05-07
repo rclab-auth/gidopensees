@@ -1,8 +1,8 @@
 proc AddbodyconstraintIDList { IDnum } {
 
-	global BodyConstraintIDList 
+	global BodyConstraintIDList
 
-	lappend BodyConstraintIDList $IDnum 
+	lappend BodyConstraintIDList $IDnum
 
 	return 0
 }
@@ -18,7 +18,7 @@ proc HowmanyBCID { } {
 
 # Assigns the BodyConstraintIDList(i-1) to the IDnum
 
-proc BCIDnumber { index } { 
+proc BCIDnumber { index } {
 
 	global BodyConstraintIDList
 
@@ -30,7 +30,7 @@ proc BCIDnumber { index } {
 proc exportBCConditions { Tx Ty Tz Rx Ry Rz } {
 	global BodyConstraintConditions
 
-	set mylist [list $Tx $Ty $Tz $Rx $Ry $Rz] 
+	set mylist [list $Tx $Ty $Tz $Rx $Ry $Rz]
 
 	foreach myvalue $mylist {
 

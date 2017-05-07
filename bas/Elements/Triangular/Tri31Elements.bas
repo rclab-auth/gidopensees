@@ -1,31 +1,29 @@
 *#--------------------------------------------------------------------------------
 *#                                  Tri31 Elements                                -
 *#--------------------------------------------------------------------------------
-*# variable to count Quad elements
-*set var cntTri31=0
-*loop elems 
+*# variable to count Tri31 elements
+*set var cntcurrTri31=0
+*loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
 *if(ElemsType!=2)
 *MessageBox Error: Tri31 elements must be triangular.
 *endif
 *set var cntTri31=operation(cntTri31+1)
+*set var cntcurrTri31=operation(cntcurrTri31+1)
 *endif
 *end elems
-*if(cntTri31!=0)
+*if(cntcurrTri31!=0)
 
 # --------------------------------------------------------------------------------------------------------------
 # T R I 3 1   E L E M E N T S
 # --------------------------------------------------------------------------------------------------------------
 
 *set var VarCount=1
-*if(GenData(Dimensions,int)==2 && GenData(DOF,int)==2)
-*loop elems
+*if(ndime==2 && currentDOF==2)
+*loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
 *set var thickness=ElemsMatProp(Thickness,real)
 *if(VarCount==1)
-*if(file!=2)
-*set var file=4
-*endif
 # nDMaterial Definition
 
 *loop materials
@@ -39,10 +37,10 @@
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(1),"ElasticIsotropic")==0)
 *format "%d%g%g%g"
-nDMaterial ElasticIsotropic *MaterialID *MatProp(Elastic_Modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Mass_density,real)
+nDMaterial ElasticIsotropic *MaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Poisson's_ratio,real) *MatProp(Mass_density,real)
 *elseif(strcmp(MatProp(1),"ElasticOrthotropic")==0)
 *format "%d%g%g%g%g%g%g%g%g%g%g"
-nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_Modulus_Ex,real) *MatProp(Elastic_Modulus_Ey,real) *MatProp(Elastic_Modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
+nDMaterial ElasticOrthotropic *MaterialID *MatProp(Elastic_modulus_Ex,real) *MatProp(Elastic_modulus_Ey,real) *MatProp(Elastic_modulus_Ez,real) *MatProp(Poisson's_ratio_vxy,real) *MatProp(Poisson's_ratio_vyz,real) *MatProp(Poisson's_ratio_vzy,real) *MatProp(Shear_modulus_Gxy,real) *MatProp(Shear_modulus_Gyz,real) *MatProp(Shear_modulus_Gzx,real) *MatProp(Mass_density,real)
 *endif
 *break
 *endif
@@ -66,7 +64,5 @@ PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(Sur
 *set var VarCount=VarCount+1
 *endif
 *end elems
-*else
-*MessageBox Error: Quad elements require a 2D / 2-DOF model.
 *endif
 *endif

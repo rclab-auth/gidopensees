@@ -36,9 +36,10 @@ BOOK: Restraints
 CONDITION: Point_Restraints
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n
+COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n\tAfter assigning new restraints DO NOT FORGET to regenerate the mesh.\n
 QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
+TKWIDGET: TK_UpdateInfoBar
 QUESTION: Y-Translation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Translation#CB#(1,0)
@@ -49,7 +50,7 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
-QUESTION: Fast_Restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
+QUESTION: Fast_restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
 VALUE: Fix XYZ
 DEPENDENCIES: (Fix_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
 DEPENDENCIES: (Fix_XY,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Rotation,1,RESTORE,Z-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0)
@@ -65,7 +66,7 @@ END CONDITION
 CONDITION: Line_Restraints
 CONDTYPE: over lines
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on lines and is transferred on line nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n
+COMMENT: \n\tThis condition is assigned on lines and is transferred on line nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n\tAfter assigning new restraints DO NOT FORGET to regenerate the mesh.\n
 QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
 QUESTION: Y-Translation#CB#(1,0)
@@ -78,7 +79,7 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
-QUESTION: Fast_Restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
+QUESTION: Fast_restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
 VALUE: Fix XYZ
 DEPENDENCIES: (Fix_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
 DEPENDENCIES: (Fix_XY,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Rotation,1,RESTORE,Z-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0)
@@ -94,7 +95,7 @@ END CONDITION
 CONDITION: Surface_Restraints
 CONDTYPE: over surfaces
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on surfaces and is transferred on surface nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n
+COMMENT: \n\tThis condition is assigned on surfaces and is transferred on surface nodes.\n\t\It is recommended to apply restraints in the FIRST interval only.\n\tAfter assigning new restraints DO NOT FORGET to regenerate the mesh.\n
 QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
 QUESTION: Y-Translation#CB#(1,0)
@@ -107,7 +108,7 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
-QUESTION: Fast_Restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
+QUESTION: Fast_restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
 VALUE: Fix XYZ
 DEPENDENCIES: (Fix_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
 DEPENDENCIES: (Fix_XY,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Rotation,1,RESTORE,Z-Translation,0,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0)
@@ -124,12 +125,13 @@ END CONDITION
 BOOK: Loads
 
 
-CONDITION: Point_Forces 
+CONDITION: Point_Forces
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\tLoads are always applied in the ACTIVE interval.\n
+COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\tLoads are always applied in the ACTIVE interval.\n\tAfter assigning new loads DO NOT FORGET to regenerate the mesh.\n
 QUESTION: X-Force#UNITS#
 VALUE: 0.0 kN
+TKWIDGET: TK_UpdateInfoBar
 QUESTION: Y-Force#UNITS#
 VALUE: 0.0 kN
 QUESTION: Z-Force#UNITS#
@@ -141,19 +143,20 @@ VALUE: 0.0 kNm
 QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
-VALUE: 
+VALUE:
 TKWIDGET: TK_ActiveIntervalinLoads
 QUESTION: __#CB#(__)
-VALUE: 
+VALUE:
 TKWIDGET: TK_LoadsWikiInfo
 END CONDITION
 
-CONDITION: Line_Forces 
+CONDITION: Line_Forces
 CONDTYPE: over lines
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on lines and is transferred on line nodes.\n\tLoads are always applied in the ACTIVE interval.\n
+COMMENT: \n\tThis condition is assigned on lines and is transferred on line nodes.\n\tLoads are always applied in the ACTIVE interval.\n\tAfter assigning new loads DO NOT FORGET to regenerate the mesh.\n
 QUESTION: X-Force#UNITS#
 VALUE: 0.0 kN
+TKWIDGET: TK_UpdateInfoBar
 QUESTION: Y-Force#UNITS#
 VALUE: 0.0 kN
 QUESTION: Z-Force#UNITS#
@@ -165,19 +168,45 @@ VALUE: 0.0 kNm
 QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
-VALUE: 
+VALUE:
 TKWIDGET: TK_ActiveIntervalinLoads
 QUESTION: __#CB#(__)
-VALUE: 
+VALUE:
+TKWIDGET: TK_LoadsWikiInfo
+END CONDITION
+
+CONDITION: Surface_Forces
+CONDTYPE: over surfaces
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is assigned on surfaces and is transferred on nodes.\n\tLoads are always applied in the ACTIVE interval.\n\tAfter assigning new loads DO NOT FORGET to regenerate the mesh.\n
+QUESTION: X-Force#UNITS#
+VALUE: 0.0 kN
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Y-Force#UNITS#
+VALUE: 0.0 kN
+QUESTION: Z-Force#UNITS#
+VALUE: 0.0 kN
+QUESTION: X-Moment#UNITS#
+VALUE: 0.0 kNm
+QUESTION: Y-Moment#UNITS#
+VALUE: 0.0 kNm
+QUESTION: Z-Moment#UNITS#
+VALUE: 0.0 kNm
+QUESTION: _#CB#(_)
+VALUE:
+TKWIDGET: TK_ActiveIntervalinLoads
+QUESTION: __#CB#(__)
+VALUE:
 TKWIDGET: TK_LoadsWikiInfo
 END CONDITION
 
 CONDITION: Line_Uniform_Forces
 CONDTYPE: over lines
-CONDMESHTYPE: over body elements 
-COMMENT: \n\tThis condition is assigned on lines and is transferred on linear elements.\n
+CONDMESHTYPE: over body elements
+COMMENT: \n\tThis condition is assigned on lines and is transferred on linear elements.\n\tLoads are always applied in the ACTIVE interval.\n\tAfter assigning new loads DO NOT FORGET to regenerate the mesh.\n
 QUESTION: Uniform_load_along_line_longitudinal_axis#UNITS#
 VALUE: 0.0 kN/m
+TKWIDGET: TK_UpdateInfoBar
 QUESTION: Uniform_load_acting_in_local_y_direction#UNITS#
 VALUE: 0.0 kN/m
 QUESTION: Uniform_load_acting_in_local_z_direction#UNITS#
@@ -187,107 +216,179 @@ VALUE: Hover for local axes info
 STATE: DISABLED
 HELP: The local x axis is always specified by the two line nodes and its positive direction is defined from the first to the second selected node.\n\nIN A 2D MODEL:\n\nLocal z axis field is IGNORED\nThe global Y axis is the vertical axis by default\nLocal x axis has the line drawing direction (View -> Normals -> Lines)\nLocal z axis coincides with the global Z axis\nLocal y axis has the right hand rule\n\nIN A 3D MODEL:\n\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non-vertical element (in any line drawing direction):\n\nVecxz has the direction of the selected global vertical (Y or Z) axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy\nIf the element is horizontal: local z has the direction of the vertical axis, local x axis is specified by the two line nodes (View->Normals->Lines) and local y axis is found by the right hand rule\n\nFor a vertical element (in any line drawing direction):\n\nVeczx has the direction of global -X axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy
 QUESTION: __#CB#(_)
-VALUE: 
+VALUE:
 TKWIDGET: TK_ActiveIntervalinLoads
 QUESTION: ___#CB#(___)
-VALUE: 
+VALUE:
 TKWIDGET: TK_LineLoadsWikiInfo
+END CONDITION
+
+CONDITION: Point_Ground_Motion_from_Record
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+COMMENT: \n\tYou can assign this condition using the defined records from the Records window.\n\tGround motion is applied always applied in the ACTIVE interval.\n\tAfter assigning new ground motion DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Record_file#MAT#(Records)
+VALUE: Ground_Motion_Record
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
+VALUE: Ux
+TKWIDGET: TK_OpenRecordsWindow
+END CONDITION
+
+CONDITION: Point_Sine_Ground_Motion
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+COMMENT: \n\tGround motion is applied always applied in the ACTIVE interval.\n\tAfter assigning new ground motion DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Type#CB#(Acceleration,Displacement)
+VALUE: Displacement
+TKWIDGET: TK_UpdateInfoBar
+DEPENDENCIES: (Acceleration,RESTORE,Acceleration_Amplitude,#CURRENT#,HIDE,Displacement_Amplitude,#CURRENT#)
+DEPENDENCIES: (Displacement,HIDE,Acceleration_Amplitude,#CURRENT#,RESTORE,Displacement_Amplitude,#CURRENT#)
+QUESTION: Ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
+VALUE: Ux
+QUESTION: Acceleration_Amplitude#UNITS#
+VALUE: 1.0m/s^2
+QUESTION: Displacement_Amplitude#UNITS#
+VALUE: 1.0m
+QUESTION: Period#UNITS#
+VALUE: 0.6sec
+QUESTION: Duration#UNITS#
+VALUE: 10sec
+QUESTION: Shift
+VALUE: 0.0#WIDTH#(10)
 END CONDITION
 
 
 BOOK: Constraints
 
 
-CONDITION: Point_Body_constraints
+CONDITION: Point_Body_constraint_master_node
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tYou can assign this condition on at least 2 nodes, for each body constraint.\n\tEach body constraint should have a unique positive integer ID number.\n\tFor more than 2 points/nodes, the constraint is applied in point/node pairs (first is master).\n\t\It is recommended to apply body constraints in the FIRST interval only.\n
+COMMENT: \n\tYou must assign this condition to ONE point that will be the master node for the selected ID. \n\tEach body constraint group should have a unique positive integer ID number.\n\t\It is recommended to apply body constraints in the FIRST interval only.\n\tAfter assigning new constraints DO NOT FORGET to regenerate the mesh.\n
 QUESTION: Body_constraint_ID_number
-VALUE: 1
-HELP: Give a positive integer number body constraint.
-QUESTION: X-Translation#CB#(1,0)
-VALUE: 1
-QUESTION: Y-Translation#CB#(1,0)
-VALUE: 1
-QUESTION: Z-Translation#CB#(1,0)
-VALUE: 1
-QUESTION: X-Rotation#CB#(1,0)
-VALUE: 1
-QUESTION: Y-Rotation#CB#(1,0)
-VALUE: 1
-QUESTION: Z-Rotation#CB#(1,0)
-VALUE: 1
-QUESTION: Fast_Constraint#CB#(Bar,Beam)
-VALUE: Bar
-DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0) 
-DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
+VALUE: 1#WIDTH#(4)
+HELP: Give a positive integer number for body constraint group.
 TKWIDGET: TK_EqualDOFWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+TKWIDGET: TK_UpdateInfoBar
 END CONDITION
 
-CONDITION: Line_Body_constraints
-CONDTYPE: over lines
-CONDMESHTYPE: over nodes
-COMMENT: \n\tLine constraints will be transferred to all respective line nodes.\n\t\It is recommended to apply line constraints in the FIRST interval only.\n
-QUESTION: Line_constraint_ID_number
-VALUE: 1
-HELP: Enter a positive integer number for the body constraint.
-QUESTION: X-Translation#CB#(1,0)
-VALUE: 1
-QUESTION: Y-Translation#CB#(1,0)
-VALUE: 1
-QUESTION: Z-Translation#CB#(1,0)
-VALUE: 1
-QUESTION: X-Rotation#CB#(1,0)
-VALUE: 1
-QUESTION: Y-Rotation#CB#(1,0)
-VALUE: 1
-QUESTION: Z-Rotation#CB#(1,0)
-VALUE: 1
-QUESTION: Fast_Constraint#CB#(Bar,Beam)
-VALUE: Bar
-DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0) 
-DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
-TKWIDGET: TK_EqualDOFWikiInfo
-END CONDITION
-
-CONDITION: Point_Rigid_diaphragm
+CONDITION: Point_Body_constraint_slave_nodes
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on points and will be transferred to all respective nodes.\n\tEach rigid diaphragm must have a unique positive ID number.\n\tMaster node should be selected in meshed model.\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n
-QUESTION: Diaphragm_ID_number
+COMMENT: \n\tYou can assign this condition to more than 1 points/nodes, for each body constraint ID.\n\tEach body constraint group should have a unique positive integer ID number.\n\tFor more than 1 points/nodes, the constraint is applied in point/node pairs.\n\t\It is recommended to apply body constraints in the FIRST interval only.\n\tAfter assigning new constraints DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Body_constraint_ID_number
+VALUE: 1#WIDTH#(4)
+HELP: Give a positive integer number for body constraint group.
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
-QUESTION: Rigid_plane#CB#(XY,YZ,ZX)
-VALUE: XY
-QUESTION: MasterNode
-VALUE:
-TKWIDGET: GidUtils::TkwidgetPickNode
-TKWIDGET: TK_RigidDiaphragmWikiInfo
+QUESTION: Y-Translation#CB#(1,0)
+VALUE: 1
+QUESTION: Z-Translation#CB#(1,0)
+VALUE: 1
+QUESTION: X-Rotation#CB#(1,0)
+VALUE: 1
+QUESTION: Y-Rotation#CB#(1,0)
+VALUE: 1
+QUESTION: Z-Rotation#CB#(1,0)
+VALUE: 1
+QUESTION: Fast_constraints#CB#(Bar,Beam)
+VALUE: Bar
+DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
+DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
+TKWIDGET: TK_EqualDOFWikiInfo
 END CONDITION
 
-CONDITION: Line_Rigid_diaphragm
+CONDITION: Line_Body_constraint_slave_nodes
 CONDTYPE: over lines
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on lines and will be transferred to all respective line nodes.\n\tEach rigid diaphragm must have a unique positive ID number.\n\tMaster node should be selected in meshed model.\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n
-QUESTION: Diaphragm_ID_number
+COMMENT: \n\tLine constraints will be transferred to all respective line nodes.\n\tIt is recommended to use this condition in case of fine line mesh that more than 2 nodes will be generated.\n\tEach body constraint group should have a unique positive integer ID number.\n\t\It is recommended to apply line constraints in the FIRST interval only.\n\tAfter assigning new constraints DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Line_constraint_ID_number
+VALUE: 1#WIDTH#(4)
+HELP: Enter a positive integer number for the body constraint.
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: X-Translation#CB#(1,0)
 VALUE: 1
+QUESTION: Y-Translation#CB#(1,0)
+VALUE: 1
+QUESTION: Z-Translation#CB#(1,0)
+VALUE: 1
+QUESTION: X-Rotation#CB#(1,0)
+VALUE: 1
+QUESTION: Y-Rotation#CB#(1,0)
+VALUE: 1
+QUESTION: Z-Rotation#CB#(1,0)
+VALUE: 1
+QUESTION: Fast_constraints#CB#(Bar,Beam)
+VALUE: Bar
+DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
+DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
+TKWIDGET: TK_EqualDOFWikiInfo
+END CONDITION
+
+CONDITION: Point_Rigid_diaphragm_master_node
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition must be assigned to ONE point that will be the master node for the selected ID group. \n\tEach rigid diaphragm must have a unique positive ID number.\n\tThe rigid plane can be selected on the corresponding condition for slave nodes\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n\tMaster node fixities are automatically assigned depending on the rigid plane.\n\tAfter assigning new constraints DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Diaphragm_ID_number
+VALUE: 1#WIDTH#(4)
+TKWIDGET: TK_UpdateInfoBar
+#QUESTION: MasterNode
+#VALUE:
+#TKWIDGET: GidUtils::TkwidgetPickNode
+QUESTION: _#CB#(_)
+VALUE:
+TKWIDGET: TK_RigidDiaphragmWikiInfo
+END CONDITION
+
+CONDITION: Point_Rigid_diaphragm_slave_nodes
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is assigned to points and will be transferred to all respective nodes.\n\tEach rigid diaphragm must have a unique positive ID number.\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n\tAfter assigning new constraints DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Diaphragm_ID_number
+VALUE: 1#WIDTH#(4)
 QUESTION: Rigid_plane#CB#(XY,YZ,ZX)
 VALUE: XY
-QUESTION: MasterNode
+TKWIDGET: TK_UpdateInfoBar
+#QUESTION: MasterNode
+#VALUE:
+#TKWIDGET: GidUtils::TkwidgetPickNode
+QUESTION: _#CB#(_)
 VALUE:
-TKWIDGET: GidUtils::TkwidgetPickNode
+TKWIDGET: TK_RigidDiaphragmWikiInfo
+END CONDITION
+
+CONDITION: Line_Rigid_diaphragm_slave_nodes
+CONDTYPE: over lines
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is assigned to lines and will be transferred to all respective line nodes.\n\tIt is recommended to use this condition in case of fine line mesh that more than 2 nodes will be generated.\n\tEach rigid diaphragm must have a unique positive ID number.\n\tIn Interval data, a 'Transformation' or 'Lagrange' constraint handler type should be selected.\n\t\It is recommended to apply rigid diaphragms in the FIRST interval only.\n\tAfter assigning new constraints DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Diaphragm_ID_number
+VALUE: 1#WIDTH#(4)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Rigid_plane#CB#(XY,YZ,ZX)
+VALUE: XY
+#QUESTION: MasterNode
+#VALUE:
+#TKWIDGET: GidUtils::TkwidgetPickNode
+QUESTION: _#CB#(_)
+VALUE:
 TKWIDGET: TK_RigidDiaphragmWikiInfo
 END CONDITION
 
 
-BOOK: Masses
+BOOK: Mass/Damping
 
 
 CONDITION: Point_Mass
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\t\It is recommended to apply masses in the FIRST interval only.\n
+COMMENT: \n\tThis condition is assigned to points and is transferred to nodes.\n\t\It is recommended to apply masses in the FIRST interval only.\n\tAfter assigning new masses DO NOT FORGET to regenerate the mesh.\n
 QUESTION: Mass_DOF_values#CB#(:)
 VALUE: :
+TKWIDGET: TK_UpdateInfoBar
 QUESTION: X-Direction#UNITS#
 VALUE: 0.0ton
 QUESTION: Y-Direction#UNITS#
@@ -303,6 +404,176 @@ VALUE: 0.0ton
 TKWIDGET: TK_MassWikiInfo
 END CONDITION
 
+CONDITION: Line_Mass
+CONDTYPE: over lines
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is assigned to lines and is transferred to line nodes.\n\t\It is recommended to apply masses in the FIRST interval only.\n\tAfter assigning new masses DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Mass_DOF_values#CB#(:)
+VALUE: :
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: X-Direction#UNITS#
+VALUE: 0.0ton
+QUESTION: Y-Direction#UNITS#
+VALUE: 0.0ton
+QUESTION: Z-Direction#UNITS#
+VALUE: 0.0ton
+QUESTION: X-Rotation#UNITS#
+VALUE: 0.0ton
+QUESTION: Y-Rotation#UNITS#
+VALUE: 0.0ton
+QUESTION: Z-Rotation#UNITS#
+VALUE: 0.0ton
+TKWIDGET: TK_MassWikiInfo
+END CONDITION
+
+CONDITION: Surface_Mass
+CONDTYPE: over surfaces
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is assigned to lines and is transferred to surface nodes.\n\t\It is recommended to apply masses in the FIRST interval only.\n\tAfter assigning new masses DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Mass_DOF_values#CB#(:)
+VALUE: :
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: X-Direction#UNITS#
+VALUE: 0.0ton
+QUESTION: Y-Direction#UNITS#
+VALUE: 0.0ton
+QUESTION: Z-Direction#UNITS#
+VALUE: 0.0ton
+QUESTION: X-Rotation#UNITS#
+VALUE: 0.0ton
+QUESTION: Y-Rotation#UNITS#
+VALUE: 0.0ton
+QUESTION: Z-Rotation#UNITS#
+VALUE: 0.0ton
+TKWIDGET: TK_MassWikiInfo
+END CONDITION
+
+CONDITION: Line_Rayleigh_Damping-Elements
+CONDTYPE: over lines
+CONDMESHTYPE: over body elements
+COMMENT: \n\tThis condition is used to assign rayleigh damping parameters to line elements.\n\tIt includes all these elements and all the connected nodes.\n\tIt is assigned to lines and is transferred to line elements.\n\tRegion IDs must be SEPERATE between Element and Node Damping.\n\tAfter assigning new damping DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Region_ID
+VALUE: 1#WIDTH#(5)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: alphaM
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaK
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKinit
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKcomm
+VALUE: 0.0#WIDTH#(10)
+TKWIDGET: TK_RegionWikiInfo
+END CONDITION
+
+CONDITION: Surface_Rayleigh_Damping-Elements
+CONDTYPE: over surfaces
+CONDMESHTYPE: over body elements
+COMMENT: \n\tThis condition is used to assign rayleigh damping parameters to surface elements.\n\tIt includes all these elements and all the connected nodes.\n\tIt is assigned to surfaces and is transferred to surface elements.\n\tRegion IDs must be SEPERATE between Element and Node Damping.\n\tAfter assigning new damping DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Region_ID
+VALUE: 1#WIDTH#(5)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: alphaM
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaK
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKinit
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKcomm
+VALUE: 0.0#WIDTH#(10)
+TKWIDGET: TK_RegionWikiInfo
+END CONDITION
+
+CONDITION: Volume_Rayleigh_Damping-Elements
+CONDTYPE: over volumes
+CONDMESHTYPE: over body elements
+COMMENT: \n\tThis condition is used to assign rayleigh damping parameters to volume elements.\n\tIt includes all these elements and all the connected nodes.\n\tIt is assigned to volumes and is transferred to volume elements.\n\tRegion IDs must be SEPERATE between Element and Node Damping.\n\tAfter assigning new damping DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Region_ID
+VALUE: 1#WIDTH#(5)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: alphaM
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaK
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKinit
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKcomm
+VALUE: 0.0#WIDTH#(10)
+TKWIDGET: TK_RegionWikiInfo
+END CONDITION
+
+CONDITION: Point_Rayleigh_Damping-Nodes
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is used to assign rayleigh damping parameters to nodes.\n\tIt includes all these nodes and all elements of which all nodes are selected.\n\tIt is assigned to points and is transferred to the corresponding nodes.\n\tRegion IDs must be SEPERATE between Element and Node Damping.\n\tAfter assigning new damping DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Region_ID
+VALUE: 1#WIDTH#(5)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: alphaM
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaK
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKinit
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKcomm
+VALUE: 0.0#WIDTH#(10)
+TKWIDGET: TK_RegionWikiInfo
+END CONDITION
+
+CONDITION: Line_Rayleigh_Damping-Nodes
+CONDTYPE: over lines
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is used to assign rayleigh damping parameters to line nodes.\n\tIt includes all these nodes and all elements of which all nodes are selected.\n\tIt is assigned to lines and is transferred to line nodes.\n\tRegion IDs must be SEPERATE between Element and Node Damping.\n\tAfter assigning new damping DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Region_ID
+VALUE: 1#WIDTH#(5)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: alphaM
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaK
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKinit
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKcomm
+VALUE: 0.0#WIDTH#(10)
+TKWIDGET: TK_RegionWikiInfo
+END CONDITION
+
+CONDITION: Surface_Rayleigh_Damping-Nodes
+CONDTYPE: over surfaces
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is used to assign rayleigh damping parameters to surface nodes.\n\tIt includes all these nodes and all elements of which all nodes are selected.\n\tIt is assigned to surfaces and is transferred to surface nodes.\n\tRegion IDs must be SEPERATE between Element and Node Damping.\n\tAfter assigning new damping DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Region_ID
+VALUE: 1#WIDTH#(5)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: alphaM
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaK
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKinit
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKcomm
+VALUE: 0.0#WIDTH#(10)
+TKWIDGET: TK_RegionWikiInfo
+END CONDITION
+
+CONDITION: Volume_Rayleigh_Damping-Nodes
+CONDTYPE: over volumes
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is used to assign rayleigh damping parameters to volume nodes.\n\tIt includes all these nodes and all elements of which all nodes are selected.\n\tIt is assigned to volumes and is transferred to volume nodes.\n\tRegion IDs must be SEPERATE between Element and Node Damping.\n\tAfter assigning new damping DO NOT FORGET to regenerate the mesh.\n
+QUESTION: Region_ID
+VALUE: 1#WIDTH#(5)
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: alphaM
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaK
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKinit
+VALUE: 0.0#WIDTH#(10)
+QUESTION: betaKcomm
+VALUE: 0.0#WIDTH#(10)
+TKWIDGET: TK_RegionWikiInfo
+END CONDITION
+
 
 BOOK: ZeroLength_Elements
 
@@ -310,42 +581,43 @@ BOOK: ZeroLength_Elements
 CONDITION: ZeroLength
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
-COMMENT: \n\tEach group of ZeroLength elements must have a unique integer ID number.\n\tEach ZeroLength ID must be assigned on at least 2 points/nodes with the same coordinates.\n\tFor more than 2 points/nodes, the element is applied in point/node pairs (first is master).\n\tAfter assigning new ZeroLength elements DO NOT FORGET to regenerate the mesh.\n
+COMMENT: \n\tEach group of ZeroLength elements must have a unique integer ID number.\n\tEach ZeroLength ID must be assigned on at least 2 points/nodes with the same coordinates.\n\tFor more than 2 points/nodes, the element is applied in point/node pairs.\n\tZero Length Element's Nodes must have same dof.\n\tAfter assigning new zero length elements DO NOT FORGET to regenerate the mesh.\n
 QUESTION: ZeroLength_ID_number
-VALUE: 1
+VALUE: 1#WIDTH#(4)
+TKWIDGET: TK_UpdateInfoBar
 QUESTION: Activate_Ux#CB#(0,1)
 VALUE: 1
-DEPENDENCIES: (0,SET,Ux_Material,#CURRENT#) (1,RESTORE,Ux_Material,#CURRENT#)
-QUESTION: Ux_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+DEPENDENCIES: (0,SET,Ux_material,#CURRENT#) (1,RESTORE,Ux_material,#CURRENT#)
+QUESTION: Ux_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 QUESTION: Activate_Uy#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,SET,Uy_Material,#CURRENT#) (1,RESTORE,Uy_Material,#CURRENT#)
-QUESTION: Uy_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+DEPENDENCIES: (0,SET,Uy_material,#CURRENT#) (1,RESTORE,Uy_material,#CURRENT#)
+QUESTION: Uy_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Uz#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,SET,Uz_Material,#CURRENT#) (1,RESTORE,Uz_Material,#CURRENT#)
-QUESTION: Uz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+DEPENDENCIES: (0,SET,Uz_material,#CURRENT#) (1,RESTORE,Uz_material,#CURRENT#)
+QUESTION: Uz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rx#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,SET,Rx_Material,#CURRENT#) (1,RESTORE,Rx_Material,#CURRENT#)
-QUESTION: Rx_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+DEPENDENCIES: (0,SET,Rx_material,#CURRENT#) (1,RESTORE,Rx_material,#CURRENT#)
+QUESTION: Rx_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Ry#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,SET,Ry_Material,#CURRENT#) (1,RESTORE,Ry_Material,#CURRENT#)
-QUESTION: Ry_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+DEPENDENCIES: (0,SET,Ry_material,#CURRENT#) (1,RESTORE,Ry_material,#CURRENT#)
+QUESTION: Ry_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rz#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,SET,Rz_Material,#CURRENT#) (1,RESTORE,Rz_Material,#CURRENT#)
-QUESTION: Rz_Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+DEPENDENCIES: (0,SET,Rz_material,#CURRENT#) (1,RESTORE,Rz_material,#CURRENT#)
+QUESTION: Rz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
 VALUE: Elastic
 STATE: DISABLED
 TKWIDGET: TK_ZeroLengthWikiInfo

@@ -1,9 +1,14 @@
 *# variable to check masses existance
 *set var MassFound=0
-*set Cond Point_Mass *nodes
+*set Cond Point_Mass *nodes *CanRepeat
+*add Cond Line_Mass *nodes *CanRepeat
+*add Cond Surface_Mass *nodes *CanRepeat
 *loop nodes *OnlyInCond
+*set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
+*if(nodeDOF==currentDOF)
 *set var MassFound=1
 *break
+*endif
 *end nodes
 *if(MassFound==1)
 
@@ -12,8 +17,12 @@
 # --------------------------------------------------------------------------------------------------------------
 
 *endif
-*set Cond Point_Mass *nodes
+*set Cond Point_Mass *nodes *CanRepeat
+*add Cond Line_Mass *nodes *CanRepeat
+*add Cond Surface_Mass *nodes *CanRepeat
 *loop nodes *OnlyInCond
+*set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
+*if(nodeDOF==currentDOF)
 *if(Loopvar==1)
 # Mass Definition : mass $NodeTag $(ndf nodal mass values corresponding to each DOF)
 
@@ -21,12 +30,12 @@
 *format "%6d"
 mass *NodesNum *\
 *#-------------------------3D-6DOF------------------------------
-*if(GenData(DOF,int)==6)
+*if(currentDOF==6)
 *format "%8.3f%8.3f%8.3f%8.3f%8.3f%8.3f"
 *Cond(2,real) *Cond(3,real) *Cond(4,real) *Cond(5,real) *Cond(6,real) *Cond(7,real)
-*elseif(GenData(DOF,int)==3) 
+*elseif(currentDOF==3)
 *#--------------------------2D-3DOF----------------------------
-*if(GenData(Dimensions,int)==2)
+*if(ndime==2)
 *format "%8.3f%8.3f%8.3f"
 *Cond(2,real) *Cond(3,real) *Cond(6,real)
 *else
@@ -38,5 +47,6 @@ mass *NodesNum *\
 *else
 *format "%8.3f%8.3f"
 *Cond(2,real) *Cond(3,real)
+*endif
 *endif
 *end nodes

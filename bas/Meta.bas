@@ -1,7 +1,7 @@
-*set var elem1D=operation(cntEBC+cntETB+cntTruss+cntCorotTruss+cntFBC)
+*set var elem1D=operation(cntEBC+cntETB+cntTruss+cntCorotTruss+cntFBC+cntDBC)
 *set var elem2D=operation(cntQuad+cntShell)
 *set var elem3D=cntStdBrick
-*set var frames=operation(cntEBC+cntETB+cntFBC)
+*set var frames=operation(cntEBC+cntETB+cntFBC+cntDBC)
 
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -13,7 +13,6 @@
 # *cntNodes
 
 # Elements 1D
-
 # *elem1D
 
 # Elements 2D
@@ -26,7 +25,7 @@
 # ElasticBeamColumn
 # *cntEBC
 # *\
-*loop elems 
+*loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
 *ElemsNum *\
 *endif
@@ -38,7 +37,7 @@
 # ElasticTimoshenkoBeam
 # *cntETB
 # *\
-*loop elems 
+*loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
 *ElemsNum *\
 *endif
@@ -57,12 +56,24 @@
 *end elems
 
 *endif
+*if(cntDBC!=0)
+
+# DispBeamColumn
+# *cntDBC
+# *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumn")==0)
+*ElemsNum *\
+*endif
+*end elems
+
+*endif
 *if(cntTruss!=0)
 
 # Truss
 # *cntTruss
 # *\
-*loop elems 
+*loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *ElemsNum *\
 *endif
@@ -74,11 +85,11 @@
 # CorotTruss
 # *cntCorotTruss
 # *\
-*loop elems 
+*loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
 *ElemsNum *\
 *endif
-*end elems 
+*end elems
 
 *endif
 *if(cntQuad!=0)
@@ -86,11 +97,11 @@
 # Quad
 # *cntQuad
 # *\
-*loop elems 
+*loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
 *ElemsNum *\
 *endif
-*end elems 
+*end elems
 
 *endif
 *if(cntShell!=0)
@@ -98,11 +109,11 @@
 # ShellMITC4
 # *cntShell
 # *\
-*loop elems 
+*loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
 *ElemsNum *\
 *endif
-*end elems 
+*end elems
 
 *endif
 *if(cntTri31!=0)
@@ -114,7 +125,7 @@
 *if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
 *ElemsNum *\
 *endif
-*end elems 
+*end elems
 
 *endif
 *if(cntStdBrick!=0)
@@ -122,7 +133,7 @@
 # stdBrick
 # *cntStdBrick
 # *\
-*loop elems 
+*loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"stdBrick")==0)
 *ElemsNum *\
 *endif
@@ -154,6 +165,9 @@
 *elseif(strcmp(ElemsMatProp(Element_type:),"forceBeamColumn")==0)
 *ElemsNum                forceBeamColumn*\
 *set var exist=1
+*elseif(strcmp(ElemsMatProp(Element_type:),"dispBeamColumn")==0)
+*ElemsNum                 dispBeamColumn*\
+*set var exist=1
 *endif
 *#
 *# process element
@@ -172,15 +186,15 @@
 *set var Vx2=operation((y2-y1)/L)
 *set var Vx3=operation((z2-z1)/L)
 *# 2D Problem
-*if(GenData(Dimensions,int)==2)
+*if(ndime==2)
 *# Vecxz = +Z
 *set var Vecxz1=0.0
 *set var Vecxz2=0.0
 *set var Vecxz3=1.0
 *# 3D Problem
-*elseif(GenData(Dimensions,int)==3)
+*elseif(ndime==3)
 *# vertical axis Y
-*if(strcmp(GenData(Vertical_Axis),"Y")==0)
+*if(strcmp(GenData(Vertical_axis),"Y")==0)
 *if(x1!=x2 || z1!=z2)
 *# vertical axis Y - oblique element
 *set var Vecxz1=0.0
@@ -194,7 +208,7 @@
 *endif
 *endif
 *# vertical axis Z
-*if(strcmp(GenData(Vertical_Axis),"Z")==0)
+*if(strcmp(GenData(Vertical_axis),"Z")==0)
 *if(x1!=x2 || y1!=y2)
 *# vertical axis Z - oblique element
 *set var Vecxz1=0.0
@@ -223,9 +237,9 @@
 *set var Vz3=operation(Vx1*Vy2-Vx2*Vy1)
 *# convert to unit vector
 *set var L=operation(sqrt(Vz1*Vz1+Vz2*Vz2+Vz3*Vz3))
-*set var Væ1=operation(Vz1/L)
-*set var Væ2=operation(Vz2/L)
-*set var Væ3=operation(Vz3/L)
+*set var Vz1=operation(Vz1/L)
+*set var Vz2=operation(Vz2/L)
+*set var Vz3=operation(Vz3/L)
 *# write axis in vector form
 *format "     {%+5.3f %+5.3f %+5.3f}     {%+5.3f %+5.3f %+5.3f}     {%+5.3f %+5.3f %+5.3f}"
 *Vx1*Vx2*Vx3*Vy1*Vy2*Vy3*Vz1*Vz2*Vz3     {*\

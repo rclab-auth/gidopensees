@@ -31,23 +31,22 @@ PROBLEM DATA
 
 TITLE: Project_Info
 QUESTION: _#CB#(_)
-VALUE: 
+VALUE:
 TKWIDGET: TK_DescriptionField
 TITLE: Modeling_Options
 QUESTION: __#CB#(_)
-VALUE: 
-QUESTION: Dimensions#CB#(2,3)
-VALUE: 3
-DEPENDENCIES: (2,SET,Vertical_Axis,Y)
-TKWIDGET: TK_CheckModelingOptions
-QUESTION: DOF#CB#(2,3,6)
-VALUE: 6
-QUESTION: Vertical_Axis#CB#(Z,Y)
+VALUE:
+QUESTION: Model_dimensions#CB#(2)
+VALUE: 2
+STATE: DISABLED
+DEPENDENCIES: (2,SET,Vertical_axis,Y)
+TKWIDGET: TK_EditModelDim
+QUESTION: Vertical_axis#CB#(Z,Y)
 VALUE: Z
-HELP: In a 3D model, vertical axis defines how the vector Vxz with be\nFor an non vertical element,Vxz is in same direction with Vertical Axis\nFor vertical elements,Vxz is in opposite direction with Global X axis\nSo, for an horizontal element local z is Global Vertical axis\nFor a vertical element, local z axis is opposite to the Global X axis\nIn 2D model, vertical axis is Y axis by default 
+HELP: In a 3D model, vertical axis defines how the vector Vxz with be\nFor an non vertical element,Vxz is in same direction with Vertical Axis\nFor vertical elements,Vxz is in opposite direction with Global X axis\nSo, for an horizontal element local z is Global Vertical axis\nFor a vertical element, local z axis is opposite to the Global X axis\nIn 2D model, vertical axis is Y axis by default
 TITLE: Eigenvalue_Analysis
 QUESTION: ___#CB#(_)
-VALUE: 
+VALUE:
 QUESTION: Activate_eigenvalue_analysis#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,HIDE,Number_of_eigenvalues,#CURRENT#,HIDE,Solver,#CURRENT#) (1,RESTORE,Number_of_eigenvalues,#CURRENT#,RESTORE,Solver,#CURRENT#)
@@ -55,12 +54,14 @@ QUESTION: Number_of_eigenvalues
 VALUE: 3
 QUESTION: Solver#CB#(genBandArpack,fullGenLapack,symmBandLapack)
 VALUE: fullGenLapack
-TITLE: Rayleigh_damping
+TITLE: Rayleigh_Damping
 QUESTION: ____#CB#(_)
-VALUE: 
-QUESTION: Activate_Reyleigh_damping#CB#(0,1)
+VALUE:
+TKWIDGET: TK_RayleighLabel
+QUESTION: Activate_global_Rayleigh_damping#CB#(0,1)
 VALUE: 0
-DEPENDENCIES: (0,HIDE,alphaM,#CURRENT#,HIDE,betaK,#CURRENT#,HIDE,betaKinit,#CURRENT#,HIDE,betaKcomm,#CURRENT#) (1,RESTORE,alphaM,#CURRENT#,RESTORE,betaK,#CURRENT#,RESTORE,betaKinit,#CURRENT#,RESTORE,betaKcomm,#CURRENT#) 
+DEPENDENCIES: (0,HIDE,alphaM,#CURRENT#,HIDE,betaK,#CURRENT#,HIDE,betaKinit,#CURRENT#,HIDE,betaKcomm,#CURRENT#)
+DEPENDENCIES: (1,RESTORE,alphaM,#CURRENT#,RESTORE,betaK,#CURRENT#,RESTORE,betaKinit,#CURRENT#,RESTORE,betaKcomm,#CURRENT#)
 QUESTION: alphaM
 VALUE: 0.0
 QUESTION: betaK
@@ -69,28 +70,27 @@ QUESTION: betaKinit
 VALUE: 0.0
 QUESTION: betaKcomm
 VALUE: 0.0
-
 END PROBLEM DATA
- 
+
 
 INTERVAL DATA
 
 TITLE: Analysis_Options
-QUESTION: System_of_Equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM,Mumps_(Parallel))
+QUESTION: System_of_equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM,Mumps_(Parallel))
 VALUE: BandGeneral
 TKWIDGET: TK_EditInterval
-QUESTION: DOF_Numberer#CB#(Plain,RCM,AMD,ParallelPlain)
+QUESTION: DOF_numberer#CB#(Plain,RCM,AMD,ParallelPlain)
 VALUE: RCM
-QUESTION: Constraint_Handler#CB#(Plain,Lagrange,Penalty,Transformation)
+QUESTION: Constraint_handler#CB#(Plain,Lagrange,Penalty,Transformation)
 VALUE: Transformation
-QUESTION: Solution_Algorithm#CB#(Linear,Full_Newton-Raphson,Modified_Newton-Raphson,Newton-Raphson_with_line_search,Broyden,BFGS)
+QUESTION: Solution_algorithm#CB#(Linear,Full_Newton-Raphson,Modified_Newton-Raphson,Newton-Raphson_with_line_search,Broyden,BFGS)
 VALUE: Linear
-DEPENDENCIES: (Linear,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Convergence_Criteria_Type,#CURRENT#,HIDE,Tolerance,#CURRENT#,HIDE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_until_a_new_tangent_is_formed,#CURRENT#) 
-DEPENDENCIES: (Full_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_Criteria_Type,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_until_a_new_tangent_is_formed,#CURRENT#)
-DEPENDENCIES: (Modified_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_Criteria_Type,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_until_a_new_tangent_is_formed,#CURRENT#)
-DEPENDENCIES: (Newton-Raphson_with_line_search,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_Criteria_Type,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,RESTORE,Line_search_type,#CURRENT#,RESTORE,Search_tolerance,#CURRENT#,RESTORE,Max_iterations_for_search,#CURRENT#,RESTORE,Min_eta_value,#CURRENT#,RESTORE,Max_eta_value,#CURRENT#,HIDE,Iterations_until_a_new_tangent_is_formed,#CURRENT#)
-DEPENDENCIES: (Broyden,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_Criteria_Type,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,RESTORE,Iterations_until_a_new_tangent_is_formed,#CURRENT#)
-DEPENDENCIES: (BFGS,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_until_a_new_tangent_is_formed,#CURRENT#)
+DEPENDENCIES: (Linear,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Convergence_criterion,#CURRENT#,HIDE,Tolerance,#CURRENT#,HIDE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
+DEPENDENCIES: (Full_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
+DEPENDENCIES: (Modified_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
+DEPENDENCIES: (Newton-Raphson_with_line_search,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,RESTORE,Line_search_type,#CURRENT#,RESTORE,Search_tolerance,#CURRENT#,RESTORE,Max_iterations_for_search,#CURRENT#,RESTORE,Min_eta_value,#CURRENT#,RESTORE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
+DEPENDENCIES: (Broyden,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,RESTORE,Iterations_for_new_tangent,#CURRENT#)
+DEPENDENCIES: (BFGS,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
 QUESTION: Use_initial_stiffness_iterations#CB#(1,0)
 VALUE: 0
 QUESTION: Line_search_type#CB#(Interpolated,RegulaFalsi,Bisection,Secant)
@@ -103,41 +103,61 @@ QUESTION: Min_eta_value
 VALUE: 0.1
 QUESTION: Max_eta_value
 VALUE: 10.0
-QUESTION: Iterations_until_a_new_tangent_is_formed
+QUESTION: Iterations_for_new_tangent
 VALUE: 10
-QUESTION: Analysis_Type#CB#(Static,Transient,VariableTransient)
+QUESTION: Analysis_type#CB#(Static,Transient)
 VALUE: Static
-QUESTION: Integrator_Type#CB#(Load_Control,Displacement_Control,Newmark,Hilber-Hughes-Taylor)
-VALUE: Load_Control
-DEPENDENCIES: (Load_Control,RESTORE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
-DEPENDENCIES: (Displacement_Control,RESTORE,Analysis_Steps,#CURRENT#,RESTORE,Total_Displacement,#CURRENT#,RESTORE,Control_Node,#CURRENT#,RESTORE,Control_Node_Direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
-DEPENDENCIES: (Newmark,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#,HIDE,alpha,#CURRENT#)
-DEPENDENCIES: (Hilber-Hughes-Taylor,RESTORE,alpha,#CURRENT#,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_Steps,#CURRENT#,HIDE,Total_Displacement,#CURRENT#,HIDE,Control_Node,#CURRENT#,HIDE,Control_Node_Direction,#CURRENT#)
-QUESTION: Control_Node
-VALUE: 
+DEPENDENCIES: (Static,RESTORE,Analysis_steps,#CURRENT#,HIDE,Analysis_duration,#CURRENT#,HIDE,Analysis_time_step,#CURRENT#,RESTORE,Loading_path,#CURRENT#)
+DEPENDENCIES: (Transient,HIDE,Analysis_steps,#CURRENT#,RESTORE,Analysis_duration,#CURRENT#,RESTORE,Analysis_time_step,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Displacement_peaks-cycles,#CURRENT#)
+QUESTION: Integrator_type#CB#(Load_control,Displacement_control,Newmark,Hilber-Hughes-Taylor)
+VALUE: Load_control
+DEPENDENCIES: (Load_control,RESTORE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
+DEPENDENCIES: (Displacement_control,RESTORE,Analysis_steps,#CURRENT#,RESTORE,Total_displacement,#CURRENT#,RESTORE,Control_node,#CURRENT#,RESTORE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
+DEPENDENCIES: (Newmark,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#)
+DEPENDENCIES: (Hilber-Hughes-Taylor,RESTORE,alpha,#CURRENT#,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#)
+QUESTION: Control_node
+VALUE:
 HELP: Control node, select on meshed model
 TKWIDGET: GidUtils::TkwidgetPickNode
-QUESTION: Control_Node_Direction#CB#(UX,UY,UZ,RX,RY,RZ)
+QUESTION: Control_node_direction#CB#(UX,UY,UZ,RX,RY,RZ)
 VALUE: UX
-HELP: Control node degree of freedom, select 1 to ndf
-QUESTION: Analysis_Steps
+HELP: Control node degree of freedom
+QUESTION: Analysis_steps
 VALUE: 1
-QUESTION: Total_Displacement#UNITS#
+QUESTION: Total_displacement#UNITS#
 VALUE: 0.1 m
-QUESTION: alpha
-VALUE: 1.0
-QUESTION: gamma
-VALUE: 0.5
-QUESTION: beta
+QUESTION: Alpha
+VALUE: -0.333
+QUESTION: Beta
 VALUE: 0.25
-QUESTION: Loading_Type#CB#(Constant,Linear)
+QUESTION: Gamma
+VALUE: 0.5
+QUESTION: Analysis_duration#UNITS#
+VALUE: 10sec
+QUESTION: Analysis_time_step#UNITS#
+VALUE: 0.05sec
+QUESTION: Loading_type#CB#(Constant,Linear,Uniform_excitation,Multiple_support_excitation)
 VALUE: Linear
-QUESTION: Loading_Path#CB#(Monotonic,Cyclic)
+DEPENDENCIES: (Constant,SET,Loading_path,Monotonic,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURRENT#)
+DEPENDENCIES: (Linear,RESTORE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURRENT#)
+DEPENDENCIES: (Uniform_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,RESTORE,Excitation_type,#CURRENT#,RESTORE,Ground_motion_direction,#CURRENT#)
+DEPENDENCIES: (Multiple_support_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,HIDE,Ground_motion_direction,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Record_file,#CURRENT#)
+QUESTION: Excitation_type#CB#(Record,Sine)
+VALUE: Record
+DEPENDENCIES: (Record,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Record_file,#CURRENT#)
+DEPENDENCIES: (Sine,TITLESTATE,Sine_Excitation_Parameters,normal,HIDE,Record_file,#CURRENT#)
+TKWIDGET: TK_Excitation_type
+QUESTION: Record_file#MAT#(Records)
+VALUE: Ground_motion_record
+QUESTION: Ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
+VALUE: Ux
+QUESTION: Loading_path#CB#(Monotonic,Cyclic)
 VALUE: Monotonic
-DEPENDENCIES: (Cyclic,RESTORE,Number_of_Cycles,#CURRENT#) (Monotonic,HIDE,Number_of_Cycles,#CURRENT#)
-QUESTION: Number_of_Cycles
-VALUE: 1
-QUESTION: Convergence_Criteria_Type#CB#(Norm_Unbalance,Norm_Displacement_Increment,Energy_Increment,Relative_Norm_Unbalance,Relative_Norm_Displacement_Increment,Total_Relative_Norm_Displacement_Increment,Relative_Energy_Increment,Fixed_Number_of_Iterations)
+DEPENDENCIES: (Cyclic,RESTORE,Displacement_peaks-cycles,#CURRENT#,RESTORE,Displacement_peaks,#CURRENT#)
+DEPENDENCIES: (Monotonic,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Displacement_peaks,#CURRENT#)
+QUESTION: Displacement_peaks-cycles(Displacement_ratio,Number_of_cycles)
+VALUE: #N# 2 1 5
+QUESTION: Convergence_criterion#CB#(Norm_Unbalance,Norm_Displacement_Increment,Energy_Increment,Relative_Norm_Unbalance,Relative_Norm_Displacement_Increment,Total_Relative_Norm_Displacement_Increment,Relative_Energy_Increment,Fixed_Number_of_Iterations)
 VALUE: Relative_Energy_Increment
 DEPENDENCIES: (Norm_Unbalance,RESTORE,Tolerance,#CURRENT#)
 DEPENDENCIES: (Norm_Displacement_Increment,RESTORE,Tolerance,#CURRENT#)
@@ -150,11 +170,26 @@ DEPENDENCIES: (Fixed_Number_of_Iterations,HIDE,Tolerance,#CURRENT#)
 QUESTION: Tolerance
 VALUE: 1.0e-3
 HELP: 	Tolerance criteria for checking convergence
-QUESTION: Max_Iterations_per_Step
+QUESTION: Max_iterations_per_step
 VALUE: 50
 HELP: Maximum number of iterations per step
 QUESTION: Keep_this_loading_active_until_the_end_of_analysis#CB#(1,0)
 VALUE: 0
 HELP: Maintains the load constant for the remainder of the the analysis and resets the current time to zero
+QUESTION: Logging_level#CB#(Low,Medium,High)
+VALUE: Low
+HELP: Low : print nothing\nMedium : print information on norms and number of iterations at end of successful test\nHigh : print information on norms each time test is invoked
 TKWIDGET: TK_AnalWikiInfo
+TITLE: Sine_Excitation_Parameters
+QUESTION: Duration#UNITS#
+VALUE: 10sec
+QUESTION: Acceleration_Amplitude#UNITS#
+VALUE: 1.0 m/s^2
+QUESTION: Period#UNITS#
+VALUE: 1.0 sec
+QUESTION: Initial_velocity#UNITS#
+VALUE: 0.0m/sec
+QUESTION: Shift
+VALUE: 0.0#WIDTH#(10)
+HELP: Shift in radians
 END INTERVAL DATA

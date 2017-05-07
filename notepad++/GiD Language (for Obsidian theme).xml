@@ -1,5 +1,5 @@
 <NotepadPlus>
-    <UserLang name="GiD" ext="" udlVersion="2.1">
+    <UserLang name="GiD" ext="bas mat cnd prb sim" udlVersion="2.1">
         <Settings>
             <Global caseIgnored="no" allowFoldOfComments="no" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
             <Prefix Keywords1="yes" Keywords2="no" Keywords3="no" Keywords4="no" Keywords5="yes" Keywords6="no" Keywords7="no" Keywords8="yes" />
