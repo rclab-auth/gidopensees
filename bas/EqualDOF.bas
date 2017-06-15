@@ -86,12 +86,14 @@
 *set var Rotz=6
 *endif
 *endif
-*break
+*#break
 *endif
 *end nodes
 *loop nodes *OnlyInCond
+*if(Cond(1,int)==BCID)
 *# counting slave nodes for each Body Constraint ID group
 *set var BCNode=operation(BCNode+1)
+*endif
 *end nodes
 *# This procedure puts the constrained DOF in a list called BodyConstraintConditions(it depends on the checkboxes on the Body constraint window options)
 *set var dummy=tcl(exportBCConditions *Translx *Transly *Translz *Rotx *Roty *Rotz)
