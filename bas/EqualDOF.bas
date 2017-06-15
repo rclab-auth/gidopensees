@@ -65,7 +65,6 @@
 *if(Cond(7,int)==1)
 *set var Rotz=3
 *endif
-*set var BCNode=operation(BCNode+1)
 *# 3D
 *else
 *if(Cond(2,int)==1)
@@ -89,6 +88,10 @@
 *endif
 *break
 *endif
+*end nodes
+*loop nodes *OnlyInCond
+*# counting slave nodes for each Body Constraint ID group
+*set var BCNode=operation(BCNode+1)
 *end nodes
 *# This procedure puts the constrained DOF in a list called BodyConstraintConditions(it depends on the checkboxes on the Body constraint window options)
 *set var dummy=tcl(exportBCConditions *Translx *Transly *Translz *Rotx *Roty *Rotz)
