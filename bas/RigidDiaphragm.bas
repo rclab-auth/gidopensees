@@ -58,13 +58,13 @@
 *endif
 *end nodes
 *if(perpendicularAxis==1)
-*format "%6d       "
+*format "%6d    "
 fix            *RDMasterNodeTag 1 0 0 0 1 1
 *elseif(perpendicularAxis==2)
-*format "%6d       "
+*format "%6d    "
 fix            *RDMasterNodeTag 0 1 0 1 0 1
 *else
-*format "%6d       "
+*format "%6d    "
 fix            *RDMasterNodeTag 0 0 1 1 1 0
 *endif
 *format "%6d%6d"

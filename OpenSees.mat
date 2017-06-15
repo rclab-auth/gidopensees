@@ -178,6 +178,101 @@ VALUE: 1#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
+MATERIAL: Hysteretic
+COMMENT: \n
+QUESTION: Material:#CB#(_)
+VALUE: Hysteretic
+IMAGE: img/Materials/Hysteretic.png
+QUESTION: Formulation#CB#(Stress-Strain,Force-Deformation,Moment-Rotation)
+VALUE: Stress-Strain
+DEPENDENCIES: (Stress-Strain,RESTORE,Stress_s1p,#CURRENT#,RESTORE,Stress_s2p,#CURRENT#,RESTORE,Stress_s3p,#CURRENT#,RESTORE,Stress_s1n,#CURRENT#,RESTORE,Stress_s2n,#CURRENT#,RESTORE,Stress_s3n,#CURRENT#,RESTORE,Strain_e1p,#CURRENT#,RESTORE,Strain_e2p,#CURRENT#,RESTORE,Strain_e3p,#CURRENT#,RESTORE,Strain_e1n,#CURRENT#,RESTORE,Strain_e2n,#CURRENT#,RESTORE,Strain_e3n,#CURRENT#,HIDE,Force_s1p,#CURRENT#,HIDE,Force_s2p,#CURRENT#,HIDE,Force_s3p,#CURRENT#,HIDE,Force_s1n,#CURRENT#,HIDE,Force_s2n,#CURRENT#,HIDE,Force_s3n,#CURRENT#,HIDE,Displacement_e1p,#CURRENT#,HIDE,Displacement_e2p,#CURRENT#,HIDE,Displacement_e3p,#CURRENT#,HIDE,Displacement_e1n,#CURRENT#,HIDE,Displacement_e2n,#CURRENT#,HIDE,Displacement_e3n,#CURRENT#,HIDE,Moment_s1p,#CURRENT#,HIDE,Moment_s2p,#CURRENT#,HIDE,Moment_s3p,#CURRENT#,HIDE,Moment_s1n,#CURRENT#,HIDE,Moment_s2n,#CURRENT#,HIDE,Moment_s3n,#CURRENT#,HIDE,Rotation_e1p,#CURRENT#,HIDE,Rotation_e2p,#CURRENT#,HIDE,Rotation_e3p,#CURRENT#,HIDE,Rotation_e1n,#CURRENT#,HIDE,Rotation_e2n,#CURRENT#,HIDE,Rotation_e3n,#CURRENT#)
+DEPENDENCIES: (Force-Deformation,RESTORE,Force_s1p,#CURRENT#,RESTORE,Force_s2p,#CURRENT#,RESTORE,Force_s3p,#CURRENT#,RESTORE,Force_s1n,#CURRENT#,RESTORE,Force_s2n,#CURRENT#,RESTORE,Force_s3n,#CURRENT#,RESTORE,Displacement_e1p,#CURRENT#,RESTORE,Displacement_e2p,#CURRENT#,RESTORE,Displacement_e3p,#CURRENT#,RESTORE,Displacement_e1n,#CURRENT#,RESTORE,Displacement_e2n,#CURRENT#,RESTORE,Displacement_e3n,#CURRENT#,HIDE,Stress_s1p,#CURRENT#,HIDE,Stress_s2p,#CURRENT#,HIDE,Stress_s3p,#CURRENT#,HIDE,Stress_s1n,#CURRENT#,HIDE,Stress_s2n,#CURRENT#,HIDE,Stress_s3n,#CURRENT#,HIDE,Strain_e1p,#CURRENT#,HIDE,Strain_e2p,#CURRENT#,HIDE,Strain_e3p,#CURRENT#,HIDE,Strain_e1n,#CURRENT#,HIDE,Strain_e2n,#CURRENT#,HIDE,Strain_e3n,#CURRENT#,HIDE,Moment_s1p,#CURRENT#,HIDE,Moment_s2p,#CURRENT#,HIDE,Moment_s3p,#CURRENT#,HIDE,Moment_s1n,#CURRENT#,HIDE,Moment_s2n,#CURRENT#,HIDE,Moment_s3n,#CURRENT#,HIDE,Rotation_e1p,#CURRENT#,HIDE,Rotation_e2p,#CURRENT#,HIDE,Rotation_e3p,#CURRENT#,HIDE,Rotation_e1n,#CURRENT#,HIDE,Rotation_e2n,#CURRENT#,HIDE,Rotation_e3n,#CURRENT#)
+DEPENDENCIES: (Moment-Rotation,RESTORE,Moment_s1p,#CURRENT#,RESTORE,Moment_s2p,#CURRENT#,RESTORE,Moment_s3p,#CURRENT#,RESTORE,Moment_s1n,#CURRENT#,RESTORE,Moment_s2n,#CURRENT#,RESTORE,Moment_s3n,#CURRENT#,RESTORE,Rotation_e1p,#CURRENT#,RESTORE,Rotation_e2p,#CURRENT#,RESTORE,Rotation_e3p,#CURRENT#,RESTORE,Rotation_e1n,#CURRENT#,RESTORE,Rotation_e2n,#CURRENT#,RESTORE,Rotation_e3n,#CURRENT#,HIDE,Stress_s1p,#CURRENT#,HIDE,Stress_s2p,#CURRENT#,HIDE,Stress_s3p,#CURRENT#,HIDE,Stress_s1n,#CURRENT#,HIDE,Stress_s2n,#CURRENT#,HIDE,Stress_s3n,#CURRENT#,HIDE,Strain_e1p,#CURRENT#,HIDE,Strain_e2p,#CURRENT#,HIDE,Strain_e3p,#CURRENT#,HIDE,Strain_e1n,#CURRENT#,HIDE,Strain_e2n,#CURRENT#,HIDE,Strain_e3n,#CURRENT#,HIDE,Force_s1p,#CURRENT#,HIDE,Force_s2p,#CURRENT#,HIDE,Force_s3p,#CURRENT#,HIDE,Force_s1n,#CURRENT#,HIDE,Force_s2n,#CURRENT#,HIDE,Force_s3n,#CURRENT#,HIDE,Displacement_e1p,#CURRENT#,HIDE,Displacement_e2p,#CURRENT#,HIDE,Displacement_e3p,#CURRENT#,HIDE,Displacement_e1n,#CURRENT#,HIDE,Displacement_e2n,#CURRENT#,HIDE,Displacement_e3n,#CURRENT#)
+QUESTION: Stress_s1p#UNITS#
+VALUE: 0.0MPa
+QUESTION: Strain_e1p
+VALUE: 0.0
+QUESTION: Force_s1p#UNITS#
+VALUE: 0.0kN
+QUESTION: Displacement_e1p#UNITS#
+VALUE: 0.0m
+QUESTION: Moment_s1p#UNITS#
+VALUE: 0.0kNm
+QUESTION: Rotation_e1p
+VALUE: 0.0
+QUESTION: Stress_s2p#UNITS#
+VALUE: 0.0MPa
+QUESTION: Strain_e2p
+VALUE: 0.0
+QUESTION: Force_s2p#UNITS#
+VALUE: 0.0kN
+QUESTION: Displacement_e2p#UNITS#
+VALUE: 0.0m
+QUESTION: Moment_s2p#UNITS#
+VALUE: 0.0kNm
+QUESTION: Rotation_e2p
+VALUE: 0.0
+QUESTION: Stress_s3p#UNITS#
+VALUE: 0.0MPa
+QUESTION: Strain_e3p
+VALUE: 0.0
+QUESTION: Force_s3p#UNITS#
+VALUE: 0.0kN
+QUESTION: Displacement_e3p#UNITS#
+VALUE: 0.0m
+QUESTION: Moment_s3p#UNITS#
+VALUE: 0.0kNm
+QUESTION: Rotation_e3p
+VALUE: 0.0
+QUESTION: Stress_s1n#UNITS#
+VALUE: 0.0MPa
+QUESTION: Strain_e1n
+VALUE: 0.0
+QUESTION: Force_s1n#UNITS#
+VALUE: 0.0kN
+QUESTION: Displacement_e1n#UNITS#
+VALUE: 0.0m
+QUESTION: Moment_s1n#UNITS#
+VALUE: 0.0kNm
+QUESTION: Rotation_e1n
+VALUE: 0.0
+QUESTION: Stress_s2n#UNITS#
+VALUE: 0.0MPa
+QUESTION: Strain_e2n
+VALUE: 0.0
+QUESTION: Force_s2n#UNITS#
+VALUE: 0.0kN
+QUESTION: Displacement_e2n#UNITS#
+VALUE: 0.0m
+QUESTION: Moment_s2n#UNITS#
+VALUE: 0.0kNm
+QUESTION: Rotation_e2n
+VALUE: 0.0
+QUESTION: Stress_s3n#UNITS#
+VALUE: 0.0MPa
+QUESTION: Strain_e3n
+VALUE: 0.0
+QUESTION: Force_s3n#UNITS#
+VALUE: 0.0kN
+QUESTION: Displacement_e3n#UNITS#
+VALUE: 0.0m
+QUESTION: Moment_s3n#UNITS#
+VALUE: 0.0kNm
+QUESTION: Rotation_e3n
+VALUE: 0.0
+QUESTION: Pitching_factor_for_strain-deformation
+VALUE: 1
+QUESTION: Pitching_factor_for_stress-force
+VALUE: 1
+QUESTION: Damage_due_to_ductility
+VALUE: 0.0
+QUESTION: Damage_due_to_energy
+VALUE: 0.2
+QUESTION: Beta_power
+VALUE: 0.0
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
 
 BOOK: Uniaxial_Steel_Materials
 
@@ -414,7 +509,7 @@ TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
 
-BOOK: Series/Parallel_Uniaxial_Materials
+BOOK: Combined_Materials
 
 
 MATERIAL: Series
@@ -485,6 +580,63 @@ DEPENDENCIES: (0,SET,Material_5,#CURRENT#) (1,RESTORE,Material_5,#CURRENT#)
 QUESTION: Material_5#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
 VALUE: Elastic
 TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
+MATERIAL: Section_Aggregator
+COMMENT:\n
+TITLE: General
+QUESTION: Section:#CB#(SectionAggregator)
+VALUE: SectionAggregator
+QUESTION: Compatible_materials:#CB#(_)
+VALUE: Elastic/ElasticPP/ElasticPPwithGap/Series/Parallel
+QUESTION: Compatible_sections:#CB#(_)
+VALUE: Fiber
+TKWIDGET: TK_SectionWikiInfo
+TITLE: Section_properties
+QUESTION: Select_section#CB#(1,0)
+VALUE: 1
+IMAGE: Img/Materials/SectionAggregator.png
+DEPENDENCIES: (1,RESTORE,Section,#CURRENT#) (0,HIDE,Section,#CURRENT#)
+QUESTION: Section_to_be_aggregated#MAT#(Section_Force-Deformation)
+VALUE: Fiber
+QUESTION: Section_force-deformation#CB#(_)
+VALUE: response for a particular section DOF
+QUESTION: Activate_P#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Axial_force-deformation,#CURRENT#) (0,SET,Axial_force-deformation,#CURRENT#)
+QUESTION: Axial_force-deformation#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Elastic
+STATE: DISABLED
+QUESTION: Activate_Mz#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Moment-curvature_about_local_z-z,#CURRENT#) (0,SET,Moment-curvature_about_local_z-z,#CURRENT#)
+QUESTION: Moment-curvature_about_local_z-z#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Elastic
+STATE: DISABLED
+QUESTION: Activate_Vy#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Shear_force-deformation_along_local_y-y,#CURRENT#) (0,SET,Shear_force-deformation_along_local_y-y,#CURRENT#)
+QUESTION: Shear_force-deformation_along_local_y-y#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Elastic
+STATE: DISABLED
+QUESTION: Activate_My#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Moment-curvature_about_local_y-y,#CURRENT#) (0,SET,Moment-curvature_about_local_y-y,#CURRENT#)
+QUESTION: Moment-curvature_about_local_y-y#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Elastic
+STATE: DISABLED
+QUESTION: Activate_Vz#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Shear_force-deformation_along_local_z-z,#CURRENT#) (0,SET,Shear_force-deformation_along_local_z-z,#CURRENT#)
+QUESTION: Shear_force-deformation_along_local_z-z#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Elastic
+STATE: DISABLED
+QUESTION: Activate_T#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Torsion_force-deformation,#CURRENT#) (0,SET,Torsion_force-deformation,#CURRENT#)
+QUESTION: Torsion_force-deformation#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Elastic
+STATE: DISABLED
 END MATERIAL
 
 
@@ -619,6 +771,12 @@ VALUE: 0.0#WIDTH#(10)
 QUESTION: Yield_surfaces
 VALUE: 20#WIDTH#(10)
 HELP: Yield surfaces must be less than 40
+QUESTION: Activate_plastic_response#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Activate_plastic_response_at_interval,#CURRENT#) (1,RESTORE,Activate_plastic_response_at_interval,#CURRENT#)
+QUESTION: Activate_plastic_response_at_interval
+VALUE: 2#WIDTH#(4)
+TKWIDGET: TK_CheckIntegerIntvNum
 QUESTION: Automatic_surface_generation#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,RESTORE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#) (1,HIDE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#)
@@ -683,6 +841,12 @@ VALUE: 0.3kPa
 QUESTION: Yield_surfaces
 VALUE: 20#WIDTH#(10)
 HELP: Yield surfaces must be less than 40
+QUESTION: Activate_plastic_response#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Activate_plastic_response_at_interval,#CURRENT#) (1,RESTORE,Activate_plastic_response_at_interval,#CURRENT#)
+QUESTION: Activate_plastic_response_at_interval
+VALUE: 2#WIDTH#(4)
+TKWIDGET: TK_CheckIntegerIntvNum
 QUESTION: Automatic_surface_generation#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,RESTORE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#) (1,HIDE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#)
@@ -701,7 +865,7 @@ COMMENT: \n
 TITLE: General
 QUESTION: Section:#CB#(Fiber)
 VALUE: Fiber
-TKWIDGET: TK_CheckMaterialsForFiber
+TKWIDGET: TK_CheckFieldValuesForFiber
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: Concrete01/Concrete02/Concrete04/Concrete06/Steel01/Reinforcing steel
 TKWIDGET: TK_SectionWikiInfo
@@ -710,19 +874,26 @@ QUESTION: _#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info
 STATE: DISABLED
 HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Problem data options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule
-QUESTION: Cross_section#CB#(Rectangular_Column,Rectangular_Beam,Circular_Column)
+QUESTION: Cross_section#CB#(Rectangular_Column,Rectangular_Beam,Tee_Beam,Circular_Column)
 VALUE: Rectangular_Column
-DEPENDENCIES: (Rectangular_Column,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,HIDE,Bar_area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_bar_size,#CURRENT#,RESTORE,Middle_bar_size,#CURRENT#,RESTORE,Corner_bar_area,#CURRENT#,RESTORE,Middle_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#)
-DEPENDENCIES: (Circular_Column,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,RESTORE,Bar_area,#CURRENT#,HIDE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,RESTORE,Bars_along_arc,#CURRENT#,RESTORE,Bar_size,#CURRENT#,RESTORE,Fibers_in_the_circumferential_direction,#CURRENT#,RESTORE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_bar_area,#CURRENT#,HIDE,Fibers_in_local_z_direction,#CURRENT#,HIDE,Fibers_in_local_y_direction,#CURRENT#)
-DEPENDENCIES: (Rectangular_Beam,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_bar_area,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,RESTORE,Top_bars,#CURRENT#,RESTORE,Bottom_bars,#CURRENT#,RESTORE,Top_bar_size,#CURRENT#,RESTORE,Bottom_bar_size,#CURRENT#,RESTORE,Top_bar_area,#CURRENT#,RESTORE,Bottom_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bar_area,#CURRENT#)
+DEPENDENCIES: (Rectangular_Column,HIDE,Width_bf,#CURRENT#,HIDE,Bottom_beam_bar_area,#CURRENT#,HIDE,Bottom_beam_bar_size,#CURRENT#,HIDE,Bottom_beam_bars,#CURRENT#,HIDE,Slab_bar_area,#CURRENT#,HIDE,Top_beam_bar_area,#CURRENT#,HIDE,Web_width_bw,#CURRENT#,HIDE,Slab_thickness_hf,#CURRENT#,HIDE,Top_beam_bars,#CURRENT#,HIDE,Slab_bars,#CURRENT#,HIDE,Slab_bar_size,#CURRENT#,HIDE,Top_beam_bar_size,#CURRENT#,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,HIDE,Bar_area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_bar_size,#CURRENT#,RESTORE,Middle_bar_size,#CURRENT#,RESTORE,Corner_bar_area,#CURRENT#,RESTORE,Middle_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#)
+DEPENDENCIES: (Circular_Column,HIDE,Width_bf,#CURRENT#,HIDE,Bottom_beam_bar_area,#CURRENT#,HIDE,Bottom_beam_bar_size,#CURRENT#,HIDE,Bottom_beam_bars,#CURRENT#,HIDE,Slab_bar_area,#CURRENT#,HIDE,Top_beam_bar_area,#CURRENT#,HIDE,Web_width_bw,#CURRENT#,HIDE,Slab_thickness_hf,#CURRENT#,HIDE,Top_beam_bars,#CURRENT#,HIDE,Slab_bars,#CURRENT#,HIDE,Slab_bar_size,#CURRENT#,HIDE,Top_beam_bar_size,#CURRENT#,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,RESTORE,Bar_area,#CURRENT#,HIDE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,RESTORE,Bars_along_arc,#CURRENT#,RESTORE,Bar_size,#CURRENT#,RESTORE,Fibers_in_the_circumferential_direction,#CURRENT#,RESTORE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_bar_area,#CURRENT#,HIDE,Fibers_in_local_z_direction,#CURRENT#,HIDE,Fibers_in_local_y_direction,#CURRENT#)
+DEPENDENCIES: (Rectangular_Beam,HIDE,Width_bf,#CURRENT#,HIDE,Bottom_beam_bar_area,#CURRENT#,HIDE,Bottom_beam_bar_size,#CURRENT#,HIDE,Bottom_beam_bars,#CURRENT#,HIDE,Slab_bar_area,#CURRENT#,HIDE,Top_beam_bar_area,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Web_width_bw,#CURRENT#,HIDE,Slab_thickness_hf,#CURRENT#,HIDE,Top_beam_bars,#CURRENT#,HIDE,Slab_bars,#CURRENT#,HIDE,Slab_bar_size,#CURRENT#,HIDE,Top_beam_bar_size,#CURRENT#,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_bar_area,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,RESTORE,Top_bars,#CURRENT#,RESTORE,Bottom_bars,#CURRENT#,RESTORE,Top_bar_size,#CURRENT#,RESTORE,Bottom_bar_size,#CURRENT#,RESTORE,Top_bar_area,#CURRENT#,RESTORE,Bottom_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bar_area,#CURRENT#)
+DEPENDENCIES: (Tee_Beam,RESTORE,Width_bf,#CURRENT#,RESTORE,Bottom_beam_bar_area,#CURRENT#,RESTORE,Bottom_beam_bar_size,#CURRENT#,RESTORE,Bottom_beam_bars,#CURRENT#,RESTORE,Top_beam_bar_size,#CURRENT#,RESTORE,Slab_bar_size,#CURRENT#,RESTORE,Slab_bar_area,#CURRENT#,RESTORE,Top_beam_bar_area,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bar_size,#CURRENT#,RESTORE,Web_width_bw,#CURRENT#,RESTORE,Slab_thickness_hf,#CURRENT#,RESTORE,Top_beam_bars,#CURRENT#,RESTORE,Slab_bars,#CURRENT#,HIDE,Corner_bar_area,#CURRENT#,HIDE,Middle_bar_area,#CURRENT#,HIDE,Corner_bar_size,#CURRENT#,HIDE,Middle_bar_size,#CURRENT#,HIDE,Bars_along_y_axis_face,#CURRENT#,HIDE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Height_h,#CURRENT#,HIDE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,HIDE,Bar_area,#CURRENT#)
 QUESTION: Height_h#UNITS#
 VALUE: 0.5 m
 QUESTION: Width_b#UNITS#
-VALUE: 0.25 m
+VALUE: 0.5 m
+QUESTION: Width_bf#UNITS#
+VALUE: 0.8 m
 QUESTION: Diameter_d#UNITS#
 VALUE: 0.5 m
+QUESTION: Web_width_bw#UNITS#
+VALUE: 0.3 m
+QUESTION: Slab_thickness_hf#UNITS#
+VALUE: 0.15 m
 QUESTION: Cross_section_Area#UNITS#
-VALUE: 0.125m^2
+VALUE: 0.25m^2
 STATE: HIDDEN
 TKWIDGET: TK_CalcFiberCrossSectionArea
 QUESTION: Reinforcement:#CB#(_)
@@ -732,7 +903,14 @@ VALUE: 0.05 m
 QUESTION: Top_bars
 VALUE: 2#WIDTH#(10)
 IMAGE: img/Sections/sec_Rect_Beam_RC.png
+QUESTION: Top_beam_bars
+VALUE: 2#WIDTH#(10)
+IMAGE: img/Sections/sec_Tee_Beam_RC.png
+QUESTION: Bottom_beam_bars
+VALUE: 2#WIDTH#(10)
 QUESTION: Bottom_bars
+VALUE: 2#WIDTH#(10)
+QUESTION: Slab_bars
 VALUE: 2#WIDTH#(10)
 QUESTION: Bars_along_z_axis_face
 VALUE: 2#WIDTH#(10)
@@ -750,8 +928,14 @@ QUESTION: Bar_size#UNITS#
 VALUE: 8 mm
 QUESTION: Top_bar_size#UNITS#
 VALUE: 14 mm
+QUESTION: Top_beam_bar_size#UNITS#
+VALUE: 14 mm
 QUESTION: Bottom_bar_size#UNITS#
 VALUE: 14 mm
+QUESTION: Bottom_beam_bar_size#UNITS#
+VALUE: 14 mm
+QUESTION: Slab_bar_size#UNITS#
+VALUE: 8 mm
 QUESTION: Calculate_bar_areas_(update_to_apply)#CB#(0,1)
 VALUE: 1
 TKWIDGET: Calculate_Reinf_Areas_for_Fiber
@@ -763,21 +947,27 @@ QUESTION: Bar_area#UNITS#
 VALUE: 5.027e-005 m^2
 QUESTION: Top_bar_area#UNITS#
 VALUE: 1.539e-004 m^2
+QUESTION: Top_beam_bar_area#UNITS#
+VALUE: 1.539e-004 m^2
 QUESTION: Bottom_bar_area#UNITS#
 VALUE: 1.539e-004 m^2
+QUESTION: Bottom_beam_bar_area#UNITS#
+VALUE: 1.539e-004 m^2
+QUESTION: Slab_bar_area#UNITS#
+VALUE: 5.027e-005 m^2
 QUESTION: Fibers:#CB#(_)
 VALUE:
 QUESTION: Suggest_fiber_mesh_(update_to_apply)#CB#(0,1)
 VALUE: 0
 TKWIDGET: TK_Suggest_Fibers_for_Fiber_Section
 QUESTION: Fibers_in_local_z_direction
-VALUE: 20#WIDTH#(10)
+VALUE: 15#WIDTH#(10)
 QUESTION: Fibers_in_local_y_direction
-VALUE: 10#WIDTH#(10)
+VALUE: 15#WIDTH#(10)
 QUESTION: Fibers_in_the_circumferential_direction
-VALUE: 10#WIDTH#(10)
+VALUE: 15#WIDTH#(10)
 QUESTION: Fibers_in_the_radial_direction
-VALUE: 10#WIDTH#(10)
+VALUE: 15#WIDTH#(10)
 TITLE: Materials
 QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
@@ -787,7 +977,7 @@ QUESTION: Reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel01
 END MATERIAL
 
-MATERIAL: Plate_fiber
+MATERIAL: Plate_Fiber
 COMMENT: \n
 TITLE: General
 QUESTION: Section:#CB#(PlateFiber)
@@ -997,7 +1187,7 @@ QUESTION: Element_type:#CB#(forceBeamColumn)
 VALUE: forceBeamColumn
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Compatible_Sections:#CB#(_)
-VALUE: Fiber
+VALUE: Fiber/SectionAggregator
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Integration
 QUESTION: Integration_type#CB#(Lobatto)
@@ -1011,7 +1201,7 @@ VALUE: points per element is currently fixed to three points per element.
 QUESTION: To_increase_analysis_accuracy,#CB#(_)
 VALUE: a finer mesh is recommended for modeling structural members instead of one element per member
 TITLE: Section
-QUESTION: Section#MAT#(Section_Force-Deformation)
+QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
 VALUE: Fiber
 TKWIDGET: TK_CheckSectionForFBC
 TITLE: Element_Geometry
@@ -1039,7 +1229,7 @@ QUESTION: Element_type:#CB#(dispBeamColumn)
 VALUE: dispBeamColumn
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Compatible_Sections:#CB#(_)
-VALUE: Fiber
+VALUE: Fiber/SectionAggregator
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Integration
 QUESTION: Number_of_integration_points
@@ -1051,7 +1241,7 @@ VALUE: points per element is currently fixed to three points per element.
 QUESTION: To_increase_analysis_accuracy,#CB#(_)
 VALUE: a finer mesh is recommended for modeling structural members instead of one element per member
 TITLE: Section
-QUESTION: Section#MAT#(Section_Force-Deformation)
+QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
 VALUE: Fiber
 TKWIDGET: TK_CheckSectionForDBC
 TITLE: Element_Geometry
@@ -1190,6 +1380,10 @@ QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 QUESTION: Plane_behavior#CB#(PlaneStrain,PlaneStress)
 VALUE: PlaneStress
+QUESTION: PMY_ID
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_PMY-ID
 TITLE: Section_properties
 QUESTION: Thickness#UNITS#
 VALUE: 0.2m
@@ -1238,6 +1432,10 @@ QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 QUESTION: Plane_behavior#CB#(PlaneStrain,PlaneStress)
 VALUE: PlaneStress
+QUESTION: PMY_ID
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_PMY-ID
 TITLE: Section_properties
 QUESTION: Thickness#UNITS#
 VALUE: 0.2 m
@@ -1269,6 +1467,10 @@ TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: PressureIndependMultiYield
+QUESTION: PMY_ID
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_PMY-ID
 TITLE: Properties
 QUESTION: Thickness#UNITS#
 VALUE: 1.0m

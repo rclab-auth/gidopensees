@@ -46,6 +46,7 @@
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==BCID)
 *set var MasterNode=NodesNum
+*break
 *endif
 *end nodes
 *set cond Point_Body_constraint_slave_nodes *nodes
@@ -53,6 +54,20 @@
 *# For every node that belongs to the running BC ID do the following
 *loop nodes *OnlyInCond
 *if(Cond(1,int)==BCID)
+*# 2D
+*if(ndime==2)
+*if(Cond(2,int)==1)
+*set var Translx=1
+*endif
+*if(Cond(3,int)==1)
+*set var Transly=2
+*endif
+*if(Cond(7,int)==1)
+*set var Rotz=3
+*endif
+*set var BCNode=operation(BCNode+1)
+*# 3D
+*else
 *if(Cond(2,int)==1)
 *set var Translx=1
 *endif
@@ -71,7 +86,8 @@
 *if(Cond(7,int)==1)
 *set var Rotz=6
 *endif
-*set var BCNode=operation(BCNode+1)
+*endif
+*break
 *endif
 *end nodes
 *# This procedure puts the constrained DOF in a list called BodyConstraintConditions(it depends on the checkboxes on the Body constraint window options)
@@ -90,6 +106,7 @@
 *endif
 *endif
 *end nodes
+*format "%6d%6d%6d"
 equalDOF *MasterNode *SlaveNode *tcl(importBCConditions )
 *endfor
 *endfor

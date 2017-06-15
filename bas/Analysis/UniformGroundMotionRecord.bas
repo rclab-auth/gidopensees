@@ -153,7 +153,7 @@ LoadRecordTimeandValues $inFile recordValues recordTimes
 *if(strcmp(MatProp(Record_type),"Acceleration")==0)
 *format "%g"
 set AccelSeries "Path -time {$recordTimes} -values {$recordValues} -factor *GMfact"
-pattern UniformExcitation  *IDGMLoadPatternTag  $GMdirection -accel $AccelSeries -fact 1
+pattern UniformExcitation *IDGMLoadPatternTag $GMdirection -accel $AccelSeries -fact 1
 *else
 *format "%g"
 set DispSeries "Path -time {$recordTimes} -values {$recordValues} -factor *GMfact"
@@ -184,6 +184,7 @@ variable testTypeDynamic RelativeEnergyIncr
 *elseif(strcmp(IntvData(Convergence_criterion),"Fixed_Number_of_Iterations")==0)
 variable testTypeDynamic FixedNumIter
 *endif
+*format "%g"
 variable TolDynamic *IntvData(Tolerance,real);
 variable maxNumIterDynamic *IntvData(Max_Iterations_per_Step,int);
 *if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)

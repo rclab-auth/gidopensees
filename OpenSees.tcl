@@ -29,7 +29,7 @@
 # TCL macros
 #
 
-set VersionNumber "v2.0.0"
+set VersionNumber "v2.1.0"
 
 set InfoWin .gid.win_example
 
@@ -122,7 +122,7 @@ proc Opt1_5 { } {
 
 proc Opt1_6 { } {
 
-	GidOpenMaterials "Series/Parallel_Uniaxial_Materials"
+	GidOpenMaterials "Combined_Materials"
 	HideInfoBar
 }
 
@@ -199,7 +199,7 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		"Define Steel Uniaxial Materials" \
 		"Define Multidimensional Materials" \
 		"Define Section Force-Deformation" \
-		"Define Series/Parallel Uniaxial Materials" \
+		"Define Combined Materials" \
 		"" \
 		"Records" \
 		"Assign Restraints" \
@@ -267,30 +267,36 @@ proc Opt2_5 { } {
 
 proc Opt2_6 { } {
 
-	GidOpenProblemData
+	GidOpenProblemData "General_Data"
 	HideInfoBar
 }
 
 proc Opt2_7 { } {
 
-	GiD_Process Mescape Data IDataWindow
+	GidOpenProblemData "Output_Options"
 	HideInfoBar
 }
 
 proc Opt2_8 { } {
 
-	GiD_Process Mescape Meshing generate
+	GiD_Process Mescape Data IDataWindow
 	HideInfoBar
 }
 
 proc Opt2_9 { } {
+
+	GiD_Process Mescape Meshing generate
+	HideInfoBar
+}
+
+proc Opt2_10 { } {
 
 	Opt1_dialog
 }
 
 set NormalsDrawStatus 0
 
-proc Opt2_10 { } {
+proc Opt2_11 { } {
 
 	global NormalsDrawStatus
 
@@ -310,7 +316,7 @@ proc Opt2_10 { } {
 
 set ElemDrawStatus 0
 
-proc Opt2_11 { } { # Switch draw elements
+proc Opt2_12 { } { # Switch draw elements
 
 	global ElemDrawStatus
 
@@ -330,7 +336,7 @@ proc Opt2_11 { } { # Switch draw elements
 
 set ConditionsDrawStatus 0
 
-proc Opt2_12 { } { # Switch draw conditions
+proc Opt2_13 { } { # Switch draw conditions
 
 	global ConditionsDrawStatus
 
@@ -348,7 +354,7 @@ proc Opt2_12 { } { # Switch draw conditions
 	}
 }
 
-proc Opt2_13 { } {
+proc Opt2_14 { } {
 
 	GiD_Process Mescape Data Intervals ChangeInterval
 	UpdateInfoBar
@@ -366,6 +372,7 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/$GiDtheme/btn_Elem_Brick.png \
 		img/Toolbar/$GiDtheme/btn_Separator.png \
 		img/Toolbar/$GiDtheme/btn_Data.png \
+		img/Toolbar/$GiDtheme/btn_Output.png \
 		img/Toolbar/$GiDtheme/btn_Interval.png \
 		img/Toolbar/$GiDtheme/btn_Mesh.png \
 		img/Toolbar/$GiDtheme/btn_Calc.png \
@@ -386,11 +393,12 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		[list -np- Opt2_7] \
 		[list -np- Opt2_8] \
 		[list -np- Opt2_9] \
-		"" \
 		[list -np- Opt2_10] \
+		"" \
 		[list -np- Opt2_11] \
 		[list -np- Opt2_12] \
 		[list -np- Opt2_13] \
+		[list -np- Opt2_14]
 	]
 
 	set ToolbarHelp2(0) { \
@@ -400,7 +408,8 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		"Define Surface Elements" \
 		"Define Solid Elements" \
 		"" \
-		"Set Problem Data" \
+		"Set General Data" \
+		"Set Output Options" \
 		"Set Interval Data" \
 		"Generate Mesh" \
 		"Create .tcl, run analysis and postprocess" \
@@ -455,7 +464,7 @@ proc InitGIDProject { dir } {
 		return
 	}
 
-	LoadOpenSeesPath
+	GetOpenSeesPath
 
 	global splashdir
 	set splashdir 0
@@ -509,7 +518,7 @@ proc InitGIDProject { dir } {
 	GiD_DataBehaviour materials Other_Uniaxial_Materials hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials Multidimensional_(nD)_Materials hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Section_Force-Deformation" hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials "Series/Parallel_Uniaxial_Materials" hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "Combined_Materials" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Records" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Beam-Column_Elements" geomlist {lines}
 	GiD_DataBehaviour materials "Truss_Elements" geomlist {lines}
@@ -719,7 +728,7 @@ proc LoadGIDProject { filespd } {
 			ttk::frame $InfoWin.top
 			ttk::label $InfoWin.top.title_text -text [= ""]
 			ttk::frame $InfoWin.information -relief raised
-			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is newer than saved model version ($spd_data). Please transform your model first."]
+			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
 			ttk::frame $InfoWin.bottom
 			ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "TransformAndClose"
 			ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"

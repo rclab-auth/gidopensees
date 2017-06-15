@@ -16,7 +16,7 @@ proc TK_CheckMaterialForElasticBeamColumn { event args } {
 			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
 			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
 
-			if { $MatType == "ElasticOrthotropic"} {
+			if { $MatType != "ElasticIsotropic"} {
 				WarnWinText "Material $ChosenMaterial ($MatType material) can not be used for beam-column elements."
 				WarnWinText "Use an elastic isotropic material instead."
 
@@ -117,6 +117,34 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 				set ok [DWLocalSetValue $GDN $STRUCT Bottom_bar_area $BottomBarArea]
 
 				return ""
+				} elseif { $Shape=="Tee_Beam" } {
+
+					set TopWebBarSizeUnit [DWLocalGetValue $GDN $STRUCT Top_beam_bar_size]
+					set BottomBarSizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_beam_bar_size]
+					set TopSlabBarSizeUnit [DWLocalGetValue $GDN $STRUCT Slab_bar_size]
+
+					set temp1 [GidConvertValueUnit $TopWebBarSizeUnit]
+					set temp1 [ParserNumberUnit $temp1 TopWebBarSize TopWebBarUnit]
+
+					set temp2 [GidConvertValueUnit $BottomBarSizeUnit]
+					set temp2 [ParserNumberUnit $temp2 BottomBarSize BottomBarUnit]
+
+					set temp3 [GidConvertValueUnit $TopSlabBarSizeUnit]
+					set temp3 [ParserNumberUnit $temp3 TopSlabBarSize TopSlabBarUnit]
+
+					set TopWebBarArea [format "%1.3e" [expr $pi*($TopWebBarSize*$TopWebBarSize)/4.0]]
+					set TopWebBarArea $TopWebBarArea$TopWebBarUnit^2
+
+					set BottomBarArea [format "%1.3e" [expr $pi*($BottomBarSize*$BottomBarSize)/4.0]]
+					set BottomBarArea $BottomBarArea$BottomBarUnit^2
+
+					set TopSlabBarArea [format "%1.3e" [expr $pi*($TopSlabBarSize*$TopSlabBarSize)/4.0]]
+					set TopSlabBarArea $TopSlabBarArea$TopSlabBarUnit^2
+
+					set ok [DWLocalSetValue $GDN $STRUCT Top_beam_bar_area $TopWebBarArea]
+					set ok [DWLocalSetValue $GDN $STRUCT Bottom_beam_bar_area $BottomBarArea]
+					set ok [DWLocalSetValue $GDN $STRUCT Slab_bar_area $TopSlabBarArea]
+
 				} else {
 
 					return ""
@@ -176,6 +204,28 @@ proc TK_CalcFiberCrossSectionArea { event args } {
 			set Areaunit $Dunit^2
 
 			set AreaSize [expr 3.14159265359*$diameter*$diameter/4]
+			set Area $AreaSize$Areaunit
+			set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
+
+			} elseif { $CrossSectionType == "Tee_Beam" } {
+
+			set heightUnit [DWLocalGetValue $GDN $STRUCT Height_h]
+			set widthUnit [DWLocalGetValue $GDN $STRUCT Width_bf]
+			set SlabThickUnit [DWLocalGetValue $GDN $STRUCT Slab_thickness_hf]
+			set WebThickUnit [DWLocalGetValue $GDN $STRUCT Web_width_bw]
+
+			set temp [GidConvertValueUnit $widthUnit]
+			set temp [ParserNumberUnit $temp w Wunit]
+			set temp [GidConvertValueUnit $heightUnit]
+			set temp [ParserNumberUnit $temp h Hunit]
+			set temp [GidConvertValueUnit $SlabThickUnit]
+			set temp [ParserNumberUnit $temp ts tsUnit]
+			set temp [GidConvertValueUnit $WebThickUnit]
+			set temp [ParserNumberUnit $temp tw twUnit]
+
+			set Areaunit $Hunit^2
+
+			set AreaSize [expr $w*$ts+($h-$ts)*$tw]
 			set Area $AreaSize$Areaunit
 			set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
 
@@ -325,13 +375,13 @@ proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
 							"3" {
 
 								if { $height >= $width  } {
-									set Fibers_z [roundUp [expr 10*$height/$width] ]
-									set Fibers_y 10
+									set Fibers_z [roundUp [expr 15*$height/$width] ]
+									set Fibers_y 15
 
 								} elseif { $height<$width } {
 
-									set Fibers_y [roundUp [expr 10*$height/$width] ]
-									set Fibers_z 10
+									set Fibers_y [roundUp [expr 15*$height/$width] ]
+									set Fibers_z 15
 
 								} else {
 									return ""
@@ -340,13 +390,13 @@ proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
 							"2" {
 
 								if { $height >= $width  } {
-									set Fibers_y [roundUp [expr 10*$height/$width] ]
-									set Fibers_z 10
+									set Fibers_y [roundUp [expr 15*$height/$width] ]
+									set Fibers_z 15
 
 								} elseif { $height<$width } {
 
-									set Fibers_z [roundUp [expr 10*$height/$width] ]
-									set Fibers_y 10
+									set Fibers_z [roundUp [expr 15*$height/$width] ]
+									set Fibers_y 15
 
 								} else {
 									return ""
@@ -376,27 +426,60 @@ proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
 
 								"3" {
 
-									set Fibers_y [expr {2*max($TopBars,$BottomBars)}]
+									set Fibers_y [expr {4*max($TopBars,$BottomBars)}]
 									set Fibers_z [expr $Fibers_y*$height/$width]
 
 								}
 								"2" {
 
-									set Fibers_z [expr {2*max($TopBars,$BottomBars)}]
+									set Fibers_z [expr {4*max($TopBars,$BottomBars)}]
 									set Fibers_y [expr $Fibers_z*$height/$width]
 
 								}
 							}
-						}
 						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
 						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction [roundUp $Fibers_y]]
+						}
+
 					}
 
-					"Circular" {
+					"Circular_Column" {
 
-						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_circumferential_direction 10]
-						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_radial_direction 10]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_circumferential_direction 15]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_radial_direction 15]
 
+					}
+
+					"Tee_Beam" {
+
+						set heightUnit [DWLocalGetValue $GDN $STRUCT "Height_h"]
+						set widthUnit [DWLocalGetValue $GDN $STRUCT "Width_bf"]
+						set temp [GidConvertValueUnit $heightUnit]
+						set temp [ParserNumberUnit $temp height dummy]
+						set temp [GidConvertValueUnit $widthUnit]
+						set temp [ParserNumberUnit $temp width dummy]
+
+						set TopBars [DWLocalGetValue $GDN $STRUCT "Top_beam_bars"]
+						set BottomBars [DWLocalGetValue $GDN $STRUCT "Bottom_beam_bars"]
+						set TopSlabBars [DWLocalGetValue $GDN $STRUCT "Slab_bars"]
+
+							switch $ndm {
+
+								"3" {
+
+										set Fibers_y [expr {max(8*$TopBars,8*$BottomBars,20)}]
+										set Fibers_z [expr $Fibers_y*$height/$width]
+
+								}
+								"2" {
+
+										set Fibers_z [expr {max(8*$TopBars,8*$BottomBars,20)}]
+										set Fibers_y [expr $Fibers_z*$height/$width]
+
+								}
+							}
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction [roundUp $Fibers_y]]
 					}
 				}
 			}
@@ -411,7 +494,7 @@ proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
 	return ""
 }
 
-proc TK_CheckMaterialsForFiber { event args } {
+proc TK_CheckFieldValuesForFiber { event args } {
 
 	switch $event {
 
@@ -442,6 +525,50 @@ proc TK_CheckMaterialsForFiber { event args } {
 				DWLocalSetValue $GDN $STRUCT "Reinforcing_Bar_material" "Steel01"
 			}
 
+			set CrossSection [DWLocalGetValue $GDN $STRUCT "Cross_section"]
+
+			if {$CrossSection == "Rectangular_Column" } {
+				set BarsZface [DWLocalGetValue $GDN $STRUCT "Bars_along_z_axis_face"]
+				set BarsYface [DWLocalGetValue $GDN $STRUCT "Bars_along_y_axis_face"]
+				set IntBarsZface [expr int($BarsZface)]
+				set IntBarsYface [expr int($BarsYface)]
+				set remainderz [expr fmod($BarsZface,2)]
+				set remaindery [expr fmod($BarsYface,2)]
+				if {$BarsZface != $IntBarsZface || $BarsYface != $IntBarsYface} {
+					WarnWinText "Warning: Number of bars must be integer."
+				}
+
+			} elseif {$CrossSection == "Rectangular_Beam"} {
+				set TopBars [DWLocalGetValue $GDN $STRUCT "Top_bars"]
+				set BottomBars [DWLocalGetValue $GDN $STRUCT "Bottom_bars"]
+				set IntTopBars [expr int($TopBars)]
+				set IntBottomBars [expr int($BottomBars)]
+				if {$TopBars != $IntTopBars || $BottomBars != $IntBottomBars} {
+					WarnWinText "Warning: Number of bars must be integer."
+				}
+			} elseif {$CrossSection == "Tee_Beam"} {
+				set TopBeamBars [DWLocalGetValue $GDN $STRUCT "Top_Beam_bars"]
+				set BottomBeamBars [DWLocalGetValue $GDN $STRUCT "Bottom_beam_bars"]
+				set SlabBars [DWLocalGetValue $GDN $STRUCT "Slab_bars"]
+				set IntTopBeamBars [expr int($TopBeamBars)]
+				set IntBottomBeamBars [expr int($BottomBeamBars)]
+				set IntSlabBars [expr int($SlabBars)]
+				set remainder [expr fmod($SlabBars,2)]
+				if {$TopBeamBars != $IntTopBeamBars || $BottomBeamBars != $IntBottomBeamBars || $SlabBars != $IntSlabBars} {
+					WarnWinText "Warning: Number of bars must be integer"
+				}
+				if {$remainder != 0} {
+					WarnWinText "Warning: Number of slab bars must be even"
+				}
+			} elseif {$CrossSection == "Circular_Column"} {
+				set Bars [DWLocalGetValue $GDN $STRUCT "Bars_along_arc"]
+				set IntBars [expr int($Bars)]
+
+				if {$Bars != $IntBars} {
+					WarnWinText "Warning: Number of bars must be integer"
+				}
+
+			}
 			return ""
 		}
 
@@ -1446,7 +1573,7 @@ proc TK_DescriptionField { event args } {
 
 			if { $ProjectName != "UNNAMED" } {
 
-				LoadProjectDirPath { "" }
+				GetProjectDirPath
 
 				set filename [file join $GiDProjectDir "$GiDProjectName.txt"]
 				set fexist [file exist $filename]
@@ -1457,6 +1584,7 @@ proc TK_DescriptionField { event args } {
 				close $fp
 				}
 			}
+
 			set PARENT [lindex $args 0]
 			set Description_Parent $PARENT
 			upvar [lindex $args 1] ROW
@@ -1502,7 +1630,7 @@ proc SaveProjectDescriptionFile { } {
 
 	if { $ProjectName != "UNNAMED" } {
 
-		LoadProjectDirPath { "" }
+		GetProjectDirPath
 
 		set file [file join $GiDProjectDir "$GiDProjectName.txt"]
 
@@ -1743,7 +1871,9 @@ proc TK_MaterialWikiInfo { event args } {
 				"Parallel" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Parallel_Material"
 				}
-
+				"Hysteretic" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Hysteretic_Material"
+				}
 			}
 
 			set b [Button $PARENT.wikiinfo -text [= "Material info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
@@ -1779,6 +1909,9 @@ proc TK_SectionWikiInfo { event args } {
 				}
 				"ElasticMembranePlate" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Plate_Fiber_Section"
+				}
+				"SectionAggregator" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Section_Aggregator"
 				}
 			}
 
@@ -1858,7 +1991,7 @@ proc TK_EqualDOFWikiInfo { event args } {
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/EqualDOF_command"
 
 			set b [Button $PARENT.wikiinfo -text [= "More info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
-			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
+			grid $b -column 1 -row [expr $ROW+3] -sticky nw -pady 5
 		}
 	}
 
@@ -1892,6 +2025,24 @@ proc TK_LoadsWikiInfo { event args } {
 			set PARENT [lindex $args 0]
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/NodalLoad_Command"
+
+			set b [Button $PARENT.wikiinfo -text [= "More info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
+			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
+		}
+	}
+
+	return ""
+}
+
+proc TK_DisplacementsWikiInfo { event args } {
+
+	switch $event {
+
+		INIT {
+
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Sp_Command"
 
 			set b [Button $PARENT.wikiinfo -text [= "More info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
 			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
@@ -2106,7 +2257,7 @@ proc GetRecordFilenameCmd { varname entry {tail 0}} {
 			warning 0 [_ "OK"]
 			set current_value ""
 		} else {
-			LoadProjectDirPath { "" }
+			GetProjectDirPath
 			global OpenSeesProblemDir GiDProjectDir GiDProjectName
 			file mkdir $GiDProjectDir/Records
 			file copy -force -- $current_value $GiDProjectDir/Records
@@ -2188,4 +2339,67 @@ proc TK_DWSet { GDN STRUCT QUESTION VALUE {STATE ""}} {
 			$action($STATE) $GDN $STRUCT $ifld $VALUE
 		}
 	}
+}
+
+proc Bas_mod { x y } {
+
+set ans [expr fmod ($x,$y)]
+
+return $ans
+}
+
+proc TK_PMY-ID { event args } {
+
+	switch $event {
+
+		INIT {
+
+			lassign $args PARENT current_row_variable GDN STRUCT QUESTION
+
+			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT "Material"]
+			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
+
+			if { $MatType == "PressureDependMultiYield" || $MatType == "PressureIndependMultiYield" } {
+				set matnumber [expr [lsearch [GiD_Info materials] $ChosenMaterial]+1]
+				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION $matnumber]
+
+			} else {
+				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION 0]
+			}
+
+		}
+
+		SYNC {
+			lassign $args GDN STRUCT QUESTION
+			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT "Material"]
+			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
+
+			if { $MatType == "PressureDependMultiYield" || $MatType == "PressureIndependMultiYield" } {
+				set matnumber [expr [lsearch [GiD_Info materials] $ChosenMaterial]+1]
+				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION $matnumber]
+
+			} else {
+				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION 0]
+			}
+		}
+	}
+	return ""
+}
+
+proc TK_CheckIntegerIntvNum { event args } {
+
+	switch $event {
+
+		SYNC {
+			lassign $args GDN STRUCT QUESTION
+			set value [DWLocalGetValue $GDN $STRUCT $QUESTION]
+			set intvalue [expr int($value)]
+
+			if {$value != $intvalue} {
+				WarnWinText "Interval number must be integer"
+				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION $intvalue]
+			}
+		}
+	}
+	return ""
 }

@@ -31,6 +31,19 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 2.1.0 (15/06/2017)**
+
+- Added : **Section aggregator** object
+- Added : **Hysteretic material**
+- Added : **Prescribed displacement** (SP) loading
+- Added : **Tee** fiber section
+- Added : User selection of output results
+- Added : Option for output **frequency** (every n steps)
+- Added : Option for **binary** output (smaller size, faster read)
+- Minor bug fixes
+
+---
+
 **Version 2.0.0 (08/05/2017)**
 
 - Now supported : **Multiple model domains** (defined automatically depending on element types)
@@ -54,7 +67,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 - Improved : Body constraint (equalDOF) condition is split into two conditions, for master and slave nodes, respectively. Body constraints are now defined on the geometry model
 - Improved : Pushover Analysis. In case of analysis divergence, **substepping** and alternative convergence criteria are automatically applied
 - Improved : Static Cyclic Analysis. In case of analysis divergence, alternative convergence criteria are automatically applied
-- Various minor improvements and corrections.
+- Various minor improvements and corrections
 
 ---
 

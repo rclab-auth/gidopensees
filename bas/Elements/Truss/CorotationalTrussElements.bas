@@ -20,7 +20,7 @@
 *loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
 *if(VarCount==1)
-# Uniaxial Materials definition
+# Uniaxial Materials definition used by Corotational Truss Elements. (Only if they have not been already defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"CorotationalTruss")==0)
@@ -35,44 +35,19 @@
 *#we check which is the material that user choosed in Material field in element definition.
 *if(MaterialID==SelectedMaterial)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
-*format "%d%g"
-*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
-uniaxialMaterial Elastic *MaterialID *MatProp(Elastic_modulus_E,real)
-*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
-uniaxialMaterial Elastic *MaterialID *MatProp(Stiffness_K,real)
-*else
-uniaxialMaterial Elastic *MaterialID *MatProp(Moment_per_rotation_unit,real)
-*endif
+*include ..\..\Materials\Uniaxial\Elastic.bas
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlastic")==0)
-*format "%d%g%g%g%g"
-*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
-uniaxialMaterial ElasticPP *MaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Strain_epsP,real) *MatProp(Strain_epsN,real) *MatProp(Initial_strain_eps0,real)
-*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
-uniaxialMaterial ElasticPP *MaterialID *MatProp(Stiffness_K,real) *MatProp(Deformation_epsP,real) *MatProp(Deformation_epsN,real) *MatProp(Initial_deformation_eps0,real)
-*else
-uniaxialMaterial ElasticPP *MaterialID *MatProp(Moment_per_rotation_unit,real) *MatProp(Rotation_epsP,real) *MatProp(Rotation_epsN,real) *MatProp(Initial_rotation_eps0,real)
-*endif
+*include ..\..\Materials\Uniaxial\ElasticPP.bas
 *elseif(strcmp(MatProp(Material:),"Steel01")==0)
-*format "%d%g%g%g"
-*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
-uniaxialMaterial Steel01 *MaterialID *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
-*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
-uniaxialMaterial Steel01 *MaterialID *MatProp(Force_Fy,real) *MatProp(Initial_stiffness_K,real) *MatProp(Strain-hardening_ratio_b,real)
-*else
-uniaxialMaterial Steel01 *MaterialID *MatProp(Moment_My,real) *MatProp(Moment_per_rotation_unit,real) *MatProp(Strain-hardening_ratio_b,real)
-*endif
+*include ..\..\Materials\Uniaxial\Steel01.bas
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
-*format "%d%g%g%g"
-*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
-uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Elastic_modulus_E,real) *MatProp(Yield_Stress_Fy,real) *MatProp(Strain_gap,real)
-*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
-uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Stiffness_K,real) *MatProp(Force_Fy,real) *MatProp(Deformation_gap,real)
-*else
-uniaxialMaterial ElasticPPGap *MaterialID *MatProp(Moment_per_rotation_unit,real) *MatProp(Moment_My,real) *MatProp(Rotation_gap,real)
-*endif
+*include ..\..\Materials\Uniaxial\ElasticPPwithGap.bas
 *elseif(strcmp(MatProp(Material:),"Viscous")==0)
-*format "%d%g%g"
-uniaxialMaterial Viscous &MaterialID *MatProp(Damping_coefficient,real) *MatProp(Power_factor,real)
+*include ..\..\Materials\Uniaxial\Viscous.bas
+*elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
+*include ..\..\Materials\Uniaxial\Hysteretic.bas
+*else
+*MessageBox Error: Invalid uniaxial material selected for truss element
 *endif
 *break
 *endif

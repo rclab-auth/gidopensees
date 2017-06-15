@@ -56,7 +56,7 @@ geomTransf PDelta *TransfTag4  0 1 0
 *endif
 *set var GeomTransfPrinted=1
 *endif
-# Sections Definition for forceBeamColumn Elements
+# Sections Definition used by forceBeamColumn Elements. (Only if they have not already been defined on this model domain)
 
 *# Searching all assigned forceBeamColumn elements to check all Sections that they need
 *loop materials
@@ -66,286 +66,17 @@ geomTransf PDelta *TransfTag4  0 1 0
 *# IF IT HAS NOT BEEN DEFINED YET
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
 *# if the Section is FOUND
-*if(SelectedSection==SecNum)
+*if(SelectedSection==SectionID)
 *# Add it to the used "Materials"
 *set var dummy=tcl(AddUsedMaterials *SelectedSection)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*# if it is a Fiber Section, We need to check which uniaxial materials we need to define
-*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) )
-*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) )
-*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) )
-*# CORE MATERIAL DEFINITION
-*set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoreMaterial )
-*if(MaterialExists==-1)
-*loop materials *NotUsed
-*set var MatNumber=tcl(FindMaterialNumber *Matprop(0))
-*if(SelectedCoreMaterial==MatNumber)
-*if(strcmp(MatProp(Material:),"Concrete01")==0)
-*format "%d%g%g%g%g"
-uniaxialMaterial Concrete01 *SelectedCoreMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real)
-*elseif(strcmp(MatProp(Material:),"Concrete02")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete02 *SelectedCoreMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
-*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete04 *SelectedCoreMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
-*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
-*format "%d%g%g%g%g%g%g%g%g"
-uniaxialMaterial Concrete06 *SelectedCoreMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
-*else
-*MessageBox Error: Unsupported Core material for Fiber Section
+*include ..\..\Sections\Fiber.bas
+*elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
+*include ..\..\Sections\SectionAggregator.bas
 *endif
-*set var dummy=tcl(AddUsedMaterials *SelectedCoreMaterial)
 *break
-*endif
-*end materials
-*endif
-*# Cover Material DEFINITION
-*set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoverMaterial)
-*if(MaterialExists==-1)
-*loop materials *NotUsed
-*set var MatNumber=tcl(FindMaterialNumber *Matprop(0) )
-*if(SelectedCoverMaterial==MatNumber)
-*if(strcmp(MatProp(Material:),"Concrete01")==0)
-*format "%d%g%g%g%g"
-uniaxialMaterial Concrete01 *SelectedCoverMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real)
-*elseif(strcmp(MatProp(Material:),"Concrete02")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete02 *SelectedCoverMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
-*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete04 *SelectedCoverMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
-*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
-*format "%d%g%g%g%g%g%g%g%g"
-uniaxialMaterial Concrete06 *SelectedCoverMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
-*else
-*MessageBox Error: Unsupported Cover material for Fiber Section
-*endif
-*set var dummy=tcl(AddUsedMaterials *SelectedCoverMaterial)
-*break
-*endif
-*end materials
-*endif
-*# Reinforcing Bar MATERIAL DEFINITION
-*set var MaterialExists=tcl(CheckUsedMaterials *SelectedRBMaterial)
-*if(MaterialExists==-1)
-*loop materials *NotUsed
-*set var MatNumber=tcl(FindMaterialNumber *Matprop(0) )
-*if(SelectedRBMaterial==MatNumber)
-*if(strcmp(MatProp(Material:),"Steel01")==0)
-*format "%d%g%g%g"
-*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
-uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
-*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
-uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Force_Fy,real) *MatProp(Initial_stiffness_K,real) *MatProp(Strain-hardening_ratio_b,real)
-*else
-uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Moment_My,real) *MatProp(Moment_per_rotation_unit,real) *MatProp(Strain-hardening_ratio_b,real)
-*endif
-*elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial ReinforcingSteel *SelectedRBMaterial *MatProp(Yield_stress_fy,real) *MatProp(Ultimate_stress_fsu,real) *MatProp(Initial_elastic_tangent_Es,real) *MatProp(Tangent_at_initial_strain_hardening_Esh,real) *MatProp(Strain_corresponding_to_initial_strain_hardening_esh,real) *MatProp(Strain_at_peak_stress_esu,real)
-*else
-*MessageBox Error: Unsupported Rebar material for Fiber Section
-*endif
-*set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
-*break
-*endif
-*end materials
-*# endif material has been already defined
-*endif
-*# ------------------------FIBER definition--------------------
-*# ----------Rectangular_Column Section-------------
-*if(strcmp(Matprop(Cross_section),"Rectangular_Column")==0)
-*set var height=Matprop(Height_h,real)
-*set var width=MatProp(Width_b,real)
-*set var zhalf=operation(height/2.0)
-*set var yhalf=operation(width/2.0)
-*set var cover=MatProp(Cover_depth_for_bars,real)
-
-section Fiber *SelectedSection {
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
-*set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
-*set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
-
-*# --------------Core fibers definition-----------
-# Create the Core fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(zdivision-2*zcoverFibers) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(zhalf-cover)
-*# --------------Cover fibers definition----------
-
-# Create the Cover fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(yhalf-cover) *operation(-zhalf) *yhalf *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(-zhalf) *operation(yhalf-cover) *operation(-zhalf+cover)
-*# Reinforcing Bars Definition along local z axis
-*if(MatProp(Bars_along_z_axis_face,int)==2)
-
-# Create the corner bars
-
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
-*elseif(MatProp(Bars_along_z_axis_face,int)==3)
-
-# Create the corner bars
-
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
-
-# Create the middle bars
-
-*format "%10.6f%12.8f%3d"
-fiber *operation(yhalf-cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*format "%10.6f%12.8f%3d"
-fiber *operation(-yhalf+cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*else
-*set var Howmanybars=MatProp(Bars_along_z_axis_face,int)
-*set var zdist=operation((height-2*cover)/(Howmanybars-1))
-*set var zfirstcoord=operation(zhalf-cover-zdist)
-*set var zlastcoord=operation(cover-zhalf+zdist)
-*# Corner bars
-
-# Create the corner bars
-
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
-*# intermediate bars along z axis
-
-# Create the middle Reinforcing Bars along local z axis
-
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(yhalf-cover) *zfirstcoord *operation(yhalf-cover) *zlastcoord
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(cover-yhalf) *zfirstcoord *operation(cover-yhalf) *zlastcoord
-*endif
-*# Reinforcing bars along local y axis
-*if(MatProp(Bars_along_y_axis_face,int)==3)
-
-# Create the middle Reinforcing Bars along local y axis
-
-*format "%10.6f  %12.8f%3d"
-fiber 0 *operation(zhalf-cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*format "%10.6f  %12.8f%3d"
-fiber 0 *operation(-zhalf+cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*elseif(MatProp(Bars_along_y_axis_face,int)>=4)
-*set var Howmanybars=MatProp(Bars_along_y_axis_face,int)
-*set var ydist=operation((width-2*cover)/(Howmanybars-1))
-*set var yfirstcoord=operation(yhalf-cover-ydist)
-*set var ylastcoord=operation(cover-yhalf+ydist)
-
-# Create the middle Reinforcing Bars along local y axis
-
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(zhalf-cover) *ylastcoord *operation(zhalf-cover)
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(cover-zhalf) *ylastcoord *operation(cover-zhalf)
-*elseif(MatProp(Bars_along_y_axis_face,int)==1)
-*MessageBox Error: Invalid number of longitudinal bars along local y face
-*endif
-}
-*# -----------Rectangular Beam Section-----------
-*elseif(strcmp(Matprop(Cross_section),"Rectangular_Beam")==0)
-*set var height=Matprop(Height_h,real)
-*set var width=MatProp(Width_b,real)
-*set var zhalf=operation(height/2.0)
-*set var yhalf=operation(width/2.0)
-*set var cover=MatProp(Cover_depth_for_bars,real)
-
-section Fiber *SelectedSection {
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
-*set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
-*set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
-
-# Create the Core fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(zdivision-2*zcoverFibers) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(zhalf-cover)
-*# --------------Cover fibers definition----------
-
-# Create the Cover fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(yhalf-cover) *operation(-zhalf) *yhalf *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(-zhalf) *operation(yhalf-cover) *operation(-zhalf+cover)
-
-*if(MatProp(Top_bars,int)>=2)
-*set var HowmanyTopbars=MatProp(Top_bars,int)
-
-# Create the Top bars (face on local z positive dir)
-
-*format "%3d%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(yhalf-cover) *operation(zhalf-cover)
-
-*else
-*MessageBox Error: Invalid Number of Top bars in a Fiber Section
-*endif
-*if(MatProp(Bottom_bars,int)>=2)
-# Create the Bottom bars (face on local z negative dir)
-
-*set var HowmanyBottombars=MatProp(Bottom_bars,int)
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_area,real) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(cover-zhalf)
-*else
-*MessageBox Error: Invalid Number of Bottom Bars in a Fiber Section
-*endif
-}
-*#---------Circular_Column Section-------
-*elseif(strcmp(Matprop(Cross_section),"Circular_Column")==0)
-*set var diameter=MatProp(Diameter_d,real)
-*set var radius=operation(diameter/2.0)
-*set var cover=MatProp(Cover_depth_for_bars,real)
-*set var circmdivision=MatProp(Fibers_in_the_circumferential_direction,int)
-*set var raddivision=MatProp(Fibers_in_the_radial_direction,int)
-*set var CoreExternalRadius=operation(radius-cover)
-*set var coverFibers=tcl(NumofCoverFibers *cover *radius *raddivision)
-
-section Fiber *SelectedSection {
-
-# Create the core fibers
-
-#patch circ $matTag $numSubdivCirc $numSubdivRad $yCenter $zCenter $intRad $extRad $startAng $endAng
-*format "%3d%3d%3d %8.3f "
-patch circ *SelectedCoreMaterial *circmdivision *operation(raddivision-coverFibers) 0.0 0.0 0.0 *CoreExternalRadius 0 360
-
-# Create the cover fibers
-
-#patch circ $matTag $numSubdivCirc $numSubdivRad $yCenter $zCenter $intRad $extRad $startAng $endAng
-*format "%3d%3d %8.3f%8.3f "
-patch circ *SelectedCoverMaterial *circmdivision *coverFibers 0.0 0.0 *CoreExternalRadius *radius 0 360
-
-# Create the reinforcing bars
-
-#layer circ $matTag $numFiber $areaFiber $yCenter $zCenter $radius <$startAng $endAng>
-*format "%3d%3d%12.8f %8.3f"
-layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,real) 0.0 0.0 *CoreExternalRadius
-}
-*# endif section is rectangular or circular
-*endif
-*# endif section is fiber
-*endif
-*# endif section found
 *endif
 *# end materials for section searching
 *end materials
@@ -379,8 +110,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials
@@ -391,8 +122,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials
@@ -414,8 +145,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials
@@ -426,8 +157,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials
@@ -453,8 +184,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials
@@ -465,8 +196,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials
@@ -488,9 +219,23 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
+*if(strcmp(MatProp(Section:),"Fiber")==0)
 *set var FiberArea=MatProp(Cross_section_Area,real)
+*elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
+*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
+*loop materials *NotUsed
+*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSectionTobeAggregated==SectionTobeAggregated)
+*if(strcmp(MatProp(Section:),"Fiber")==0)
+*set var FiberArea=MatProp(Cross_section_Area,real)
+*else
+*MessageBox Invalid Section was selected for Section Aggregator. Only Fiber is supported.
+*endif
+*endif
+*end materials
+*endif
 *endif
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
@@ -500,8 +245,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials
@@ -534,7 +279,7 @@ geomTransf PDelta *TransfTag2
 
 *set var GeomTransfPrinted=1
 *endif
-# Sections Definition for forceBeamColumn Elements
+# Sections Definition used by forceBeamColumn Elements. (Only if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"forceBeamColumn")==0)
@@ -544,281 +289,16 @@ geomTransf PDelta *TransfTag2
 *if(MaterialExists==-1)
 *# meta valto sti lista me ta used materials
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
 *# Section FOUND
-*if(SelectedSection==SecNum)
+*if(SelectedSection==SectionID)
 *set var dummy=tcl(AddUsedMaterials *SelectedSection)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) )
-*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) )
-*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) )
-*# CORE MATERIAL DEFINITION
-*set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoreMaterial )
-*if(MaterialExists==-1)
-*loop materials *NotUsed
-*set var MatNumber=tcl(FindMaterialNumber *Matprop(0))
-*if(SelectedCoreMaterial==MatNumber)
-*if(strcmp(MatProp(Material:),"Concrete01")==0)
-*format "%d%g%g%g%g"
-uniaxialMaterial Concrete01 *SelectedCoreMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real)
-*elseif(strcmp(MatProp(Material:),"Concrete02")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete02 *SelectedCoreMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
-*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete04 *SelectedCoreMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
-*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
-*format "%d%g%g%g%g%g%g%g%g"
-uniaxialMaterial Concrete06 *SelectedCoreMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
-*else
-*MessageBox Error: Unsupported Core material for Fiber Section
+*include ..\..\Sections\Fiber.bas
+*elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
+*include ..\..\Sections\SectionAggregator.bas
 *endif
-*set var dummy=tcl(AddUsedMaterials *SelectedCoreMaterial)
 *break
-*endif
-*end materials
-*endif
-*# Cover Material DEFINITION
-*set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoverMaterial)
-*if(MaterialExists==-1)
-*loop materials *NotUsed
-*set var MatNumber=tcl(FindMaterialNumber *Matprop(0) )
-*if(SelectedCoverMaterial==MatNumber)
-*if(strcmp(MatProp(Material:),"Concrete01")==0)
-*format "%d%g%g%g%g"
-uniaxialMaterial Concrete01 *SelectedCoverMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real)
-*elseif(strcmp(MatProp(Material:),"Concrete02")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete02 *SelectedCoverMaterial *MatProp(Compressive_strength_fpc,real) *MatProp(Strain_at_maximum_strength_epsc0,real) *MatProp(Crushing_strength_fpcu,real) *MatProp(Strain_at_crushing_strength_epscU,real) *MatProp(ratio_between_unloading_slope_at_epscU_and_initial_slope_lamdba,real) *MatProp(Tensile_strength_Ft,real) *MatProp(Tension_softening_stiffness_Ets,real)
-*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial Concrete04 *SelectedCoverMaterial *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)
-*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
-*format "%d%g%g%g%g%g%g%g%g"
-uniaxialMaterial Concrete06 *SelectedCoreMaterial *MatProp(Concrete_compressive_strength_fc,real) *MatProp(Strain_at_compressive_strength_e0,real) *MatProp(Compressive_shape_factor_n,real) *MatProp(Post-peak_compressive_shape_factor_k,real) *MatProp(Parameter_a1_for_compressive_plastic_strain_definition,real) *MatProp(Tensile_strength_fcr,real) *MatProp(Tensile_strain_at_peak_stress_ecr,real) *MatProp(Exponent_of_the_tension_stiffering_curve_b,real) *MatProp(Parameter_a2_for_tensile_plastic_strain_definition,real)
-*else
-*MessageBox Error: Unsupported Cover material for Fiber Section
-*endif
-*set var dummy=tcl(AddUsedMaterials *SelectedCoverMaterial)
-*break
-*endif
-*end materials
-*endif
-*# Reinforcing Bar MATERIAL DEFINITION
-*set var MaterialExists=tcl(CheckUsedMaterials *SelectedRBMaterial)
-*if(MaterialExists==-1)
-*loop materials *NotUsed
-*set var MatNumber=tcl(FindMaterialNumber *Matprop(0) )
-*if(SelectedRBMaterial==MatNumber)
-*if(strcmp(MatProp(Material:),"Steel01")==0)
-*format "%d%g%g%g"
-*if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
-uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Yield_Stress_Fy,real) *MatProp(Initial_elastic_tangent_E0,real) *MatProp(Strain-hardening_ratio_b,real)
-*elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
-uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Force_Fy,real) *MatProp(Initial_stiffness_K,real) *MatProp(Strain-hardening_ratio_b,real)
-*else
-uniaxialMaterial Steel01 *SelectedRBMaterial *MatProp(Moment_My,real) *MatProp(Moment_per_rotation_unit,real) *MatProp(Strain-hardening_ratio_b,real)
-*endif
-*elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
-*format "%d%g%g%g%g%g%g"
-uniaxialMaterial ReinforcingSteel *SelectedRBMaterial *MatProp(Yield_stress_fy,real) *MatProp(Ultimate_stress_fsu,real) *MatProp(Initial_elastic_tangent_Es,real) *MatProp(Tangent_at_initial_strain_hardening_Esh,real) *MatProp(Strain_corresponding_to_initial_strain_hardening_esh,real) *MatProp(Strain_at_peak_stress_esu,real)
-*else
-*MessageBox Error: Unsupported Rebar material for Fiber Section
-*endif
-*set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
-*break
-*endif
-*end materials
-*# endif material has not been already defined
-*endif
-*# ------------------------FIBER definition!!!----------------
-*if(strcmp(Matprop(Cross_section),"Rectangular_Column")==0)
-*set var height=Matprop(Height_h,real)
-*set var width=MatProp(Width_b,real)
-*set var yhalf=operation(height/2.0)
-*set var zhalf=operation(width/2.0)
-*set var cover=MatProp(Cover_depth_for_bars,real)
-
-section Fiber *SelectedSection {
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
-*set var zcoverFibers=tcl(NumofCoverFibers *cover *width *zdivision)
-*# --------------Core fibers-----------
-
-# Create the Core fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(zdivision-2*zcoverFibers) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(zhalf-cover)
-*# --------------Cover fibers----------
-
-# Create the Cover fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(zhalf-cover) *operation(-yhalf) *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(-zhalf) *operation(-yhalf) *operation(cover-zhalf)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(cover-zhalf) *operation(cover-yhalf) *operation(zhalf-cover)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(cover-zhalf) *yhalf *operation(zhalf-cover)
-*# Reinforcing Bars Definition along local y axis
-*if(MatProp(Bars_along_y_axis_face,int)==2)
-
-# Create the corner bars
-
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(-yhalf+cover) *operation(zhalf-cover)
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(-zhalf+cover) *operation(-yhalf+cover) *operation(-zhalf+cover)
-*elseif(MatProp(Bars_along_y_axis_face,int)==3)
-
-# Create the corner bars
-
-*format "%3d% 12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(-yhalf+cover) *operation(zhalf-cover)
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(-zhalf+cover) *operation(-yhalf+cover) *operation(-zhalf+cover)
-
-# Create the middle bars
-
-*format "%10.6f%12.8f%3d"
-fiber 0 *operation(zhalf-cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*format "%10.6f%12.8f%3d"
-fiber 0 *operation(-zhalf+cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*else
-*set var Howmanybars=MatProp(Bars_along_y_axis_face,int)
-*set var ydist=operation((height-2*cover)/(Howmanybars-1))
-*set var yfirstcoord=operation(yhalf-cover-ydist)
-*set var ylastcoord=operation(cover-yhalf+ydist)
-*# Corner bars
-
-# Create the corner bars
-
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(-yhalf+cover) *operation(zhalf-cover)
-*format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(-zhalf+cover) *operation(-yhalf+cover) *operation(-zhalf+cover)
-*# middle bars along y axis
-
-# Create the middle bars along local y axis
-
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(zhalf-cover) *ylastcoord *operation(zhalf-cover)
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(cover-zhalf) *ylastcoord *operation(cover-zhalf)
-*endif
-*# middle Reinforcing bars along local z axis
-*if(MatProp(Bars_along_z_axis_face,int)==3)
-
-# Create the middle bars
-
-*format "%10.6f  %12.8f%3d"
-fiber *operation(yhalf-cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*format "%10.6f  %12.8f%3d"
-fiber *operation(-yhalf+cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*elseif(MatProp(Bars_along_z_axis_face,int)>=4)
-*set var Howmanybars=MatProp(Bars_along_z_axis_face,int)
-*set var zdist=operation((width-2*cover)/(Howmanybars-1))
-*set var zfirstcoord=operation(zhalf-cover-zdist)
-*set var zlastcoord=operation(cover-zhalf+zdist)
-
-# Create the middle bars along local z axis
-
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(yhalf-cover) *zfirstcoord *zlastcoord *operation(yhalf-cover)
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(cover-yhalf) *zfirstcoord *zlastcoord *operation(cover-yhalf)
-*elseif(MatProp(Bars_along_z_axis_face,int)==1)
-*MessageBox Error: Invalid number of longitudinal bars along local y face (1)
-*endif
-}
-*elseif(strcmp(MatProp(Cross_section),"Rectangular_Beam")==0)
-*set var height=Matprop(Height_h,real)
-*set var width=MatProp(Width_b,real)
-*set var yhalf=operation(height/2.0)
-*set var zhalf=operation(width/2.0)
-*set var cover=MatProp(Cover_depth_for_bars,real)
-
-section Fiber *SelectedSection {
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
-*set var zcoverFibers=tcl(NumofCoverFibers *cover *width *zdivision)
-*# --------------Core fibers-----------
-
-# Create the Core fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(zdivision-2*zcoverFibers) *operation(cover-yhalf) *operation(cover-zhalf) *operation(yhalf-cover) *operation(zhalf-cover)
-*# --------------Cover fibers----------
-
-# Create the Cover fibers
-
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(zhalf-cover) *operation(-yhalf) *zhalf
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(-zhalf) *operation(-yhalf) *operation(cover-zhalf)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(cover-zhalf) *operation(cover-yhalf) *operation(zhalf-cover)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(cover-zhalf) *yhalf *operation(zhalf-cover)
-
-*if(MatProp(Top_bars,int)>=2)
-*set var HowmanyTopbars=MatProp(Top_bars,int)
-
-# Create the Top bars (face on local y positive dir)
-
-*format "%3d%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyTopbars *MatProp(Top_bar_area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
-
-*else
-*MessageBox Error: Invalid Number of Top bars in a Fiber Section
-*endif
-*if(MatProp(Bottom_bars,int)>=2)
-# Create the Bottom bars (face on local y negative dir)
-
-*set var HowmanyBottombars=MatProp(Bottom_bars,int)
-*format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
-layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
-*else
-*MessageBox Error: Invalid Number of Bottom Bars in a Fiber Section
-*endif
-}
-*elseif(strcmp(Matprop(Cross_section),"Circular_Column")==0)
-*set var diameter=MatProp(Diameter_d,real)
-*set var radius=operation(diameter/2.0)
-*set var cover=MatProp(Cover_depth_for_bars,real)
-*set var circmdivision=MatProp(Fibers_in_the_circumferential_direction,int)
-*set var raddivision=MatProp(Fibers_in_the_radial_direction,int)
-*set var CoreExternalRadius=operation(radius-cover)
-*set var coverFibers=tcl(NumofCoverFibers *cover *radius *raddivision)
-
-section Fiber *SelectedSection {
-
-# Create the core fibers
-
-#patch circ $matTag $numSubdivCirc $numSubdivRad $yCenter $zCenter $intRad $extRad $startAng $endAng
-*format "%3d%3d%3d %8.3f "
-patch circ *SelectedCoreMaterial *circmdivision *operation(raddivision-coverFibers) 0.0 0.0 0.0 *CoreExternalRadius 0 360
-
-# Create the cover fibers
-
-#patch circ $matTag $numSubdivCirc $numSubdivRad $yCenter $zCenter $intRad $extRad $startAng $endAng
-*format "%3d%3d%3d %8.3f%8.3f "
-patch circ *SelectedCoverMaterial *circmdivision *coverFibers 0.0 0.0 *CoreExternalRadius *radius 0 360
-
-# Create the reinforcing bars
-
-#layer circ $matTag $numFiber $areaFiber $yCenter $zCenter $radius <$startAng $endAng>
-*format "%3d%3d%12.8f %8.3f"
-layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,real) 0.0 0.0 *CoreExternalRadius
-}
-*# endif section is rectangular or circular
-*endif
-*# endif section is fiber
-*endif
-*# endif section found
 *endif
 *# end materials for section searching
 *end materials
@@ -847,9 +327,23 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real) *\
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
+*if(strcmp(MatProp(Section:),"Fiber")==0)
 *set var FiberArea=MatProp(Cross_section_Area,real)
+*elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
+*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
+*loop materials *NotUsed
+*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSectionTobeAggregated==SectionTobeAggregated)
+*if(strcmp(MatProp(Section:),"Fiber")==0)
+*set var FiberArea=MatProp(Cross_section_Area,real)
+*else
+*MessageBox Invalid Section was selected for Section Aggregator. Only Fiber is supported.
+*endif
+*endif
+*end materials
+*endif
 *endif
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
@@ -859,8 +353,8 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
-*set var SecNum=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SecNum)
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*if(SelectedSection==SectionID)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *endif
 *end materials

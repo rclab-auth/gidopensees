@@ -29,6 +29,10 @@
 #
 PROBLEM DATA
 
+
+BOOK: General_Data
+
+
 TITLE: Project_Info
 QUESTION: _#CB#(_)
 VALUE:
@@ -70,11 +74,68 @@ QUESTION: betaKinit
 VALUE: 0.0
 QUESTION: betaKcomm
 VALUE: 0.0
+
+
+BOOK: Output_Options
+
+TITLE: General
+QUESTION: _____#CB#(_)
+VALUE:
+QUESTION: Use_binary_format#CB#(1,0)
+VALUE: 0
+QUESTION: ______#CB#(_)
+VALUE:
+QUESTION: Output_step_frequency
+VALUE: 1#WIDTH#(5)
+TITLE: Nodes
+QUESTION: _______#CB#(_)
+VALUE:
+QUESTION: Nodal_displacements#CB#(1,0)
+STATE: DISABLED
+VALUE: 1
+QUESTION: Nodal_rotations#CB#(1,0)
+VALUE: 1
+QUESTION: Nodal_reactions#CB#(1,0)
+VALUE: 1
+QUESTION: Nodal_relative_accelerations#CB#(1,0)
+VALUE: 1
+QUESTION: Nodal_relative_velocities#CB#(1,0)
+VALUE: 1
+TITLE: Beam_Column_Elements
+QUESTION: ________#CB#(_)
+VALUE:
+QUESTION: Local_forces#CB#(1,0)
+VALUE: 1
+QUESTION: Basic_deformation#CB#(1,0)
+VALUE: 1
+QUESTION: Plastic_Deformation#CB#(1,0)
+VALUE: 1
+TITLE: Truss_Elements
+QUESTION: _________#CB#(_)
+VALUE:
+QUESTION: Axial_force#CB#(1,0)
+VALUE: 1
+TITLE: Surface_Elements
+QUESTION: __________#CB#(_)
+VALUE:
+QUESTION: Stresses#CB#(1,0)
+VALUE: 1
+QUESTION: Strains#CB#(1,0)
+VALUE: 1
+QUESTION: Forces#CB#(1,0)
+VALUE: 1
+TITLE: Solid_Elements
+QUESTION: ___________#CB#(_)
+VALUE:
+QUESTION: _Stresses#CB#(1,0)
+VALUE: 1
+QUESTION: _Strains#CB#(1,0)
+VALUE: 1
+QUESTION: _Forces#CB#(1,0)
+VALUE: 1
 END PROBLEM DATA
 
-
 INTERVAL DATA
-
 TITLE: Analysis_Options
 QUESTION: System_of_equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM,Mumps_(Parallel))
 VALUE: BandGeneral

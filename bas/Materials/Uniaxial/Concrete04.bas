@@ -1,0 +1,2 @@
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial Concrete04 *MaterialID *MatProp(Compressive_strength,real) *Matprop(Strain_at_maximum_strength,real) *MatProp(Strain_at_crushing_strength,real) *MatProp(Initial_stiffness,real) *MatProp(Maximum_tensile_strength,real) *MatProp(Ultimate_tensile_strain,real)

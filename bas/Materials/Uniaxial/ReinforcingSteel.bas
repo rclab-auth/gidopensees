@@ -1,0 +1,2 @@
+*format "%d%g%g%g%g%g%g"
+uniaxialMaterial ReinforcingSteel *MaterialID *MatProp(Yield_stress_fy,real) *MatProp(Ultimate_stress_fsu,real) *MatProp(Initial_elastic_tangent_Es,real) *MatProp(Tangent_at_initial_strain_hardening_Esh,real) *MatProp(Strain_corresponding_to_initial_strain_hardening_esh,real) *MatProp(Strain_at_peak_stress_esu,real)

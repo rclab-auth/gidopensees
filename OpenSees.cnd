@@ -223,6 +223,25 @@ VALUE:
 TKWIDGET: TK_LineLoadsWikiInfo
 END CONDITION
 
+CONDITION: Point_Displacements
+CONDTYPE: over points
+CONDMESHTYPE: over nodes
+COMMENT: \n\tThis condition is assigned on points and is transferred on nodes.\n\tDisplacements are always applied in the ACTIVE interval.\n\tZero values are ignored. Use Restraint condition instead.\n\tAfter assigning new displacements DO NOT FORGET to regenerate the mesh.\n
+QUESTION: X-Displacement#UNITS#
+VALUE: 0.0m
+QUESTION: Y-Displacement#UNITS#
+VALUE: 0.0m
+QUESTION: Z-Displacement#UNITS#
+VALUE: 0.0m
+QUESTION: X-Rotation
+VALUE: 0.0#WIDTH#(12)
+QUESTION: Y-Rotation
+VALUE: 0.0#WIDTH#(12)
+QUESTION: Z-Rotation
+VALUE: 0.0#WIDTH#(12)
+TKWIDGET: TK_DisplacementsWikiInfo
+END CONDITION
+
 CONDITION: Point_Ground_Motion_from_Record
 CONDTYPE: over points
 CONDMESHTYPE: over nodes
@@ -295,10 +314,10 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
-QUESTION: Fast_constraints#CB#(Bar,Beam)
+QUESTION: Fast_constraints#CB#(Pinned_Connection,Fixed_Connection)
 VALUE: Bar
-DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
-DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
+DEPENDENCIES: (Pinned_Connection,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
+DEPENDENCIES: (Fixed_Connection,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
 TKWIDGET: TK_EqualDOFWikiInfo
 END CONDITION
 
@@ -322,10 +341,10 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
-QUESTION: Fast_constraints#CB#(Bar,Beam)
+QUESTION: Fast_constraints#CB#(Pinned_Connection,Fixed_Connection)
 VALUE: Bar
-DEPENDENCIES: (Bar,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
-DEPENDENCIES: (Beam,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
+DEPENDENCIES: (Pinned_Connection,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,0,RESTORE,Y-Rotation,0,RESTORE,Z-Rotation,0)
+DEPENDENCIES: (Fixed_Connection,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
 TKWIDGET: TK_EqualDOFWikiInfo
 END CONDITION
 
@@ -588,36 +607,36 @@ TKWIDGET: TK_UpdateInfoBar
 QUESTION: Activate_Ux#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,SET,Ux_material,#CURRENT#) (1,RESTORE,Ux_material,#CURRENT#)
-QUESTION: Ux_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+QUESTION: Ux_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Elastic
 QUESTION: Activate_Uy#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uy_material,#CURRENT#) (1,RESTORE,Uy_material,#CURRENT#)
-QUESTION: Uy_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+QUESTION: Uy_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Uz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uz_material,#CURRENT#) (1,RESTORE,Uz_material,#CURRENT#)
-QUESTION: Uz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+QUESTION: Uz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rx#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rx_material,#CURRENT#) (1,RESTORE,Rx_material,#CURRENT#)
-QUESTION: Rx_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+QUESTION: Rx_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Ry#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Ry_material,#CURRENT#) (1,RESTORE,Ry_material,#CURRENT#)
-QUESTION: Ry_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+QUESTION: Ry_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rz_material,#CURRENT#) (1,RESTORE,Rz_material,#CURRENT#)
-QUESTION: Rz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Series/Parallel_Uniaxial_Materials)
+QUESTION: Rz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Elastic
 STATE: DISABLED
 TKWIDGET: TK_ZeroLengthWikiInfo

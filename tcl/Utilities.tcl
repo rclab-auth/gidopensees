@@ -1,41 +1,6 @@
-# Create GiDProjectDir variable
-
-proc LoadProjectDirPath { filename } {
-
-	set ProjectName 0
-
-	# GiD_Info Project returns a list with project information { ProblemType ModelName .. .. .. }
-
-	set lines [GiD_Info Project]
-	set ProblemType [lindex $lines 0]
-	set ProjectName [lindex $lines 1]
-
-	if { $ProjectName == "UNNAMED" } {
-		set ProjectName $filename
-	}
-
-	regsub -all {\\} $ProjectName {/} ProjectName
-
-	if { [file extension $ProjectName] == ".gid" } {
-		set ProjectName [file root $ProjectName]
-	}
-
-	set pos [string last / $ProjectName]
-
-	global GiDProjectDir
-	global GiDProjectName
-
-	# returns the characters between two points in the string
-
-	set GiDProjectName [string range $ProjectName $pos+1 $pos+100]
-	set GiDProjectDir [string range $ProjectName 0 $pos-1]
-
-	append GiDProjectDir "/$GiDProjectName.gid"
-}
-
 # This procedure is called only once, when Problem type is loaded from InitGIDProject
 
-proc LoadOpenSeesPath { } {
+proc GetOpenSeesPath { } {
 
 	global OpenSeesPath GidProcWin OpenSeesProblemDir
 
@@ -62,7 +27,137 @@ proc LoadOpenSeesPath { } {
 	}
 }
 
+# Get project directory path
+
+proc GetProjectDirPath {} {
+
+	set lines [GiD_Info Project]
+	set ProblemType [lindex $lines 0]
+	set ProjectName [lindex $lines 1]
+
+	global GiDProjectDir
+	global GiDProjectName
+
+	# GiD_Info Project returns a list with project information { ProblemType ModelName .. .. .. }
+
+	if { $ProjectName == "UNNAMED" } {
+
+		set GiDProjectName "NONE"
+		set GiDProjectDir "NONE"
+
+	} else {
+
+		regsub -all {\\} $ProjectName {/} ProjectName
+
+		if { [file extension $ProjectName] == ".gid" } {
+			set ProjectName [file root $ProjectName]
+		}
+
+		set pos [string last / $ProjectName]
+
+		# returns the characters between two points in the string
+
+		set GiDProjectName [string range $ProjectName $pos+1 $pos+100]
+		set GiDProjectDir [string range $ProjectName 0 $pos-1]
+
+		append GiDProjectDir "/$GiDProjectName.gid"
+	}
+}
+
+# This procedure sets the GiD installation path
+
+proc GetGiDPath { } {
+
+	global GiDPath
+
+	set temp [GiD_Info problemtypepath]
+
+	regsub -all {\\} $temp {/} temp
+
+	set pos [string last /problemtypes $temp]
+
+	set GiDPath [string range $temp 0 $pos-1]
+}
+
 # Analysis procedures
+
+proc ExecutePost {} {
+
+	global GiDPath GiDProjectDir GiDProjectName OpenSeesProblemDir
+
+	GetGiDPath
+
+	set temp1 $GiDPath
+	regsub -all {/} $temp1 {\\} temp1
+	set temp2 $GiDProjectDir
+	regsub -all {/} $temp2 {\\} temp2
+
+	set OutputStep [GiD_AccessValue get gendata Output_step_frequency]
+	set OutputStep [lindex [split $OutputStep #] 0]
+
+	cd "$OpenSeesProblemDir/exe"
+	if {[GiD_AccessValue get gendata use_binary_format] == 0 } {
+	exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep"
+	} else {
+	exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep" "/b"
+	}
+}
+
+proc CheckLogAndPost { projectDir projectName doPost } {
+
+	global ElapsedTime
+	set ElapsedTime ""
+
+	set file "$projectDir/OpenSees/$projectName.log"
+
+	set fp [open $file r]
+	set file_data [read $fp]
+	close $fp
+	set data [split $file_data \n]
+
+	foreach line $data {
+
+		if { ([string match *Analysis* $line]) == 1 && ([string match *time* $line] == 1) } {
+			set words [split $line]
+			if { [lindex $words 0] == "Analysis" && [lindex $words 1] == "time" } {
+
+				set pos [string last ":" $line]
+				set ElapsedTime [string range $line $pos+2 $pos+100]
+
+				break
+			}
+		}
+	}
+
+	set success 1
+
+	foreach line $data {
+
+		if { $line == "Analysis FAILED" } {
+
+			set success 0
+			break
+		}
+	}
+
+	if { $success == 1 } {
+
+		if { $doPost == 0 } {
+
+			AnalysisInformationWindow "RunSuccess"
+
+		} else {
+
+			ExecutePost
+			AnalysisInformationWindow "RunSuccessPost"
+
+		}
+
+	} else {
+
+		AnalysisInformationWindow "RunFailed"
+	}
+}
 
 proc ResetAnalysis {w} {
 
@@ -79,11 +174,11 @@ proc ResetAnalysis {w} {
 	}
 }
 
+# Analysis commands
+
 proc Create_tcl_file {w} {
 
 	destroy $w
-
-	GiD_Process Mescape Files Save
 
 	global GidProcWin
 
@@ -105,6 +200,7 @@ proc Create_tcl_file {w} {
 
 	} else {
 
+		GiD_Process Mescape Files Save
 		global OpenSeesProblemDir GiDProjectDir GiDProjectName
 		file mkdir $GiDProjectDir/OpenSees
 		GiD_Process Mescape Files WriteForBAS "$OpenSeesProblemDir/../OpenSees.gid/OpenSees.bas" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
@@ -133,11 +229,11 @@ proc Run_existing_tcl {w doPost} {
 
 	destroy $w
 
-	GiD_Process Mescape Files Save
-
 	global GiDProjectDir GiDProjectName GidProcWin OpenSeesPath
 
 	if {[file exists "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"] } {
+
+		GiD_Process Mescape Files Save
 
 		cd "$GiDProjectDir/OpenSees"
 
@@ -180,6 +276,28 @@ proc Run_existing_tcl_and_postprocess {w} {
 	return ""
 }
 
+proc Postprocess {} {
+
+	global GiDProjectDir GiDProjectName
+
+	if {[file exists "$GiDProjectDir/OpenSees/$GiDProjectName.log"] } {
+
+			CheckLogAndPost $GiDProjectDir $GiDProjectName 1
+
+	} else {
+
+		if { ![info exists GidProcWin(ww)] || ![winfo exists $GidProcWin(ww).listbox#1] } {
+			set wbase .gid
+			set ww ""
+		} else {
+			set wbase $GidProcWin(ww)
+			set ww $GidProcWin(ww).listbox#1
+		}
+
+		tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "The analysis has not run yet." ] error 0 [_ "Close"]
+	}
+}
+
 proc Create_tcl_run_analysis_and_postprocess {w} {
 
 	destroy $w
@@ -200,79 +318,13 @@ proc Create_tcl_run_analysis_and_postprocess {w} {
 	return ""
 }
 
-proc ExecutePost {} {
-
-	global GiDProjectDir GiDProjectName OpenSeesProblemDir
-
-	set temp $GiDProjectDir
-	regsub -all {/} $temp {\\} temp
-	cd "$OpenSeesProblemDir/exe"
-	exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp"
-}
-
-proc CheckLogAndPost { projectDir projectName doPost } {
-
-	global ElapsedTime
-	set ElapsedTime ""
-
-	set file "$projectDir/OpenSees/$projectName.log"
-
-	set fp [open $file r]
-	set file_data [read $fp]
-	close $fp
-	set data [split $file_data \n]
-
-	foreach line $data {
-
-		if { ([string match *Analysis* $line]) == 1 && ([string match *time* $line] == 1) } {
-			set words [split $line]
-			if { [lindex $words 0] == "Analysis" && [lindex $words 1] == "time" } {
-			
-				set pos [string last ":" $line]
-				set ElapsedTime [string range $line $pos+2 $pos+100]
-
-				break
-			}
-		}
-	}
-
-	set success 1
-
-	foreach line $data {
-
-		if { $line == "Analysis FAILED" } {
-
-			set success 0
-			break
-		}
-	}
-
-	if { $success == 1 } {
-
-		if { $doPost == 0 } {
-
-			AnalysisInformationWindow "RunSuccess"
-
-		} else {
-
-			ExecutePost
-			AnalysisInformationWindow "RunSuccessPost"
-
-		}
-
-	} else {
-
-		AnalysisInformationWindow "RunFailed"
-	}
-}
-
-# Post analysis dialogs
+# Analysis dialogs
 
 proc OpenLogFile {w} {
 
 	destroy $w
 
-	LoadProjectDirPath { "" }
+	GetProjectDirPath
 
 	global GiDProjectDir GiDProjectName
 	set filename [file join $GiDProjectDir OpenSees "$GiDProjectName.log"]
@@ -397,7 +449,8 @@ proc AnalysisInformationWindow { analResult } {
 proc Opt1_dialog { } {
 
 	global GiDProjectDir
-	LoadProjectDirPath { "" }
+
+	GetProjectDirPath
 
 	set file "$GiDProjectDir/OpenSees"
 	set fexists [file exist $file]
@@ -435,7 +488,8 @@ proc Opt1_dialog { } {
 proc Opt2_dialog { } {
 
 	global GiDProjectDir
-	LoadProjectDirPath { "" }
+
+	GetProjectDirPath
 
 	set file "$GiDProjectDir/OpenSees"
 	set fexists [file exist $file]
@@ -473,7 +527,8 @@ proc Opt2_dialog { } {
 proc Opt3_dialog { } {
 
 	global GiDProjectDir
-	LoadProjectDirPath { "" }
+
+	GetProjectDirPath
 
 	set file "$GiDProjectDir/OpenSees"
 	set fexists [file exist $file]
@@ -511,7 +566,8 @@ proc Opt3_dialog { } {
 proc Opt4_dialog { } {
 
 	global GiDProjectDir
-	LoadProjectDirPath { "" }
+
+	GetProjectDirPath
 
 	set file "$GiDProjectDir/OpenSees"
 	set fexists [file exist $file]
@@ -549,12 +605,20 @@ proc Opt4_dialog { } {
 
 proc Opt5_dialog { } {
 
+	Postprocess
+
+	return ""
+}
+
+proc Opt6_dialog { } {
+
 	global GiDProjectDir
-	LoadProjectDirPath { "" }
+
+	GetProjectDirPath
 
 	set file "$GiDProjectDir/OpenSees"
 	set fexists [file exist $file]
-	set w .gid.warn5
+	set w .gid.warn6
 
 	if { $fexists == 1 } {
 
@@ -585,31 +649,36 @@ proc Opt5_dialog { } {
 	return ""
 }
 
-proc Opt6_dialog { } {
+proc Opt7_dialog { } {
 
 	global GiDProjectDir
-	LoadProjectDirPath { "" }
 
+	GetProjectDirPath
+
+	set file "$GiDProjectDir/OpenSees"
+	set fexists [file exist $file]
 	set w .gid.warn6
 
-	InitWindow $w [= "Warning"] ErrorInfo "" "" 1
-	if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
-	ttk::frame $w.top
-	ttk::label $w.top.title_text -text [= ""]
-	ttk::frame $w.information -relief raised
-	ttk::label $w.information.warningmessage -text [= "\tResetting analysis will delete any existing .tcl files and results.\t\n\n\tDo you want to continue ?"]
-	ttk::frame $w.bottom
-	ttk::button $w.bottom.continue -text [= "Yes"] -command [= "ResetAnalysis $w"]
-	ttk::button $w.bottom.destroy -text [= "No"] -command "destroy $w"
-	grid $w.top.title_text -sticky ew
-	grid $w.top -sticky new
-	grid $w.information.warningmessage -sticky w -padx 6 -pady 6
-	grid $w.information -sticky nsew
-	grid $w.bottom.continue $w.bottom.destroy -padx 6
-	grid $w.bottom -sticky sew -padx 6 -pady 6
-	if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-	grid rowconfigure $w 1 -weight 1
-	grid columnconfigure $w 0 -weight 1
+	if { $fexists == 1 } {
+		InitWindow $w [= "Warning"] ErrorInfo "" "" 1
+		if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
+		ttk::frame $w.top
+		ttk::label $w.top.title_text -text [= ""]
+		ttk::frame $w.information -relief raised
+		ttk::label $w.information.warningmessage -text [= "\tResetting analysis will delete any existing .tcl files and results.\t\n\n\tDo you want to continue ?"]
+		ttk::frame $w.bottom
+		ttk::button $w.bottom.continue -text [= "Yes"] -command [= "ResetAnalysis $w"]
+		ttk::button $w.bottom.destroy -text [= "No"] -command "destroy $w"
+		grid $w.top.title_text -sticky ew
+		grid $w.top -sticky new
+		grid $w.information.warningmessage -sticky w -padx 6 -pady 6
+		grid $w.information -sticky nsew
+		grid $w.bottom.continue $w.bottom.destroy -padx 6
+		grid $w.bottom -sticky sew -padx 6 -pady 6
+		if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+		grid rowconfigure $w 1 -weight 1
+		grid columnconfigure $w 0 -weight 1
+	}
 
 	return ""
 }
@@ -636,16 +705,16 @@ proc OpenSees_Menu { dir } {
 
 	# Tab labels
 
-	set tabs [list  [= "Create .tcl, run analysis and postprocess"] [= "Create .tcl only"] [= "Create and view .tcl only"] [= "Run analysis only"] [= "Run analysis only and postprocess"] [= "Reset analysis"] "---" [= "Go to GiD+OpenSees Site"] [= "Go to OpenSees Wiki"] [= "About"] ]
+	set tabs [list  [= "Create .tcl, run analysis and postprocess"] "---" [= "Create .tcl only"] [= "Create and view .tcl only"] [= "Run analysis only"] [= "Postprocess only"] [= "Run analysis and postprocess"] "---" [= "Reset analysis"] "---" [= "Go to GiD+OpenSees Site"] [= "Go to OpenSees Wiki"] [= "About"] ]
 
 	# Selection commands
 
-	set cmds { {Opt1_dialog} {Opt2_dialog} {Opt3_dialog} {Opt4_dialog} {Opt5_dialog} {Opt6_dialog} {} {VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
+	set cmds { {Opt1_dialog} {} {Opt2_dialog} {Opt3_dialog} {Opt4_dialog} {Opt5_dialog} {Opt6_dialog} {} {Opt7_dialog} {} {VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
 	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} {AboutOpenSeesProbType} }
 
 	# Tab icons
 
-	set icons {mnu_Analysis.png mnu_TCL.png mnu_TCL.png mnu_TCL_Analysis.png mnu_TCL_Analysis.png mnu_Reset.png "" mnu_Site.png mnu_Wiki.png mnu_About.png}
+	set icons {mnu_Analysis.png "" mnu_TCL.png mnu_TCL.png mnu_TCL_Analysis.png mnu_TCL_Analysis.png mnu_TCL_Analysis.png "" mnu_Reset.png "" mnu_Site.png mnu_Wiki.png mnu_About.png}
 
 	set position 0
 
@@ -703,169 +772,4 @@ proc ReturnProjectDimensions { } {
 			}
 		}
 	return $ndm
-}
-
-proc ModelessDialog {w title text bitmap default args} {
-
-	global tcl_platform
-	variable ::tk::Priv
-
-	# Check that $default was properly given
-
-	if {[string is integer -strict $default]} {
-		if {$default >= [llength $args]} {
-			return -code error "default button index greater than number of\
-			buttons specified for tk_dialog"
-		}
-	} elseif {"" eq $default} {
-		set default -1
-	} else {
-		set default [lsearch -exact $args $default]
-	}
-
-	set windowingsystem [tk windowingsystem]
-
-	if {$windowingsystem eq "aqua"} {
-		option add *Dialog*background systemDialogBackgroundActive widgetDefault
-		option add *Dialog*Button.highlightBackground \
-		systemDialogBackgroundActive widgetDefault
-	}
-
-	# 1. Create the top-level window and divide it into top
-	# and bottom parts.
-
-	destroy $w
-	toplevel $w -class Dialog
-	wm title $w $title
-	wm iconname $w Dialog
-	wm protocol $w WM_DELETE_WINDOW { }
-
-	# Dialog boxes should be transient with respect to their parent,
-	# so that they will always stay on top of their parent window.  However,
-	# some window managers will create the window as withdrawn if the parent
-	# window is withdrawn or iconified.  Combined with the grab we put on the
-	# window, this can hang the entire application.  Therefore we only make
-	# the dialog transient if the parent is viewable.
-
-	if {[winfo viewable [winfo toplevel [winfo parent $w]]] } {
-		wm transient $w [winfo toplevel [winfo parent $w]]
-	}
-
-	if {$windowingsystem eq "aqua"} {
-		::tk::unsupported::MacWindowStyle style $w moveableModal {}
-	} elseif {$windowingsystem eq "x11"} {
-		wm attributes $w -type dialog
-	}
-
-	frame $w.bot
-	frame $w.top
-
-	if {$windowingsystem eq "x11"} {
-		$w.bot configure -relief raised -bd 1
-		$w.top configure -relief raised -bd 1
-	}
-
-	pack $w.bot -side bottom -fill both
-	pack $w.top -side top -fill both -expand 1
-	grid anchor $w.bot center
-
-	# 2. Fill the top part with bitmap and message (use the option
-	# database for -wraplength and -font so that they can be
-	# overridden by the caller).
-
-	option add *Dialog.msg.wrapLength 3i widgetDefault
-	option add *Dialog.msg.font TkCaptionFont widgetDefault
-
-	label $w.msg -justify left -text $text
-	pack $w.msg -in $w.top -side right -expand 1 -fill both -padx 3m -pady 3m
-	if {$bitmap ne ""} {
-	if {$windowingsystem eq "aqua" && $bitmap eq "error"} {
-		set bitmap "stop"
-	}
-	label $w.bitmap -bitmap $bitmap
-	pack $w.bitmap -in $w.top -side left -padx 3m -pady 3m
-	}
-
-	# 3. Create a row of buttons at the bottom of the dialog.
-
-	set i 0
-
-	foreach but $args {
-
-		button $w.button$i -text $but -command [list set ::tk::Priv(button) $i]
-
-		if {$i == $default} {
-			$w.button$i configure -default active
-		} else {
-			$w.button$i configure -default normal
-		}
-		grid $w.button$i -in $w.bot -column $i -row 0 -sticky ew \
-			-padx 10 -pady 4
-		grid columnconfigure $w.bot $i
-
-		# We boost the size of some Mac buttons for l&f
-
-		if {$windowingsystem eq "aqua"} {
-			set tmp [string tolower $but]
-			if {$tmp eq "ok" || $tmp eq "cancel"} {
-				grid columnconfigure $w.bot $i -minsize 90
-			}
-			grid configure $w.button$i -pady 7
-		}
-
-		incr i
-	}
-
-	# 4. Create a binding for <Return> on the dialog if there is a
-	# default button.
-	# Convention also dictates that if the keyboard focus moves among the
-	# the buttons that the <Return> binding affects the button with the focus.
-
-	if {$default >= 0} {
-
-		bind $w <Return> [list $w.button$default invoke]
-		}
-
-	bind $w <<PrevWindow>> [list bind $w <Return> {[tk_focusPrev %W] invoke}]
-	bind $w <Tab> [list bind $w <Return> {[tk_focusNext %W] invoke}]
-
-	# 5. Create a <Destroy> binding for the window that sets the
-	# button variable to -1;  this is needed in case something happens
-	# that destroys the window, such as its parent window being destroyed.
-
-	bind $w <Destroy> {set ::tk::Priv(button) -1}
-
-	# 6. Withdraw the window, then update all the geometry information
-	# so we know how big it wants to be, then center the window in the
-	# display (Motif style) and de-iconify it.
-
-	#::tk::PlaceWindow $w
-	#tkwait visibility $w
-
-	# 7. Set a grab and claim the focus too.
-
-	#if {$default >= 0} {
-	#   set focus $w.button$default
-	#} else {
-	#	set focus $w
-	#}
-	#tk::SetFocusGrab $w $focus
-
-	# 8. Wait for the user to respond, then restore the focus and
-	# return the index of the selected button.  Restore the focus
-	# before deleting the window, since otherwise the window manager
-	# may take the focus away so we can't redirect it.  Finally,
-	# restore any grab that was in effect.
-
-	#vwait ::tk::Priv(button)
-
-	#catch {
-	# It's possible that the window has already been destroyed,
-	# hence this "catch".  Delete the Destroy handler so that
-	# Priv(button) doesn't get reset by it.
-
-	#bind $w <Destroy> {}
-	#}
-	#tk::RestoreFocusGrab $w $focus
-	#return $Priv(button)
 }

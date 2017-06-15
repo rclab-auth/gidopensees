@@ -127,7 +127,7 @@ geomTransf PDelta *TransfTag4  0 1 0
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
-*A *E *G *J *Iy *Iz *TransfTag -mass *\
+*A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
 *else

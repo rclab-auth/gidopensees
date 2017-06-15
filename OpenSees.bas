@@ -216,9 +216,10 @@ puts "Analysis Summary"
 *format "%g"
 puts "Interval *IntvNum - *IntvData(Analysis_type) : Steps *\
 *if(strcmp(IntvData(Analysis_type),"Static")==0)
+*format "%d"
 *IntvData(Analysis_steps,int)"
 *elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
-*format "%g"
+*format "%g%g"
 [expr int(*IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))]"
 *endif
 *end intervals
@@ -240,6 +241,7 @@ puts "Interval *IntvNum"
 puts ""
 
 *include bas\Loads.bas
+*include bas\UpdateMaterialStage.bas
 
 # recording the initial status
 
