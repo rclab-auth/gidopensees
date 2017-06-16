@@ -31,6 +31,12 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 2.1.0 (16/06/2017)**
+
+- Minor bug fix in multiple constraints
+
+---
+
 **Version 2.1.0 (15/06/2017)**
 
 - Added : **Section aggregator** object

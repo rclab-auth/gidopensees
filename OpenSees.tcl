@@ -29,7 +29,7 @@
 # TCL macros
 #
 
-set VersionNumber "v2.1.0"
+set VersionNumber "v2.1.1"
 
 set InfoWin .gid.win_example
 
