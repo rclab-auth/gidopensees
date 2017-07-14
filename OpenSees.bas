@@ -37,6 +37,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+# --------------------------------------------------------------------------------------------------------------
+# U N I T S
+# --------------------------------------------------------------------------------------------------------------
+
+# Length : *Units(LENGTH)
+# Force  : *Units(FORCE)
+# Moment : *Units(MOMENT)
+# Stress : *Units(STRESS)
+# Mass   : *Units(MASS)
 *set var TwoDOF=0
 *set var ThreeDOF=0
 *set var SixDOF=0
@@ -206,7 +216,7 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 *include bas\equalDOF.bas
 *include bas\Recorders.bas
 
-logFile log.txt
+*tcl(LogFile)
 
 # --------------------------------------------------------------------------------------------------------------
 

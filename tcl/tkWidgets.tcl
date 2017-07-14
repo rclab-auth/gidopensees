@@ -518,10 +518,33 @@ proc TK_CheckFieldValuesForFiber { event args } {
 
 			#CoreMatType is the value of the field: material: of the chosen material from the combo box!
 
-			if { $BarMatType != "Steel01" && $BarMatType != "ReinforcingSteel" } {
-				WarnWinText "ERROR : Material $ChoosedBarMaterial ($BarMatType material) can not be used for fiber sections in this version."
-				WarnWinText "It has been changed to Steel01 material."
+			# List of concrete uniaxial materials that can be used for core/cover material of Fiber Section
+			set CompatibleConcreteMaterials " \
+			Concrete01 \
+			Concrete02 \
+			Concrete04 \
+			Concrete06 \
+			InitStrain \
+			InitStress \
+			"
+			# List of steel uniaxial materials that can be used for reinforcing bar material of Fiber Section
+			set CompatibleSteelMaterials " \
+			Steel01 \
+			ReinforcingSteel \
+			"
 
+			if { [lsearch $CompatibleConcreteMaterials $CoreMatType]==-1 } {
+				WarnWinText "Uncompatible Core material ($CoreMatType) selected for Fiber Material"
+				DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete04_(Popovics_concrete)"
+			}
+
+			if { [lsearch $CompatibleConcreteMaterials $CoverMatType]==-1 } {
+				WarnWinText "Uncompatible Cover material ($CoreMatType) selected for Fiber Material"
+				DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete04_(Popovics_concrete)"
+			}
+
+			if { [lsearch $CompatibleSteelMaterials $BarMatType]==-1 } {
+				WarnWinText "Uncompatible steel material ($CoreMatType) selected for Fiber Material"
 				DWLocalSetValue $GDN $STRUCT "Reinforcing_Bar_material" "Steel01"
 			}
 
@@ -1122,7 +1145,6 @@ proc TK_GenerateUniaxialMaterialsProperties { event args } {
 					}
 				}
 			}
-
 		}
 
 		DEPEND {
@@ -1131,9 +1153,9 @@ proc TK_GenerateUniaxialMaterialsProperties { event args } {
 			if { $ACTION == "RESTORE" } {
 				set mat_type [DWLocalGetValue $GDN $STRUCT $QUESTION]
 				if { $mat_type == "Steel" } {
-					set dummy [TK_DWSet $GDN $STRUCT "Material_type" "Steel" normal]
+					set dummy [TK_DWSet $GDN $STRUCT $QUESTION "Steel" normal]
 				} elseif { $mat_type == "Concrete" } {
-					set dummy [TK_DWSet $GDN $STRUCT "Material_type" "Concrete" normal]
+					set dummy [TK_DWSet $GDN $STRUCT $QUESTION "Concrete" normal]
 				}
 			}
 		}
@@ -1556,8 +1578,7 @@ proc TK_PDMY_FastProperties { event args } {
 	return ""
 }
 
-global Description_text
-set Description_text ""
+set ::Description_text ""
 
 proc TK_DescriptionField { event args } {
 
@@ -1873,6 +1894,12 @@ proc TK_MaterialWikiInfo { event args } {
 				}
 				"Hysteretic" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Hysteretic_Material"
+				}
+				"InitStrain" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Initial_Strain_Material"
+				}
+				"InitStress" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Initial_Stress_Material"
 				}
 			}
 
@@ -2402,4 +2429,266 @@ proc TK_CheckIntegerIntvNum { event args } {
 		}
 	}
 	return ""
+}
+
+proc TK_ControlNodeDirection {event args } {
+
+	switch $event {
+
+		DEPEND {
+
+			lassign $args GDN STRUCT QUESTION ACTION VALUE
+			if { $ACTION == "RESTORE" } {
+				set CtrlNodeDir [DWLocalGetValue $GDN $STRUCT $QUESTION]
+				if { $CtrlNodeDir == "UX" } {
+					set dummy [TK_DWSet $GDN $STRUCT "Total_displacement" "#CURRENT#" normal]
+				} elseif { $CtrlNodeDir == "UY" } {
+					set dummy [TK_DWSet $GDN $STRUCT "Total_displacement" "#CURRENT#" normal]
+				} elseif { $CtrlNodeDir == "UZ" } {
+					set dummy [TK_DWSet $GDN $STRUCT "Total_displacement" "#CURRENT#" normal]
+				} elseif { $CtrlNodeDir == "RX" } {
+					set dummy [TK_DWSet $GDN $STRUCT "Total_rotation" "#CURRENT#" normal]
+				} elseif { $CtrlNodeDir == "RY" } {
+					set dummy [TK_DWSet $GDN $STRUCT "Total_rotation" "#CURRENT#" normal]
+				} elseif { $CtrlNodeDir == "RZ" } {
+					set dummy [TK_DWSet $GDN $STRUCT "Total_rotation" "#CURRENT#" normal]
+				}
+			}
+		}
+
+	}
+	return ""
+}
+
+proc TK_SectionAggregator_CheckValidOptions { event args } {
+	switch $event {
+		INIT {
+
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+
+			set label [label $PARENT.info -text [= "Section Force-Deformation response for a particular section DOF:"]  ]
+			grid $label -column 0 -row [expr $ROW+0] -sticky nw
+		}
+
+		SYNC {
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set thisSectionType [DWLocalGetValue $GDN $STRUCT Section:]
+			set SelectSection [DWLocalGetValue $GDN $STRUCT Select_Section]
+			set ChosenSection [DWLocalGetValue $GDN $STRUCT $QUESTION]
+			set SecType [GiD_AccessValue get materials $ChosenSection "Section:"]
+
+			set CompatibleMaterials " \
+			Elastic \
+			ElasticPerfectlyPlastic \
+			ElasticPerfectlyPlasticwithGap \
+			Steel01 \
+			ReinforcingSteel \
+			Hysteretic \
+			Concrete01 \
+			Concrete02 \
+			Concrete04 \
+			Concrete06 \
+			InitStrain \
+			InitStress \
+			Series \
+			Parallel \
+			"
+
+			if { $SelectSection == 1 } {
+			if { $SecType != "Fiber"} {
+				WarnWinText "Section $ChosenSection ($SecType Section) can not be used for Section Aggregator Object."
+				WarnWinText "Use a Fiber section instead."
+
+				# Change the value of the field "Section_to_be_aggregated" to Fiber
+
+				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
+			}
+			}
+
+			# count activated materials
+			set MatCounter 0
+
+			if { [DWLocalGetValue $GDN $STRUCT Activate_P]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Axial_force-deformation]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Mz]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Moment-curvature_about_local_z-z]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Vy]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Shear_force-deformation_along_local_y-y]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_My]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Moment-curvature_about_local_y-y]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Vz]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Shear_force-deformation_along_local_z-z]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_T]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Torsion_force-deformation]
+			incr MatCounter 1
+			}
+
+			if {$MatCounter} {
+			foreach mat $ChosenMaterials {
+				set matType [GiD_AccessValue get materials $mat "Material:"]
+
+				if { [lsearch $CompatibleMaterials $matType]==-1 } {
+
+					WarnWinText "Uncompatible Material ($matType) selected for $thisSectionType Material"
+
+				}
+			}
+			}
+
+		}
+
+	}
+}
+
+proc TK_SeriesParallel_CheckValidOptions { event args } {
+	switch $event {
+
+		SYNC {
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set thisMatType [DWLocalGetValue $GDN $STRUCT Material:]
+
+			set CompatibleMaterials " \
+			Elastic \
+			ElasticPerfectlyPlastic \
+			ElasticPerfectlyPlasticwithGap \
+			Steel01 \
+			ReinforcingSteel \
+			Hysteretic \
+			Concrete01 \
+			Concrete02 \
+			Concrete04 \
+			Concrete06 \
+			"
+
+			# count activated materials
+			set MatCounter 0
+
+			if { [DWLocalGetValue $GDN $STRUCT Activate_1st_material]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Material_1]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_2nd_material]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Material_2]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_3rd_material]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Material_3]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_4th_material]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Material_4]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_5th_material]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Material_5]
+			incr MatCounter 1
+			}
+
+			if {$MatCounter} {
+			foreach mat $ChosenMaterials {
+				set matType [GiD_AccessValue get materials $mat "Material:"]
+
+				if { [lsearch $CompatibleMaterials $matType]==-1 } {
+
+					WarnWinText "Uncompatible Material ($matType) selected for $thisMatType Material"
+
+				}
+			}
+			}
+		}
+		CLOSE {
+
+			UpdateInfoBar
+		}
+	}
+}
+
+proc TK_ZeroLength_CheckValidOptions { event args } {
+	switch $event {
+
+	SYNC {
+		set GDN [lindex $args 0]
+		set STRUCT [lindex $args 1]
+		set QUESTION [lindex $args 2]
+
+		set CompatibleMaterials " \
+		Elastic \
+		ElasticPerfectlyPlastic \
+		ElasticPerfectlyPlasticwithGap \
+		Steel01 \
+		Hysteretic \
+		InitStrain \
+		InitStress \
+		"
+
+		# count activated materials
+			set MatCounter 0
+
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Ux]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Ux_material]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Uy]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Uy_material]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Uz]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Uz_material]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Rx]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Rx_material]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Ry]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Ry_material]
+			incr MatCounter 1
+			}
+			if { [DWLocalGetValue $GDN $STRUCT Activate_Rz]==1 } {
+			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Rz_material]
+			incr MatCounter 1
+			}
+
+			if {$MatCounter} {
+			foreach mat $ChosenMaterials {
+				if {![catch {GiD_AccessValue get materials $mat "Material:"}]} {
+
+				set matType [GiD_AccessValue get materials $mat "Material:"]
+
+				if { [lsearch $CompatibleMaterials $matType]==-1 } {
+
+					WarnWinText "Uncompatible Material ($matType) selected for ZeroLength Element"
+
+				}
+				} else {
+
+					WarnWinText "Uncompatible Material selected for ZeroLength Element"
+
+				}
+			}
+			}
+	}
+
+	CLOSE {
+
+			UpdateInfoBar
+	}
+	}
 }

@@ -1,4 +1,3 @@
-*#set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
 set iDmax [list]
 set Nsteps *steps
 set IDctrlNode *IntvData(Control_node,int)
@@ -8,7 +7,12 @@ set IDctrlDOF *NodeCtrlDOF
 *for(i=1;i<=Nmatrix;i=i+2)
 *set var tempratio=IntvData(Displacement_peaks-cycles,*i,real)
 *format "%g"
+*if(strcmp(IntvData(Control_node_direction),"UX")==0 || strcmp(IntvData(Control_node_direction),"UY")==0 || strcmp(IntvData(Control_node_direction),"UZ")==0)
 lappend iDmax *operation(tempratio*(IntvData(Total_displacement,real)))
+*# Rotational control direction
+*else
+lappend iDmax *operation(tempratio*(IntvData(Total_rotation,real)))
+*endif
 lappend iNcycles *IntvData(Displacement_peaks-cycles,*operation(i+1),int)
 *endfor
 

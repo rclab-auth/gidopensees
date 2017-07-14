@@ -1,9 +1,12 @@
 *set var PlateThickness=MatProp(Plate_thickness_h,real)
 *set var PlateFiberTag=SectionID
 *set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
+*if(MaterialExists==-1)
 *loop materials *NotUsed
 *set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
 *if(SelectedMaterial==MaterialID)
+*set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
 *include ..\Materials\nD\ElasticIsotropic.bas
 *elseif(strcmp(MatProp(Material:),"ElastiOrthotropic")==0)
@@ -16,14 +19,10 @@
 *include ..\Materials\nD\J2Plasticity.bas
 *elseif(strcmp(MatProp(Material:),"Damage2p")==0)
 *include ..\Materials\nD\Damage2p.bas
-*if(strcmp(MatProp(Computational_stiffness_matrix),"Computational_tangent")==0)
--tangent 0
-*else
--tangent 1
 *endif
-*endif
-*format "%d%d%g"
-section PlateFiber *PlateFiberTag *SelectedMaterial *PlateThickness
 *break
 *endif
 *end materials
+*endif
+*format "%d%d%g"
+section PlateFiber *PlateFiberTag *SelectedMaterial *PlateThickness

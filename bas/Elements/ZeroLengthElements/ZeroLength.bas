@@ -65,6 +65,10 @@
 *include ..\..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Viscous")==0)
 *include ..\..\Materials\Uniaxial\Viscous.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\..\Materials\Uniaxial\InitialStress.bas
 *#
 *# ------------------- Start of Series/Parallel Uniaxial Material Definition ---------------------
 *#

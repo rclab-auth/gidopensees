@@ -56,6 +56,10 @@
 *include ..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Invalid uniaxial P material selected for Section Aggregator
 *# end if Material is Elastic ElasticPP etc.
@@ -101,6 +105,10 @@
 *include ..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Invalid uniaxial Mz material selected for Section Aggregator
 *# end if Material is Elastic ElasticPP etc.
@@ -146,6 +154,10 @@
 *include ..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Invalid uniaxial Vy material selected for Section Aggregator
 *# end if Material is Elastic ElasticPP etc.
@@ -191,6 +203,10 @@
 *include ..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Invalid uniaxial My material selected for Section Aggregator
 *# end if Material is Elastic ElasticPP etc.
@@ -236,6 +252,10 @@
 *include ..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Invalid uniaxial Vz material selected for Section Aggregator
 *# end if Material is Elastic ElasticPP etc.
@@ -281,6 +301,10 @@
 *include ..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Invalid uniaxial T material selected for Section Aggregator
 *# end if Material is Elastic ElasticPP etc.
@@ -294,22 +318,43 @@
 *# end T
 *endif
 *if(ndime==3)
-section Aggregator *SectionAggregatorTag *tcl(FindMaterialNumber *MatProp(Axial_force-deformation) ) P *\
+section Aggregator *SectionAggregatorTag *\
+*if(DefinePmaterial==1)
+*tcl(FindMaterialNumber *MatProp(Axial_force-deformation) ) P *\
+*endif
+*if(DefineMzmaterial==1)
 *tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z) ) Mz *\
+*endif
+*if(DefineVymaterial==1)
 *tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) ) Vy *\
+*endif
+*if(DefineMymaterial==1)
 *tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_y-y) ) My *\
-*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_z-z) ) Mz *\
+*endif
+*if(DefineVzmaterial==1)
+*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_z-z) ) Vz *\
+*endif
+*if(DefineTmaterial==1)
 *tcl(FindMaterialNumber *MatProp(Torsion_force-deformation) ) T *\
+*endif
 *if(DefineSection==1)
 *# optional
 -section *SelectedSection
 *else
 
 *endif
+*# 2D
 *else
-section Aggregator *SectionAggregatorTag *tcl(FindMaterialNumber *MatProp(Axial_force-deformation) ) P *\
+section Aggregator *SectionAggregatorTag *\
+*if(DefinePmaterial==1)
+*tcl(FindMaterialNumber *MatProp(Axial_force-deformation) ) P *\
+*endif
+*if(DefineMzmaterial==1)
 *tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z) ) Mz *\
+*endif
+*if(DefineVymaterial==1)
 *tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) ) Vy *\
+*endif
 *if(DefineSection==1)
 *# optional
 -section *SelectedSection

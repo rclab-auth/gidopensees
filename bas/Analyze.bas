@@ -83,19 +83,39 @@ constraints *IntvData(Constraint_handler)
 integrator LoadControl *LoadIncr
 *elseif(strcmp(IntvData(Integrator_type),"Displacement_control")==0)
 *set var steps=IntvData(Analysis_steps,int)
-*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
+*if(ndime==2)
 *if(strcmp(IntvData(Control_node_direction),"UX")==0)
 *set var NodeCtrlDOF=1
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"UY")==0)
 *set var NodeCtrlDOF=2
-*elseif(strcmp(IntvData(Control_node_direction),"YZ")==0)
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
+*elseif(strcmp(IntvData(Control_node_direction),"RZ")==0)
 *set var NodeCtrlDOF=3
+*set var DispIncr=operation(IntvData(Total_rotation,real)/steps)
+*else
+*MessageBox Error: Invalid Control Node Direction for 2D Model.
+*endif
+*else
+*if(strcmp(IntvData(Control_node_direction),"UX")==0)
+*set var NodeCtrlDOF=1
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
+*elseif(strcmp(IntvData(Control_node_direction),"UY")==0)
+*set var NodeCtrlDOF=2
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
+*elseif(strcmp(IntvData(Control_node_direction),"UZ")==0)
+*set var NodeCtrlDOF=3
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"RX")==0)
 *set var NodeCtrlDOF=4
+*set var DispIncr=operation(IntvData(Total_rotation,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"RY")==0)
 *set var NodeCtrlDOF=5
+*set var DispIncr=operation(IntvData(Total_rotation,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"RZ")==0)
 *set var NodeCtrlDOF=6
+*set var DispIncr=operation(IntvData(Total_rotation,real)/steps)
+*endif
 *endif
 *format "%g%d%g"
 integrator DisplacementControl *IntvData(Control_node) *NodeCtrlDOF *DispIncr
@@ -199,19 +219,24 @@ if {$AnalOk == 0} {
 *# Integrator for Static Cyclic Analysis
 *if(strcmp(IntvData(Integrator_type),"Displacement_control")==0)
 *set var steps=IntvData(Analysis_steps,int)
-*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
 *if(strcmp(IntvData(Control_node_direction),"UX")==0)
 *set var NodeCtrlDOF=1
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"UY")==0)
 *set var NodeCtrlDOF=2
-*elseif(strcmp(IntvData(Control_node_direction),"YZ")==0)
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
+*elseif(strcmp(IntvData(Control_node_direction),"UZ")==0)
 *set var NodeCtrlDOF=3
+*set var DispIncr=operation(IntvData(Total_displacement,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"RX")==0)
 *set var NodeCtrlDOF=4
+*set var DispIncr=operation(IntvData(Total_rotation,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"RY")==0)
 *set var NodeCtrlDOF=5
+*set var DispIncr=operation(IntvData(Total_rotation,real)/steps)
 *elseif(strcmp(IntvData(Control_node_direction),"RZ")==0)
 *set var NodeCtrlDOF=6
+*set var DispIncr=operation(IntvData(Total_rotation,real)/steps)
 *endif
 *format "%g%d%g"
 integrator DisplacementControl *IntvData(Control_node) *NodeCtrlDOF *DispIncr
@@ -295,11 +320,12 @@ analysis *IntvData(Analysis_type)
 system *IntvData(System_of_equations)
 numberer *IntvData(DOF_numberer)
 constraints *IntvData(Constraint_handler)
-*format "%g%g"
 *if(strcmp(IntvData(Integrator_type),"Newmark")==0)
+*format "%g%g"
 integrator Newmark *IntvData(gamma,real) *IntvData(beta,real)
 *elseif(strcmp(IntvData(Integrator_type),"Hilber-Hughes-Taylor")==0)
-integrator Newmark *IntvData(alpha,real) *IntvData(gamma,real) *IntvData(beta,real)
+*format "%g%g%g"
+integrator HHT *IntvData(alpha,real) *IntvData(gamma,real) *IntvData(beta,real)
 *else
 *MessageBox Error: Invalid Analysis Options.
 *endif

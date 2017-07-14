@@ -1,6 +1,11 @@
 
 *format "%g"
+*if(strcmp(IntvData(Control_node_direction),"UX")==0 || strcmp(IntvData(Control_node_direction),"UY")==0 || strcmp(IntvData(Control_node_direction),"UZ")==0)
 set Dmax *IntvData(Total_displacement,real)
+*# Rotation control direction
+*else
+set Dmax *IntvData(Total_rotation,real)
+*endif
 *format "%g"
 set Dincr *DispIncr
 set Nsteps *steps

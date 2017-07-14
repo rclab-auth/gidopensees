@@ -25,15 +25,15 @@
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Truss")==0)
 *# We set the variable SelectedMaterial the IDnumber of the material that user choosed from the Material field , in the element that he/she assigned!
-*set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
-*set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *loop materials *NotUsed
 *# We set the variable MaterialID the IDnumber of each material(NotUsed) and we check which is the material that user choosed in Material field in element definition.
 *set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
 *#we check which is the material that user choosed in Material field in element definition.
 *if(MaterialID==SelectedMaterial)
+*set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
 *include ..\..\Materials\Uniaxial\Elastic.bas
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlastic")==0)
@@ -46,6 +46,12 @@
 *include ..\..\Materials\Uniaxial\Viscous.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"Parallel")==0 || strcmp(MatProp(Material:),"Series")==0)
+*include ..\..\Materials\Uniaxial\SeriesParallel.bas
 *else
 *MessageBox Error: Invalid uniaxial material selected for truss element
 *endif

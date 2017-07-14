@@ -18,6 +18,10 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Unsupported Core material for Fiber Section
 *endif
@@ -40,6 +44,10 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Unsupported Cover material for Fiber Section
 *endif
@@ -61,7 +69,7 @@
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
-*set var dummy=tcl(AddUsedMaterials *MaterialID)
+*set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
 *break
 *endif
 *end materials
@@ -373,10 +381,14 @@ layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,re
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Unsupported Core material for Fiber Section
 *endif
-*set var dummy=tcl(AddUsedMaterials *MaterialID)
+*set var dummy=tcl(AddUsedMaterials *SelectedCoreMaterial)
 *break
 *endif
 *end materials
@@ -395,10 +407,14 @@ layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,re
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"InitStrain")==0)
+*include ..\Materials\Uniaxial\InitialStrain.bas
+*elseif(strcmp(MatProp(Material:),"InitStress")==0)
+*include ..\Materials\Uniaxial\InitialStress.bas
 *else
 *MessageBox Error: Unsupported Cover material for Fiber Section
 *endif
-*set var dummy=tcl(AddUsedMaterials *MaterialID)
+*set var dummy=tcl(AddUsedMaterials *SelectedCoverMaterial)
 *break
 *endif
 *end materials
@@ -416,7 +432,7 @@ layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,re
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
-*set var dummy=tcl(AddUsedMaterials *MaterialID)
+*set var dummy=tcl(AddUsedMaterials *SelectedRBMaterial)
 *break
 *endif
 *end materials

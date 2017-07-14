@@ -29,6 +29,9 @@
 *# PDelta geomTransf tags
 *set var TransfTag3=3
 *set var TransfTag4=4
+*# Corotational geomTransf tags
+*set var TransfTag5=5
+*set var TransfTag6=6
 *#------------------------------------------------
 *#-----------Geometric Transformation-------------
 *#------------------------------------------------
@@ -37,21 +40,24 @@
 *#-------------------- Z AXIS AS VERTICAL AXIS-------------------------
 *if(strcmp(GenData(Vertical_axis),"Z")==0)
 *# Vertical elements
-*# Vertical elements
 geomTransf Linear *TransfTag1 -1 0 0
 geomTransf PDelta *TransfTag3 -1 0 0
+geomTransf Corotational *TransfTag5 -1 0 0
 *# Not vertical elements
 geomTransf Linear *TransfTag2  0 0 1
 geomTransf PDelta *TransfTag4  0 0 1
+geomTransf Corotational *TransfTag6 0 0 1
 
 *#-------------------- Y AXIS AS VERTICAL AXIS-------------------------
 *elseif(strcmp(GenData(Vertical_axis),"Y")==0)
 *# Vertical elements
 geomTransf Linear *TransfTag1 -1 0 0
 geomTransf PDelta *TransfTag3 -1 0 0
+geomTransf Corotational *TransfTag5 -1 0 0
 *# Not vertical elements
 geomTransf Linear *TransfTag2  0 1 0
 geomTransf PDelta *TransfTag4  0 1 0
+geomTransf Corotational *TransfTag6 0 1 0
 
 *endif
 *set var GeomTransfPrinted=1
@@ -101,6 +107,8 @@ geomTransf PDelta *TransfTag4  0 1 0
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
 *set var TransfTag=TransfTag3
+*else
+*set var TransfTag=TransfTag5
 *endif
 *format "%3d%6d%6d%3d%3d%4d%g"
 element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
@@ -119,6 +127,8 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *set var TransfTag=TransfTag2
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
 *set var TransfTag=TransfTag4
+*else
+*set var TransfTag=TransfTag6
 *endif
 *format "%3d%6d%6d%3d%3d%4d%g"
 element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
@@ -141,6 +151,8 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
 *set var TransfTag=TransfTag3
+*else
+*set var TransfTag=TransfTag5
 *endif
 *format "%6d%6d%6d%3d%3d%4d%g"
 element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
@@ -173,6 +185,8 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *set var TransfTag=TransfTag2
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
 *set var TransfTag=TransfTag4
+*else
+*set var TransfTag=TransfTag6
 *endif
 *format "%6d%6d%6d%3d%3d%4d%g"
 element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
@@ -201,6 +215,7 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *if(GeomTransfPrinted==0)
 *set var TransfTag1=1
 *set var TransfTag2=2
+*set var TransfTag3=3
 *#------------------------------------------------
 *#-----------Geometric Transformation-------------
 *#------------------------------------------------
@@ -208,6 +223,7 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 
 geomTransf Linear *TransfTag1
 geomTransf PDelta *TransfTag2
+geomTransf Corotational *TransfTag3
 
 *set var GeomTransfPrinted=1
 *endif
@@ -251,6 +267,8 @@ geomTransf PDelta *TransfTag2
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
 *set var TransfTag=TransfTag2
+*else
+*set var TransfTag=TransfTag3
 *endif
 *format "%3d%6d%6d%3d%3d%g"
 element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\

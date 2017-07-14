@@ -603,7 +603,7 @@ CONDMESHTYPE: over nodes
 COMMENT: \n\tEach group of ZeroLength elements must have a unique integer ID number.\n\tEach ZeroLength ID must be assigned on at least 2 points/nodes with the same coordinates.\n\tFor more than 2 points/nodes, the element is applied in point/node pairs.\n\tZero Length Element's Nodes must have same dof.\n\tAfter assigning new zero length elements DO NOT FORGET to regenerate the mesh.\n
 QUESTION: ZeroLength_ID_number
 VALUE: 1#WIDTH#(4)
-TKWIDGET: TK_UpdateInfoBar
+TKWIDGET: TK_ZeroLength_CheckValidOptions
 QUESTION: Activate_Ux#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,SET,Ux_material,#CURRENT#) (1,RESTORE,Ux_material,#CURRENT#)

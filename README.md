@@ -31,7 +31,17 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-**Version 2.1.0 (16/06/2017)**
+**Version 2.1.2 (14/07/2017)**
+
+- Added : **Initial stress** material
+- Added : **Initial strain** material
+- Added : **Corotational** transformation
+- Compatibility with latest GiD developer version
+- Minor bug fixes
+
+---
+
+**Version 2.1.1 (16/06/2017)**
 
 - Minor bug fix in multiple constraints
 

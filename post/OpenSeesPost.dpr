@@ -549,13 +549,6 @@ begin
         MSH.Writeline('Nodes included');
         MSH.Writeline('Natural Coordinates: Internal');
         MSH.Writeline('end GaussPoints');
-
-        MSH.Writeline('');
-        MSH.Writeline('GaussPoints "Line_Axes" ElemType Line');
-        MSH.Writeline('Number Of Gauss Points: 1');
-        MSH.Writeline('Nodes not included');
-        MSH.Writeline('Natural Coordinates: Internal');
-        MSH.Writeline('end GaussPoints');
     end;
 
     // buffer interval types and steps
@@ -589,7 +582,6 @@ begin
         CloseFile(RES);
     end;
 
-
     //
     //
     // L O C A L   A X E S   F O R   F R A M E   E L E M E N T S
@@ -604,6 +596,13 @@ begin
 
     if FileExists(OutFile) and (n <> -1) then
     begin
+        MSH.Writeline('');
+        MSH.Writeline('GaussPoints "Line_Axes" ElemType Line');
+        MSH.Writeline('Number Of Gauss Points: 1');
+        MSH.Writeline('Nodes not included');
+        MSH.Writeline('Natural Coordinates: Internal');
+        MSH.Writeline('end GaussPoints');
+
         writeln('Reading frame element local axes');
 
         LOC := TStringList.Create;
@@ -2298,8 +2297,11 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//V" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//M" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
                 end;
@@ -2308,16 +2310,21 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//Vy" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//Vz" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//T" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//My" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//Mz" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
                 end;
 
-                MSH.Writeline('Unit "kN or kNm"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
@@ -2400,8 +2407,11 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//V" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//M" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
                 end;
@@ -2410,16 +2420,21 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Vy" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Vz" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//T" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//My" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Mz" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
                 end;
 
-                MSH.Writeline('Unit "kN or kNm"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
@@ -2504,8 +2519,11 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//V" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//M" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
                 end;
@@ -2514,16 +2532,21 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//Vy" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//Vz" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//T" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//My" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//Mz" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
                 end;
 
-                MSH.Writeline('Unit "kN or kNm"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
@@ -2604,7 +2627,9 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
@@ -2613,14 +2638,17 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation_z" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation_y" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Torsional" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
                 end;
 
-                MSH.Writeline('Unit "m or rad"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
@@ -2701,7 +2729,9 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
@@ -2710,14 +2740,17 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation_z" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation_y" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Torsional" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
                 end;
 
-                MSH.Writeline('Unit "m or rad"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
@@ -2802,8 +2835,11 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//V" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//M" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
                 end;
@@ -2812,16 +2848,21 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//Vy" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//Vz" Scalar');
+                    MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//T" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//My" Scalar');
+                    MSH.Writeline('Unit "kNm"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//Mz" Scalar');
+                    MSH.Writeline('Unit "kNm"');
 
                     StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
                 end;
 
-                MSH.Writeline('Unit "kN or kNm"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
@@ -2902,7 +2943,9 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Rotation" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
@@ -2911,14 +2954,17 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Rotation_z" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Rotation_y" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Torsional" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
                 end;
 
-                MSH.Writeline('Unit "m or rad"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
@@ -2999,7 +3045,9 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Rotation" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
@@ -3008,14 +3056,17 @@ begin
                 begin
                     MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Axial" Scalar');
+                    MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Rotation_z" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Rotation_y" Scalar');
+                    MSH.Writeline('Unit "rad"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Torsional" Scalar');
+                    MSH.Writeline('Unit "rad"');
 
                     StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
                 end;
 
-                MSH.Writeline('Unit "m or rad"');
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do

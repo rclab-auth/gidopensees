@@ -43,7 +43,7 @@ IMAGE: img/Materials/Elastic.png
 QUESTION: Formulation#CB#(Stress-Strain,Force-Deformation,Moment-Rotation)
 VALUE: Stress-Strain
 DEPENDENCIES: (Stress-Strain,RESTORE,Material_type,#CURRENT#,HIDE,Stiffness_K,#CURRENT#,HIDE,Moment_per_rotation_unit,#CURRENT#,RESTORE,Elastic_modulus_E,#CURRENT#,HIDE,Moment_per_rotation_unit,#CURRENT#)
-DEPENDENCIES: (Force-Deformation,HIDE,Material_type,#CURRENT#,HIDE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,HIDE,Elastic_modulus_E,#CURRENT#,RESTORE,Stiffness_K,#CURRENT#)
+DEPENDENCIES: (Force-Deformation,HIDE,Material_type,#CURRENT#,HIDE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,HIDE,Elastic_modulus_E,#CURRENT#,RESTORE,Stiffness_K,#CURRENT#,HIDE,Moment_per_rotation_unit,#CURRENT#)
 DEPENDENCIES: (Moment-Rotation,HIDE,Material_type,#CURRENT#,HIDE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,HIDE,Elastic_modulus_E,#CURRENT#,HIDE,Stiffness_K,#CURRENT#,RESTORE,Moment_per_rotation_unit,#CURRENT#)
 QUESTION: Material_type#CB#(Concrete,Steel,Custom)
 VALUE: Custom
@@ -517,7 +517,7 @@ COMMENT: \n
 QUESTION: Material:#CB#(Series)
 VALUE: Series
 IMAGE: img/Materials/SeriesMaterial.png
-TKWIDGET: TK_UpdateInfoBar
+TKWIDGET: TK_SeriesParallel_CheckValidOptions
 QUESTION: Activate_1st_material#CB#(0,1)
 VALUE: 1
 IMAGE: img/Materials/SeriesMaterialExample.png
@@ -534,7 +534,7 @@ VALUE: 0
 DEPENDENCIES: (0,SET,Material_3,#CURRENT#) (1,RESTORE,Material_3,#CURRENT#)
 QUESTION: Material_3#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
 VALUE: Elastic
-QUESTION: Activate_4rd_Material#CB#(0,1)
+QUESTION: Activate_4th_Material#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Material_4,#CURRENT#) (1,RESTORE,Material_4,#CURRENT#)
 QUESTION: Material_4#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
@@ -552,7 +552,7 @@ COMMENT: \n
 QUESTION: Material:#CB#(Parallel)
 VALUE: Parallel
 IMAGE: img/Materials/ParallelMaterial.png
-TKWIDGET: TK_UpdateInfoBar
+TKWIDGET: TK_SeriesParallel_CheckValidOptions
 QUESTION: Activate_1st_material#CB#(0,1)
 VALUE: 1
 IMAGE: img/Materials/ParallelMaterialExample.png
@@ -569,7 +569,7 @@ VALUE: 0
 DEPENDENCIES: (0,SET,Material_3,#CURRENT#) (1,RESTORE,Material_3,#CURRENT#)
 QUESTION: Material_3#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
 VALUE: Elastic
-QUESTION: Activate_4rd_Material#CB#(0,1)
+QUESTION: Activate_4th_Material#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Material_4,#CURRENT#) (1,RESTORE,Material_4,#CURRENT#)
 QUESTION: Material_4#MAT#(Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials)
@@ -588,7 +588,7 @@ TITLE: General
 QUESTION: Section:#CB#(SectionAggregator)
 VALUE: SectionAggregator
 QUESTION: Compatible_materials:#CB#(_)
-VALUE: Elastic/ElasticPP/ElasticPPwithGap/Series/Parallel
+VALUE: All uniaxial materials except Viscous
 QUESTION: Compatible_sections:#CB#(_)
 VALUE: Fiber
 TKWIDGET: TK_SectionWikiInfo
@@ -596,11 +596,10 @@ TITLE: Section_properties
 QUESTION: Select_section#CB#(1,0)
 VALUE: 1
 IMAGE: Img/Materials/SectionAggregator.png
-DEPENDENCIES: (1,RESTORE,Section,#CURRENT#) (0,HIDE,Section,#CURRENT#)
+DEPENDENCIES: (1,RESTORE,Section_to_be_aggregated,#CURRENT#) (0,HIDE,Section_to_be_aggregated,#CURRENT#)
 QUESTION: Section_to_be_aggregated#MAT#(Section_Force-Deformation)
 VALUE: Fiber
-QUESTION: Section_force-deformation#CB#(_)
-VALUE: response for a particular section DOF
+TKWIDGET: TK_SectionAggregator_CheckValidOptions
 QUESTION: Activate_P#CB#(1,0)
 VALUE: 0
 DEPENDENCIES: (1,RESTORE,Axial_force-deformation,#CURRENT#) (0,SET,Axial_force-deformation,#CURRENT#)
@@ -637,6 +636,30 @@ DEPENDENCIES: (1,RESTORE,Torsion_force-deformation,#CURRENT#) (0,SET,Torsion_for
 QUESTION: Torsion_force-deformation#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Elastic
 STATE: DISABLED
+END MATERIAL
+
+MATERIAL: Initial_Strain
+COMMENT: \n
+QUESTION: Material:#CB#(_)
+VALUE: InitStrain
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Material_for_defining_initial_strain#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Standard_Uniaxial_Materials)
+VALUE: Elastic
+QUESTION: Initial_strain
+VALUE: 0.0004#WIDTH#(15)
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
+MATERIAL: Initial_Stress
+COMMENT: \n
+QUESTION: Material:#CB#(_)
+VALUE: InitStress
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Material_for_defining_initial_stress#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Standard_Uniaxial_Materials)
+VALUE: Elastic
+QUESTION: Initial_stress#UNITS#
+VALUE: -10 MPa
+TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
 
@@ -867,7 +890,7 @@ QUESTION: Section:#CB#(Fiber)
 VALUE: Fiber
 TKWIDGET: TK_CheckFieldValuesForFiber
 QUESTION: Compatible_materials:#CB#(_)
-VALUE: Concrete01/Concrete02/Concrete04/Concrete06/Steel01/Reinforcing steel
+VALUE: Concrete uniaxial materials/InitStrain/InitStress/Steel uniaxial materials
 TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
 QUESTION: _#CB#(Hover_for_local_axes_info)
@@ -969,9 +992,9 @@ VALUE: 15#WIDTH#(10)
 QUESTION: Fibers_in_the_radial_direction
 VALUE: 15#WIDTH#(10)
 TITLE: Materials
-QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials)
+QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
-QUESTION: Cover_material#MAT#(Uniaxial_Concrete_Materials)
+QUESTION: Cover_material#MAT#(Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
 QUESTION: Reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel01
@@ -1104,7 +1127,7 @@ VALUE: 1
 QUESTION: mod._Iyz
 VALUE: 1
 TITLE: Element_Geometry
-QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
+QUESTION: Geometric_transformation#CB#(Linear,P-Delta,Corotational)
 VALUE: Linear
 END MATERIAL
 
@@ -1176,7 +1199,7 @@ VALUE: 1
 QUESTION: mod._Iyz
 VALUE: 1
 TITLE: Element_Geometry
-QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
+QUESTION: Geometric_transformation#CB#(Linear,P-Delta,Corotational)
 VALUE: Linear
 END MATERIAL
 
@@ -1205,7 +1228,7 @@ QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
 VALUE: Fiber
 TKWIDGET: TK_CheckSectionForFBC
 TITLE: Element_Geometry
-QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
+QUESTION: Geometric_transformation#CB#(Linear,P-Delta,Corotational)
 VALUE: Linear
 TITLE: Element_compatibillity
 QUESTION: Activate_iterative_scheme_for_satisfying_element_compatibility#CB#(1,0)
@@ -1245,7 +1268,7 @@ QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
 VALUE: Fiber
 TKWIDGET: TK_CheckSectionForDBC
 TITLE: Element_Geometry
-QUESTION: Geometric_transformation#CB#(Linear,P-Delta)
+QUESTION: Geometric_transformation#CB#(Linear,P-Delta,Corotational)
 VALUE: Linear
 TITLE: Mass
 QUESTION: Mass_density#UNITS#
@@ -1266,7 +1289,7 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Standard Uniaxial Materials/Steel01
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials)
+QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use it's parameters.
 TITLE: Mass
@@ -1318,7 +1341,7 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Standard Uniaxial Materials/Steel01
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials)
+QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use it's parameters.
 TITLE: Mass

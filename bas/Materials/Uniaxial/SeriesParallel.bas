@@ -19,12 +19,20 @@
 *include ..\..\Materials\Uniaxial\ElasticPPwithGap.bas
 *elseif(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\..\Materials\Uniaxial\Steel01.bas
+*elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
+*include ..\..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
+*include ..\..\Materials\Uniaxial\Hysteretic.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\..\Materials\Uniaxial\Concrete01.bas
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
 *include ..\..\Materials\Uniaxial\Concrete02.bas
+*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
+*include ..\..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\..\Materials\Uniaxial\Concrete06.bas
+*else
+*MessageBox Error: Invalid uniaxial material selected for Series/Parallel material
 *endif
 *break
 *endif
@@ -33,7 +41,7 @@
 *endif
 *endfor
 *if(Nuniax==0)
-*MessageBox Error: Parallel uniaxialMaterial material without Uniaxial materials
+*MessageBox Error: Series/Parallel uniaxialMaterial material without Uniaxial materials
 *else
 uniaxialMaterial *\
 *if(strcmp(MatProp(Material:),"Parallel")==0)

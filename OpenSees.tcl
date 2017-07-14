@@ -29,18 +29,206 @@
 # TCL macros
 #
 
-set VersionNumber "v2.1.1"
+set ::VersionNumber "v2.1.2"
+set ::InfoWin .gid.transform
 
-set InfoWin .gid.win_example
+#
+# GiD TCL events
+#
+
+proc InitGIDProject { dir } {
+
+	global MenuNames MenuEntries MenuCommands MenuAcceler
+	global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
+	global InterfaceName
+	global GidPriv
+	global OpenSeesProblemDir OpenSeesPath
+
+	set OpenSeesProblemDir $dir
+
+	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl} {
+		source [file join $dir tcl $filename]
+	}
+
+	set InterfaceName [_ "GiD+OpenSees Interface"]
+
+	set num [lsearch $MenuNamesP [_ "View results"]]
+
+	if { $num == -1 } {
+		WarnWin "OpenSees is not compatible with this GiD version"
+		return
+	}
+
+	GetOpenSeesPath
+
+	global splashdir
+	set splashdir 0
+	global keepsplash
+	set keepsplash 0
+
+	SetImagesAndColors
+
+	Splash $dir
+	set splashdir $dir
+
+	OpenSees_Menu $dir
+
+	set ipos [lsearch $MenuNames [_ "Help"]]
+
+	if { $ipos != -1 } {
+		set MenuEntries($ipos) [linsert $MenuEntries($ipos) 0 "Help on OpenSees"]
+		set MenuCommands($ipos) [linsert $MenuCommands($ipos) 0 [list -np- HelpOnOpenSees $dir]]
+		set MenuAcceler($ipos) [linsert $MenuAcceler($ipos) 0 ""]
+
+		CreateTopMenus
+	}
+
+	set ipos [lsearch $MenuNamesP Help]
+
+	if { $ipos != -1 } {
+		set MenuEntriesP($ipos) [linsert $MenuEntriesP($ipos) 0 "Help on OpenSees"]
+		set MenuCommandsP($ipos) [linsert $MenuCommandsP($ipos) 0 [list -np- HelpOnOpenSees $dir]]
+		set MenuAccelerP($ipos) [linsert $MenuAccelerP($ipos) 0 ""]
+	}
+
+	Toolbar1
+	Toolbar2
+
+	set GidPriv(ProgName) $InterfaceName
+
+	GidChangeDataLabel "Conditions" ""
+	GidChangeDataLabel "Local Axes" ""
+	GidChangeDataLabel "Materials" "Materials/Elements Definition"
+
+	GidAddUserDataOptions "Loads" "GidOpenConditions Loads" 2
+	GidAddUserDataOptions "Restraints" "GidOpenConditions Restraints" 3
+	GidAddUserDataOptions "Constraints" "GidOpenConditions Constraints" 4
+	GidAddUserDataOptions "Mass/Damping" "GidOpenConditions Mass/Damping" 5
+	GidAddUserDataOptions "ZeroLength Elements" "GidOpenConditions ZeroLength_Elements" 6
+	GidAddUserDataOptions "---" "" 8
+
+	GiD_DataBehaviour materials Standard_Uniaxial_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Uniaxial_Steel_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Uniaxial_Concrete_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Other_Uniaxial_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials Multidimensional_(nD)_Materials hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "Section_Force-Deformation" hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "Combined_Materials" hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "Records" hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "Beam-Column_Elements" geomlist {lines}
+	GiD_DataBehaviour materials "Truss_Elements" geomlist {lines}
+	GiD_DataBehaviour materials Surface_Elements geomlist {surfaces}
+	GiD_DataBehaviour materials Solid_Elements geomlist {volumes}
+
+	GiDMenu::UpdateMenus
+
+	after 1000 "{UpdateInfoBar}"
+}
+
+proc EndGIDProject {} {
+
+	bind .gid <Configure>	{}
+	bind .gid <Activate>	{}
+	bind .gid <Deactivate>	{}
+	bind .gid <Map>			{}
+
+	if {[winfo exist .ibar]} {destroy .ibar}
+
+	EndToolbar1
+	EndToolbar2
+}
+
+# check problemtype version mismatch
+
+proc LoadGIDProject { filespd } {
+
+	global VersionNumber
+	global InfoWin
+
+	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
+
+	# loading the problemtype itself, not a model
+
+	} else {
+
+		set spd_exist [file exist $filespd]
+
+		if {$spd_exist} {
+
+			set spd [open $filespd r]
+
+			set spd_data [read $spd]
+			set spd_data [string trim $spd_data]
+
+			close $spd
+
+		} else {
+
+			set spd_data "Unknown"
+		}
+
+		set cmp [string compare "$spd_data" "$VersionNumber"]
+
+		if { $cmp != 0 } {
+
+			InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
+			if { ![winfo exists $InfoWin] } return ;
+			ttk::frame $InfoWin.top
+			ttk::label $InfoWin.top.title_text -text [= ""]
+			ttk::frame $InfoWin.information -relief raised
+			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
+			ttk::frame $InfoWin.bottom
+			ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "TransformAndClose"
+			ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
+			grid $InfoWin.top.title_text -sticky ew
+			grid $InfoWin.top -sticky new
+			grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
+			grid $InfoWin.information -sticky new
+			grid $InfoWin.bottom.continue $InfoWin.bottom.readlog -padx 10
+			grid $InfoWin.bottom -sticky sew -padx 10 -pady 10
+			if { $::tcl_version >= 8.5 } { grid anchor $InfoWin.bottom center }
+			grid rowconfigure $InfoWin 1 -weight 1
+			grid columnconfigure $InfoWin 0 -weight 1
+		}
+	}
+}
+
+proc SaveGIDProject { filespd } {
+
+	global VersionNumber
+
+	set spd [open $filespd w]
+	puts $spd $VersionNumber
+	close $spd
+}
+
+proc BeforeInitGIDPostProcess {} {
+
+	# remove bindings
+
+	bind .gid <Configure>	{}
+	bind .gid <Activate>	{}
+	bind .gid <Deactivate>	{}
+	bind .gid <Map>			{}
+
+	if { [winfo exist .ibar]} {
+		destroy .ibar
+	}
+}
+
+proc EndGIDPostProcess {} {
+
+	after 2000 "{UpdateInfoBar}"
+}
 
 #
 # Theme settings
 #
 
-set ibarBackgroundColor "#F0F0F0"
-set ibarTextColor "black"
-set ibarLineColor "#CFC5C3"
-set GiDtheme "Classic"
+set ::ibarBackgroundColor "#F0F0F0"
+set ::ibarTextColor "black"
+set ::ibarLineColor "#CFC5C3"
+set ::GiDtheme "Classic"
 
 proc GetAppDataDir { } {
 
@@ -294,7 +482,7 @@ proc Opt2_10 { } {
 	Opt1_dialog
 }
 
-set NormalsDrawStatus 0
+set ::NormalsDrawStatus 0
 
 proc Opt2_11 { } {
 
@@ -314,7 +502,7 @@ proc Opt2_11 { } {
 	}
 }
 
-set ElemDrawStatus 0
+set ::ElemDrawStatus 0
 
 proc Opt2_12 { } { # Switch draw elements
 
@@ -334,7 +522,7 @@ proc Opt2_12 { } { # Switch draw elements
 	}
 }
 
-set ConditionsDrawStatus 0
+set ::ConditionsDrawStatus 0
 
 proc Opt2_13 { } { # Switch draw conditions
 
@@ -439,108 +627,6 @@ proc EndToolbar2 {} {
 	rename Toolbar2 ""
 
 	catch { destroy $OpenSees2(toolbarwin) }
-}
-
-proc InitGIDProject { dir } {
-
-	global MenuNames MenuEntries MenuCommands MenuAcceler
-	global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
-	global InterfaceName
-	global GidPriv
-	global OpenSeesProblemDir OpenSeesPath
-
-	set OpenSeesProblemDir $dir
-
-	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl} {
-		source [file join $dir tcl $filename]
-	}
-
-	set InterfaceName [_ "GiD+OpenSees Interface"]
-
-	set num [lsearch $MenuNamesP [_ "View results"]]
-
-	if { $num == -1 } {
-		WarnWin "OpenSees is not compatible with this GiD version"
-		return
-	}
-
-	GetOpenSeesPath
-
-	global splashdir
-	set splashdir 0
-	global keepsplash
-	set keepsplash 0
-
-	SetImagesAndColors
-
-	Splash $dir
-	set splashdir $dir
-
-	OpenSees_Menu $dir
-
-	set ipos [lsearch $MenuNames [_ "Help"]]
-
-	if { $ipos != -1 } {
-		set MenuEntries($ipos) [linsert $MenuEntries($ipos) 0 "Help on OpenSees"]
-		set MenuCommands($ipos) [linsert $MenuCommands($ipos) 0 [list -np- HelpOnOpenSees $dir]]
-		set MenuAcceler($ipos) [linsert $MenuAcceler($ipos) 0 ""]
-
-		CreateTopMenus
-	}
-
-	set ipos [lsearch $MenuNamesP Help]
-
-	if { $ipos != -1 } {
-		set MenuEntriesP($ipos) [linsert $MenuEntriesP($ipos) 0 "Help on OpenSees"]
-		set MenuCommandsP($ipos) [linsert $MenuCommandsP($ipos) 0 [list -np- HelpOnOpenSees $dir]]
-		set MenuAccelerP($ipos) [linsert $MenuAccelerP($ipos) 0 ""]
-	}
-
-	Toolbar1
-	Toolbar2
-
-	set GidPriv(ProgName) $InterfaceName
-
-	GidChangeDataLabel "Conditions" ""
-	GidChangeDataLabel "Local Axes" ""
-	GidChangeDataLabel "Materials" "Materials/Elements Definition"
-
-	GidAddUserDataOptions "Loads" "GidOpenConditions Loads" 2
-	GidAddUserDataOptions "Restraints" "GidOpenConditions Restraints" 3
-	GidAddUserDataOptions "Constraints" "GidOpenConditions Constraints" 4
-	GidAddUserDataOptions "Mass/Damping" "GidOpenConditions Mass/Damping" 5
-	GidAddUserDataOptions "ZeroLength Elements" "GidOpenConditions ZeroLength_Elements" 6
-	GidAddUserDataOptions "---" "" 8
-
-	GiD_DataBehaviour materials Standard_Uniaxial_Materials hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials Uniaxial_Steel_Materials hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials Uniaxial_Concrete_Materials hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials Other_Uniaxial_Materials hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials Multidimensional_(nD)_Materials hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials "Section_Force-Deformation" hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials "Combined_Materials" hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials "Records" hide {assign draw unassign impexp}
-	GiD_DataBehaviour materials "Beam-Column_Elements" geomlist {lines}
-	GiD_DataBehaviour materials "Truss_Elements" geomlist {lines}
-	GiD_DataBehaviour materials Surface_Elements geomlist {surfaces}
-	GiD_DataBehaviour materials Solid_Elements geomlist {volumes}
-
-	GiDMenu::UpdateMenus
-
-	after 1000 "{UpdateInfoBar}"
-}
-
-proc EndGIDProject {} {
-
-	bind .gid <Configure>	{}
-	bind .gid <Activate>	{}
-	bind .gid <Deactivate>	{}
-	bind .gid <Map>			{}
-
-	if {[winfo exist .ibar]} {destroy .ibar}
-
-	EndToolbar1
-	EndToolbar2
 }
 
 proc HelpOnOpenSees { dir } {
@@ -690,61 +776,6 @@ proc HideInfoBar { } {
 	update
 }
 
-# check problemtype version mismatch
-
-proc LoadGIDProject { filespd } {
-
-	global VersionNumber
-	global InfoWin
-
-	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
-
-	# loading the problemtype itself, not a model
-
-	} else {
-
-		set spd_exist [file exist $filespd]
-
-		if {$spd_exist} {
-
-			set spd [open $filespd r]
-
-			set spd_data [read $spd]
-			set spd_data [string trim $spd_data]
-
-			close $spd
-
-		} else {
-
-			set spd_data "Unknown"
-		}
-
-		set cmp [string compare "$spd_data" "$VersionNumber"]
-
-		if { $cmp != 0 } {
-
-			InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
-			if { ![winfo exists $InfoWin] } return ;
-			ttk::frame $InfoWin.top
-			ttk::label $InfoWin.top.title_text -text [= ""]
-			ttk::frame $InfoWin.information -relief raised
-			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
-			ttk::frame $InfoWin.bottom
-			ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "TransformAndClose"
-			ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
-			grid $InfoWin.top.title_text -sticky ew
-			grid $InfoWin.top -sticky new
-			grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
-			grid $InfoWin.information -sticky new
-			grid $InfoWin.bottom.continue $InfoWin.bottom.readlog -padx 10
-			grid $InfoWin.bottom -sticky sew -padx 10 -pady 10
-			if { $::tcl_version >= 8.5 } { grid anchor $InfoWin.bottom center }
-			grid rowconfigure $InfoWin 1 -weight 1
-			grid columnconfigure $InfoWin 0 -weight 1
-		}
-	}
-}
-
 proc TransformAndClose { } {
 
 	global InfoWin
@@ -754,30 +785,83 @@ proc TransformAndClose { } {
 	GiD_Process Mescape data defaults TransfProblem OpenSees
 }
 
-proc SaveGIDProject { filespd } {
+# This procedure is called only once, when Problem type is loaded from InitGIDProject
 
-	global VersionNumber
+proc GetOpenSeesPath { } {
 
-	set spd [open $filespd w]
-	puts $spd $VersionNumber
-	close $spd
-}
+	global OpenSeesPath GidProcWin OpenSeesProblemDir
 
-proc BeforeInitGIDPostProcess {} {
+	set file "$OpenSeesProblemDir/OpenSees.path"
+	set fexists [file exist $file]
+	if { $fexists == 1 } {
+		set fp [open $file r]
+		set file_data [read $fp]
+		close $fp
+		set data [split $file_data \n]
+		set OpenSeesPath [lindex $data 0]
+		regsub -all {\\} $OpenSeesPath {/} OpenSeesPath
 
-	# remove bindings
-
-	bind .gid <Configure>	{}
-	bind .gid <Activate>	{}
-	bind .gid <Deactivate>	{}
-	bind .gid <Map>			{}
-
-	if { [winfo exist .ibar]} {
-		destroy .ibar
+	} else {
+			if { ![info exists GidProcWin(w)] || \
+				![winfo exists $GidProcWin(w).listbox#1] } {
+				set wbase .gid
+				set w ""
+			} else {
+				set wbase $GidProcWin(w)
+				set w $GidProcWin(w).listbox#1
+			}
+			tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees path was not found" ] error 0 [_ "Close"]
 	}
 }
 
-proc EndGIDPostProcess {} {
+# Get project directory path
 
-	after 2000 "{UpdateInfoBar}"
+proc GetProjectDirPath {} {
+
+	set lines [GiD_Info Project]
+	set ProblemType [lindex $lines 0]
+	set ProjectName [lindex $lines 1]
+
+	global GiDProjectDir
+	global GiDProjectName
+
+	# GiD_Info Project returns a list with project information { ProblemType ModelName .. .. .. }
+
+	if { $ProjectName == "UNNAMED" } {
+
+		set GiDProjectName "NONE"
+		set GiDProjectDir "NONE"
+
+	} else {
+
+		regsub -all {\\} $ProjectName {/} ProjectName
+
+		if { [file extension $ProjectName] == ".gid" } {
+			set ProjectName [file root $ProjectName]
+		}
+
+		set pos [string last / $ProjectName]
+
+		# returns the characters between two points in the string
+
+		set GiDProjectName [string range $ProjectName $pos+1 $pos+100]
+		set GiDProjectDir [string range $ProjectName 0 $pos-1]
+
+		append GiDProjectDir "/$GiDProjectName.gid"
+	}
+}
+
+# This procedure sets the GiD installation path
+
+proc GetGiDPath { } {
+
+	global GiDPath
+
+	set temp [GiD_Info problemtypepath]
+
+	regsub -all {\\} $temp {/} temp
+
+	set pos [string last /problemtypes $temp]
+
+	set GiDPath [string range $temp 0 $pos-1]
 }

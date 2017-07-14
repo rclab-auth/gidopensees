@@ -70,9 +70,36 @@ proc equalDOFClear { } {
 
 	global BodyConstraintConditions
 	global BodyConstraintIDList
+	global BodyConstraintSlaveNodesList
 
+	set BodyConstraintSlaveNodesList " "
 	set BodyConstraintConditions " "
 	set BodyConstraintIDList " "
 
 	return 0
+}
+
+proc AddBCSlaveNode { NodeNum } {
+
+	global BodyConstraintSlaveNodesList
+
+	lappend BodyConstraintSlaveNodesList $NodeNum
+	return 0
+}
+
+proc RestartBCSlaveNodes { } {
+
+	global BodyConstraintSlaveNodesList
+
+	set BodyConstraintConditions " "
+
+	return 0
+}
+
+proc CheckSlaveNode { NodeNum } {
+
+	global BodyConstraintSlaveNodesList
+
+	set pos [lsearch $BodyConstraintSlaveNodesList $NodeNum]
+	return $pos
 }

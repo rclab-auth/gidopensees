@@ -1,83 +1,3 @@
-# This procedure is called only once, when Problem type is loaded from InitGIDProject
-
-proc GetOpenSeesPath { } {
-
-	global OpenSeesPath GidProcWin OpenSeesProblemDir
-
-	set file "$OpenSeesProblemDir/OpenSees.path"
-	set fexists [file exist $file]
-	if { $fexists == 1 } {
-		set fp [open $file r]
-		set file_data [read $fp]
-		close $fp
-		set data [split $file_data \n]
-		set OpenSeesPath [lindex $data 0]
-		regsub -all {\\} $OpenSeesPath {/} OpenSeesPath
-
-	} else {
-			if { ![info exists GidProcWin(w)] || \
-				![winfo exists $GidProcWin(w).listbox#1] } {
-				set wbase .gid
-				set w ""
-			} else {
-				set wbase $GidProcWin(w)
-				set w $GidProcWin(w).listbox#1
-			}
-			tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees path was not found" ] error 0 [_ "Close"]
-	}
-}
-
-# Get project directory path
-
-proc GetProjectDirPath {} {
-
-	set lines [GiD_Info Project]
-	set ProblemType [lindex $lines 0]
-	set ProjectName [lindex $lines 1]
-
-	global GiDProjectDir
-	global GiDProjectName
-
-	# GiD_Info Project returns a list with project information { ProblemType ModelName .. .. .. }
-
-	if { $ProjectName == "UNNAMED" } {
-
-		set GiDProjectName "NONE"
-		set GiDProjectDir "NONE"
-
-	} else {
-
-		regsub -all {\\} $ProjectName {/} ProjectName
-
-		if { [file extension $ProjectName] == ".gid" } {
-			set ProjectName [file root $ProjectName]
-		}
-
-		set pos [string last / $ProjectName]
-
-		# returns the characters between two points in the string
-
-		set GiDProjectName [string range $ProjectName $pos+1 $pos+100]
-		set GiDProjectDir [string range $ProjectName 0 $pos-1]
-
-		append GiDProjectDir "/$GiDProjectName.gid"
-	}
-}
-
-# This procedure sets the GiD installation path
-
-proc GetGiDPath { } {
-
-	global GiDPath
-
-	set temp [GiD_Info problemtypepath]
-
-	regsub -all {\\} $temp {/} temp
-
-	set pos [string last /problemtypes $temp]
-
-	set GiDPath [string range $temp 0 $pos-1]
-}
 
 # Analysis procedures
 
@@ -97,9 +17,13 @@ proc ExecutePost {} {
 
 	cd "$OpenSeesProblemDir/exe"
 	if {[GiD_AccessValue get gendata use_binary_format] == 0 } {
-	exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep"
+
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep"
+
 	} else {
-	exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep" "/b"
+
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep" "/b"
+
 	}
 }
 
@@ -225,6 +149,16 @@ proc Create_and_open_tcl_file {w} {
 	return ""
 }
 
+# This procedure is used in OpenSees.bas
+
+proc LogFile {} {
+
+global GiDProjectName
+
+return [join [list logFile \"$GiDProjectName.log\"] ]
+
+}
+
 proc Run_existing_tcl {w doPost} {
 
 	destroy $w
@@ -239,9 +173,7 @@ proc Run_existing_tcl {w doPost} {
 
 		exec {*}[auto_execok start] "$OpenSeesPath" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
 
-		if {[file exists "log.txt"] } {
-
-			file rename -force -- "log.txt" "$GiDProjectName.log"
+		if {[file exists "$GiDProjectName.log"] } {
 
 			CheckLogAndPost $GiDProjectDir $GiDProjectName $doPost
 
@@ -605,6 +537,8 @@ proc Opt4_dialog { } {
 
 proc Opt5_dialog { } {
 
+	GetProjectDirPath
+
 	Postprocess
 
 	return ""
@@ -705,16 +639,43 @@ proc OpenSees_Menu { dir } {
 
 	# Tab labels
 
-	set tabs [list  [= "Create .tcl, run analysis and postprocess"] "---" [= "Create .tcl only"] [= "Create and view .tcl only"] [= "Run analysis only"] [= "Postprocess only"] [= "Run analysis and postprocess"] "---" [= "Reset analysis"] "---" [= "Go to GiD+OpenSees Site"] [= "Go to OpenSees Wiki"] [= "About"] ]
+	set tabs [list  \
+	[= "Create .tcl, run analysis and postprocess"] "---" \
+	[= "Create .tcl only"] \
+	[= "Create and view .tcl only"] \
+	[= "Run analysis only"] \
+	[= "Postprocess only"] \
+	[= "Run analysis and postprocess"] "---" \
+	[= "Reset analysis"] "---" \
+	[= "GiD+OpenSees Site"] \
+	[= "OpenSees Site"] \
+	[= "OpenSees Wiki"] \
+	[= "DesignSafe-CI Site"] "---" \
+	[= "About"] ]
 
 	# Selection commands
 
-	set cmds { {Opt1_dialog} {} {Opt2_dialog} {Opt3_dialog} {Opt4_dialog} {Opt5_dialog} {Opt6_dialog} {} {Opt7_dialog} {} {VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
-	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} {AboutOpenSeesProbType} }
+	set cmds { {Opt1_dialog} {} {Opt2_dialog} {Opt3_dialog} {Opt4_dialog} {Opt5_dialog} {Opt6_dialog} {} {Opt7_dialog} {} \
+	{VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
+	{VisitWeb "http://opensees.berkeley.edu"} \
+	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} \
+	{VisitWeb "https://www.designsafe-ci.org"} {} \
+	{AboutOpenSeesProbType} }
 
 	# Tab icons
 
-	set icons {mnu_Analysis.png "" mnu_TCL.png mnu_TCL.png mnu_TCL_Analysis.png mnu_TCL_Analysis.png mnu_TCL_Analysis.png "" mnu_Reset.png "" mnu_Site.png mnu_Wiki.png mnu_About.png}
+	set icons {mnu_Analysis.png "" \
+	mnu_TCL.png \
+	mnu_TCL.png \
+	mnu_TCL_Analysis.png \
+	mnu_TCL_Analysis.png \
+	mnu_TCL_Analysis.png "" \
+	mnu_Reset.png "" \
+	mnu_Site.png \
+	mnu_Site.png \
+	mnu_Wiki.png \
+	mnu_DesignSafe.png "" \
+	mnu_About.png}
 
 	set position 0
 

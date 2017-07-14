@@ -33,7 +33,19 @@
 *for(i=1;i<=howmanyBCID;i=i+1)
 *# BCID get the ID number from the corresponding list
 *set var BCID=tcl(BCIDnumber *i)
-*set var BCNode=0
+*set var dummy=tcl(RestartBCSlaveNodes)
+*set cond Point_Body_constraint_master_node *nodes
+*loop nodes *OnlyInCond
+*if(Cond(1,int)==BCID)
+*set var MasterNode=NodesNum
+*break
+*endif
+*end nodes
+*set cond Line_Body_constraint_slave_nodes *nodes
+*add cond Point_Body_constraint_slave_nodes *nodes
+*# For every node that belongs to the running BC ID do the following
+*loop nodes *OnlyInCond
+*if(Cond(1,int)==BCID)
 *set var Translx=0
 *set var Transly=0
 *set var Translz=0
@@ -42,18 +54,6 @@
 *set var Rotz=0
 *# for each Body constaint ID, this procedure clears the list of the equalDOF(Translx,Transly,....Rotx,Roty,..)
 *set var dummy=tcl(RestartBCconditions)
-*set cond Point_Body_constraint_master_node *nodes
-*loop nodes *OnlyInCond
-*if(Cond(1,int)==BCID)
-*set var MasterNode=NodesNum
-*break
-*endif
-*end nodes
-*set cond Point_Body_constraint_slave_nodes *nodes
-*add cond Line_Body_constraint_slave_nodes *nodes
-*# For every node that belongs to the running BC ID do the following
-*loop nodes *OnlyInCond
-*if(Cond(1,int)==BCID)
 *# 2D
 *if(ndime==2)
 *if(Cond(2,int)==1)
@@ -86,33 +86,17 @@
 *set var Rotz=6
 *endif
 *endif
-*#break
-*endif
-*end nodes
-*loop nodes *OnlyInCond
-*if(Cond(1,int)==BCID)
-*# counting slave nodes for each Body Constraint ID group
-*set var BCNode=operation(BCNode+1)
-*endif
-*end nodes
 *# This procedure puts the constrained DOF in a list called BodyConstraintConditions(it depends on the checkboxes on the Body constraint window options)
 *set var dummy=tcl(exportBCConditions *Translx *Transly *Translz *Rotx *Roty *Rotz)
-*# For every node of this BC ID except the MasterNode(we call it SlaveNode) print : equalDOF *MasterNode *SlaveNode and the DOF user chose to constrain
-*for(k=1;k<=BCNode;k=k+1)
-*set var CountLoop=0
-*loop nodes *OnlyInCond
-*if(Cond(1,int)==BCID)
-*set var CountLoop=CountLoop+1
-*if(CountLoop==k)
 *set var SlaveNode=NodesNum
-*if(SlaveNode==MasterNode)
-*set var CountLoop=operation(CountLoop-1)
-*endif
+*set var SlaveNodeExists=tcl(CheckSlaveNode *SlaveNode)
+*# For every node of this BC ID except the MasterNode(we call it SlaveNode) print : equalDOF *MasterNode *SlaveNode and the DOF user chose to constrain
+*if(SlaveNode!=MasterNode && SlaveNodeExists==-1)
+*set var dummy=tcl(AddBCSlaveNode *SlaveNode)
+*format "%6d%6d%6d"
+equalDOF *MasterNode *SlaveNode *tcl(importBCConditions )
 *endif
 *endif
 *end nodes
-*format "%6d%6d%6d"
-equalDOF *MasterNode *SlaveNode *tcl(importBCConditions )
-*endfor
 *endfor
 *endif

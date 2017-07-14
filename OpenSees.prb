@@ -78,6 +78,7 @@ VALUE: 0.0
 
 BOOK: Output_Options
 
+
 TITLE: General
 QUESTION: _____#CB#(_)
 VALUE:
@@ -172,10 +173,10 @@ DEPENDENCIES: (Static,RESTORE,Analysis_steps,#CURRENT#,HIDE,Analysis_duration,#C
 DEPENDENCIES: (Transient,HIDE,Analysis_steps,#CURRENT#,RESTORE,Analysis_duration,#CURRENT#,RESTORE,Analysis_time_step,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Displacement_peaks-cycles,#CURRENT#)
 QUESTION: Integrator_type#CB#(Load_control,Displacement_control,Newmark,Hilber-Hughes-Taylor)
 VALUE: Load_control
-DEPENDENCIES: (Load_control,RESTORE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
-DEPENDENCIES: (Displacement_control,RESTORE,Analysis_steps,#CURRENT#,RESTORE,Total_displacement,#CURRENT#,RESTORE,Control_node,#CURRENT#,RESTORE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
-DEPENDENCIES: (Newmark,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#)
-DEPENDENCIES: (Hilber-Hughes-Taylor,RESTORE,alpha,#CURRENT#,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#)
+DEPENDENCIES: (Load_control,RESTORE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
+DEPENDENCIES: (Displacement_control,RESTORE,Analysis_steps,#CURRENT#,RESTORE,Control_node,#CURRENT#,RESTORE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
+DEPENDENCIES: (Newmark,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#)
+DEPENDENCIES: (Hilber-Hughes-Taylor,RESTORE,alpha,#CURRENT#,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#)
 QUESTION: Control_node
 VALUE:
 HELP: Control node, select on meshed model
@@ -183,10 +184,19 @@ TKWIDGET: GidUtils::TkwidgetPickNode
 QUESTION: Control_node_direction#CB#(UX,UY,UZ,RX,RY,RZ)
 VALUE: UX
 HELP: Control node degree of freedom
+DEPENDENCIES: (UX,RESTORE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#)
+DEPENDENCIES: (UY,RESTORE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#)
+DEPENDENCIES: (UZ,RESTORE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#)
+DEPENDENCIES: (RX,HIDE,Total_displacement,#CURRENT#,RESTORE,Total_rotation,#CURRENT#)
+DEPENDENCIES: (RY,HIDE,Total_displacement,#CURRENT#,RESTORE,Total_rotation,#CURRENT#)
+DEPENDENCIES: (RZ,HIDE,Total_displacement,#CURRENT#,RESTORE,Total_rotation,#CURRENT#)
+TKWIDGET: TK_ControlNodeDirection
 QUESTION: Analysis_steps
 VALUE: 1
 QUESTION: Total_displacement#UNITS#
 VALUE: 0.1 m
+QUESTION: Total_rotation#UNITS#
+VALUE: 3.1415 rad
 QUESTION: Alpha
 VALUE: -0.333
 QUESTION: Beta
