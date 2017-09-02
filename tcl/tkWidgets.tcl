@@ -46,11 +46,6 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 
 	switch $event {
 
-		INIT {
-
-			return ""
-		}
-
 		SYNC {
 
 			set pi 3.14159265358979323846
@@ -63,16 +58,16 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 
 			if { $check==1 } {
 
-				if { $Shape=="Rectangular_Column" } {
+				if { $Shape == "Rectangular_Column" } {
 
 					set CornerSizeUnit [DWLocalGetValue $GDN $STRUCT Corner_Bar_size]
 					set InterSizeUnit [DWLocalGetValue $GDN $STRUCT Middle_Bar_size]
 
-					set temp1 [GidConvertValueUnit $CornerSizeUnit]
-					set temp1 [ParserNumberUnit $temp1 CornerSize CornerUnit]
+					set temp [GidConvertValueUnit $CornerSizeUnit]
+					set temp [ParserNumberUnit $temp CornerSize CornerUnit]
 
-					set temp2 [GidConvertValueUnit $InterSizeUnit]
-					set temp2 [ParserNumberUnit $temp2 InterSize InterUnit]
+					set temp [GidConvertValueUnit $InterSizeUnit]
+					set temp [ParserNumberUnit $temp InterSize InterUnit]
 
 					set CornerArea [format "%1.3e" [expr $pi*($CornerSize*$CornerSize)/4.0]]
 					set CornerArea $CornerArea$CornerUnit^2
@@ -84,7 +79,7 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 					set ok [DWLocalSetValue $GDN $STRUCT Middle_bar_area $InterArea]
 					return ""
 
-				} elseif { $Shape=="Circular_Column" } {
+				} elseif { $Shape == "Circular_Column" } {
 
 					set SizeUnit [DWLocalGetValue $GDN $STRUCT Bar_size]
 
@@ -96,41 +91,41 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 					set ok [DWLocalSetValue $GDN $STRUCT Bar_area $Area]
 
 					return ""
-				} elseif { $Shape=="Rectangular_Beam" } {
+				} elseif { $Shape == "Rectangular_Beam" } {
 
-				set TopBarSizeUnit [DWLocalGetValue $GDN $STRUCT Top_bar_size]
-				set BottomBarSizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_bar_size]
+					set TopBarSizeUnit [DWLocalGetValue $GDN $STRUCT Top_bar_size]
+					set BottomBarSizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_bar_size]
 
-				set temp1 [GidConvertValueUnit $TopBarSizeUnit]
-				set temp1 [ParserNumberUnit $temp1 TopBarSize TopBarUnit]
+					set temp [GidConvertValueUnit $TopBarSizeUnit]
+					set temp [ParserNumberUnit $temp TopBarSize TopBarUnit]
 
-				set temp2 [GidConvertValueUnit $BottomBarSizeUnit]
-				set temp2 [ParserNumberUnit $temp2 BottomBarSize BottomBarUnit]
+					set temp [GidConvertValueUnit $BottomBarSizeUnit]
+					set temp [ParserNumberUnit $temp BottomBarSize BottomBarUnit]
 
-				set TopBarArea [format "%1.3e" [expr $pi*($TopBarSize*$TopBarSize)/4.0]]
-				set TopBarArea $TopBarArea$TopBarUnit^2
+					set TopBarArea [format "%1.3e" [expr $pi*($TopBarSize*$TopBarSize)/4.0]]
+					set TopBarArea $TopBarArea$TopBarUnit^2
 
-				set BottomBarArea [format "%1.3e" [expr $pi*($BottomBarSize*$BottomBarSize)/4.0]]
-				set BottomBarArea $BottomBarArea$BottomBarUnit^2
+					set BottomBarArea [format "%1.3e" [expr $pi*($BottomBarSize*$BottomBarSize)/4.0]]
+					set BottomBarArea $BottomBarArea$BottomBarUnit^2
 
-				set ok [DWLocalSetValue $GDN $STRUCT Top_bar_area $TopBarArea]
-				set ok [DWLocalSetValue $GDN $STRUCT Bottom_bar_area $BottomBarArea]
+					set ok [DWLocalSetValue $GDN $STRUCT Top_bar_area $TopBarArea]
+					set ok [DWLocalSetValue $GDN $STRUCT Bottom_bar_area $BottomBarArea]
 
-				return ""
-				} elseif { $Shape=="Tee_Beam" } {
+					return ""
+				} elseif { $Shape == "Tee_Beam" } {
 
 					set TopWebBarSizeUnit [DWLocalGetValue $GDN $STRUCT Top_beam_bar_size]
 					set BottomBarSizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_beam_bar_size]
 					set TopSlabBarSizeUnit [DWLocalGetValue $GDN $STRUCT Slab_bar_size]
 
-					set temp1 [GidConvertValueUnit $TopWebBarSizeUnit]
-					set temp1 [ParserNumberUnit $temp1 TopWebBarSize TopWebBarUnit]
+					set temp [GidConvertValueUnit $TopWebBarSizeUnit]
+					set temp [ParserNumberUnit $temp TopWebBarSize TopWebBarUnit]
 
-					set temp2 [GidConvertValueUnit $BottomBarSizeUnit]
-					set temp2 [ParserNumberUnit $temp2 BottomBarSize BottomBarUnit]
+					set temp [GidConvertValueUnit $BottomBarSizeUnit]
+					set temp [ParserNumberUnit $temp BottomBarSize BottomBarUnit]
 
-					set temp3 [GidConvertValueUnit $TopSlabBarSizeUnit]
-					set temp3 [ParserNumberUnit $temp3 TopSlabBarSize TopSlabBarUnit]
+					set temp [GidConvertValueUnit $TopSlabBarSizeUnit]
+					set temp [ParserNumberUnit $temp TopSlabBarSize TopSlabBarUnit]
 
 					set TopWebBarArea [format "%1.3e" [expr $pi*($TopWebBarSize*$TopWebBarSize)/4.0]]
 					set TopWebBarArea $TopWebBarArea$TopWebBarUnit^2
@@ -145,6 +140,50 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 					set ok [DWLocalSetValue $GDN $STRUCT Bottom_beam_bar_area $BottomBarArea]
 					set ok [DWLocalSetValue $GDN $STRUCT Slab_bar_area $TopSlabBarArea]
 
+				} elseif { $Shape == "Bridge_Deck" } {
+
+					set TopSlabBarSizeUnit [DWLocalGetValue $GDN $STRUCT Top_slab_bar_size]
+					set BottomSlabBarSizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_slab_bar_size]
+
+					set temp [GidConvertValueUnit $TopSlabBarSizeUnit]
+					set temp [ParserNumberUnit $temp TopSlabBarSize BarDiameterUnit]
+
+					set temp [GidConvertValueUnit $BottomSlabBarSizeUnit]
+					set temp [ParserNumberUnit $temp BottomSlabBarSize BarDiameterUnit]
+
+					set TopSlabBarArea [format "%1.3e" [expr $pi*($TopSlabBarSize*$TopSlabBarSize)/4.0]]
+					set TopSlabBarArea $TopSlabBarArea$BarDiameterUnit^2
+
+					set BottomSlabBarArea [format "%1.3e" [expr $pi*($BottomSlabBarSize*$BottomSlabBarSize)/4.0]]
+					set BottomSlabBarArea $BottomSlabBarArea$BarDiameterUnit^2
+
+					set ok [DWLocalSetValue $GDN $STRUCT Top_slab_bar_area $TopSlabBarArea]
+					set ok [DWLocalSetValue $GDN $STRUCT Bottom_slab_bar_area $BottomSlabBarArea]
+
+					set includeChecked [DWLocalGetValue $GDN $STRUCT Include_additional_part]
+
+					if {$includeChecked} {
+
+						set AddSlabBarSizeUnit [DWLocalGetValue $GDN $STRUCT Additional_slab_bar_size]
+						set BeamBarSizeUnit [DWLocalGetValue $GDN $STRUCT Beam_bar_size]
+
+						set temp [GidConvertValueUnit $AddSlabBarSizeUnit]
+						set temp [ParserNumberUnit $temp AddSlabBarSize BarDiameterUnit]
+
+						set temp [GidConvertValueUnit $BeamBarSizeUnit]
+						set temp [ParserNumberUnit $temp BeamBarSize BarDiameterUnit]
+
+						set AddSlabBarArea [format "%1.3e" [expr $pi*($AddSlabBarSize*$AddSlabBarSize)/4.0]]
+						set AddSlabBarArea $AddSlabBarArea$BarDiameterUnit^2
+
+						set BeamBarArea [format "%1.3e" [expr $pi*($BeamBarSize*$BeamBarSize)/4.0]]
+						set BeamBarArea $BeamBarArea$BarDiameterUnit^2
+
+						set ok [DWLocalSetValue $GDN $STRUCT Additional_slab_bar_area $AddSlabBarArea]
+						set ok [DWLocalSetValue $GDN $STRUCT Beam_bar_area $BeamBarArea]
+
+					}
+
 				} else {
 
 					return ""
@@ -155,15 +194,102 @@ proc Calculate_Reinf_Areas_for_Fiber { event args } {
 			return ""
 			}
 		}
+	}
 
-		DEPEND {
+	return ""
+}
 
-			return ""
-		}
+proc TK_Fiber_CalcTorsionalStiffness { event args } {
 
-		CLOSE {
+	switch $event {
 
-			return ""
+		SYNC {
+			set pi 3.14159265358979323846
+			set GDN  [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set check [DWLocalGetValue $GDN $STRUCT "Calculate_torsional_stiffness_(update_to_apply)"]
+
+			if {$check} {
+
+				set Shape [DWLocalGetValue $GDN $STRUCT "Cross_section"]
+
+				set ShearModulus [DWLocalGetValue $GDN $STRUCT "Shear_modulus"]
+				set temp [GidConvertValueUnit $ShearModulus]
+				set temp [ParserNumberUnit $temp G Gunit]
+				set GJunit "kNm^2"
+
+				if { $Shape == "Rectangular_Column" || $Shape == "Rectangular_Beam" } {
+					set height [DWLocalGetValue $GDN $STRUCT Height_h]
+					set temp [GidConvertValueUnit $height]
+					set temp [ParserNumberUnit $temp h dummy]
+
+					set width [DWLocalGetValue $GDN $STRUCT Width_b]
+					set temp [GidConvertValueUnit $width]
+					set temp [ParserNumberUnit $temp b dummy]
+
+					set a [expr max($h,$b)]
+					set b [expr min($h,$b)]
+
+					set J [expr $a*pow($b,3)*(1.0/3-0.21*$b/$a*(1-pow($b,4)/(12*pow($a,4))))]
+
+					set GJ [format "%1.0f" [expr $G*$J]]
+					set GJ $GJ$GJunit
+
+					set ok [DWLocalSetValue $GDN $STRUCT Torsional_stiffness $GJ]
+
+				} elseif { $Shape == "Circular_Column" } {
+
+					set diameter [DWLocalGetValue $GDN $STRUCT Diameter_d]
+					set temp [GidConvertValueUnit $diameter]
+					set temp [ParserNumberUnit $temp d dummy]
+
+					set Iz [expr $pi*pow($d,4)/64]
+					set Iy [expr $pi*pow($d,4)/64]
+
+					set J [expr $Iz+$Iy]
+
+					set GJ [format "%1.0f" [expr $G*$J]]
+					set GJ $GJ$GJunit
+
+					set ok [DWLocalSetValue $GDN $STRUCT Torsional_stiffness $GJ]
+
+				} elseif { $Shape=="Tee_Beam" } {
+
+					set height [DWLocalGetValue $GDN $STRUCT Height_h]
+					set temp [GidConvertValueUnit $height]
+					set temp [ParserNumberUnit $temp h dummy]
+
+					set width [DWLocalGetValue $GDN $STRUCT Width_bf]
+					set temp [GidConvertValueUnit $width]
+					set temp [ParserNumberUnit $temp b dummy]
+
+					set webwidth [DWLocalGetValue $GDN $STRUCT Web_width_bw]
+					set temp [GidConvertValueUnit $webwidth]
+					set temp [ParserNumberUnit $temp tw dummy]
+
+					set slabthick [DWLocalGetValue $GDN $STRUCT Slab_thickness_hf]
+					set temp [GidConvertValueUnit $slabthick]
+					set temp [ParserNumberUnit $temp tf dummy]
+
+					set kremasi [expr $h-$tf]
+
+					# does not matter if it is 2D or 3D. Just calculate Torsional constant.
+					set Zcm [expr (($tf*$b)*($h-$tf/2)+($kremasi*$tw)*$kremasi/2)/($tf*$b+$kremasi*$tw)]
+					set Iy [expr pow($tf,3)*$b/12 + pow($kremasi,3)*$tw/12 + ($tf*$b)*($h-($tf/2)-$Zcm)*($h-($tf/2)-$Zcm)+($kremasi*$tw)*($Zcm-$kremasi/2)*($Zcm-$kremasi/2)]
+					set Iz [expr pow($b,3)*$tf/12 + pow($tw,3)*$kremasi/12]
+
+					set J [expr $Iz+$Iy]
+
+					set GJ [format "%1.0f" [expr $G*$J]]
+					set GJ $GJ$GJunit
+
+					set ok [DWLocalSetValue $GDN $STRUCT Torsional_stiffness $GJ]
+				} else {
+					return ""
+				}
+			}
 		}
 	}
 
@@ -184,59 +310,161 @@ proc TK_CalcFiberCrossSectionArea { event args } {
 
 			if {$CrossSectionType == "Rectangular_Beam" || $CrossSectionType == "Rectangular_Column"} {
 
-			set heightUnit [DWLocalGetValue $GDN $STRUCT Width_b]
-			set widthUnit [DWLocalGetValue $GDN $STRUCT Height_h]
-			set temp [GidConvertValueUnit $widthUnit]
-			set temp [ParserNumberUnit $temp width Wunit]
-			set temp [GidConvertValueUnit $heightUnit]
-			set temp [ParserNumberUnit $temp height Hunit]
-			set Areaunit $Hunit^2
+				set heightUnit [DWLocalGetValue $GDN $STRUCT Width_b]
+				set widthUnit [DWLocalGetValue $GDN $STRUCT Height_h]
+				set temp [GidConvertValueUnit $widthUnit]
+				set temp [ParserNumberUnit $temp width Wunit]
+				set temp [GidConvertValueUnit $heightUnit]
+				set temp [ParserNumberUnit $temp height Hunit]
+				set Areaunit $Hunit^2
 
-			set AreaSize [expr $height*$width]
-			set Area $AreaSize$Areaunit
-			set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
+				set AreaSize [expr $height*$width]
+				set Area $AreaSize$Areaunit
+				set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
 
 			} elseif { $CrossSectionType == "Circular_Column" } {
 
-			set diameterunit [DWLocalGetValue $GDN $STRUCT Diameter_d]
-			set temp [GidConvertValueUnit $diameterunit]
-			set temp [ParserNumberUnit $temp diameter Dunit]
-			set Areaunit $Dunit^2
+				set diameterunit [DWLocalGetValue $GDN $STRUCT Diameter_d]
+				set temp [GidConvertValueUnit $diameterunit]
+				set temp [ParserNumberUnit $temp diameter Dunit]
+				set diameter [format "%f" $diameter]
 
-			set AreaSize [expr 3.14159265359*$diameter*$diameter/4]
-			set Area $AreaSize$Areaunit
-			set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
+				set Areaunit $Dunit^2
+
+				set AreaSize [expr 3.14159265359*$diameter*$diameter/4]
+				set Area $AreaSize$Areaunit
+				set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
 
 			} elseif { $CrossSectionType == "Tee_Beam" } {
 
-			set heightUnit [DWLocalGetValue $GDN $STRUCT Height_h]
-			set widthUnit [DWLocalGetValue $GDN $STRUCT Width_bf]
-			set SlabThickUnit [DWLocalGetValue $GDN $STRUCT Slab_thickness_hf]
-			set WebThickUnit [DWLocalGetValue $GDN $STRUCT Web_width_bw]
+				set heightUnit [DWLocalGetValue $GDN $STRUCT Height_h]
+				set widthUnit [DWLocalGetValue $GDN $STRUCT Width_bf]
+				set SlabThickUnit [DWLocalGetValue $GDN $STRUCT Slab_thickness_hf]
+				set WebThickUnit [DWLocalGetValue $GDN $STRUCT Web_width_bw]
 
-			set temp [GidConvertValueUnit $widthUnit]
-			set temp [ParserNumberUnit $temp w Wunit]
-			set temp [GidConvertValueUnit $heightUnit]
-			set temp [ParserNumberUnit $temp h Hunit]
-			set temp [GidConvertValueUnit $SlabThickUnit]
-			set temp [ParserNumberUnit $temp ts tsUnit]
-			set temp [GidConvertValueUnit $WebThickUnit]
-			set temp [ParserNumberUnit $temp tw twUnit]
+				set temp [GidConvertValueUnit $widthUnit]
+				set temp [ParserNumberUnit $temp w Wunit]
+				set temp [GidConvertValueUnit $heightUnit]
+				set temp [ParserNumberUnit $temp h Hunit]
+				set temp [GidConvertValueUnit $SlabThickUnit]
+				set temp [ParserNumberUnit $temp ts tsUnit]
+				set temp [GidConvertValueUnit $WebThickUnit]
+				set temp [ParserNumberUnit $temp tw twUnit]
 
-			set Areaunit $Hunit^2
+				set Areaunit $Hunit^2
 
-			set AreaSize [expr $w*$ts+($h-$ts)*$tw]
-			set Area $AreaSize$Areaunit
-			set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
+				set AreaSize [expr $w*$ts+($h-$ts)*$tw]
+				set Area $AreaSize$Areaunit
+				set ok [DWLocalSetValue $GDN $STRUCT "Cross_section_Area" $Area]
+
+			} elseif {$CrossSectionType == "Bridge_Deck"} {
+
+				set wtunit [DWLocalGetValue $GDN $STRUCT Top_slab_width_wt]
+				set wbunit [DWLocalGetValue $GDN $STRUCT Bottom_slab_width_wb]
+				set ts1unit [DWLocalGetValue $GDN $STRUCT Top_slab_thickness_ts1]
+				set ts2unit [DWLocalGetValue $GDN $STRUCT Bottom_slab_thickness_ts2]
+				set hvunit [DWLocalGetValue $GDN $STRUCT Height_hv]
+
+				set temp [GidConvertValueUnit $wtunit]
+				set temp [ParserNumberUnit $temp wt Wunit]
+				set temp [GidConvertValueUnit $wbunit]
+				set temp [ParserNumberUnit $temp wb Wunit]
+				set temp [GidConvertValueUnit $ts1unit]
+				set temp [ParserNumberUnit $temp ts1 Wunit]
+				set temp [GidConvertValueUnit $ts2unit]
+				set temp [ParserNumberUnit $temp ts2 Wunit]
+				set temp [GidConvertValueUnit $hvunit]
+				set temp [ParserNumberUnit $temp hv Wunit]
+
+				set Areaunit $Wunit^2
+
+				set includeChecked [DWLocalGetValue $GDN $STRUCT Include_additional_part]
+				set SolidChecked [DWLocalGetValue $GDN $STRUCT Solid_Section]
+
+				if {$includeChecked} {
+
+					set ts3unit [DWLocalGetValue $GDN $STRUCT Additional_slab_thickness_ts3]
+					set ts4unit [DWLocalGetValue $GDN $STRUCT Sidewalk_thickness_ts4]
+					set bswunit [DWLocalGetValue $GDN $STRUCT Sidewalk_width_bsw]
+					set bunit [DWLocalGetValue $GDN $STRUCT Beam_width_b]
+					set hunit [DWLocalGetValue $GDN $STRUCT Beam_height_h]
+
+					set temp [GidConvertValueUnit $ts3unit]
+					set temp [ParserNumberUnit $temp ts3 Wunit]
+					set temp [GidConvertValueUnit $ts4unit]
+					set temp [ParserNumberUnit $temp ts4 Wunit]
+					set temp [GidConvertValueUnit $bswunit]
+					set temp [ParserNumberUnit $temp bsw Wunit]
+					set temp [GidConvertValueUnit $bunit]
+					set temp [ParserNumberUnit $temp b Wunit]
+					set temp [GidConvertValueUnit $hunit]
+					set temp [ParserNumberUnit $temp h Wunit]
+
+					if {$SolidChecked} {
+
+						set AreaSize [expr $wb*$hv+$wb*$ts2+$wt*$ts1+$b*$h*2+$wt*$ts3+2*$ts4*$bsw]
+						set Area $AreaSize$Areaunit
+
+						set ok [DWLocalSetValue $GDN $STRUCT Cross_section_Area $Area]
+
+					} else {
+
+						set twunit [DWLocalGetValue $GDN $STRUCT External_web_thickness_tw]
+						set dvunit [DWLocalGetValue $GDN $STRUCT Void_width_dv]
+
+						set temp [GidConvertValueUnit $twunit]
+						set temp [ParserNumberUnit $temp tw Wunit]
+						set temp [GidConvertValueUnit $dvunit]
+						set temp [ParserNumberUnit $temp dv Wunit]
+
+						set nvoids [DWLocalGetValue $GDN $STRUCT Number_of_voids]
+						set nvoids [expr int($nvoids)]
+						set nintwebs [expr $nvoids-1]
+						set intwebthick [expr $wb-2*$tw-$nvoids*$dv]
+						set AreaSize [expr $wb*$ts2+$nintwebs*$intwebthick*$hv+2*$tw*$h+$wt*$ts1+$wt*$ts3+2*$bsw*$ts4+2*$b*$h]
+						set Area $AreaSize$Areaunit
+
+						set ok [DWLocalSetValue $GDN $STRUCT Cross_section_Area $Area]
+					}
+
+					# not including additional part
+				} else {
+
+					if {$SolidChecked} {
+
+						set AreaSize [expr $wb*$hv+$wb*$ts2+$wt*$ts1]
+						set Area $AreaSize$Areaunit
+
+						set ok [DWLocalSetValue $GDN $STRUCT Cross_section_Area $Area]
+
+					} else {
+
+						set twunit [DWLocalGetValue $GDN $STRUCT External_web_thickness_tw]
+						set dvunit [DWLocalGetValue $GDN $STRUCT Void_width_dv]
+
+						set temp [GidConvertValueUnit $twunit]
+						set temp [ParserNumberUnit $temp tw Wunit]
+						set temp [GidConvertValueUnit $dvunit]
+						set temp [ParserNumberUnit $temp dv Wunit]
+
+						set nvoids [DWLocalGetValue $GDN $STRUCT Number_of_voids]
+						set nvoids [expr int($nvoids)]
+						set nintwebs [expr $nvoids-1]
+						set intwebthick [expr $wb-2*$tw-$nvoids*$dv]
+						set AreaSize [expr $wb*$ts2+$nintwebs*$intwebthick*$hv+2*$tw*$hv+$wt*$ts1]
+						set Area $AreaSize$Areaunit
+
+						set ok [DWLocalSetValue $GDN $STRUCT Cross_section_Area $Area]
+					}
+				}
 
 			} else {
 
-			return ""
-
+				return ""
 			}
-			return ""
+
+				return ""
 		}
-		return ""
 	}
 
 	return ""
@@ -246,44 +474,29 @@ proc TK_CheckSectionForFBC { event args } {
 
 	switch $event {
 
-		INIT {
-
-			return ""
-		}
-
 		SYNC {
 
 			set GDN [lindex $args 0]
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# i.e. ChosenMaterial can be Plate_fiber (from combo box "Section" in force based beam column definition)
-			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
+			set ChosenSection [DWLocalGetValue $GDN $STRUCT $QUESTION]
 
-			#GiD_AccessValue get materials : Search the value of a field of a material.
-			# $ChosenMaterial is the material name
-			# Section: is the question name of the Section $ChosenMaterial
-			set SecType [GiD_AccessValue get materials $ChosenMaterial "Section:"]
-			#SecType is the value of the question: Section: of the chosen Section from the combo box!
+			if {![catch {GiD_AccessValue get materials $ChosenSection "Section:"}]} {
+			set SecType [GiD_AccessValue get materials $ChosenSection "Section:"]
 
-			if { $SecType == "PlateFiber" || $SecType == "ElasticMembranePlate" } {
-				WarnWinText "ERROR : Section $ChosenMaterial ($SecType section) can not be used for Force-Based beam-column elements."
+			if { $SecType != "Fiber" && $SecType != "SectionAggregator" } {
+				WarnWinText "Uncompatible Section $ChosenSection ($SecType section) selected for Force-Based beam-column elements."
 				WarnWinText "It has been changed to Fiber section."
 				# Change the value of the field "Section:" to Fiber
 				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
 			}
 
-			return ""
-		}
-
-		DEPEND {
-
-			return ""
-		}
-
-		CLOSE {
-
-			return ""
+			} else {
+				WarnWinText "Uncompatible Section selected for Force-based Beam Column Element"
+				WarnWinText "It has been changed to Fiber Section"
+				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
+			}
 		}
 	}
 
@@ -294,10 +507,39 @@ proc TK_CheckSectionForDBC { event args } {
 
 	switch $event {
 
-		INIT {
+		SYNC {
 
-			return ""
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set ChosenSection [DWLocalGetValue $GDN $STRUCT $QUESTION]
+
+			if {![catch {GiD_AccessValue get materials $ChosenSection "Section:"}]} {
+			set SecType [GiD_AccessValue get materials $ChosenSection "Section:"]
+			#SecType is the value of the question: Section: of the chosen Section from the combo box!
+
+			if { $SecType != "Fiber" && $SecType != "SectionAggregator" } {
+				WarnWinText "Uncompatible Section $ChosenSection ($SecType section) selected for Displacement-Based beam-column elements."
+				WarnWinText "It has been changed to Fiber section."
+				# Change the value of the field "Section:" to Fiber
+				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
+			}
+			} else {
+				WarnWinText "Uncompatible Section selected for Displacement-Based Beam Column Element"
+				WarnWinText "It has been changed to Fiber Section"
+				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
+			}
 		}
+
+	}
+
+	return ""
+}
+
+proc TK_DBCI_CheckSection { event args } {
+
+	switch $event {
 
 		SYNC {
 
@@ -305,33 +547,22 @@ proc TK_CheckSectionForDBC { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# i.e. ChosenMaterial can be Plate_fiber (from combo box "Section" in force based beam column definition)
-			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
+			set ChosenSection [DWLocalGetValue $GDN $STRUCT $QUESTION]
 
-			#GiD_AccessValue get materials : Search the value of a field of a material.
-			# $ChosenMaterial is the material name
-			# Section: is the question name of the Section $ChosenMaterial
-			set SecType [GiD_AccessValue get materials $ChosenMaterial "Section:"]
-			#SecType is the value of the question: Section: of the chosen Section from the combo box!
+			if {![catch {GiD_AccessValue get materials $ChosenSection "Section:"}]} {
+			set SecType [GiD_AccessValue get materials $ChosenSection "Section:"]
 
-			if { $SecType == "PlateFiber" || $SecType == "ElasticMembranePlate" } {
-				WarnWinText "ERROR : Section $ChosenMaterial ($SecType section) can not be used for Displacement-Based beam-column elements."
-				WarnWinText "It has been changed to Fiber section."
-				# Change the value of the field "Section:" to Fiber
-				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
+			if { $SecType != "FiberInt" } {
+				WarnWinText "Uncompatible Section $ChosenSection ($SecType section) selected for F-S Interaction Displacement-Based beam-column elements."
+				WarnWinText "It has been changed to FiberInt section."
+
+				DWLocalSetValue $GDN $STRUCT $QUESTION "FiberInt"
 			}
-
-			return ""
-		}
-
-		DEPEND {
-
-			return ""
-		}
-
-		CLOSE {
-
-			return ""
+			} else {
+				WarnWinText "Uncompatible Section selected for F-S Interaction Displacement-Based Beam Column Element"
+				WarnWinText "It has been changed to FiberInt Section"
+				DWLocalSetValue $GDN $STRUCT $QUESTION "FiberInt"
+			}
 		}
 	}
 
@@ -440,7 +671,6 @@ proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
 						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
 						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction [roundUp $Fibers_y]]
 						}
-
 					}
 
 					"Circular_Column" {
@@ -467,27 +697,119 @@ proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
 
 								"3" {
 
-										set Fibers_y [expr {max(8*$TopBars,8*$BottomBars,20)}]
-										set Fibers_z [expr $Fibers_y*$height/$width]
+									set Fibers_y [expr {max(8*$TopBars,8*$BottomBars,20)}]
+									set Fibers_z [expr $Fibers_y*$height/$width]
 
 								}
 								"2" {
 
-										set Fibers_z [expr {max(8*$TopBars,8*$BottomBars,20)}]
-										set Fibers_y [expr $Fibers_z*$height/$width]
-
+									set Fibers_z [expr {max(8*$TopBars,8*$BottomBars,20)}]
+									set Fibers_y [expr $Fibers_z*$height/$width]
 								}
 							}
 						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
 						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction [roundUp $Fibers_y]]
 					}
+
+					"Bridge_Deck" {
+
+						set wtunit [DWLocalGetValue $GDN $STRUCT Top_slab_width_wt]
+						set wbunit [DWLocalGetValue $GDN $STRUCT Bottom_slab_width_wb]
+						set ts1unit [DWLocalGetValue $GDN $STRUCT Top_slab_thickness_ts1]
+						set ts2unit [DWLocalGetValue $GDN $STRUCT Bottom_slab_thickness_ts2]
+						set hvunit [DWLocalGetValue $GDN $STRUCT Height_hv]
+
+						set temp [GidConvertValueUnit $wtunit]
+						set temp [ParserNumberUnit $temp wt dummy]
+						set temp [GidConvertValueUnit $wbunit]
+						set temp [ParserNumberUnit $temp wb dummy]
+						set temp [GidConvertValueUnit $ts1unit]
+						set temp [ParserNumberUnit $temp ts1 dummy]
+						set temp [GidConvertValueUnit $ts2unit]
+						set temp [ParserNumberUnit $temp ts2 dummy]
+						set temp [GidConvertValueUnit $hvunit]
+						set temp [ParserNumberUnit $temp hv dummy]
+
+						set FibersTopSlabWidth [expr 10*$wt]
+						set FibersTopSlabWidth [roundUp $FibersTopSlabWidth]
+
+						set FibersTopSlabThickness [expr {max(10*$ts1,5)}]
+						set FibersTopSlabThickness [roundUp $FibersTopSlabThickness]
+
+						set FibersBotSlabWidth [expr 10*$wb]
+						set FibersBotSlabWidth [roundUp $FibersBotSlabWidth]
+
+						set FibersBotSlabThickness [expr {max(10*$ts2,5)}]
+						set FibersBotSlabThickness [roundUp $FibersBotSlabThickness]
+
+						set FibersWebHeight [expr {max(10*$hv,10)}]
+						set FibersWebHeight [roundUp $FibersWebHeight]
+
+						# change values
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_top_slab_width $FibersTopSlabWidth]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_top_slab_thickness $FibersTopSlabThickness]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_bottom_slab_width $FibersBotSlabWidth]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_bottom_slab_thickness $FibersBotSlabThickness]
+						set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_web_height $FibersWebHeight]
+
+						set SolidChecked [DWLocalGetValue $GDN $STRUCT Solid_Section]
+						set nvoids [DWLocalGetValue $GDN $STRUCT Number_of_voids]
+
+						if {$SolidChecked} {
+
+							set FibersExtWebThickness [expr 5*$wb]
+							set FibersExtWebThickness [roundUp $FibersExtWebThickness]
+							set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_external_web_thickness $FibersExtWebThickness]
+
+						} else {
+
+							set twunit [DWLocalGetValue $GDN $STRUCT External_web_thickness_tw]
+							set dvunit [DWLocalGetValue $GDN $STRUCT Void_width_dv]
+
+							set temp [GidConvertValueUnit $twunit]
+							set temp [ParserNumberUnit $temp tw dummy]
+							set temp [GidConvertValueUnit $dvunit]
+							set temp [ParserNumberUnit $temp dv dummy]
+
+							# internal web thickness
+							set inttw [expr $wb-2*$tw-$nvoids*$dv]
+
+							set FibersExtWebThickness [expr {max(10*$tw,5)}]
+							set FibersExtWebThickness [roundUp $FibersExtWebThickness]
+
+							set FibersIntWebThickness [expr {max(10*$inttw,5)}]
+							set FibersIntWebThickness [roundUp $FibersIntWebThickness]
+
+							set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_external_web_thickness $FibersExtWebThickness]
+							set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_internal_web_thickness $FibersIntWebThickness]
+
+						}
+
+						set includeChecked [DWLocalGetValue $GDN $STRUCT Include_additional_part]
+
+						if {$includeChecked} {
+
+							set bunit [DWLocalGetValue $GDN $STRUCT Beam_width_b]
+							set hunit [DWLocalGetValue $GDN $STRUCT Beam_height_h]
+
+							set temp [GidConvertValueUnit $bunit]
+							set temp [ParserNumberUnit $temp b dummy]
+							set temp [GidConvertValueUnit $hunit]
+							set temp [ParserNumberUnit $temp h dummy]
+
+							set FibersBeamHeight [expr {max(10*$h,5)}]
+							set FibersBeamHeight [roundUp $FibersBeamHeight]
+
+							set FibersBeamWidth [expr {max(10*$b,5)}]
+							set FibersBeamWidth [roundUp $FibersBeamWidth]
+
+							set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_beam_height $FibersBeamHeight]
+							set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_beam_width $FibersBeamWidth]
+
+						}
+					}
 				}
 			}
-		}
-
-		CLOSE {
-
-			return ""
 		}
 	}
 
@@ -504,20 +826,6 @@ proc TK_CheckFieldValuesForFiber { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 
-			# i.e. ChosenSection can be Elastic_Orthotropic (from combo box "Material" in beam column definition)
-			set ChoosedCoreMaterial [DWLocalGetValue $GDN $STRUCT "Core_material"]
-			set ChoosedCoverMaterial [DWLocalGetValue $GDN $STRUCT "Cover_material"]
-			set ChoosedBarMaterial [DWLocalGetValue $GDN $STRUCT "Reinforcing_Bar_material"]
-
-			#GiD_AccessValue get materials : Search the value of a field of a material.
-			# $ChosenSection is the material name
-			# Section: is the question name of the Section $ChosenSection
-			set CoreMatType [GiD_AccessValue get materials $ChoosedCoreMaterial "Material:"]
-			set CoverMatType [GiD_AccessValue get materials $ChoosedCoverMaterial "Material:"]
-			set BarMatType [GiD_AccessValue get materials $ChoosedBarMaterial "Material:"]
-
-			#CoreMatType is the value of the field: material: of the chosen material from the combo box!
-
 			# List of concrete uniaxial materials that can be used for core/cover material of Fiber Section
 			set CompatibleConcreteMaterials " \
 			Concrete01 \
@@ -527,29 +835,116 @@ proc TK_CheckFieldValuesForFiber { event args } {
 			InitStrain \
 			InitStress \
 			"
+
 			# List of steel uniaxial materials that can be used for reinforcing bar material of Fiber Section
 			set CompatibleSteelMaterials " \
 			Steel01 \
+			Steel02 \
 			ReinforcingSteel \
+			Hysteretic \
 			"
-
-			if { [lsearch $CompatibleConcreteMaterials $CoreMatType]==-1 } {
-				WarnWinText "Uncompatible Core material ($CoreMatType) selected for Fiber Material"
-				DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete04_(Popovics_concrete)"
-			}
-
-			if { [lsearch $CompatibleConcreteMaterials $CoverMatType]==-1 } {
-				WarnWinText "Uncompatible Cover material ($CoreMatType) selected for Fiber Material"
-				DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete04_(Popovics_concrete)"
-			}
-
-			if { [lsearch $CompatibleSteelMaterials $BarMatType]==-1 } {
-				WarnWinText "Uncompatible steel material ($CoreMatType) selected for Fiber Material"
-				DWLocalSetValue $GDN $STRUCT "Reinforcing_Bar_material" "Steel01"
-			}
 
 			set CrossSection [DWLocalGetValue $GDN $STRUCT "Cross_section"]
 
+			# Check material options
+
+			if { $CrossSection != "Bridge_Deck" } {
+
+				set ChosenCoreMaterial [DWLocalGetValue $GDN $STRUCT "Core_material"]
+				set ChosenCoverMaterial [DWLocalGetValue $GDN $STRUCT "Cover_material"]
+				set ChosenBarMaterial [DWLocalGetValue $GDN $STRUCT "Reinforcing_Bar_material"]
+
+				#GiD_AccessValue get materials : Search the value of a field of a material.
+				# $ChosenSection is the material name
+				# Section: is the question name of the Section $ChosenSection
+				set CoreMatType [GiD_AccessValue get materials $ChosenCoreMaterial "Material:"]
+				set CoverMatType [GiD_AccessValue get materials $ChosenCoverMaterial "Material:"]
+				set BarMatType [GiD_AccessValue get materials $ChosenBarMaterial "Material:"]
+
+				#CoreMatType is the value of the field: material: of the chosen material from the combo box!
+
+				if { [lsearch $CompatibleConcreteMaterials $CoreMatType]==-1 } {
+					WarnWinText "Uncompatible Core material ($CoreMatType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete04_(Popovics_concrete)"
+				}
+
+				if { [lsearch $CompatibleConcreteMaterials $CoverMatType]==-1 } {
+					WarnWinText "Uncompatible Cover material ($CoverMatType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete04_(Popovics_concrete)"
+				}
+
+				if { [lsearch $CompatibleSteelMaterials $BarMatType]==-1 } {
+					WarnWinText "Uncompatible steel material ($BarMatType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Reinforcing_Bar_material" "Steel01"
+				}
+
+			} else {
+
+				set ChosenMainConcrete [DWLocalGetValue $GDN $STRUCT "Main_section_material"]
+				set ChosenTopBarMaterial [DWLocalGetValue $GDN $STRUCT "Top_slab_reinforcing_bar_material"]
+				set ChosenBotBarMaterial [DWLocalGetValue $GDN $STRUCT "Bottom_slab_reinforcing_bar_material"]
+
+				set MainConcreteType [GiD_AccessValue get materials $ChosenMainConcrete "Material:"]
+				set TopBarMatType [GiD_AccessValue get materials $ChosenTopBarMaterial "Material:"]
+				set BotBarMatType [GiD_AccessValue get materials $ChosenBotBarMaterial "Material:"]
+
+				if { [lsearch $CompatibleConcreteMaterials $MainConcreteType]==-1 } {
+
+					WarnWinText "Uncompatible concrete material ($MainConcreteType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Main_section_material" "Concrete04_(Popovics_concrete)"
+
+				}
+				if { [lsearch $CompatibleSteelMaterials $TopBarMatType]==-1 } {
+
+					WarnWinText "Uncompatible steel material ($TopBarMatType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Top_slab_reinforcing_bar_material" "Steel01"
+
+				}
+				if { [lsearch $CompatibleSteelMaterials $BotBarMatType]==-1 } {
+
+					WarnWinText "Uncompatible steel material ($BotBarMatType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Bottom_slab_reinforcing_bar_material" "Steel01"
+
+				}
+
+				set includeChecked [DWLocalGetValue $GDN $STRUCT "Include_additional_part"]
+
+				if {$includeChecked} {
+
+					set ChosenAddConcrete [DWLocalGetValue $GDN $STRUCT "Additional_part_material"]
+					set ChosenAddSlabBarMaterial [DWLocalGetValue $GDN $STRUCT "Additional_slab_reinforcing_bar_material"]
+					set ChosenBeamBarMaterial [DWLocalGetValue $GDN $STRUCT "Beam_reinforcing_bar_material"]
+
+					set AddConcreteType [GiD_AccessValue get materials $ChosenAddConcrete "Material:"]
+					set AddSlabBarType [GiD_AccessValue get materials $ChosenAddSlabBarMaterial "Material:"]
+					set BeamBarType [GiD_AccessValue get materials $ChosenBeamBarMaterial "Material:"]
+
+					if { [lsearch $CompatibleConcreteMaterials $AddConcreteType]==-1 } {
+
+					WarnWinText "Uncompatible concrete material ($AddConcreteType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Additional_part_material" "Concrete04_(Popovics_concrete)"
+
+					}
+
+					if { [lsearch $CompatibleSteelMaterials $AddSlabBarType]==-1 } {
+
+					WarnWinText "Uncompatible steel material ($AddSlabBarType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Top_slab_reinforcing_bar_material" "Steel01"
+
+					}
+
+					if { [lsearch $CompatibleSteelMaterials $BeamBarType]==-1 } {
+
+					WarnWinText "Uncompatible steel material ($BeamBarType) selected for Fiber Section"
+					DWLocalSetValue $GDN $STRUCT "Beam_reinforcing_bar_material" "Steel01"
+
+				}
+
+				}
+
+			}
+
+			# Check if number of bars are integer and slab bars even
 			if {$CrossSection == "Rectangular_Column" } {
 				set BarsZface [DWLocalGetValue $GDN $STRUCT "Bars_along_z_axis_face"]
 				set BarsYface [DWLocalGetValue $GDN $STRUCT "Bars_along_y_axis_face"]
@@ -591,6 +986,52 @@ proc TK_CheckFieldValuesForFiber { event args } {
 					WarnWinText "Warning: Number of bars must be integer"
 				}
 
+			} elseif {$CrossSection == "Bridge_Deck"} {
+
+				set wbSizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_slab_width_wb]
+				set wtSizeUnit [DWLocalGetValue $GDN $STRUCT Top_slab_width_wt]
+				set ts1SizeUnit [DWLocalGetValue $GDN $STRUCT Top_slab_thickness_ts1]
+				set ts2SizeUnit [DWLocalGetValue $GDN $STRUCT Bottom_slab_thickness_ts2]
+				set hvSizeUnit [DWLocalGetValue $GDN $STRUCT Height_hv]
+
+				set temp [GidConvertValueUnit $wbSizeUnit]
+				set temp [ParserNumberUnit $temp wbSize Lunit]
+				set temp [GidConvertValueUnit $wtSizeUnit]
+				set temp [ParserNumberUnit $temp wtSize Lunit]
+				set temp [GidConvertValueUnit $ts1SizeUnit]
+				set temp [ParserNumberUnit $temp ts1Size Lunit]
+				set temp [GidConvertValueUnit $ts2SizeUnit]
+				set temp [ParserNumberUnit $temp ts2Size Lunit]
+				set temp [GidConvertValueUnit $hvSizeUnit]
+				set temp [ParserNumberUnit $temp hvSize Lunit]
+
+				if {$wtSize < $wbSize} {
+
+					WarnWinText "Warning: Top slab width wt must be greater or equal to Bottom slab's width wb."
+					set wtSize [format "%g" $wbSize]
+					set wt $wtSize$Lunit
+					set ok [DWLocalSetValue $GDN $STRUCT Top_slab_width_wt $wt]
+
+				}
+
+				set SolidChecked [DWLocalGetValue $GDN $STRUCT Solid_Section]
+				set nvoids [DWLocalGetValue $GDN $STRUCT Number_of_voids]
+				set dvSizeUnit [DWLocalGetValue $GDN $STRUCT Void_width_dv]
+				set exttwSizeUnit [DWLocalGetValue $GDN $STRUCT External_web_thickness_tw]
+
+				set temp [GidConvertValueUnit $dvSizeUnit]
+				set temp [ParserNumberUnit $temp dvSize Lunit]
+				set temp [GidConvertValueUnit $exttwSizeUnit]
+				set temp [ParserNumberUnit $temp exttwSize Lunit]
+
+				set halfwbSize [format "%f" [expr $wbSize/2]]
+
+				if {($nvoids==0 || $dvSize==0 || $exttwSize>=$halfwbSize) && $SolidChecked==0} {
+
+					WarnWinText "Warning: Some field values corresponds to a solid section. Section is assumed as solid."
+					set ok [DWLocalSetValue $GDN $STRUCT Solid_Section 1]
+
+				}
 			}
 			return ""
 		}
@@ -896,22 +1337,17 @@ proc TK_GenerateUniaxialSteelProperties { event args } {
 					set ok [DWLocalSetValue $GDN $STRUCT "Initial_elastic_tangent_E0" $E$Eunit]
 					return ""
 					}
+					"Steel02" {
+					set ok [DWLocalSetValue $GDN $STRUCT "Yield_Stress_Fy" $Fy$unit]
+					set ok [DWLocalSetValue $GDN $STRUCT "Initial_elastic_tangent_E0" $E$Eunit]
+					return ""
+					}
 					"ReinforcingSteel" {
 					set ok [DWLocalSetValue $GDN $STRUCT "Yield_stress_fy" $Fy$unit]
 					set ok [DWLocalSetValue $GDN $STRUCT "Initial_elastic_tangent_Es" $E$Eunit]
 					return ""
 					}
 				}
-		}
-
-		DEPEND {
-
-			return ""
-		}
-
-		CLOSE {
-
-			return ""
 		}
 	}
 
@@ -1733,12 +2169,13 @@ proc TK_UpdateInfoBar { event args } {
 global SelectedVerticalAxis
 
 proc TK_EditModelDim { event args } {
-global SelectedVerticalAxis
-			set PARENT [lindex $args 0]
-			upvar [lindex $args 1] ROW
-			set GDN [lindex $args 2]
-			set STRUCT [lindex $args 3]
-			set QUESTION [lindex $args 4]
+
+	global SelectedVerticalAxis
+	set PARENT [lindex $args 0]
+	upvar [lindex $args 1] ROW
+	set GDN [lindex $args 2]
+	set STRUCT [lindex $args 3]
+	set QUESTION [lindex $args 4]
 
 	switch $event {
 
@@ -1798,6 +2235,9 @@ proc TK_ElementWikiInfo { event args } {
 				"Shell" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Shell_Element"
 				}
+				"ShellDKGQ" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ShellDKGQ"
+				}
 				"Tri31" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Tri31_Element"
 				}
@@ -1809,6 +2249,9 @@ proc TK_ElementWikiInfo { event args } {
 				}
 				"dispBeamColumn" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Displacement-Based_Beam-Column_Element"
+				}
+				"dispBeamColumnInt" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Flexure-Shear_Interaction_Displacement-Based_Beam-Column_Element"
 				}
 
 			}
@@ -1865,6 +2308,9 @@ proc TK_MaterialWikiInfo { event args } {
 				"Steel01" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Steel01_Material"
 				}
+				"Steel02" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffré-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening"
+				}
 				"ReinforcingSteel" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Reinforcing_Steel_Material"
 				}
@@ -1901,6 +2347,12 @@ proc TK_MaterialWikiInfo { event args } {
 				"InitStress" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Initial_Stress_Material"
 				}
+				"ViscousDamper" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ViscousDamper_Material"
+				}
+				"HyperbolicGap" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Hyperbolic_Gap_Material"
+				}
 			}
 
 			set b [Button $PARENT.wikiinfo -text [= "Material info"] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal ]
@@ -1931,11 +2383,14 @@ proc TK_SectionWikiInfo { event args } {
 				"Fiber" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fiber_Section"
 				}
+				"FiberInt" {
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Flexure-Shear_Interaction_Displacement-Based_Beam-Column_Element"
+				}
 				"PlateFiber" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Membrane_Plate_Section"
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Plate_Fiber_Section"
 				}
 				"ElasticMembranePlate" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Plate_Fiber_Section"
+					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Membrane_Plate_Section"
 				}
 				"SectionAggregator" {
 					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Section_Aggregator"
@@ -2255,6 +2710,7 @@ proc TK_RecordFileButton { event args } {
 	}
 
 	#a tkwidget procedure must return "" if Ok or [list ERROR $description] or [list WARNING $description]
+
 	return ""
 }
 
@@ -2322,7 +2778,74 @@ proc TK_RayleighLabel { event args } {
 	return ""
 }
 
-proc TK_Excitation_type { event args } {
+proc TK_IntvData_Directions { event args } {
+
+	switch $event {
+
+		DEPEND {
+
+			lassign $args GDN STRUCT QUESTION ACTION VALUE
+			set Dirs [DWLocalGetValue $GDN $STRUCT Directions]
+			if { $ACTION == "RESTORE" } {
+				set exc_type [DWLocalGetValue $GDN $STRUCT Excitation_type]
+				if { $exc_type == "Sine" } {
+
+					set dummy [TK_DWSet $GDN $STRUCT Directions 1 disabled]
+					set dummy [TK_DWSet $GDN $STRUCT "Ground_motion_direction" "#CURRENT#" normal]
+					set dummy [TK_DWSet $GDN $STRUCT "First_record_file" "#CURRENT#" hidden]
+					set dummy [TK_DWSet $GDN $STRUCT "Second_record_file" "#CURRENT#" hidden]
+					set dummy [TK_DWSet $GDN $STRUCT "Third_record_file" "#CURRENT#" hidden]
+					set dummy [TK_DWSet $GDN $STRUCT "First_ground_motion_direction" "#CURRENT#" hidden]
+					set dummy [TK_DWSet $GDN $STRUCT "Second_ground_motion_direction" "#CURRENT#" hidden]
+					set dummy [TK_DWSet $GDN $STRUCT "Third_ground_motion_direction" "#CURRENT#" hidden]
+					set dummy [TK_DWSet $GDN $STRUCT "Record_file" "#CURRENT#" hidden]
+
+				} elseif { $exc_type == "Record" } {
+
+					if { $Dirs == 1 } {
+
+						set dummy [TK_DWSet $GDN $STRUCT "Record_file" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Ground_motion_direction" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "First_record_file" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "Second_record_file" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "Third_record_file" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "First_ground_motion_direction" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "Second_ground_motion_direction" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "Third_ground_motion_direction" "#CURRENT#" hidden]
+
+					} elseif { $Dirs == 2} {
+
+						set dummy [TK_DWSet $GDN $STRUCT "Record_file" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "Ground_motion_direction" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "First_record_file" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Second_record_file" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Third_record_file" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "First_ground_motion_direction" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Second_ground_motion_direction" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Third_ground_motion_direction" "#CURRENT#" hidden]
+
+					} else {
+
+						set dummy [TK_DWSet $GDN $STRUCT "Record_file" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "Ground_motion_direction" "#CURRENT#" hidden]
+						set dummy [TK_DWSet $GDN $STRUCT "First_record_file" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Second_record_file" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Third_record_file" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "First_ground_motion_direction" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Second_ground_motion_direction" "#CURRENT#" normal]
+						set dummy [TK_DWSet $GDN $STRUCT "Third_ground_motion_direction" "#CURRENT#" normal]
+
+					}
+				}
+			}
+		}
+
+	}
+
+	return ""
+}
+
+proc TK_IntvData_ExcitationType { event args } {
 
 	switch $event {
 
@@ -2336,9 +2859,123 @@ proc TK_Excitation_type { event args } {
 				} elseif { $exc_type == "Record" } {
 					set dummy [TK_DWSet $GDN $STRUCT "Excitation_type" "Record" normal]
 				}
+			} elseif { $ACTION == "HIDE" } {
+
+				set dummy [TK_DWSet $GDN $STRUCT Directions "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "Ground_motion_direction" "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "First_record_file" "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "Second_record_file" "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "Third_record_file" "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "First_ground_motion_direction" "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "Second_ground_motion_direction" "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "Third_ground_motion_direction" "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT "Record_file" "#CURRENT#" hidden]
 			}
 		}
 	}
+
+	return ""
+}
+
+proc TK_IntvData_IntegratorType { event args } {
+
+	switch $event {
+
+		DEPEND {
+
+		lassign $args GDN STRUCT QUESTION ACTION VALUE
+		if { $ACTION == "RESTORE" } {
+				set integrator_type [DWLocalGetValue $GDN $STRUCT $QUESTION]
+				set analysis_type [DWLocalGetValue $GDN $STRUCT Analysis_type]
+
+				set StaticIntegratorTypes " \
+				Load_control \
+				Displacement_control \
+				"
+
+				set TransientIntegratorTypes " \
+				Newmark \
+				Hilber-Hughes-Taylor \
+				"
+
+				if { $analysis_type == "Static" } {
+					if { [lsearch $StaticIntegratorTypes $integrator_type] == -1 } {
+						set dummy [TK_DWSet $GDN $STRUCT $QUESTION Load_control normal]
+					}
+
+				} elseif { $analysis_type == "Transient" } {
+
+					if { [lsearch $TransientIntegratorTypes $integrator_type] == -1 } {
+						set dummy [TK_DWSet $GDN $STRUCT $QUESTION Newmark normal]
+					}
+				}
+			}
+		}
+	}
+
+	return ""
+}
+
+proc TK_IntvData_LoadingPath { event args } {
+
+	switch $event {
+
+	DEPEND {
+
+	lassign $args GDN STRUCT QUESTION ACTION VALUE
+		if { $ACTION == "SET" } {
+
+				set dummy [TK_DWSet $GDN $STRUCT $QUESTION $VALUE normal]
+				set dummy [TK_DWSet $GDN $STRUCT $QUESTION $VALUE disabled]
+
+			}
+		}
+	}
+
+	return ""
+}
+
+proc TK_IntvData_LoadingType { event args } {
+
+	switch $event {
+
+		DEPEND {
+
+		lassign $args GDN STRUCT QUESTION ACTION VALUE
+		if { $ACTION == "RESTORE" } {
+				set loading_type [DWLocalGetValue $GDN $STRUCT $QUESTION]
+				set integrator_type [DWLocalGetValue $GDN $STRUCT Integrator_type]
+
+				set StaticIntegratorTypes " \
+				Load_control \
+				Displacement_control \
+				"
+
+				set StaticLoadingTypes " \
+				Constant \
+				Linear \
+				"
+
+				set TransientIntegratorTypes " \
+				Newmark \
+				Hilber-Hughes-Taylor \
+				"
+
+				set TransientLoadingTypes " \
+				Uniform_excitation \
+				Multiple_support_excitation \
+				"
+				if { [lsearch $StaticIntegratorTypes $integrator_type] == -1 && [lsearch $StaticLoadingTypes $loading_type] != -1 } {
+					set dummy [TK_DWSet $GDN $STRUCT $QUESTION Uniform_excitation normal]
+				}
+
+				if { [lsearch $TransientIntegratorTypes $integrator_type] == -1 && [lsearch $TransientLoadingTypes $loading_type] != -1 } {
+					set dummy [TK_DWSet $GDN $STRUCT $QUESTION Linear normal]
+				}
+			}
+		}
+	}
+
 	return ""
 }
 
@@ -2410,6 +3047,7 @@ proc TK_PMY-ID { event args } {
 			}
 		}
 	}
+
 	return ""
 }
 
@@ -2455,13 +3093,61 @@ proc TK_ControlNodeDirection {event args } {
 				}
 			}
 		}
-
 	}
+
+	return ""
+}
+
+proc TK_InitialStrainStress_CheckValidOptions { event args } {
+
+	switch $event {
+
+		SYNC {
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set thisMatType [DWLocalGetValue $GDN $STRUCT Material:]
+				set SelectedMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
+
+			set CompatibleMaterials " \
+			Elastic \
+			ElasticPerfectlyPlastic \
+			ElasticPerfectlyPlasticwithGap \
+			Steel01 \
+			Steel02 \
+			ReinforcingSteel \
+			Hysteretic \
+			Concrete01 \
+			Concrete02 \
+			Concrete04 \
+			Concrete06 \
+			Series \
+			Parallel \
+			"
+
+			if {![catch {GiD_AccessValue get materials $SelectedMaterial "Material:"}]} {
+
+				set matType [GiD_AccessValue get materials $SelectedMaterial "Material:"]
+
+				if { [lsearch $CompatibleMaterials $matType]==-1 } {
+
+					WarnWinText "Uncompatible Material ($matType) selected for $thisMatType Material"
+				}
+			} else {
+
+				WarnWinText "Uncompatible material selected for $thisMatType Material"
+			}
+		}
+	}
+
 	return ""
 }
 
 proc TK_SectionAggregator_CheckValidOptions { event args } {
+
 	switch $event {
+
 		INIT {
 
 			set PARENT [lindex $args 0]
@@ -2513,48 +3199,54 @@ proc TK_SectionAggregator_CheckValidOptions { event args } {
 			set MatCounter 0
 
 			if { [DWLocalGetValue $GDN $STRUCT Activate_P]==1 } {
-			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Axial_force-deformation]
-			incr MatCounter 1
+				lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Axial_force-deformation]
+				incr MatCounter 1
 			}
 			if { [DWLocalGetValue $GDN $STRUCT Activate_Mz]==1 } {
-			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Moment-curvature_about_local_z-z]
-			incr MatCounter 1
+				lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Moment-curvature_about_local_z-z]
+				incr MatCounter 1
 			}
 			if { [DWLocalGetValue $GDN $STRUCT Activate_Vy]==1 } {
-			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Shear_force-deformation_along_local_y-y]
-			incr MatCounter 1
+				lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Shear_force-deformation_along_local_y-y]
+				incr MatCounter 1
 			}
 			if { [DWLocalGetValue $GDN $STRUCT Activate_My]==1 } {
-			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Moment-curvature_about_local_y-y]
-			incr MatCounter 1
+				lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Moment-curvature_about_local_y-y]
+				incr MatCounter 1
 			}
 			if { [DWLocalGetValue $GDN $STRUCT Activate_Vz]==1 } {
-			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Shear_force-deformation_along_local_z-z]
-			incr MatCounter 1
+				lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Shear_force-deformation_along_local_z-z]
+				incr MatCounter 1
 			}
 			if { [DWLocalGetValue $GDN $STRUCT Activate_T]==1 } {
-			lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Torsion_force-deformation]
-			incr MatCounter 1
+				lappend ChosenMaterials [DWLocalGetValue $GDN $STRUCT Torsion_force-deformation]
+				incr MatCounter 1
 			}
 
 			if {$MatCounter} {
-			foreach mat $ChosenMaterials {
-				set matType [GiD_AccessValue get materials $mat "Material:"]
+				foreach mat $ChosenMaterials {
+					if {![catch {GiD_AccessValue get materials $mat "Material:"}]} {
 
-				if { [lsearch $CompatibleMaterials $matType]==-1 } {
+						set matType [GiD_AccessValue get materials $mat "Material:"]
 
-					WarnWinText "Uncompatible Material ($matType) selected for $thisSectionType Material"
+						if { [lsearch $CompatibleMaterials $matType]==-1 } {
 
+							WarnWinText "Uncompatible Material ($matType) selected for $thisSectionType Section"
+						}
+					} else {
+
+						WarnWinText "Uncompatible material selected for $thisSectionType Section"
+					}
 				}
 			}
-			}
-
 		}
-
 	}
+
+	return ""
 }
 
 proc TK_SeriesParallel_CheckValidOptions { event args } {
+
 	switch $event {
 
 		SYNC {
@@ -2613,17 +3305,58 @@ proc TK_SeriesParallel_CheckValidOptions { event args } {
 			}
 			}
 		}
+
 		CLOSE {
 
 			UpdateInfoBar
 		}
 	}
+
+	return ""
 }
 
-proc TK_ZeroLength_CheckValidOptions { event args } {
+proc TK_Shell_CheckFieldValues { event args } {
+
 	switch $event {
 
-	SYNC {
+		SYNC {
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			set thisElemType [DWLocalGetValue $GDN $STRUCT Element_type:]
+			set ChosenSection [DWLocalGetValue $GDN $STRUCT $QUESTION]
+
+			set CompatibeSections " \
+			PlateFiber \
+			ElasticMembranePlate \
+			"
+
+			if {![catch {GiD_AccessValue get materials $ChosenSection "Section:"}]} {
+
+				set secType [GiD_AccessValue get materials $ChosenSection "Section:"]
+
+				if { [lsearch $CompatibeSections $secType]==-1 } {
+
+				WarnWinText "Uncompatible Section ($secType) selected for $thisElemType Element"
+
+				}
+			} else {
+
+				WarnWinText "Uncompatible Material selected for $thisElemType Element"
+			}
+		}
+	}
+
+	return ""
+}
+
+proc TK_Truss_CheckFieldValues { event args } {
+
+	switch $event {
+
+		SYNC {
+
 		set GDN [lindex $args 0]
 		set STRUCT [lindex $args 1]
 		set QUESTION [lindex $args 2]
@@ -2632,8 +3365,63 @@ proc TK_ZeroLength_CheckValidOptions { event args } {
 		Elastic \
 		ElasticPerfectlyPlastic \
 		ElasticPerfectlyPlasticwithGap \
+		Series \
+		Parallel \
 		Steel01 \
+		Steel02 \
+		ReinforcingSteel \
 		Hysteretic \
+		HyperbolicGap \
+		Viscous \
+		ViscousDamper \
+		InitStrain \
+		InitStress \
+		"
+
+		set ThisElemType [DWLocalGetValue $GDN $STRUCT Element_type:]
+		set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
+
+		if {![catch {GiD_AccessValue get materials $ChosenMaterial "Material:"}]} {
+
+			set matType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
+
+			if { [lsearch $CompatibleMaterials $matType]==-1 } {
+
+				WarnWinText "Uncompatible Material ($matType) selected for $ThisElemType Element"
+
+			}
+		} else {
+
+			WarnWinText "Uncompatible Material selected for $ThisElemType Element"
+		}
+		}
+	}
+
+	return ""
+}
+
+proc TK_ZeroLength_CheckValidOptions { event args } {
+
+	switch $event {
+
+	SYNC {
+
+		set GDN [lindex $args 0]
+		set STRUCT [lindex $args 1]
+		set QUESTION [lindex $args 2]
+
+		set CompatibleMaterials " \
+		Elastic \
+		ElasticPerfectlyPlastic \
+		ElasticPerfectlyPlasticwithGap \
+		Series \
+		Parallel \
+		Steel01 \
+		Steel02 \
+		Hysteretic \
+		HyperbolicGap \
+		Viscous \
+		ViscousDamper \
 		InitStrain \
 		InitStress \
 		"
@@ -2691,4 +3479,277 @@ proc TK_ZeroLength_CheckValidOptions { event args } {
 			UpdateInfoBar
 	}
 	}
+
+	return ""
+}
+
+proc TK_FiberInt_CheckValues { event args } {
+
+	switch $event {
+
+		SYNC {
+
+			set GDN [lindex $args 0]
+			set STRUCT [lindex $args 1]
+			set QUESTION [lindex $args 2]
+
+			# Check if materials are compatible
+
+			set CompatibleConcreteMaterials " \
+			Concrete01 \
+			Concrete02 \
+			Concrete04 \
+			Concrete06 \
+			InitStrain \
+			InitStress \
+			"
+
+			set CompatibleSteelMaterials " \
+			Steel01 \
+			Steel02 \
+			ReinforcingSteel \
+			Hysteretic \
+			"
+
+			set ChosenCoreMaterial [DWLocalGetValue $GDN $STRUCT "Core_material"]
+			set ChosenCoverMaterial [DWLocalGetValue $GDN $STRUCT "Cover_material"]
+			set ChosenBarMaterial [DWLocalGetValue $GDN $STRUCT "Reinforcing_Bar_material"]
+
+			set CoreMatType [GiD_AccessValue get materials $ChosenCoreMaterial "Material:"]
+			set CoverMatType [GiD_AccessValue get materials $ChosenCoverMaterial "Material:"]
+			set BarMatType [GiD_AccessValue get materials $ChosenBarMaterial "Material:"]
+
+			if { [lsearch $CompatibleConcreteMaterials $CoreMatType]==-1 } {
+				WarnWinText "Uncompatible Core material ($CoreMatType) selected for FiberInt Section"
+				DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete04_(Popovics_concrete)"
+			}
+
+			if { [lsearch $CompatibleConcreteMaterials $CoverMatType]==-1 } {
+				WarnWinText "Uncompatible Cover material ($CoverMatType) selected for FiberInt Section"
+				DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete04_(Popovics_concrete)"
+			}
+
+			if { [lsearch $CompatibleSteelMaterials $BarMatType]==-1 } {
+				WarnWinText "Uncompatible steel material ($BarMatType) selected for FiberInt Section"
+				DWLocalSetValue $GDN $STRUCT "Reinforcing_Bar_material" "Steel01"
+			}
+
+			# Check if numbers of strips are integer and positive
+
+			set leftStrips [DWLocalGetValue $GDN $STRUCT Strips]
+			set leftStrips [expr abs(int($leftStrips))]
+			set middleStrips [DWLocalGetValue $GDN $STRUCT _Strips]
+			set middleStrips [expr abs(int($middleStrips))]
+			set rightStrips [DWLocalGetValue $GDN $STRUCT __Strips]
+			set rightStrips [expr abs(int($rightStrips))]
+
+			set ok [DWLocalSetValue $GDN $STRUCT Strips $leftStrips]
+			set ok [DWLocalSetValue $GDN $STRUCT _Strips $middleStrips]
+			set ok [DWLocalSetValue $GDN $STRUCT __Strips $rightStrips]
+
+			# ------- Check positive values -------
+
+			set leftThicknessUnit [DWLocalGetValue $GDN $STRUCT Thickness]
+			set middleThicknessUnit [DWLocalGetValue $GDN $STRUCT _Thickness]
+			set rightThicknessUnit [DWLocalGetValue $GDN $STRUCT __Thickness]
+			set leftWidthUnit [DWLocalGetValue $GDN $STRUCT Width]
+			set middleWidthUnit [DWLocalGetValue $GDN $STRUCT _Width]
+			set rightWidthUnit [DWLocalGetValue $GDN $STRUCT __Width]
+			set leftCoverUnit [DWLocalGetValue $GDN $STRUCT Cover]
+			set rightCoverUnit [DWLocalGetValue $GDN $STRUCT _Cover]
+			set leftSteelAreaUnit [DWLocalGetValue $GDN $STRUCT Steel_area]
+			set middleSteelAreaUnit [DWLocalGetValue $GDN $STRUCT _Steel_area]
+			set rightSteelAreaUnit [DWLocalGetValue $GDN $STRUCT __Steel_area]
+			set horizontalSteelAreaUnit [DWLocalGetValue $GDN $STRUCT ___Steel_area]
+
+			# Seperate values from units
+
+			set temp [GidConvertValueUnit $leftThicknessUnit]
+			set temp [ParserNumberUnit $temp leftThickness thicknessUnit]
+			set temp [GidConvertValueUnit $middleThicknessUnit]
+			set temp [ParserNumberUnit $temp middleThickness dummy]
+			set temp [GidConvertValueUnit $rightThicknessUnit]
+			set temp [ParserNumberUnit $temp rightThickness dummy]
+			set temp [GidConvertValueUnit $leftWidthUnit]
+			set temp [ParserNumberUnit $temp leftWidth widthUnit]
+			set temp [GidConvertValueUnit $middleWidthUnit]
+			set temp [ParserNumberUnit $temp middleWidth dummy]
+			set temp [GidConvertValueUnit $rightWidthUnit]
+			set temp [ParserNumberUnit $temp rightWidth dummy]
+			set temp [GidConvertValueUnit $leftCoverUnit]
+			set temp [ParserNumberUnit $temp leftCover CoverUnit]
+			set temp [GidConvertValueUnit $rightCoverUnit]
+			set temp [ParserNumberUnit $temp rightCover dummy]
+			set temp [GidConvertValueUnit $leftSteelAreaUnit]
+			set temp [ParserNumberUnit $temp leftSteelArea SteelAreaUnit]
+			set temp [GidConvertValueUnit $middleSteelAreaUnit]
+			set temp [ParserNumberUnit $temp middleSteelArea dummy]
+			set temp [GidConvertValueUnit $rightSteelAreaUnit]
+			set temp [ParserNumberUnit $temp rightSteelArea dummy]
+			set temp [GidConvertValueUnit $horizontalSteelAreaUnit]
+			set temp [ParserNumberUnit $temp horizontalSteelArea dummy]
+
+			# change to absolute values with their units
+
+			set leftThickness [expr abs($leftThickness)]
+			set leftThickness $leftThickness$thicknessUnit
+
+			set middleThickness [expr abs($middleThickness)]
+			set middleThickness $middleThickness$thicknessUnit
+
+			set rightThickness [expr abs($rightThickness)]
+			set rightThickness $rightThickness$thicknessUnit
+
+			set leftWidth [expr abs($leftWidth)]
+			set leftWidth $leftWidth$widthUnit
+
+			set middleWidth [expr abs($middleWidth)]
+			set middleWidth $middleWidth$widthUnit
+
+			set rightWidth [expr abs($rightWidth)]
+			set rightWidth $rightWidth$widthUnit
+
+			set leftCover [expr abs($leftCover)]
+			set leftCover $leftCover$CoverUnit
+
+			set rightCover [expr abs($rightCover)]
+			set rightCover $rightCover$CoverUnit
+
+			set leftSteelArea [expr abs($leftSteelArea)]
+			set leftSteelArea $leftSteelArea$SteelAreaUnit
+
+			set middleSteelArea [expr abs($middleSteelArea)]
+			set middleSteelArea $middleSteelArea$SteelAreaUnit
+
+			set rightSteelArea [expr abs($rightSteelArea)]
+			set rightSteelArea $rightSteelArea$SteelAreaUnit
+
+			set horizontalSteelArea [expr abs($horizontalSteelArea)]
+			set horizontalSteelArea $horizontalSteelArea$SteelAreaUnit
+
+			# Change the field values
+
+			set ok [DWLocalSetValue $GDN $STRUCT Thickness $leftThickness]
+			set ok [DWLocalSetValue $GDN $STRUCT _Thickness $middleThickness]
+			set ok [DWLocalSetValue $GDN $STRUCT __Thickness $rightThickness]
+
+			set ok [DWLocalSetValue $GDN $STRUCT Width $leftWidth]
+			set ok [DWLocalSetValue $GDN $STRUCT _Width $middleWidth]
+			set ok [DWLocalSetValue $GDN $STRUCT __Width $rightWidth]
+
+			set ok [DWLocalSetValue $GDN $STRUCT Cover $leftCover]
+			set ok [DWLocalSetValue $GDN $STRUCT _Cover $rightCover]
+
+			set ok [DWLocalSetValue $GDN $STRUCT Steel_area $leftSteelArea]
+			set ok [DWLocalSetValue $GDN $STRUCT _Steel_area $middleSteelArea]
+			set ok [DWLocalSetValue $GDN $STRUCT __Steel_area $rightSteelArea]
+			set ok [DWLocalSetValue $GDN $STRUCT ___Steel_area $horizontalSteelArea]
+		}
+	}
+
+	return ""
+}
+
+# control the field dependencies when "include additional part" checkbox is restored or hidden
+proc TK_Fiber_BridgeDeck_IncludeAddPart { event args } {
+
+	switch $event {
+
+	DEPEND {
+
+		lassign $args GDN STRUCT QUESTION ACTION VALUE
+
+		if { $ACTION == "RESTORE" } {
+
+			set checked [DWLocalGetValue $GDN $STRUCT $QUESTION]
+
+			# if checkbox was on, restore the fields below
+			if {$checked} {
+
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_thickness_ts3 "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Sidewalk_width_bsw "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Sidewalk_thickness_ts4 "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_width_b "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_height "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Fibers_along_beam_height "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Fibers_along_beam_width "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_on_top_layer_of_additional_slab "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_on_bottom_layer_of_additional_slab "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_along_beam_height "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_along_beam_width "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_bar_size "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_bar_size "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_bar_area "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_bar_area "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_part_material "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_reinforcing_bar_material "#CURRENT#" normal]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_reinforcing_bar_material "#CURRENT#" normal]
+			}
+
+		} elseif { $ACTION == "HIDE" } {
+
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_thickness_ts3 "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Sidewalk_width_bsw "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Sidewalk_thickness_ts4 "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_width_b "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_height "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Fibers_along_beam_height "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Fibers_along_beam_width "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_on_top_layer_of_additional_slab "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_on_bottom_layer_of_additional_slab "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_along_beam_height "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Bars_along_beam_width "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_bar_size "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_bar_size "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_bar_area "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_bar_area "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_part_material "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Additional_slab_reinforcing_bar_material "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Beam_reinforcing_bar_material "#CURRENT#" hidden]
+
+		}
+	}
+	}
+
+	return ""
+}
+
+# Control the field dependencies when "Solid Section" checkbox is restored or hidden
+
+proc TK_Fiber_BridgeDeck_Solid {event args} {
+
+	switch $event {
+
+		DEPEND {
+
+			lassign $args GDN STRUCT QUESTION ACTION VALUE
+
+			if { $ACTION == "RESTORE" } {
+
+				set checked [DWLocalGetValue $GDN $STRUCT $QUESTION]
+
+				if {$checked} {
+					set dummy [TK_DWSet $GDN $STRUCT Void_width_dv "#CURRENT#" normal]
+					set dummy [TK_DWSet $GDN $STRUCT Number_of_voids "#CURRENT#" normal]
+
+					set dummy [TK_DWSet $GDN $STRUCT Void_width_dv "#CURRENT#" disabled]
+					set dummy [TK_DWSet $GDN $STRUCT Number_of_voids "#CURRENT#" disabled]
+
+				} else {
+
+					set dummy [TK_DWSet $GDN $STRUCT Void_width_dv "#CURRENT#" normal]
+					set dummy [TK_DWSet $GDN $STRUCT Number_of_voids "#CURRENT#" normal]
+
+				}
+
+			} elseif { $ACTION == "HIDE" } {
+
+				set dummy [TK_DWSet $GDN $STRUCT Void_width_dv "#CURRENT#" hidden]
+				set dummy [TK_DWSet $GDN $STRUCT Number_of_voids "#CURRENT#" hidden]
+
+			}
+		}
+	}
+
+	return ""
 }

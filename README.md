@@ -31,6 +31,26 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 2.2.0 (01/09/2017)**
+
+- Added : **Flexure-Shear Interaction Displacement-Based Beam-Column** element
+- Added : **ShellDKGQ** element
+- Added : **FiberInt** Section
+- Added : **Viscous Damper** uniaxial material
+- Added : **Hyperbolic Gap** uniaxial material
+- Added : **Steel02** uniaxial material
+- Added : **Bridge Deck** Fiber Section
+- Added : **Dead** Loads for Frame, Truss and Shell elements
+- Added : Hardening parameters for Steel01 uniaxial materials
+- Added : Linear torsional stiffness for Fiber Section available as input
+- Added : **Up to 3 optional directions** for Uniform ground motion excitation
+- Improved : Pushover Analysis with Load Control. In case of analysis divergence, **substepping** and alternative convergence criteria are automatically applied
+- Menu : User guide for DesignSafe-CI (by G.Papageorgiou and A.Tsetas)
+- Menu : Automatic check for version update at startup
+- Minor bug fixes
+
+---
+
 **Version 2.1.2 (14/07/2017)**
 
 - Added : **Initial stress** material

@@ -144,9 +144,11 @@ QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_ActiveIntervalinLoads
 QUESTION: __#CB#(__)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_LoadsWikiInfo
 END CONDITION
 
@@ -169,9 +171,11 @@ QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_ActiveIntervalinLoads
 QUESTION: __#CB#(__)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_LoadsWikiInfo
 END CONDITION
 
@@ -194,9 +198,11 @@ QUESTION: Z-Moment#UNITS#
 VALUE: 0.0 kNm
 QUESTION: _#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_ActiveIntervalinLoads
 QUESTION: __#CB#(__)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_LoadsWikiInfo
 END CONDITION
 
@@ -217,9 +223,11 @@ STATE: DISABLED
 HELP: The local x axis is always specified by the two line nodes and its positive direction is defined from the first to the second selected node.\n\nIN A 2D MODEL:\n\nLocal z axis field is IGNORED\nThe global Y axis is the vertical axis by default\nLocal x axis has the line drawing direction (View -> Normals -> Lines)\nLocal z axis coincides with the global Z axis\nLocal y axis has the right hand rule\n\nIN A 3D MODEL:\n\nVertical axis is specified by the user (Y or Z) in modeling options tab in Problem Data menu\n\nFor an non-vertical element (in any line drawing direction):\n\nVecxz has the direction of the selected global vertical (Y or Z) axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy\nIf the element is horizontal: local z has the direction of the vertical axis, local x axis is specified by the two line nodes (View->Normals->Lines) and local y axis is found by the right hand rule\n\nFor a vertical element (in any line drawing direction):\n\nVeczx has the direction of global -X axis\nLocal y axis is found by the cross product Vecxz x Vx\nLocal z axis is found by the cross product Vx x Vy
 QUESTION: __#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_ActiveIntervalinLoads
 QUESTION: ___#CB#(___)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_LineLoadsWikiInfo
 END CONDITION
 
@@ -233,12 +241,19 @@ QUESTION: Y-Displacement#UNITS#
 VALUE: 0.0m
 QUESTION: Z-Displacement#UNITS#
 VALUE: 0.0m
-QUESTION: X-Rotation
-VALUE: 0.0#WIDTH#(12)
-QUESTION: Y-Rotation
-VALUE: 0.0#WIDTH#(12)
-QUESTION: Z-Rotation
-VALUE: 0.0#WIDTH#(12)
+QUESTION: X-Rotation#UNITS#
+VALUE: 0.0 rad
+QUESTION: Y-Rotation#UNITS#
+VALUE: 0.0 rad
+QUESTION: Z-Rotation#UNITS#
+VALUE: 0.0 rad
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_ActiveIntervalinLoads
+QUESTION: __#CB#(__)
+VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_DisplacementsWikiInfo
 END CONDITION
 
@@ -252,6 +267,10 @@ TKWIDGET: TK_UpdateInfoBar
 QUESTION: Ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
 VALUE: Ux
 TKWIDGET: TK_OpenRecordsWindow
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_ActiveIntervalinLoads
 END CONDITION
 
 CONDITION: Point_Sine_Ground_Motion
@@ -275,6 +294,10 @@ QUESTION: Duration#UNITS#
 VALUE: 10sec
 QUESTION: Shift
 VALUE: 0.0#WIDTH#(10)
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_ActiveIntervalinLoads
 END CONDITION
 
 
@@ -291,6 +314,7 @@ HELP: Give a positive integer number for body constraint group.
 TKWIDGET: TK_EqualDOFWikiInfo
 QUESTION: _#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_UpdateInfoBar
 END CONDITION
 
@@ -360,6 +384,7 @@ TKWIDGET: TK_UpdateInfoBar
 #TKWIDGET: GidUtils::TkwidgetPickNode
 QUESTION: _#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_RigidDiaphragmWikiInfo
 END CONDITION
 
@@ -377,6 +402,7 @@ TKWIDGET: TK_UpdateInfoBar
 #TKWIDGET: GidUtils::TkwidgetPickNode
 QUESTION: _#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_RigidDiaphragmWikiInfo
 END CONDITION
 
@@ -394,6 +420,7 @@ VALUE: XY
 #TKWIDGET: GidUtils::TkwidgetPickNode
 QUESTION: _#CB#(_)
 VALUE:
+STATE: HIDDEN
 TKWIDGET: TK_RigidDiaphragmWikiInfo
 END CONDITION
 

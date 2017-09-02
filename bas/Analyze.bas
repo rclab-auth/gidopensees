@@ -196,14 +196,18 @@ algorithm BFGS
 analysis *IntvData(Analysis_type)
 *if(strcmp(IntvData(Solution_algorithm),"Linear")!=0 && strcmp(IntvData(Integrator_type),"Displacement_control")==0)
 *#
-*# Pushover analysis
+*# Pushover analysis (Displacement Control)
 *#
 *include analysis/PushoverAnalysis.bas
+*elseif(strcmp(IntvData(Solution_algorithm),"Linear")!=0 && strcmp(IntvData(Integrator_type),"Load_control")==0)
+*#
+*# Pushover analysis analysis (Load Control)
+*#
+*include analysis/PushoverLoadAnalysis.bas
 *else
 *#
 *# Linear analysis
 *#
-
 *format "%d"
 set AnalOk [analyze *steps]
 if {$AnalOk == 0} {

@@ -73,7 +73,11 @@ geomTransf Corotational *TransfTag6 0 1 0
 *set var A=operation(width*height)
 *set var Iz=operation(width*width*width*height/12)
 *set var Iy=operation(height*height*height*width/12)
-*set var J=operation(Iz+Iy)
+*set var alpha=operation(max(height,width))
+*set var beta=operation(min(height,width))
+*set var J=operation(1-beta*beta*beta*beta/(12*alpha*alpha*alpha*alpha))
+*set var J=operation(1.0/3-0.21*beta/alpha*J)
+*set var J=operation(alpha*beta*beta*beta*J)
 *elseif(strcmp(elemsMatProp(Cross_section),"Tee")==0)
 *set var height=elemsMatProp(Height_h,real)
 *set var Bf=elemsMatProp(Width_Bf,real)
@@ -81,15 +85,16 @@ geomTransf Corotational *TransfTag6 0 1 0
 *set var tw=elemsMatProp(Width_Bw,real)
 *set var Ycm=operation((Bf*Bf*tf/2+tw*(height-tf)*Bf/2)/(Bf*tf+(height-tf)*tw))
 *set var Zcm=operation((Bf*tf*(height-tf/2)+(tw*(height-tf))*(height-tf)/2)/(Bf*tf+(height-tf)*tw))
-*set var Iz=operation((1/12*Bf*Bf*Bf*tf+(Bf*tf)*(Bf/2-Ycm)*(Bf/2-Ycm))+(1/12*tw*tw*tw*(height-tf)+(height-tf)*tw*(Bf/2-Ycm)*(Bf/2-Ycm)))
-*set var Iy=operation((1/12*tf*tf*tf*Bf+(Bf*tf)*(height-tf/2-Zcm)*(height-tf/2-Zcm))+(1/12*(height-tf)*(height-tf)*(height-tf)*tw+(height-tf)*tw*(height/2-tf/2-Zcm)*(height/2-tf/2-Zcm)))
-*set var J=operation(Iz+Iy)
+*set var Iz=operation((1.0/12*Bf*Bf*Bf*tf+(Bf*tf)*(Bf/2-Ycm)*(Bf/2-Ycm))+(1.0/12*tw*tw*tw*(height-tf)+(height-tf)*tw*(Bf/2-Ycm)*(Bf/2-Ycm)))
+*set var temp=operation(height-tf)
+*set var Iy=operation(pow(temp,3)*tw/12+pow(tf,3)*Bf/12+(tf*Bf)*(height-(tf/2)-Zcm)*(height-(tf/2)-Zcm)+(temp*tw)*((temp/2)-Zcm)*((temp/2)-Zcm))
+*set var J=operation(Iy+Iz)
 *set var A=operation(Bf*tf+(height-tf)*tw)
 *elseif(strcmp(elemsMatProp(Cross_section),"Circular")==0)
 *set var D=elemsMatProp(Diameter_D,real)
-*set var A=operation(3.14*D*D/4)
-*set var Iz=operation(3.14*D*D*D*D/64)
-*set var Iy=operation(3.14*D*D*D*D/64)
+*set var A=operation(3.14159*D*D/4)
+*set var Iz=operation(3.14159*D*D*D*D/64)
+*set var Iy=operation(3.14159*D*D*D*D/64)
 *set var J=operation(Iz+Iy)
 *elseif(strcmp(ElemsMatProp(Cross_section),"General")==0)
 *set var A=ElemsMatProp(Area_A,real)
@@ -135,7 +140,7 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -150,7 +155,7 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -168,7 +173,7 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -183,7 +188,7 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.6f%10.6f%10.6f   "
+*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -228,7 +233,8 @@ geomTransf Corotational *TransfTag3
 *set var tf=elemsMatProp(Height_hf,real)
 *set var tw=elemsMatProp(Width_Bw,real)
 *set var Ycm=operation((Bf*tf*(height-tf/2)+(tw*(height-tf))*(height-tf)/2)/(Bf*tf+(height-tf)*tw))
-*set var Iz=operation((1/12*tf*tf*tf*Bf+(Bf*tf)*(height-tf/2-Ycm)*(height-tf/2-Ycm))+(1/12*(height-tf)*(height-tf)*(height-tf)*tw+(height-tf)*tw*(height/2-tf/2-Ycm)*(height/2-tf/2-Ycm)))
+*set var temp=operation(height-tf)
+*set var Iz=operation(pow(temp,3)*tw/12+pow(tf,3)*Bf/12+(tf*Bf)*(height-(tf/2)-Ycm)*(height-(tf/2)-Ycm)+(temp*tw)*((temp/2)-Ycm)*((temp/2)-Ycm))
 *set var A=operation(Bf*tf+(height-tf)*tw)
 *elseif(strcmp(elemsMatProp(Cross_section),"Circular")==0)
 *set var D=elemsMatProp(Diameter_D,real)
@@ -266,7 +272,7 @@ geomTransf Corotational *TransfTag3
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.6f   "
+*format "%10.6f%10.0f%10.10f   "
 *A *E *Iz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength

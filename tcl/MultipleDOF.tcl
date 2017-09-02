@@ -159,6 +159,13 @@ proc ReturnElemDOF { elemtype ndm } {
 				return 6
 			}
 		}
+		dispBeamColumnInt {
+			if {$ndm==2} {
+				return 3
+			} elseif {$ndm==3} {
+				WarnWinText "ERROR: dispBeamColumnInt Elements require 2D model"
+			}
+		}
 		Quad {
 			if {$ndm==2} {
 				return 2
@@ -168,7 +175,14 @@ proc ReturnElemDOF { elemtype ndm } {
 		}
 		Shell {
 			if {$ndm==2} {
-				WarnWinText "ERROR: Shell Elements require 3D model"
+				WarnWinText "ERROR: ShellMITC4 Elements require 3D model"
+			} elseif {$ndm==3} {
+				return 6
+			}
+		}
+		ShellDKGQ {
+			if {$ndm==2} {
+				WarnWinText "ERROR: ShellDKGQ Elements require 3D model"
 			} elseif {$ndm==3} {
 				return 6
 			}
@@ -209,4 +223,5 @@ proc ReturnElemDOF { elemtype ndm } {
 			}
 		}
 	}
+	return 0
 }

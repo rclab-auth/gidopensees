@@ -485,6 +485,30 @@ begin
         MSH.Writeline('end GaussPoints');
     end;
 
+    if FileExists(ModelPath+'\OpenSees\ShellDKGQ_force.out') or
+       FileExists(ModelPath+'\OpenSees\ShellDKGQ_stress.out') then
+    begin
+        MSH.Writeline('');
+        MSH.Writeline('GaussPoints "ShellDKGQ_GP" ElemType Quadrilateral');
+        MSH.Writeline('Number Of Gauss Points: 4');
+        MSH.Writeline('Natural Coordinates: Given');
+        MSH.Writeline('-0.577350269189626 -0.577350269189626');
+        MSH.Writeline('-0.577350269189626  0.577350269189626');
+        MSH.Writeline(' 0.577350269189626 -0.577350269189626');
+        MSH.Writeline(' 0.577350269189626  0.577350269189626');
+        MSH.Writeline('end GaussPoints');
+
+        MSH.Writeline('');
+        MSH.Writeline('GaussPoints "ShellDKGQ_Node" ElemType Quadrilateral');
+        MSH.Writeline('Number Of Gauss Points: 4');
+        MSH.Writeline('Natural Coordinates: Given');
+        MSH.Writeline(' 1 -1');
+        MSH.Writeline('-1  1');
+        MSH.Writeline('-1 -1');
+        MSH.Writeline(' 1  1');
+        MSH.Writeline('end GaussPoints');
+    end;
+
     if FileExists(ModelPath+'\OpenSees\Quad_force.out') or
        FileExists(ModelPath+'\OpenSees\Quad_stress.out') or
        FileExists(ModelPath+'\OpenSees\Quad_strain.out') then
@@ -540,7 +564,8 @@ begin
        FileExists(ModelPath+'\OpenSees\ForceBeamColumn_plasticDeformation') or
        FileExists(ModelPath+'\OpenSees\DispBeamColumn_localForce.out') or
        FileExists(ModelPath+'\OpenSees\DispBeamColumn_basicDeformation.out') or
-       FileExists(ModelPath+'\OpenSees\DispBeamColumn_plasticDeformation.out') then
+       FileExists(ModelPath+'\OpenSees\DispBeamColumn_plasticDeformation.out') or
+       FileExists(ModelPath+'\OpenSees\DispBeamColumnInt_localForce.out') then
 
     begin
         MSH.Writeline('');
@@ -555,7 +580,7 @@ begin
 
     OutFile := ModelPath+'\OpenSees\Node_displacements.out';
 
-    if FileExists(OutFile) and (n <> -1) then
+    if FileExists(OutFile) then
     begin
         AssignFile(RES,OutFile);
         Reset(RES);
@@ -1786,6 +1811,302 @@ begin
     end;
 
     //
+    // shellDKGQ
+    //
+
+    OutFile := ModelPath+'\OpenSees\ShellDKGQ_force.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading shellDKGQ forces/moments ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# ShellDKGQ')+1],3,10));  // number of shells
+
+        StrToArray(TCL[TCL.IndexOf('# ShellDKGQ')+2],Tag,n,true);  // read all tags
+
+        AssignFile(RES,OutFile);
+
+        // forces
+
+        AssignFile(RES,OutFile);
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Forces" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
+                MSH.Writeline('ComponentNames "Fx" "Fy" "Fz"');
+                MSH.Writeline('Unit "kN"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,4*6*n,true);  // read all values from current step (6 values per node)
+
+                for j := 0 to n-1 do
+                begin
+                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
+
+                    for k := 0 to 3 do  // 4 nodes
+                    begin
+                        s := s + Str[6*(4*j+k)] + ' ' + Str[6*(4*j+k)+1] + ' ' + Str[6*(4*j+k)+2];  // positions 0,1,2
+
+                        MSH.Writeline(s);
+
+                        s := StringOfChar(' ',INDENT);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                for j := 1 to Length(s) do
+                    write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        // moments
+
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Moments" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
+                MSH.Writeline('ComponentNames "Mx" "My" "Mz"');
+                MSH.Writeline('Unit "kNm"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,4*6*n,true);  // read all values from current step (6 values per node)
+
+                for j := 0 to n-1 do
+                begin
+                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
+
+                    for k := 0 to 3 do  // 4 nodes
+                    begin
+                        s := s + Str[6*(4*j+k)+3] + ' ' + Str[6*(4*j+k)+4] + ' ' + Str[6*(4*j+k)+5];  // positions 3,4,5
+
+                        MSH.Writeline(s);
+
+                        s := StringOfChar(' ',INDENT);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(RES) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        CloseFile(RES);
+
+        writeln;
+
+        Sleep(200);
+    end;
+
+    OutFile := ModelPath+'\OpenSees\ShellDKGQ_stress.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading shellDKGQ stresses ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# ShellDKGQ')+1],3,10));  // number of shells
+
+        StrToArray(TCL[TCL.IndexOf('# ShellDKGQ')+2],Tag,n,true);  // read all tags
+
+        AssignFile(RES,OutFile);
+
+        // membrane stresses
+
+        AssignFile(RES,OutFile);
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Membrane" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
+                MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
+                MSH.Writeline('Unit "kPa"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
+
+                for j := 0 to n-1 do
+                begin
+                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
+
+                    for k := 0 to 3 do  // 4 gauss points
+                    begin
+                        s := s + Str[8*(4*j+k)] + ' ' + Str[8*(4*j+k)+1] + ' 0 ' + Str[8*(4*j+k)+2] + ' 0 0';  // positions 0,1,2
+
+                        MSH.Writeline(s);
+
+                        s := StringOfChar(' ',INDENT);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                for j := 1 to Length(s) do
+                    write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        // bending stress
+
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Bending" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
+                MSH.Writeline('ComponentNames "m11" "m22" "m33 (zero)" "m12" "m23 (zero)" "m13 (zero)"');
+                MSH.Writeline('Unit "kPa"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
+
+                for j := 0 to n-1 do
+                begin
+                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
+
+                    for k := 0 to 3 do  // 4 gauss points
+                    begin
+                        s := s + Str[8*(4*j+k)+3] + ' ' + Str[8*(4*j+k)+4] + ' 0 ' + Str[8*(4*j+k)+5] + ' 0 0';  // positions 3,4,5
+
+                        MSH.Writeline(s);
+
+                        s := StringOfChar(' ',INDENT);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                for j := 1 to Length(s) do
+                    write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        // shear stresses
+
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Shear" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_GP"');
+                MSH.Writeline('ComponentNames "q1" "q2" "q3 (zero)"');
+                MSH.Writeline('Unit "kPa"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
+
+                for j := 0 to n-1 do
+                begin
+                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
+
+                    for k := 0 to 3 do  // 4 gauss points
+                    begin
+                        s := s + Str[8*(4*j+k)+6] + ' ' + Str[8*(4*j+k)+7] + ' 0';  // positions 6,7
+
+                        MSH.Writeline(s);
+
+                        s := StringOfChar(' ',INDENT);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(RES) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        CloseFile(RES);
+
+        writeln;
+
+        Sleep(200);
+    end;
+
+    //
     // Quad
     //
 
@@ -2878,7 +3199,7 @@ begin
                         MSH.Writeline(s);
                     end;
 
-                    if ndm = 6 then // end1                                     N                         Vy                     Vz                     T                      My                    Mz
+                    if ndm = 3 then // end1                                     N                         Vy                     Vz                     T                      My                    Mz
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
@@ -3117,6 +3438,92 @@ begin
 
         Sleep(200);
     end;
+
+    //
+    // Flexure-shear interaction displacement-based beam-column element
+    //
+
+    // force
+
+    OutFile := ModelPath+'\OpenSees\DispBeamColumnInt_localForce.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading flexure-shear interaction displacement beam-column forces ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# DispBeamColumnInt')+1],3,10));  // number of elastic beam-column elements
+
+        StrToArray(TCL[TCL.IndexOf('# DispBeamColumnInt')+2],Tag,n,true);  // read all tags
+
+        AssignFile(RES,OutFile);
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+
+                if ndm = 2 then
+                begin
+                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultDescription "Elements//Flexure_Shear_Interaction_Displacement_Beam-Column//Actions//N" Scalar');
+                    MSH.Writeline('Unit "kN"');
+                    MSH.Writeline('ResultDescription "Elements//Flexure_Shear_Interaction_Displacement_Beam-Column//Actions//V" Scalar');
+                    MSH.Writeline('Unit "kN"');
+                    MSH.Writeline('ResultDescription "Elements//Flexure_Shear_Interaction_Displacement_Beam-Column//Actions//M" Scalar');
+                    MSH.Writeline('Unit "kNm"');
+
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
+                end;
+
+                MSH.Writeline('Values');
+
+                for j := 0 to n-1 do
+                begin
+                    if ndm = 2 then // end1                                     N                         V                     M
+                    begin
+                        s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[3*(2*j)] + ' ' + Str[3*(2*j)+1] + ' '+ Str[3*(2*j)+2];
+
+                        MSH.Writeline(s); // end2              N                      V                            M
+
+                        s := StringOfChar(' ',INDENT) +  Str[3*(2*j+1)] + ' ' + Str[3*(2*j+1)+1] + ' '+ Inv(Str[3*(2*j+1)+2]);
+
+                        MSH.Writeline(s);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(RES) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        CloseFile(RES);
+
+        writeln;
+
+        Sleep(200);
+    end;
+
+	//
+	//
+	//
 
     FreeAndNil(TCL);
 

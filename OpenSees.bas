@@ -62,9 +62,11 @@
 *set var ThreeDOF=1
 *elseif(ElemDOF==6)
 *set var SixDOF=1
+*else
+*MessageBox Error: Invalid elements used for this model dimensions.
 *endif
 *end materials
-*if(TwoDOF==0 && ThreeDOF==0&& SixDOF==0)
+*if(TwoDOF==0 && ThreeDOF==0 && SixDOF==0)
 *MessageBox Error: No Elements were assigned.
 *endif
 *#
@@ -72,7 +74,7 @@
 *#
 *set var dummy=tcl(CreateDOFGroups *TwoDOF *ThreeDOF *SixDOF)
 *#
-*# Assign  elements (with their nodes) to the corresponding groups
+*# Assign  elements (including their nodes) to the corresponding groups
 *#
 *loop elems
 *set var ElemDOF=tcl(ReturnElemDOF *ElemsMatProp(Element_type:) *ndime)
@@ -107,8 +109,10 @@
 *set var cntEBC=0
 *set var cntETB=0
 *set var cntDBC=0
+*set var cntDBCI=0
 *set var cntQuadUP=0
 *set var cntShell=0
+*set var cntShellDKGQ=0
 *set var cntStdBrick=0
 *set var cntTri31=0
 *set var cntTruss=0
@@ -144,6 +148,8 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 *set var procReadPeerFilePrinted=0
 *set var procLoadRecValuesPrinted=0
 *set var procLoadRecTimeandValuesPrinted=0
+*set var procDeck3DPrinted=0
+*set var procDeck2DPrinted=0
 *#
 *# Nodes
 *#
@@ -177,6 +183,10 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 *#
 *include bas\Elements\BeamColumnElements\DispBeamColumn.bas
 *#
+*# Displacement-based Beam Column Interaction Elements
+*#
+*include bas\Elements\BeamColumnElements\InteractionDispBeamColumn.bas
+*#
 *# Truss Elements
 *#
 *include bas\Elements\Truss\TrussElement.bas
@@ -192,6 +202,10 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 *# Shell Elements
 *#
 *include bas\Elements\Quadrilateral\ShellElements.bas
+*#
+*# ShellDKGQ Elements
+*#
+*include bas\Elements\Quadrilateral\ShellDKGQ.bas
 *#
 *# Tri31 Elements
 *#

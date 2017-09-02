@@ -1,17 +1,9 @@
 
-*format "%g"
-*if(strcmp(IntvData(Control_node_direction),"UX")==0 || strcmp(IntvData(Control_node_direction),"UY")==0 || strcmp(IntvData(Control_node_direction),"UZ")==0)
-set Dmax *IntvData(Total_displacement,real)
-*# Rotation control direction
-*else
-set Dmax *IntvData(Total_rotation,real)
-*endif
+*# LoadIncr must be floating!
 *format "%f"
-set Dincr *DispIncr
+set Lincr *LoadIncr
 *format "%d"
 set Nsteps *steps
-set IDctrlNode *IntvData(Control_node,int)
-set IDctrlDOF *NodeCtrlDOF
 
 *if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
 variable testTypeStatic NormUnbalance
@@ -44,28 +36,37 @@ variable algorithmTypeStatic Broyden
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 variable algorithmTypeStatic BFGS
 *endif
-set AnalOk [analyze $Nsteps]
+set LoadCounter 0
+for {set i 1} { $i <= $Nsteps } {incr i 1} {
+    set AnalOk [analyze 1]
+    if {$AnalOk !=0} {
+        break
+    } else {
+        set LoadCounter [expr $LoadCounter+1.0]
+    }
+}
 
 if {$AnalOk != 0} {
-    # if analysis fails, different algorithms are applied
-    set Dstep 0.0;
+    # if analysis fails, different stepping and algorithms are applied
     set AnalOk 0;
     set Nk 1;
-    while {$Dstep <= 1.0 && $AnalOk == 0} {
-        set controlDisp [nodeDisp $IDctrlNode $IDctrlDOF]
-        set Dstep [expr $controlDisp/$Dmax]
+    while {$LoadCounter < $Nsteps && $AnalOk == 0} {
+
         if {($Nk==2 && $AnalOk==0) || ($Nk==1 && $AnalOk==0)} {
-        set Nk 1
-		puts "\nApplying initial stepping\n"
-        integrator DisplacementControl  $IDctrlNode $IDctrlDOF $Dincr; # bring back to original increment
-        set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
+            set Nk 1
+            puts "\nApplying initial stepping\n"
+            integrator LoadControl $Lincr; # bring back to original increment
+            set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
+            if {$AnalOk == 0} {
+                set LoadCounter [expr $LoadCounter+1.0/$Nk]
+            }
         }
 
         if {($AnalOk !=0 && $Nk==1) || ($AnalOk==0 && $Nk==4)} {; # reduce step size if still fails to converge
             set Nk 2;  # reduce step size
-			puts "\nApplying substepping /2\n"
-            set DincrReduced [expr $Dincr/$Nk];
-            integrator DisplacementControl  $IDctrlNode $IDctrlDOF $DincrReduced
+            puts "\nApplying substepping /2\n"
+            set LincrReduced [expr $Lincr/$Nk];
+            integrator LoadControl $LincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==0)
@@ -121,19 +122,19 @@ if {$AnalOk != 0} {
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
-                # if {$AnalOk != 0} { ; # stop if still fails to converge
-                #    puts "Problem...."
-                #    return -1
-                # }; # end if
-            };
+
+                if {$AnalOk == 0} {
+                    set LoadCounter [expr $LoadCounter+1.0/$Nk]
+                }
+            }
         }
 
         # if step size bisection is not enough, it is bisected again
         if {($AnalOk !=0 && $Nk==2) || ($AnalOk==0 && $Nk==8)} {
             set Nk 4; # reduce step size
-			puts "\nApplying substepping /4\n"
-            set DincrReduced [expr $Dincr/$Nk];
-            integrator DisplacementControl  $IDctrlNode $IDctrlDOF $DincrReduced
+            puts "\nApplying substepping /4\n"
+            set LincrReduced [expr $Lincr/$Nk];
+            integrator LoadControl $LincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
@@ -174,7 +175,7 @@ if {$AnalOk != 0} {
                 if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
-                    set AnalOk [analyze 1 ]
+                    set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk != 0} {
@@ -189,15 +190,18 @@ if {$AnalOk != 0} {
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
+                if {$AnalOk == 0} {
+                    set LoadCounter [expr $LoadCounter+1.0/$Nk]
+                }
             }
         }
 
         # if step size double bisection is not enough, it is bisected again
         if {$AnalOk !=0 && $Nk==4} {
             set Nk 8; # reduce step size
-			puts "\nApplying substepping /8\n"
-            set DincrReduced [expr $Dincr/$Nk];
-            integrator DisplacementControl  $IDctrlNode $IDctrlDOF $DincrReduced
+            puts "\nApplying substepping /8\n"
+            set LincrReduced [expr $Lincr/$Nk];
+            integrator LoadControl $LincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
@@ -252,6 +256,9 @@ if {$AnalOk != 0} {
                     algorithm BFGS
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
+                }
+                if {$AnalOk == 0} {
+                    set LoadCounter [expr $LoadCounter+1.0/$Nk]
                 }
             }
         }; # end if Nk=8

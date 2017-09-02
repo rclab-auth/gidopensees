@@ -82,27 +82,49 @@ recorder Element -file stdBrick_strain.out -time -eleRange *FirstBrickElemNumber
 *endif
 *endif
 *#
-*# Shell
+*# ShellMITC4
 *#
 *if(cntShell!=0)
-*set var FirstShellElemNumber=0
-*set var LastShellElemNumber=0
-*loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
-*set var FirstShellElemNumber=ElemsNum
-*break
-*endif
-*end elems
-*loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
-*set var LastShellElemNumber=ElemsNum
-*endif
-*end elems
 *if(GenData(Forces,int)==1)
-recorder Element -file ShellMITC4_force.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber forces
+recorder Element -file ShellMITC4_force.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
+*ElemsNum *\
+*endif
+*end elems
+forces
 *endif
 *if(GenData(Stresses,int)==1)
-recorder Element -file ShellMITC4_stress.out -time -eleRange *FirstShellElemNumber *LastShellElemNumber stresses
+recorder Element -file ShellMITC4_stress.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
+*ElemsNum *\
+*endif
+*end elems
+stresses
+*endif
+*endif
+*#
+*# ShellDKGQ
+*#
+*if(cntShellDKGQ!=0)
+*if(GenData(Forces,int)==1)
+recorder Element -file ShellDKGQ_force.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"ShellDKGQ")==0)
+*ElemsNum *\
+*endif
+*end elems
+forces
+*endif
+*if(GenData(Stresses,int)==1)
+recorder Element -file ShellDKGQ_stress.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"ShellDKGQ")==0)
+*ElemsNum *\
+*endif
+*end elems
+stresses
 *endif
 *endif
 *#
@@ -282,6 +304,20 @@ recorder Element -file DispBeamColumn_plasticDeformation.out -time -ele *\
 *endif
 *end elems
 plasticDeformation
+*endif
+*endif
+*#
+*# Flexure-Shear Interaction Displacement beam-column
+*#
+*if(cntDBCI!=0)
+*if(GenData(Local_forces,int)==1)
+recorder Element -file DispBeamColumnInt_localForce.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumnInt")==0)
+*ElemsNum *\
+*endif
+*end elems
+localForce
 *endif
 *endif
 *#

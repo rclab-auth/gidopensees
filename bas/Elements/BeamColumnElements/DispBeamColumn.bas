@@ -110,18 +110,6 @@ geomTransf Corotational *TransfTag6 0 1 0
 *else
 *set var TransfTag=TransfTag5
 *endif
-*format "%3d%6d%6d%3d%3d%4d%g"
-element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
-*loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SectionID)
-*set var FiberArea=MatProp(Cross_section_Area,real)
-*endif
-*end materials
-*set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
-*format "%8.2f"
--mass *MassPerLength
 *else
 *if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
 *set var TransfTag=TransfTag2
@@ -130,18 +118,6 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *else
 *set var TransfTag=TransfTag6
 *endif
-*format "%3d%6d%6d%3d%3d%4d%g"
-element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
-*loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SectionID)
-*set var FiberArea=MatProp(Cross_section_Area,real)
-*endif
-*end materials
-*set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
-*format "%8.2f"
--mass *MassPerLength
 *endif
 *#--------------Y as vertical axis-------------
 *elseif(strcmp(GenData(Vertical_axis),"Y")==0)
@@ -154,7 +130,17 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *else
 *set var TransfTag=TransfTag5
 *endif
-*format "%6d%6d%6d%3d%3d%4d%g"
+*else
+*if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
+*set var TransfTag=TransfTag2
+*elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
+*set var TransfTag=TransfTag4
+*else
+*set var TransfTag=TransfTag6
+*endif
+*endif
+*endif
+*format "%3d%6d%6d%3d%3d%4d%g"
 element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
 *loop materials *NotUsed
@@ -163,6 +149,7 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *if(strcmp(MatProp(Section:),"Fiber")==0)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
+*if(MatProp(Select_section,int)==1)
 *set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
 *loop materials *NotUsed
 *set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
@@ -174,34 +161,15 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *endif
 *endif
 *end materials
+*else
+*set var FiberArea=0.0
+*endif
 *endif
 *endif
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
 *format "%8.2f"
 -mass *MassPerLength
-*else
-*if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
-*set var TransfTag=TransfTag2
-*elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
-*set var TransfTag=TransfTag4
-*else
-*set var TransfTag=TransfTag6
-*endif
-*format "%6d%6d%6d%3d%3d%4d%g"
-element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
-*loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
-*if(SelectedSection==SectionID)
-*set var FiberArea=MatProp(Cross_section_Area,real)
-*endif
-*end materials
-*set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
-*format "%8.2f"
--mass *MassPerLength
-*endif
-*endif
 *# if it is DBC
 *endif
 *end elems
@@ -280,6 +248,7 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *if(strcmp(MatProp(Section:),"Fiber")==0)
 *set var FiberArea=MatProp(Cross_section_Area,real)
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
+*if(MatProp(Select_section,int)==1)
 *set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
 *loop materials *NotUsed
 *set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
@@ -291,6 +260,9 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *endif
 *endif
 *end materials
+*else
+*set var FiberArea=0.0
+*endif
 *endif
 *endif
 *end materials

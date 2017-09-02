@@ -29,7 +29,7 @@
 # TCL macros
 #
 
-set ::VersionNumber "v2.1.2"
+set ::VersionNumber "v2.2.0"
 set ::InfoWin .gid.transform
 
 #
@@ -46,7 +46,7 @@ proc InitGIDProject { dir } {
 
 	set OpenSeesProblemDir $dir
 
-	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl} {
+	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl UniformExcitation.tcl} {
 		source [file join $dir tcl $filename]
 	}
 
@@ -123,6 +123,9 @@ proc InitGIDProject { dir } {
 	GiDMenu::UpdateMenus
 
 	after 1000 "{UpdateInfoBar}"
+
+	cd "$OpenSeesProblemDir/exe"
+	after 5000 exec {*}[auto_execok start] "CheckForUpdate.exe" "/q"
 }
 
 proc EndGIDProject {} {

@@ -46,7 +46,7 @@ STATE: DISABLED
 DEPENDENCIES: (2,SET,Vertical_axis,Y)
 TKWIDGET: TK_EditModelDim
 QUESTION: Vertical_axis#CB#(Z,Y)
-VALUE: Z
+VALUE: Y
 HELP: In a 3D model, vertical axis defines how the vector Vxz with be\nFor an non vertical element,Vxz is in same direction with Vertical Axis\nFor vertical elements,Vxz is in opposite direction with Global X axis\nSo, for an horizontal element local z is Global Vertical axis\nFor a vertical element, local z axis is opposite to the Global X axis\nIn 2D model, vertical axis is Y axis by default
 TITLE: Eigenvalue_Analysis
 QUESTION: ___#CB#(_)
@@ -55,7 +55,7 @@ QUESTION: Activate_eigenvalue_analysis#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,HIDE,Number_of_eigenvalues,#CURRENT#,HIDE,Solver,#CURRENT#) (1,RESTORE,Number_of_eigenvalues,#CURRENT#,RESTORE,Solver,#CURRENT#)
 QUESTION: Number_of_eigenvalues
-VALUE: 3
+VALUE: 3#WIDTH#(10)
 QUESTION: Solver#CB#(genBandArpack,fullGenLapack,symmBandLapack)
 VALUE: fullGenLapack
 TITLE: Rayleigh_Damping
@@ -169,14 +169,15 @@ QUESTION: Iterations_for_new_tangent
 VALUE: 10
 QUESTION: Analysis_type#CB#(Static,Transient)
 VALUE: Static
-DEPENDENCIES: (Static,RESTORE,Analysis_steps,#CURRENT#,HIDE,Analysis_duration,#CURRENT#,HIDE,Analysis_time_step,#CURRENT#,RESTORE,Loading_path,#CURRENT#)
-DEPENDENCIES: (Transient,HIDE,Analysis_steps,#CURRENT#,RESTORE,Analysis_duration,#CURRENT#,RESTORE,Analysis_time_step,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Displacement_peaks-cycles,#CURRENT#)
+DEPENDENCIES: (Static,RESTORE,Analysis_steps,#CURRENT#,HIDE,Analysis_duration,#CURRENT#,HIDE,Analysis_time_step,#CURRENT#,RESTORE,Integrator_type,#CURRENT#)
+DEPENDENCIES: (Transient,HIDE,Analysis_steps,#CURRENT#,RESTORE,Analysis_duration,#CURRENT#,RESTORE,Analysis_time_step,#CURRENT#,HIDE,Displacement_peaks-cycles,#CURRENT#,RESTORE,Integrator_type,#CURRENT#)
 QUESTION: Integrator_type#CB#(Load_control,Displacement_control,Newmark,Hilber-Hughes-Taylor)
 VALUE: Load_control
-DEPENDENCIES: (Load_control,RESTORE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
-DEPENDENCIES: (Displacement_control,RESTORE,Analysis_steps,#CURRENT#,RESTORE,Control_node,#CURRENT#,RESTORE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#)
-DEPENDENCIES: (Newmark,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#)
-DEPENDENCIES: (Hilber-Hughes-Taylor,RESTORE,alpha,#CURRENT#,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#)
+DEPENDENCIES: (Load_control,RESTORE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#,HIDE,Analysis_duration,#CURRENT#,HIDE,Analysis_time_step,#CURRENT#,RESTORE,Analysis_type,Static,RESTORE,Loading_type,#CURRENT#,RESTORE,Activate_dead_load,#CURRENT#)
+DEPENDENCIES: (Displacement_control,RESTORE,Analysis_steps,#CURRENT#,RESTORE,Control_node,#CURRENT#,RESTORE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,HIDE,gamma,#CURRENT#,HIDE,beta,#CURRENT#,HIDE,Analysis_duration,#CURRENT#,HIDE,Analysis_time_step,#CURRENT#,RESTORE,Analysis_type,Static,RESTORE,Loading_type,#CURRENT#,HIDE,Activate_dead_load,#CURRENT#)
+DEPENDENCIES: (Newmark,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,HIDE,alpha,#CURRENT#,RESTORE,Analysis_duration,#CURRENT#,RESTORE,Analysis_time_step,#CURRENT#,RESTORE,Analysis_type,Transient,RESTORE,Loading_type,#CURRENT#,HIDE,Activate_dead_load,#CURRENT#)
+DEPENDENCIES: (Hilber-Hughes-Taylor,RESTORE,alpha,#CURRENT#,RESTORE,gamma,#CURRENT#,RESTORE,beta,#CURRENT#,HIDE,Analysis_steps,#CURRENT#,HIDE,Total_displacement,#CURRENT#,HIDE,Total_rotation,#CURRENT#,HIDE,Control_node,#CURRENT#,HIDE,Control_node_direction,#CURRENT#,RESTORE,Analysis_duration,#CURRENT#,RESTORE,Analysis_time_step,#CURRENT#,RESTORE,Analysis_type,Transient,RESTORE,Loading_type,#CURRENT#,HIDE,Activate_dead_load,#CURRENT#)
+TKWIDGET: TK_IntvData_IntegratorType
 QUESTION: Control_node
 VALUE:
 HELP: Control node, select on meshed model
@@ -206,26 +207,46 @@ VALUE: 0.5
 QUESTION: Analysis_duration#UNITS#
 VALUE: 10sec
 QUESTION: Analysis_time_step#UNITS#
-VALUE: 0.05sec
+VALUE: 0.005sec
 QUESTION: Loading_type#CB#(Constant,Linear,Uniform_excitation,Multiple_support_excitation)
 VALUE: Linear
-DEPENDENCIES: (Constant,SET,Loading_path,Monotonic,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURRENT#)
-DEPENDENCIES: (Linear,RESTORE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURRENT#)
-DEPENDENCIES: (Uniform_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,RESTORE,Excitation_type,#CURRENT#,RESTORE,Ground_motion_direction,#CURRENT#)
-DEPENDENCIES: (Multiple_support_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,HIDE,Ground_motion_direction,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Record_file,#CURRENT#)
+DEPENDENCIES: (Constant,SET,Loading_path,Monotonic,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Analysis_type,Static)
+DEPENDENCIES: (Linear,RESTORE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Analysis_type,Static)
+DEPENDENCIES: (Uniform_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,RESTORE,Excitation_type,#CURRENT#,RESTORE,Analysis_type,Transient)
+DEPENDENCIES: (Multiple_support_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Record_file,#CURRENT#,RESTORE,Analysis_type,Transient)
+TKWIDGET: TK_IntvData_LoadingType
 QUESTION: Excitation_type#CB#(Record,Sine)
 VALUE: Record
-DEPENDENCIES: (Record,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Record_file,#CURRENT#)
-DEPENDENCIES: (Sine,TITLESTATE,Sine_Excitation_Parameters,normal,HIDE,Record_file,#CURRENT#)
-TKWIDGET: TK_Excitation_type
+DEPENDENCIES: (Record,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Directions,#CURRENT#)
+DEPENDENCIES: (Sine,TITLESTATE,Sine_Excitation_Parameters,normal,RESTORE,Directions,#CURRENT#)
+TKWIDGET: TK_IntvData_ExcitationType
+QUESTION: Directions#CB#(1,2,3)
+VALUE: 1
+DEPENDENCIES: (1,RESTORE,Ground_motion_direction,#CURRENT#,RESTORE,Record_file,#CURRENT#,HIDE,First_record_file,#CURRENT#,HIDE,Second_record_file,#CURRENT#,HIDE,Third_record_file,#CURRENT#,HIDE,First_ground_motion_direction,#CURRENT#,HIDE,Second_ground_motion_direction,#CURRENT#,HIDE,Third_ground_motion_direction,#CURRENT#)
+DEPENDENCIES: (2,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURRENT#,RESTORE,First_record_file,#CURRENT#,RESTORE,Second_record_file,#CURRENT#,HIDE,Third_record_file,#CURRENT#,RESTORE,First_ground_motion_direction,#CURRENT#,RESTORE,Second_ground_motion_direction,#CURRENT#,HIDE,Third_ground_motion_direction,#CURRENT#)
+DEPENDENCIES: (3,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURRENT#,RESTORE,First_record_file,#CURRENT#,RESTORE,Second_record_file,#CURRENT#,RESTORE,Third_record_file,#CURRENT#,RESTORE,First_ground_motion_direction,#CURRENT#,RESTORE,Second_ground_motion_direction,#CURRENT#,RESTORE,Third_ground_motion_direction,#CURRENT#)
+TKWIDGET: TK_IntvData_Directions
+QUESTION: First_record_file#MAT#(Records)
+VALUE: Ground_motion_record
+QUESTION: Second_record_file#MAT#(Records)
+VALUE: Ground_motion_record
+QUESTION: Third_record_file#MAT#(Records)
+VALUE: Ground_motion_record
 QUESTION: Record_file#MAT#(Records)
 VALUE: Ground_motion_record
 QUESTION: Ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
 VALUE: Ux
+QUESTION: First_ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
+VALUE: Ux
+QUESTION: Second_ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
+VALUE: Uz
+QUESTION: Third_ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
+VALUE: Uy
 QUESTION: Loading_path#CB#(Monotonic,Cyclic)
 VALUE: Monotonic
 DEPENDENCIES: (Cyclic,RESTORE,Displacement_peaks-cycles,#CURRENT#,RESTORE,Displacement_peaks,#CURRENT#)
 DEPENDENCIES: (Monotonic,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Displacement_peaks,#CURRENT#)
+TKWIDGET: TK_IntvData_LoadingPath
 QUESTION: Displacement_peaks-cycles(Displacement_ratio,Number_of_cycles)
 VALUE: #N# 2 1 5
 QUESTION: Convergence_criterion#CB#(Norm_Unbalance,Norm_Displacement_Increment,Energy_Increment,Relative_Norm_Unbalance,Relative_Norm_Displacement_Increment,Total_Relative_Norm_Displacement_Increment,Relative_Energy_Increment,Fixed_Number_of_Iterations)
@@ -244,6 +265,8 @@ HELP: 	Tolerance criteria for checking convergence
 QUESTION: Max_iterations_per_step
 VALUE: 50
 HELP: Maximum number of iterations per step
+QUESTION: Activate_dead_load#CB#(1,0)
+VALUE: 0
 QUESTION: Keep_this_loading_active_until_the_end_of_analysis#CB#(1,0)
 VALUE: 0
 HELP: Maintains the load constant for the remainder of the the analysis and resets the current time to zero

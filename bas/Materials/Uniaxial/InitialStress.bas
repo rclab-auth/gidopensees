@@ -21,6 +21,10 @@
 *include ElasticPP.bas
 *elseif(strcmp(MatProp(Material:),"Steel01")==0)
 *include Steel01.bas
+*elseif(strcmp(MatProp(Material:),"Steel02")==0)
+*include Steel02.bas
+*elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
+*include ReinforcingSteel.bas
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
 *include ElasticPPwithGap.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)

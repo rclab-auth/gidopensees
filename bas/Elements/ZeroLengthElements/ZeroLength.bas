@@ -57,6 +57,8 @@
 *include ..\..\Materials\Uniaxial\ElasticPPwithGap.bas
 *elseif(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\..\Materials\Uniaxial\Steel01.bas
+*elseif(strcmp(MatProp(Material:),"Steel02")==0)
+*include ..\..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\..\Materials\Uniaxial\Concrete01.bas
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
@@ -65,10 +67,14 @@
 *include ..\..\Materials\Uniaxial\Concrete06.bas
 *elseif(strcmp(MatProp(Material:),"Viscous")==0)
 *include ..\..\Materials\Uniaxial\Viscous.bas
+*elseif(strcmp(MatProp(Material:),"ViscousDamper")==0)
+*include ..\..\Materials\Uniaxial\ViscousDamper.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"HyperbolicGap")==0)
+*include ..\..\Materials\Uniaxial\HyperbolicGap.bas
 *#
 *# ------------------- Start of Series/Parallel Uniaxial Material Definition ---------------------
 *#

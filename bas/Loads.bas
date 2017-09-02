@@ -1,23 +1,34 @@
-# Loads
-
 *set var PrintPlainPattern=0
+*set var PrintMultiSupportPattern=0
+*# Check if there are any loads applied
 *set cond Point_Forces *nodes *CanRepeat
 *add cond Line_Forces *nodes *CanRepeat
 *add cond Surface_Forces *nodes *CanRepeat
 *add cond Point_Displacements *nodes *CanRepeat
 *loop nodes *OnlyInCond
 *set var PrintPlainPattern=1
-*set var PatternTag=operation(IntvNum*100)
 *break
 *end nodes
 *set cond Line_Uniform_Forces *elems *CanRepeat
-*loop elems
+*loop elems *OnlyInCond
 *set var PrintPlainPattern=1
-*set var PatternTag=operation(IntvNum*100)
 *break
 *end elems
+*if(IntvData(Activate_dead_load,int)==1)
+*set var PrintPlainPattern=1
+*endif
+*set cond Point_Ground_Motion_from_Record *nodes
+*add cond Point_Sine_Ground_Motion *nodes
+*loop nodes *OnlyInCond
+*set var PrintMultiSupportPattern=1
+*break
+*end nodes
 *if(strcmp(IntvData(Loading_type),"Constant")==0 || strcmp(IntvData(Loading_type),"Linear")==0)
+*# if there are loads applied, Create the pattern
 *if(PrintPlainPattern==1)
+# Loads - Plain Pattern
+
+*set var PatternTag=operation(IntvNum*100)
 pattern Plain *PatternTag *IntvData(Loading_type) {
 *set cond Point_Forces *nodes *CanRepeat
 *add cond Line_Forces *nodes *CanRepeat
@@ -124,8 +135,17 @@ pattern Plain *PatternTag *IntvData(Loading_type) {
 *endif
 *endif
 *end nodes
+*if(IntvData(Activate_dead_load,int)==1 && strcmp(IntvData(Analysis_type),"Static")==0 && strcmp(IntvData(Integrator_type),"Load_control")==0)
+# Dead Loads
+*include DeadLoad.bas
+*endif
 }
 *endif
 *elseif(strcmp(IntvData(Loading_type),"Multiple_support_excitation")==0)
+*if(PrintMultiSupportPattern==1)
+# Loads - Multiple Support Pattern
+
+*set var PatternTag=operation(IntvNum*1000)
 *include analysis/MultipleSupportExcitationPattern.bas
+*endif
 *endif

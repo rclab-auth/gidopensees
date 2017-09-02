@@ -19,4 +19,4 @@ uniaxialMaterial Hysteretic *MaterialID *MatProp(Moment_s1p,real) *MatProp(Rotat
 *MatProp(Moment_s2n,real) *MatProp(Rotation_e2n,real) *MatProp(Moment_s3n,real) *MatProp(Rotation_e3n,real) *\
 *endif
 *format "%g%g%g%g%g"
-*MatProp(Pitching_factor_for_strain-deformation,real) *MatProp(Pitching_factor_for_stress-force,real) *MatProp(Damage_due_to_ductility,real) *MatProp(Damage_due_to_energy,real) *MatProp(Beta_power,real)
+*MatProp(Pinching_factor_for_strain-deformation,real) *MatProp(Pinching_factor_for_stress-force,real) *MatProp(Damage_due_to_ductility,real) *MatProp(Damage_due_to_energy,real) *MatProp(Beta_power,real)

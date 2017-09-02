@@ -1,7 +1,7 @@
-*set var elem1D=operation(cntEBC+cntETB+cntTruss+cntCorotTruss+cntFBC+cntDBC)
-*set var elem2D=operation(cntQuad+cntShell)
+*set var elem1D=operation(cntEBC+cntETB+cntTruss+cntCorotTruss+cntFBC+cntDBC+cntDBCI)
+*set var elem2D=operation(cntQuad+cntQuadUP+cntShell+cntTri31)
 *set var elem3D=cntStdBrick
-*set var frames=operation(cntEBC+cntETB+cntFBC+cntDBC)
+*set var frames=operation(cntEBC+cntETB+cntFBC+cntDBC+cntDBCI)
 
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -68,6 +68,18 @@
 *end elems
 
 *endif
+*if(cntDBCI!=0)
+
+# DispBeamColumnInt
+# *cntDBCI
+# *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumnInt")==0)
+*ElemsNum *\
+*endif
+*end elems
+
+*endif
 *if(cntTruss!=0)
 
 # Truss
@@ -111,6 +123,18 @@
 # *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
+*ElemsNum *\
+*endif
+*end elems
+
+*endif
+*if(cntShellDKGQ!=0)
+
+# ShellDKGQ
+# *cntShellDKGQ
+# *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"ShellDKGQ")==0)
 *ElemsNum *\
 *endif
 *end elems
@@ -167,6 +191,9 @@
 *set var exist=1
 *elseif(strcmp(ElemsMatProp(Element_type:),"dispBeamColumn")==0)
 *ElemsNum                 dispBeamColumn*\
+*set var exist=1
+*elseif(strcmp(ElemsMatProp(Element_type:),"dispBeamColumnInt")==0)
+*ElemsNum              dispBeamColumnInt*\
 *set var exist=1
 *endif
 *#

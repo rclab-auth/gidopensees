@@ -629,6 +629,22 @@ proc AboutOpenSeesProbType { } {
 	set keepsplash 0
 }
 
+proc CheckForUpdate {} {
+
+	global OpenSeesProblemDir
+
+	cd "$OpenSeesProblemDir/exe"
+	exec {*}[auto_execok start] "CheckForUpdate.exe"
+}
+
+proc OpenDesignSafePDF {} {
+
+	global OpenSeesProblemDir
+
+	cd "$OpenSeesProblemDir/doc"
+	exec {*}[auto_execok start] "UserGuideGIDDesignSafe.pdf"
+}
+
 # Create GiD+OpenSees menu
 
 proc OpenSees_Menu { dir } {
@@ -649,17 +665,28 @@ proc OpenSees_Menu { dir } {
 	[= "Reset analysis"] "---" \
 	[= "GiD+OpenSees Site"] \
 	[= "OpenSees Site"] \
-	[= "OpenSees Wiki"] \
-	[= "DesignSafe-CI Site"] "---" \
+	[= "OpenSees Wiki"] "---" \
+	[= "DesignSafe-CI Site"] \
+	[= "DesignSafe-CI User Guide"] "---" \
+	[= "Check for Update"] \
 	[= "About"] ]
 
 	# Selection commands
 
-	set cmds { {Opt1_dialog} {} {Opt2_dialog} {Opt3_dialog} {Opt4_dialog} {Opt5_dialog} {Opt6_dialog} {} {Opt7_dialog} {} \
+	set cmds { \
+	{Opt1_dialog} {} \
+	{Opt2_dialog} \
+	{Opt3_dialog} \
+	{Opt4_dialog} \
+	{Opt5_dialog} \
+	{Opt6_dialog} {} \
+	{Opt7_dialog} {} \
 	{VisitWeb "http://gidopensees.rclab.civil.auth.gr"} \
 	{VisitWeb "http://opensees.berkeley.edu"} \
-	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} \
-	{VisitWeb "https://www.designsafe-ci.org"} {} \
+	{VisitWeb "http://opensees.berkeley.edu/wiki/index.php/Main_Page"} {} \
+	{VisitWeb "https://www.designsafe-ci.org"} \
+	{OpenDesignSafePDF} {} \
+	{CheckForUpdate}
 	{AboutOpenSeesProbType} }
 
 	# Tab icons
@@ -673,8 +700,10 @@ proc OpenSees_Menu { dir } {
 	mnu_Reset.png "" \
 	mnu_Site.png \
 	mnu_Site.png \
-	mnu_Wiki.png \
-	mnu_DesignSafe.png "" \
+	mnu_Wiki.png "" \
+	mnu_DesignSafe.png \
+	mnu_PDF.png \ "" \
+	mnu_Update.png \
 	mnu_About.png}
 
 	set position 0
