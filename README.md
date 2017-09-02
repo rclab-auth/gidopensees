@@ -19,6 +19,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ### KNOWN ISSUES
 
 ---
+- GiD may occasionally crash when spaces are used in new material/element names. Please do not use spaces in names until this issue is resolved in GiD.
 - Due to the large number of new features, transforming older models to version 2.0.0 onwards may lead to some non-updated data (loads, boundary conditions, analysis options etc.). It is highly recommended to check your transformed model thorougly, before running it in the latest version.
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
    - Intersection joints that belong to two lines with different constraints should be handled seperately.
