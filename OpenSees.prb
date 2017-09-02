@@ -138,10 +138,10 @@ END PROBLEM DATA
 
 INTERVAL DATA
 TITLE: Analysis_Options
-QUESTION: System_of_equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM,Mumps_(Parallel))
+QUESTION: System_of_equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM)
 VALUE: BandGeneral
 TKWIDGET: TK_EditInterval
-QUESTION: DOF_numberer#CB#(Plain,RCM,AMD,ParallelPlain)
+QUESTION: DOF_numberer#CB#(Plain,RCM,AMD)
 VALUE: RCM
 QUESTION: Constraint_handler#CB#(Plain,Lagrange,Penalty,Transformation)
 VALUE: Transformation
