@@ -32,7 +32,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
-**Version 2.2.5 (10/10/2017)
+**Version 2.2.5 (14/10/2017)**
 
 - Added : **Auto equalDOF commands** among nodes with different ndf that share the same location in General Data window
 - Added : **Auto equalDOF commands** among Quad/QuadUP element nodes which share the same vertical (Y) location.
