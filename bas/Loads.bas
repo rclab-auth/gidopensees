@@ -1,6 +1,14 @@
 *set var PrintPlainPattern=0
 *set var PrintMultiSupportPattern=0
+*set var PrintPlainPatternPathTimeseries=0
 *# Check if there are any loads applied
+*set cond Point_Forces *nodes *CanRepeat
+*add cond Line_Forces *nodes *CanRepeat
+*add cond Surface_Forces *nodes *CanRepeat
+*loop nodes *OnlyInCond
+*set var PrintPlainPatternPathTimeseries=1
+*break
+*end nodes
 *set cond Point_Forces *nodes *CanRepeat
 *add cond Line_Forces *nodes *CanRepeat
 *add cond Surface_Forces *nodes *CanRepeat
@@ -12,6 +20,7 @@
 *set cond Line_Uniform_Forces *elems *CanRepeat
 *loop elems *OnlyInCond
 *set var PrintPlainPattern=1
+*set var PrintPlainPatternPathTimeseries=1
 *break
 *end elems
 *if(IntvData(Activate_dead_load,int)==1)
@@ -140,6 +149,12 @@ pattern Plain *PatternTag *IntvData(Loading_type) {
 *include DeadLoad.bas
 *endif
 }
+*endif
+*elseif(strcmp(IntvData(Loading_type),"Function")==0)
+*if(PrintPlainPatternPathTimeseries==1)
+# Loads - Timeseries Path
+
+*include analysis/PlainPatternTimeseriesPath.bas
 *endif
 *elseif(strcmp(IntvData(Loading_type),"Multiple_support_excitation")==0)
 *if(PrintMultiSupportPattern==1)

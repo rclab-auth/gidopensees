@@ -1325,7 +1325,7 @@ COMMENT: \n
 QUESTION: Record_file
 VALUE:
 TKWIDGET: TK_RecordFileButton
-QUESTION: Record_type#CB#(Acceleration,Displacement)
+QUESTION: Record_type#CB#(Acceleration,Displacement,Velocity,Function)
 VALUE: Acceleration
 QUESTION: Record_file_format#CB#(PEER_format,Single_value_per_line,Time_and_value_per_line)
 VALUE: PEER_format
@@ -1730,6 +1730,9 @@ IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_CheckQuadFieldOptions
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
+QUESTION: Define_equalDOF_between_nodes_of_the_same_vertical_location#CB#(0,1)
+VALUE: 0
+HELP: equalDOF commands are automatically printed for element nodes which share the same vertical (Y) location
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
@@ -1842,6 +1845,9 @@ IMAGE: img/Materials/Quad_Shell.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: nD Materials
+QUESTION: Define_equal_translational_DOF_between_nodes_of_the_same_vertical_location#CB#(0,1)
+VALUE: 0
+HELP: equalDOF commands are automatically printed for element nodes which share the same vertical (Y) location
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
@@ -1861,6 +1867,13 @@ QUESTION: Permeability_coefficient_in_horizontal_direction#UNITS#
 VALUE: 1.0e-3 m/sec
 QUESTION: Permeability_coefficient_in_vertical_direction#UNITS#
 VALUE: 1.0e-3 m/sec
+QUESTION: Update_permeabilities#CB#(1,0)
+VALUE: 0
+HELP: Update permeabilities at the start of the selected interval (before analysis options)
+DEPENDENCIES: (0,HIDE,Update_permeabilities_at_interval,#CURRENT#)
+DEPENDENCIES: (1,RESTORE,Update_permeabilities_at_interval,#CURRENT#)
+QUESTION: Update_permeabilities_at_interval
+VALUE: 1#WIDTH#(3)
 TITLE: Pressure
 QUESTION: Uniform_normal_traction#UNITS#
 VALUE: 0.0kPa

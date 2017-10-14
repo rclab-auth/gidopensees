@@ -72,7 +72,12 @@ rayleigh *GenData(alphaM,real) *GenData(betaK,real) *GenData(betaKinit,real) *Ge
 *if(strcmp(IntvData(Analysis_type),"Static")==0)
 system *IntvData(System_of_equations)
 numberer *IntvData(DOF_numberer)
+*if(strcmp(IntvData(Constraint_handler),"Penalty")==0)
+*format "%g%g"
+constraints Penalty *IntvData(Penalty_as_factor,real) *IntvData(Penalty_am_factor,real)
+*else
 constraints *IntvData(Constraint_handler)
+*endif
 *# MONOTONIC
 *if(strcmp(IntvData(Loading_path),"Monotonic")==0)
 *# Integrator for Static Monotonic Analysis
@@ -124,7 +129,7 @@ integrator DisplacementControl *IntvData(Control_node) *NodeCtrlDOF *DispIncr
 *# end if Integrator type
 *endif
 *# Test for convergence
-*if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0)
+*if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
 *if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
 *format "%g%g"
 test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
@@ -187,6 +192,8 @@ Secant *\
 algorithm Broyden *IntvData(Iterations_for_new_tangent,int)
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 algorithm BFGS
+*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
+algorithm KrylovNewton
 *# end if algorithm
 *else
 *endif
@@ -249,7 +256,7 @@ integrator DisplacementControl *IntvData(Control_node) *NodeCtrlDOF *DispIncr
 *# end if Integrator type
 *endif
 *# Test for convergence
-*if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0)
+*if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
 *if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
 *format "%g%g"
 test NormUnbalance *IntvData(Tolerance,real) *IntvData(Max_Iterations_per_Step) *LoggingFlag
@@ -311,6 +318,8 @@ Secant *\
 algorithm Broyden *IntvData(Iterations_for_new_tangent,int)
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 algorithm BFGS
+*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
+algorithm KrylovNewton
 *# end if Algorithm
 *endif
 analysis *IntvData(Analysis_type)
@@ -323,7 +332,12 @@ analysis *IntvData(Analysis_type)
 *elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
 system *IntvData(System_of_equations)
 numberer *IntvData(DOF_numberer)
+*if(strcmp(IntvData(Constraint_handler),"Penalty")==0)
+*format "%g%g"
+constraints Penalty *IntvData(Penalty_as_factor,real) *IntvData(Penalty_am_factor,real)
+*else
 constraints *IntvData(Constraint_handler)
+*endif
 *if(strcmp(IntvData(Integrator_type),"Newmark")==0)
 *format "%g%g"
 integrator Newmark *IntvData(gamma,real) *IntvData(beta,real)
@@ -398,6 +412,8 @@ Secant *\
 algorithm Broyden *IntvData(Iterations_for_new_tangent,int)
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 algorithm BFGS
+*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
+algorithm KrylovNewton
 *# end if Algorithm
 *endif
 analysis *IntvData(Analysis_type)
@@ -413,6 +429,10 @@ analysis *IntvData(Analysis_type)
 *endif
 *# Multiple support excitations
 *elseif(strcmp(IntvData(Loading_type),"Multiple_support_excitation")==0)
+*include analysis/MultipleSupportExcitationAnalysis.bas
+*elseif(strcmp(IntvData(Loading_type),"Function")==0)
+*include analysis/PlainPatternTimeseriesPathAnalysis.bas
+*else
 *include analysis/MultipleSupportExcitationAnalysis.bas
 *endif
 *# end if Analysis type (Static, Transient etc.)

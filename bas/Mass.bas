@@ -43,6 +43,10 @@ mass *NodesNum *\
 *format "%8.3f%8.3f%8.3f"
 *Cond(2,real) *Cond(3,real) *Cond(4,real)
 *endif
+*#--------------------------2D-3PDOF----------------------------
+*elseif(currentDOF==30)
+*format "%8.3f%8.3f   "
+*Cond(2,real) *Cond(3,real) 0.000
 *#--------------------------2D-2DOF----------------------------
 *else
 *format "%8.3f%8.3f"

@@ -141,6 +141,7 @@ recorder Element -file Quad_force.out -time -ele *\
 forces
 *endif
 *if(GenData(Stresses,int)==1)
+*# s11 s22 s12
 recorder Element -file Quad_stress.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
@@ -150,6 +151,7 @@ recorder Element -file Quad_stress.out -time -ele *\
 stresses
 *endif
 *if(GenData(Strains,int)==1)
+*# e11 e22 e12
 recorder Element -file Quad_strain.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
@@ -163,32 +165,67 @@ strains
 *# QuadUP
 *#
 *if(cntQuadUP!=0)
-*if(GenData(Forces,int)==1)
-recorder Element -file QuadUP_force.out -time -ele *\
-*loop elems
-*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
-*ElemsNum *\
-*endif
-*end elems
-forces
-*endif
 *if(GenData(Stresses,int)==1)
-recorder Element -file QuadUP_stress.out -time -ele *\
+*# s11 s22 s33 s12
+recorder Element -file QuadUP_stress1.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
 *ElemsNum *\
 *endif
 *end elems
-stresses
+material 1 stress
+recorder Element -file QuadUP_stress2.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
+*ElemsNum *\
+*endif
+*end elems
+material 2 stress
+recorder Element -file QuadUP_stress3.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
+*ElemsNum *\
+*endif
+*end elems
+material 3 stress
+recorder Element -file QuadUP_stress4.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
+*ElemsNum *\
+*endif
+*end elems
+material 4 stress
 *endif
 *if(GenData(Strains,int)==1)
-recorder Element -file QuadUP_strain.out -time -ele *\
+*# e11 e22 g12
+recorder Element -file QuadUP_strain1.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
 *ElemsNum *\
 *endif
 *end elems
-strains
+material 1 strain
+recorder Element -file QuadUP_strain2.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
+*ElemsNum *\
+*endif
+*end elems
+material 2 strain
+recorder Element -file QuadUP_strain3.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
+*ElemsNum *\
+*endif
+*end elems
+material 3 strain
+recorder Element -file QuadUP_strain4.out -time -ele *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
+*ElemsNum *\
+*endif
+*end elems
+material 4 strain
 *endif
 *endif
 *#
@@ -233,7 +270,7 @@ localForce
 *#
 *if(cntETB!=0)
 *if(GenData(Local_forces,int)==1)
-recorder Element -file ElasticTimoshenkoBeam_localForce.out -time -ele *\
+recorder Element -file ElasticTimoshenkoBeamColumn_localForce.out -time -ele *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
 *ElemsNum *\

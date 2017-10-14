@@ -43,6 +43,8 @@ variable algorithmTypeStatic NewtonLineSearch
 variable algorithmTypeStatic Broyden
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 variable algorithmTypeStatic BFGS
+*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
+variable algorithmTypeStatic KrylovNewton
 *endif
 set AnalOk [analyze $Nsteps]
 
@@ -59,6 +61,63 @@ if {$AnalOk != 0} {
 		puts "\nApplying initial stepping\n"
         integrator DisplacementControl  $IDctrlNode $IDctrlDOF $Dincr; # bring back to original increment
         set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
+*if(IntvData(Use_initial_stiffness_iterations,int)==0)
+			if {$AnalOk != 0} {
+                    puts "\nTrying Newton-Raphson with Initial Tangent\n"
+                    test NormDispIncr $TolStatic 2000 0
+                    algorithm Newton -initial
+                    set AnalOk [analyze 1]
+                    test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
+                    algorithm $algorithmTypeStatic
+            }
+            if {$AnalOk !=0} {
+                    puts "\nTrying Modified Newton-Raphson with Initial Tangent\n"
+                    test NormDispIncr $TolStatic 2000 0
+                    algorithm ModifiedNewton -initial
+                    set AnalOk [analyze 1]
+                    test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
+                    algorithm $algorithmTypeStatic
+            }
+*else
+            if {$AnalOk != 0} {
+                    puts "\nTrying Newton-Raphson\n"
+                    test NormDispIncr $TolStatic 2000 0
+                    algorithm Newton
+                    set AnalOk [analyze 1]
+                    test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
+                    algorithm $algorithmTypeStatic
+            }
+            if {$AnalOk !=0} {
+                    puts "\nTrying Modified Newton-Raphson\n"
+                    test NormDispIncr $TolStatic 2000 0
+                    algorithm ModifiedNewton
+                    set AnalOk [analyze 1]
+                    test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
+                    algorithm $algorithmTypeStatic
+            }
+*endif
+            if {$AnalOk != 0} {
+                    puts "\nTrying Broyden\n"
+                    algorithm Broyden 8
+                    set AnalOk [analyze 1]
+                    algorithm $algorithmTypeStatic
+            }
+            if {$AnalOk != 0} {
+                    puts "\nTrying Newton-Raphson with Line Search\n"
+                    algorithm NewtonLineSearch
+                    set AnalOk [analyze 1]
+                    algorithm $algorithmTypeStatic
+            }
+            if {$AnalOk !=0} {
+                    puts "\nTrying BFGS\n"
+                    algorithm BFGS
+                    set AnalOk [analyze 1]
+                    algorithm $algorithmTypeStatic
+            }
+                # if {$AnalOk != 0} { ; # stop if still fails to converge
+                #    puts "Problem...."
+                #    return -1
+                # }; # end if
         }
 
         if {($AnalOk !=0 && $Nk==1) || ($AnalOk==0 && $Nk==4)} {; # reduce step size if still fails to converge

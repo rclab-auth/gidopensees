@@ -49,6 +49,7 @@
 # Mass   : *Units(MASS)
 *set var TwoDOF=0
 *set var ThreeDOF=0
+*set var ThreePDOF=0
 *set var SixDOF=0
 *set var currentDOF=0
 *#
@@ -60,19 +61,22 @@
 *set var TwoDOF=1
 *elseif(ElemDOF==3)
 *set var ThreeDOF=1
+*elseif(ElemDOF==30)
+*set var ThreePDOF=1
 *elseif(ElemDOF==6)
 *set var SixDOF=1
 *else
 *MessageBox Error: Invalid elements used for this model dimensions.
 *endif
 *end materials
-*if(TwoDOF==0 && ThreeDOF==0 && SixDOF==0)
+*if(TwoDOF==0 && ThreeDOF==0 && SixDOF==0 && ThreePDOF==0)
 *MessageBox Error: No Elements were assigned.
 *endif
+*set var numberGroups=operation(TwoDOF+ThreeDOF+SixDOF+ThreePDOF)
 *#
 *# Depending on modeled elements, DOF groups (domains) are created
 *#
-*set var dummy=tcl(CreateDOFGroups *TwoDOF *ThreeDOF *SixDOF)
+*set var dummy=tcl(CreateDOFGroups *TwoDOF *ThreeDOF *SixDOF *ThreePDOF)
 *#
 *# Assign  elements (including their nodes) to the corresponding groups
 *#
@@ -80,7 +84,7 @@
 *set var ElemDOF=tcl(ReturnElemDOF *ElemsMatProp(Element_type:) *ndime)
 *set var dummy=tcl(AssignElemNumToDOFlist *ElemsNum *ElemDOF)
 *end elems
-*set var dummy=tcl(AssignElemsToDOFGroups *TwoDOF *ThreeDOF *SixDOF)
+*set var dummy=tcl(AssignElemsToDOFGroups *TwoDOF *ThreeDOF *SixDOF *ThreePDOF)
 *#
 *# Orphan nodes (for example : master nodes for diaphragms)
 *#
@@ -89,7 +93,8 @@
 *set var dummy=tcl(AppendOrphanNodeList *NodesNum)
 *end nodes
 *loop groups
-*if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0)
+*# Loop only to these auto made groups, because user may has created more groups manually.
+*if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0 || strcmp(GroupName,"3PDOF")==0)
 *set Group *GroupName *nodes
 *loop nodes *OnlyInGroup
 *#
@@ -118,8 +123,13 @@
 *set var cntTruss=0
 *set var cntCorotTruss=0
 *#
+*# Clear the lists of nodeTags for each Group (each domain)
+*set var dummy=tcl(ClearGroupNodes )
+*# Clear the list of Quad/QuadUP Nodes, used for automatic equalDOF commands (if chosen)
+*set var dummy=tcl(ClearQuadMasterNodeList )
+*set var dummy=tcl(ClearQuadUPMasterNodeList )
 *loop groups
-*if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0)
+*if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0 || strcmp(GroupName,"3PDOF")==0)
 *#
 *# Specify the current ndf
 *#
@@ -131,9 +141,12 @@
 
 # Model domain *GroupName
 
+*if(currentDOF==30)
 *format "%d%d"
+model BasicBuilder -ndm *ndime -ndf 3
+*else
 model BasicBuilder -ndm *ndime -ndf *currentDOF
-
+*endif
 *#
 *# General Variables
 *#
@@ -266,6 +279,7 @@ puts ""
 
 *include bas\Loads.bas
 *include bas\UpdateMaterialStage.bas
+*include bas\UpdateParameters.bas
 
 # recording the initial status
 
@@ -276,7 +290,18 @@ record;
 *include bas\Analyze.bas
 *if(IntvData(Keep_this_loading_active_until_the_end_of_analysis,int)==1)
 
+# all previously defined patterns are constant for so on.
 loadConst -time 0.0
+*endif
+*include bas\RemovePattern.bas
+*if(IntvData(Reset_at_the_end_of_the_interval_analysis,int)==1)
+
+# reset all components to the initial state
+reset
+*endif
+*if(IntvData(Set_time_at_the_end_of_the_interval_analysis,int)==1)
+
+setTime *IntvData(Time_to_be_set,real)
 *endif
 *end intervals
 

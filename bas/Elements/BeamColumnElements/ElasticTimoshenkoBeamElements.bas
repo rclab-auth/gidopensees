@@ -153,7 +153,7 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.10f%10.10f%10.10f%10.6f%10.6f   "
+*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -168,7 +168,7 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.10f%10.10f%10.10f%10.6f%10.6f   "
+*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -186,7 +186,7 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.10f%10.10f%10.10f%10.6f%10.6f   "
+*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -201,7 +201,7 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.10f%10.10f%10.10f%10.6f%10.6f   "
+*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength
@@ -300,7 +300,7 @@ geomTransf Corotational *TransfTag3
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.10f%10.6f   "
+*format "%10.0f%10.0f%10.6f%10.15f%10.6f   "
 *E *G *A *Iz *Avy *TransfTag   -mass *\
 *format "%8.3f"
 *MassPerLength

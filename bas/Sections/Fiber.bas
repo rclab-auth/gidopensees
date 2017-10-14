@@ -445,9 +445,10 @@ section Fiber *FiberTag *\
 *set var zslabFibers=tcl(NumofCoverFibers *ts *height *zdivision)
 # Create the core fibers
 
+*set var ycoreFibers=operation(-2*(yslabFibers+ycoverFibers)+ydivision)
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(-2*(yslabFibers+ycoverFibers)+ydivision) *operation(zdivision-2*zcoverFibers) *operation(cover-tw/2) *operation(cover-Zcm) *operation(tw/2-cover) *operation(height-Zcm-cover)
+*format "%3d%6g%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoreMaterial *operation(max(ycoreFibers,5)) *operation(zdivision-2*zcoverFibers) *operation(cover-tw/2) *operation(cover-Zcm) *operation(tw/2-cover) *operation(height-Zcm-cover)
 
 # Create the Cover fibers
 
@@ -456,10 +457,10 @@ patch rect *SelectedCoreMaterial *operation(-2*(yslabFibers+ycoverFibers)+ydivis
 patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(tw/2-cover) *operation(-Zcm) *operation(tw/2) *operation(height-Zcm)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-tw/2) *operation(-Zcm) *operation(-tw/2+cover) *operation(height-Zcm)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(-2*(yslabFibers+ycoverFibers)+ydivision) *zcoverFibers *operation(-tw/2+cover) *operation(height-Zcm-cover) *operation(tw/2-cover) *operation(height-Zcm)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *operation(-2*(yslabFibers+ycoverFibers)+ydivision) *zcoverFibers *operation(-tw/2+cover) *operation(-Zcm) *operation(tw/2-cover) *operation(-Zcm+cover)
+*format "%3d%6g%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(max(ycoreFibers,5)) *zcoverFibers *operation(-tw/2+cover) *operation(height-Zcm-cover) *operation(tw/2-cover) *operation(height-Zcm)
+*format "%3d%6g%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(max(ycoreFibers,5)) *zcoverFibers *operation(-tw/2+cover) *operation(-Zcm) *operation(tw/2-cover) *operation(-Zcm+cover)
 
 # Create the slab fibers
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
@@ -1048,9 +1049,10 @@ section Fiber *FiberTag {
 *set var yslabFibers=tcl(NumofCoverFibers *ts *height *ydivision)
 # Create the Core fibers
 
+*set var zcoreFibers=operation(-2*(zslabFibers+zcoverFibers)+zdivision)
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(-2*(zslabFibers+zcoverFibers)+zdivision) *operation(cover-Ycm) *operation(cover-tw/2) *operation(height-Ycm-cover) *operation(tw/2-cover)
+*format "%3d%6d%6g%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(max(zcoreFibers,5)) *operation(cover-Ycm) *operation(cover-tw/2) *operation(height-Ycm-cover) *operation(tw/2-cover)
 
 # Create the Cover fibers
 
@@ -1059,10 +1061,10 @@ patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation
 patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *operation(-Ycm) *operation(tw/2-cover) *operation(height-Ycm) *operation(tw/2)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *operation(-Ycm) *operation(-tw/2) *operation(height-Ycm) *operation(-tw/2+cover)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(-2*(zslabFibers+zcoverFibers)+zdivision) *operation(height-Ycm-cover) *operation(-tw/2+cover) *operation(height-Ycm) *operation(tw/2-cover)
-*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *operation(-2*(zslabFibers+zcoverFibers)+zdivision) *operation(-Ycm) *operation(-tw/2+cover) *operation(-Ycm+cover) *operation(tw/2-cover)
+*format "%3d%6d%6g%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(max(zcoreFibers,5)) *operation(height-Ycm-cover) *operation(-tw/2+cover) *operation(height-Ycm) *operation(tw/2-cover)
+*format "%3d%6d%6g%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(max(zcoreFibers,5)) *operation(-Ycm) *operation(-tw/2+cover) *operation(-Ycm+cover) *operation(tw/2-cover)
 
 # Create the slab fibers
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"

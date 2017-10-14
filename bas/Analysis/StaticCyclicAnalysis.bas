@@ -42,9 +42,11 @@ variable algorithmTypeStatic ModifiedNewton
 *elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
 variable algorithmTypeStatic NewtonLineSearch
 *elseif(strcmp(IntvData(Solution_algorithm),"Broyden")==0)
-variable algorithmTypeStatic
+variable algorithmTypeStatic Broyden
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 variable algorithmTypeStatic BFGS
+*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
+variable algorithmTypeStatic KrylovNewton
 *endif
 
 foreach Dmax $iDmax Ncycles $iNcycles {

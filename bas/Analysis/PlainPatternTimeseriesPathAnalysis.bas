@@ -72,7 +72,8 @@ if {$AnalOk != 0} { ; # analysis was not successful
                 algorithm $algorithmTypeDynamic
             }
         }
-		if {($Nk == 1 && $AnalOk!=0) || ($Nk == 4 && $AnalOk==0)} {
+
+		if {($Nk == 1 && $AnalOk!=0) || ($Nk == 4 && $AnalOk==0)} {
 			set Nk 2.0
             set curTime [getTime]
             set curStep [expr int($curTime/$DtAnalysis)]
@@ -102,7 +103,8 @@ if {$AnalOk != 0} { ; # analysis was not successful
                 }
             }
         }
-        if {($Nk == 2 && $AnalOk!=0)} {
+
+        if {($Nk == 2 && $AnalOk!=0)} {
             set Nk 4.0
             set currTime [getTime]
             set curStep [expr ($currTime-$curTime)/$ReducedDtAnalysis]

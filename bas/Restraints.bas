@@ -65,6 +65,17 @@ fix *NodesNum *Cond(1,int) *Cond(2,int)
 fix *NodesNum *Cond(1,int) *Cond(2,int) *Cond(6,int)
 *endif
 *end nodes
+*#---------------------- 2D model 3 DOF (2 displacement, 1 fluid-pressure)
+*elseif(currentDOF==30)
+# fix $NodeTag x-transl -y-transl fluid-pressure
+
+*loop nodes *OnlyInCond
+*set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
+*if(nodeDOF==currentDOF)
+*format "%6d%3d%3d%3d"
+fix *NodesNum *Cond(1,int) *Cond(2,int) *Cond(7,int)
+*endif
+*end nodes
 *endif
 *endif
 *endif

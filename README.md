@@ -32,6 +32,22 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 2.2.5 (10/10/2017)
+
+- Added : **Auto equalDOF commands** among nodes with different ndf that share the same location in General Data window
+- Added : **Auto equalDOF commands** among Quad/QuadUP element nodes which share the same vertical (Y) location.
+- Added : **Function** Loading type option (Plain pattern - Path Timeseries)
+- Added : **None** Loading type option (No Load pattern is used)
+- Added : **KrylovNewton** algorithm
+- Added : **set time** option in Intervals Data
+- Added : **reset** option in Intervals Data
+- Added : **Remove pattern** option in Intervals Data
+- Added : **Fluid-pressure** option in Restraints conditions for QuadUP elements
+- Improved : Transient analysis. In case of analysis divergence, in addition to alternative convergence criteria, time step bisection is tried
+- Minor bug fixes
+
+---
+
 **Version 2.2.0 (01/09/2017)**
 
 - Added : **Flexure-Shear Interaction Displacement-Based Beam-Column** element

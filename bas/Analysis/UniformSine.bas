@@ -57,6 +57,8 @@ variable algorithmTypeDynamic NewtonLineSearch
 variable algorithmTypeDynamic Broyden
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 variable algorithmTypeDynamic BFGS
+*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
+variable algorithmTypeDynamic KrylovNewton
 *endif
 set Nsteps [expr int($TmaxAnalysis/$DtAnalysis)];
 set AnalOk [analyze $Nsteps $DtAnalysis]; # perform analysis - returns 0 if analysis was successful

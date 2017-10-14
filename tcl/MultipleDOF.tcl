@@ -1,11 +1,13 @@
-proc CreateDOFGroups { DOF2exists DOF3exists DOF6exists } {
+proc CreateDOFGroups { DOF2exists DOF3exists DOF6exists DOF3Pexists} {
 	global DOF2Elems
 	global DOF3Elems
 	global DOF6Elems
+	global DOF3PElems
 
 	set DOF2Elems [list]
 	set DOF3Elems [list]
 	set DOF6Elems [list]
+	set DOF3PElems [list]
 
 	if {[GiD_Groups exists 2DOF]==0 && $DOF2exists==1} {
 		GiD_Groups create 2DOF
@@ -22,13 +24,19 @@ proc CreateDOFGroups { DOF2exists DOF3exists DOF6exists } {
 	} elseif { [GiD_Groups exists 6DOF]==1 && $DOF6exists==0 } {
 		GiD_Groups delete 6DOF
 	}
+	if {[GiD_Groups exists 3PDOF]==0 && $DOF3Pexists==1} {
+		GiD_Groups create 3PDOF
+	} elseif { [GiD_Groups exists 3PDOF]==1 && $DOF3Pexists==0 } {
+		GiD_Groups delete 3PDOF
+	}
 	return 0
 }
 
-proc AssignElemsToDOFGroups { DOF2exists DOF3exists DOF6exists } {
+proc AssignElemsToDOFGroups { DOF2exists DOF3exists DOF6exists DOF3Pexists} {
 	global DOF2Elems
 	global DOF3Elems
 	global DOF6Elems
+	global DOF3PElems
 
 	if {$DOF2exists==1} {
 		set ok [GiD_EntitiesGroups assign 2DOF -also_lower_entities elements $DOF2Elems]
@@ -38,6 +46,9 @@ proc AssignElemsToDOFGroups { DOF2exists DOF3exists DOF6exists } {
 	}
 	if {$DOF6exists==1} {
 		set ok [GiD_EntitiesGroups assign 6DOF -also_lower_entities elements $DOF6Elems]
+	}
+	if {$DOF3Pexists==1} {
+		set ok [GiD_EntitiesGroups assign 3PDOF -also_lower_entities elements $DOF3PElems]
 	}
 	return 0
 }
@@ -76,6 +87,7 @@ proc AssignElemNumToDOFlist { num ndf } {
 	global DOF2Elems
 	global DOF3Elems
 	global DOF6Elems
+	global DOF3PElems
 
 	if {$ndf==2} {
 		lappend DOF2Elems $num
@@ -83,6 +95,8 @@ proc AssignElemNumToDOFlist { num ndf } {
 		lappend DOF3Elems $num
 	} elseif {$ndf==6} {
 		lappend DOF6Elems $num
+	} elseif {$ndf==30} {
+		lappend DOF3PElems $num
 	}
 return 0
 }
@@ -97,6 +111,9 @@ proc ReturnNodeGroupDOF { nodesnum } {
 	}
 	if { [lsearch [GiD_EntitiesGroups entity_groups nodes $nodesnum] 6DOF] !=-1 } {
 		return 6
+	}
+	if { [lsearch [GiD_EntitiesGroups entity_groups nodes $nodesnum] 3PDOF] !=-1 } {
+		return 30
 	}
 	return 0
 }
@@ -124,7 +141,6 @@ proc RemoveFromOrphanNodesList { nodesnum } {
 	set FreeNodes [lreplace $FreeNodes $index $index]
 
 	return 0
-
 }
 
 proc ReturnElemDOF { elemtype ndm } {
@@ -196,7 +212,9 @@ proc ReturnElemDOF { elemtype ndm } {
 		}
 		QuadUP {
 			if {$ndm==2} {
-				return 3
+			# Cannot return string to bas level.
+			# 0 indicates that the 1 degree of freedom corresponds to fluid-pressure.
+				return 30
 			} elseif {$ndm==3} {
 				WarnWinText "ERROR: QuadUP Elements require 2D model"
 			}

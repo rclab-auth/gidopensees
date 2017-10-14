@@ -697,14 +697,14 @@ proc TK_Suggest_Fibers_for_Fiber_Section { event args } {
 
 								"3" {
 
-									set Fibers_y [expr {max(8*$TopBars,8*$BottomBars,20)}]
-									set Fibers_z [expr $Fibers_y*$height/$width]
+									set Fibers_y [expr {max(8*$TopBars,8*$BottomBars,10*$width,20)}]
+									set Fibers_z [expr {max($Fibers_y*$height/$width,10*$height,15)}]
 
 								}
 								"2" {
 
-									set Fibers_z [expr {max(8*$TopBars,8*$BottomBars,20)}]
-									set Fibers_y [expr $Fibers_z*$height/$width]
+									set Fibers_z [expr {max(8*$TopBars,8*$BottomBars,10*$width,20)}]
+									set Fibers_y [expr {max($Fibers_z*$height/$width,10*$height,15)}]
 								}
 							}
 						set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
@@ -2964,6 +2964,7 @@ proc TK_IntvData_LoadingType { event args } {
 				set TransientLoadingTypes " \
 				Uniform_excitation \
 				Multiple_support_excitation \
+				Function \
 				"
 				if { [lsearch $StaticIntegratorTypes $integrator_type] == -1 && [lsearch $StaticLoadingTypes $loading_type] != -1 } {
 					set dummy [TK_DWSet $GDN $STRUCT $QUESTION Uniform_excitation normal]

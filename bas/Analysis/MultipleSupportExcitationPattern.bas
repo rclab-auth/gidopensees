@@ -151,6 +151,8 @@ set iGMtype "*\
 {-accel} *\
 *elseif(strcmp(MatProp(Record_type),"Displacement")==0)
 {-disp} *\
+*elseif(strcmp(MatProp(Record_type),"Velocity")==0)
+*MessageBox Error: Use Acceleration or Displacement record type for Multiple Support Excitation
 *endif
 *endif
 *end materials
@@ -294,15 +296,15 @@ set iGMSinedirection "*\
 *loop nodes *OnlyInCond
 *if(strcmp(cond(2),"Ux")==0)
 1 *\
-*elseif(strcmp(cond(2),"Ux")==0)
+*elseif(strcmp(cond(2),"Uy")==0)
 2 *\
-*elseif(strcmp(cond(2),"Ux")==0)
+*elseif(strcmp(cond(2),"Uz")==0)
 3 *\
-*elseif(strcmp(cond(2),"Ux")==0)
+*elseif(strcmp(cond(2),"Rx")==0)
 4 *\
-*elseif(strcmp(cond(2),"Ux")==0)
+*elseif(strcmp(cond(2),"Ry")==0)
 5 *\
-*elseif(strcmp(cond(2),"Ux")==0)
+*elseif(strcmp(cond(2),"Rz")==0)
 6 *\
 *endif
 *end nodes

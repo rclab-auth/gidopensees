@@ -34,7 +34,7 @@
 *endif
 *if(cntETB!=0)
 
-# ElasticTimoshenkoBeam
+# ElasticTimoshenkoBeamColumn
 # *cntETB
 # *\
 *loop elems
@@ -111,6 +111,18 @@
 # *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
+*ElemsNum *\
+*endif
+*end elems
+
+*endif
+*if(cntQuadUP!=0)
+
+# QuadUP
+# *cntQuadUP
+# *\
+*loop elems
+*if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
 *ElemsNum *\
 *endif
 *end elems

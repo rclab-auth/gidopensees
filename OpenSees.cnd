@@ -50,6 +50,8 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
+QUESTION: Fluid-Pressure#CB#(1,0)
+VALUE: 0
 QUESTION: Fast_restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
 VALUE: Fix XYZ
 DEPENDENCIES: (Fix_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
@@ -79,6 +81,8 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
+QUESTION: Fluid-Pressure#CB#(1,0)
+VALUE: 0
 QUESTION: Fast_restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
 VALUE: Fix XYZ
 DEPENDENCIES: (Fix_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)
@@ -108,6 +112,8 @@ QUESTION: Y-Rotation#CB#(1,0)
 VALUE: 1
 QUESTION: Z-Rotation#CB#(1,0)
 VALUE: 1
+QUESTION: Fluid-Pressure#CB#(1,0)
+VALUE: 0
 QUESTION: Fast_restraints#CB#(Fix_XYZ,Fix_XY,Fix_XZ,Fix_YZ,Pin_XYZ,Pin_XY,Pin_XZ,Pin_YZ)
 VALUE: Fix XYZ
 DEPENDENCIES: (Fix_XYZ,RESTORE,X-Translation,1,RESTORE,Y-Translation,1,RESTORE,Z-Translation,1,RESTORE,X-Rotation,1,RESTORE,Y-Rotation,1,RESTORE,Z-Rotation,1)

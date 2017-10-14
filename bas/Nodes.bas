@@ -8,6 +8,7 @@
 # node $NodeTag $XCoord $Ycoord $Zcoord
 
 *loop nodes *OnlyInGroup
+*set var dummy=tcl(AssignToGroupNodeList *NodesNum *currentDOF)
 *set var cntNodes=operation(cntNodes+1)
 *set var cntcurrNodes=operation(cntcurrNodes+1)
 *format "%6d%8.3f%8.3f%8.3f"
@@ -17,6 +18,7 @@ node *NodesNum *nodescoord(1) *nodescoord(2) *nodescoord(3)
 # node $NodeTag $XCoord $Ycoord
 
 *loop nodes *OnlyInGroup
+*set var dummy=tcl(AssignToGroupNodeList *NodesNum *currentDOF)
 *set var cntcurrNodes=operation(cntcurrNodes+1)
 *set var cntNodes=operation(cntNodes+1)
 *format "%6d%8.3f%8.3f"

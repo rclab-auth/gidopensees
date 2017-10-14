@@ -19,7 +19,7 @@
 # --------------------------------------------------------------------------------------------------------------
 
 *set var VarCount=1
-*if(ndime==2 && currentDOF==3)
+*if(ndime==2 && currentDOF==30)
 *loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
 *set var thickness=ElemsMatProp(Thickness,real)
@@ -63,8 +63,8 @@
 *format "%3d%6d%6d%6d%6d%8.3f"
 element quadUP *ElemsNum *ElemsConec *thickness  *\
 *set var ID=tcl(FindMaterialNumber *ElemsMatProp(Material))
-*format "%3d%8.3f%8.3f%8.3f%8.3f%8.3f%8.3f%8.3f"
-*ID *ElemsMatProp(Combined_undrained_bulk_modulus_Bc,real) *ElemsMatProp(Fluid_mass_density,real) *ElemsMatProp(Permeability_coefficient_in_horizontal_direction,real) *ElemsMatProp(Permeability_coefficient_in_vertical_direction,real) *ElemsMatProp(Uniform_normal_traction,real) *ElemsMatProp(X-acceleration,real) *ElemsMatProp(Y-acceleration,real)
+*format "%3d%8.3f%8.6f%8.6f%8.6f%8.3f%8.3f%8.3f"
+*ID *ElemsMatProp(Combined_undrained_bulk_modulus_Bc,real) *ElemsMatProp(Fluid_mass_density,real) *ElemsMatProp(Permeability_coefficient_in_horizontal_direction,real) *ElemsMatProp(Permeability_coefficient_in_vertical_direction,real) *ElemsMatProp(X-acceleration,real) *ElemsMatProp(Y-acceleration,real) *ElemsMatProp(Uniform_normal_traction,real)
 *set var VarCount=VarCount+1
 *endif
 *end elems

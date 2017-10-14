@@ -74,22 +74,27 @@ QUESTION: betaKinit
 VALUE: 0.0
 QUESTION: betaKcomm
 VALUE: 0.0
+TITLE: EqualDOF
+QUESTION: _____#CB#(_)
+VALUE:
+QUESTION: Activate_automatic_equalDOF_between_nodes_of_different_domain_with_identical_coordinates#CB#(1,0)
+VALUE: 0
 
 
 BOOK: Output_Options
 
 
 TITLE: General
-QUESTION: _____#CB#(_)
+QUESTION: ______#CB#(_)
 VALUE:
 QUESTION: Use_binary_format#CB#(1,0)
 VALUE: 0
-QUESTION: ______#CB#(_)
+QUESTION: _______#CB#(_)
 VALUE:
 QUESTION: Output_step_frequency
 VALUE: 1#WIDTH#(5)
 TITLE: Nodes
-QUESTION: _______#CB#(_)
+QUESTION: ________#CB#(_)
 VALUE:
 QUESTION: Nodal_displacements#CB#(1,0)
 STATE: DISABLED
@@ -103,7 +108,7 @@ VALUE: 1
 QUESTION: Nodal_relative_velocities#CB#(1,0)
 VALUE: 1
 TITLE: Beam_Column_Elements
-QUESTION: ________#CB#(_)
+QUESTION: _________#CB#(_)
 VALUE:
 QUESTION: Local_forces#CB#(1,0)
 VALUE: 1
@@ -112,12 +117,12 @@ VALUE: 1
 QUESTION: Plastic_Deformation#CB#(1,0)
 VALUE: 1
 TITLE: Truss_Elements
-QUESTION: _________#CB#(_)
+QUESTION: __________#CB#(_)
 VALUE:
 QUESTION: Axial_force#CB#(1,0)
 VALUE: 1
 TITLE: Surface_Elements
-QUESTION: __________#CB#(_)
+QUESTION: ___________#CB#(_)
 VALUE:
 QUESTION: Stresses#CB#(1,0)
 VALUE: 1
@@ -126,7 +131,7 @@ VALUE: 1
 QUESTION: Forces#CB#(1,0)
 VALUE: 1
 TITLE: Solid_Elements
-QUESTION: ___________#CB#(_)
+QUESTION: ____________#CB#(_)
 VALUE:
 QUESTION: _Stresses#CB#(1,0)
 VALUE: 1
@@ -145,7 +150,15 @@ QUESTION: DOF_numberer#CB#(Plain,RCM,AMD)
 VALUE: RCM
 QUESTION: Constraint_handler#CB#(Plain,Lagrange,Penalty,Transformation)
 VALUE: Transformation
-QUESTION: Solution_algorithm#CB#(Linear,Full_Newton-Raphson,Modified_Newton-Raphson,Newton-Raphson_with_line_search,Broyden,BFGS)
+DEPENDENCIES: (Plain,HIDE,Penalty_as_factor,#CURRENT#,HIDE,Penalty_am_factor,#CURRENT#)
+DEPENDENCIES: (Lagrange,HIDE,Penalty_as_factor,#CURRENT#,HIDE,Penalty_am_factor,#CURRENT#)
+DEPENDENCIES: (Transformation,HIDE,Penalty_as_factor,#CURRENT#,HIDE,Penalty_am_factor,#CURRENT#)
+DEPENDENCIES: (Penalty,RESTORE,Penalty_as_factor,#CURRENT#,RESTORE,Penalty_am_factor,#CURRENT#)
+QUESTION: Penalty_as_factor
+VALUE: 1.0e14
+QUESTION: Penalty_am_factor
+VALUE: 1.0e14
+QUESTION: Solution_algorithm#CB#(Linear,Full_Newton-Raphson,Modified_Newton-Raphson,Newton-Raphson_with_line_search,Broyden,BFGS,KrylovNewton)
 VALUE: Linear
 DEPENDENCIES: (Linear,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Convergence_criterion,#CURRENT#,HIDE,Tolerance,#CURRENT#,HIDE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
 DEPENDENCIES: (Full_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
@@ -153,6 +166,7 @@ DEPENDENCIES: (Modified_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,
 DEPENDENCIES: (Newton-Raphson_with_line_search,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,RESTORE,Line_search_type,#CURRENT#,RESTORE,Search_tolerance,#CURRENT#,RESTORE,Max_iterations_for_search,#CURRENT#,RESTORE,Min_eta_value,#CURRENT#,RESTORE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
 DEPENDENCIES: (Broyden,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,RESTORE,Iterations_for_new_tangent,#CURRENT#)
 DEPENDENCIES: (BFGS,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
+DEPENDENCIES: (KrylovNewton,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#)
 QUESTION: Use_initial_stiffness_iterations#CB#(1,0)
 VALUE: 0
 QUESTION: Line_search_type#CB#(Interpolated,RegulaFalsi,Bisection,Secant)
@@ -208,12 +222,15 @@ QUESTION: Analysis_duration#UNITS#
 VALUE: 10sec
 QUESTION: Analysis_time_step#UNITS#
 VALUE: 0.005sec
-QUESTION: Loading_type#CB#(Constant,Linear,Uniform_excitation,Multiple_support_excitation)
+QUESTION: Loading_type#CB#(Constant,Linear,Uniform_excitation,Multiple_support_excitation,Function,None)
 VALUE: Linear
+HELP: Constant: Plain Pattern/Constant Timeseries\nLinear: Plain Pattern/Linear Timeseries\nUniform excitation: Uniform excitation Pattern/Path Timeseries\nMultiple support excitation: Multi-support excitation Pattern/Path Timeseries\nFrom path: Plain Pattern/Path Timeseries\nNone: No Load Pattern
 DEPENDENCIES: (Constant,SET,Loading_path,Monotonic,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Analysis_type,Static)
 DEPENDENCIES: (Linear,RESTORE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Analysis_type,Static)
 DEPENDENCIES: (Uniform_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,RESTORE,Excitation_type,#CURRENT#,RESTORE,Analysis_type,Transient)
 DEPENDENCIES: (Multiple_support_excitation,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Record_file,#CURRENT#,RESTORE,Analysis_type,Transient)
+DEPENDENCIES: (Function,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,RESTORE,Analysis_type,Transient,RESTORE,Record_file,#CURRENT#)
+DEPENDENCIES: (None,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Loading_path,#CURRENT#,HIDE,Excitation_type,#CURRENT#,TITLESTATE,Sine_Excitation_Parameters,hidden,HIDE,Record_file,#CURRENT#,HIDE,Loading_path,Monotonic)
 TKWIDGET: TK_IntvData_LoadingType
 QUESTION: Excitation_type#CB#(Record,Sine)
 VALUE: Record
@@ -270,6 +287,19 @@ VALUE: 0
 QUESTION: Keep_this_loading_active_until_the_end_of_analysis#CB#(1,0)
 VALUE: 0
 HELP: Maintains the load constant for the remainder of the the analysis and resets the current time to zero
+DEPENDENCIES: (1,HIDE,Reset_at_the_end_of_the_interval_analysis,0) (0,RESTORE,Reset_at_the_end_of_the_interval_analysis,#CURRENT#)
+QUESTION: Set_time_at_the_end_of_the_interval_analysis#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Time_to_be_set,#CURRENT#)
+DEPENDENCIES: (0,HIDE,Time_to_be_set,#CURRENT#)
+QUESTION: Time_to_be_set#UNITS#
+VALUE: 0.0sec
+HELP: Pseudotime domain to be set
+QUESTION: Reset_at_the_end_of_the_interval_analysis#CB#(1,0)
+VALUE: 0
+HELP: Reset to the original state
+QUESTION: Remove_load_pattern_at_the_end_of_the_interval_analysis#CB#(0,1)
+VALUE: 0
 QUESTION: Logging_level#CB#(Low,Medium,High)
 VALUE: Low
 HELP: Low : print nothing\nMedium : print information on norms and number of iterations at end of successful test\nHigh : print information on norms each time test is invoked

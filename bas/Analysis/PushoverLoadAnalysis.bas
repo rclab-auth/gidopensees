@@ -35,6 +35,8 @@ variable algorithmTypeStatic NewtonLineSearch
 variable algorithmTypeStatic Broyden
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 variable algorithmTypeStatic BFGS
+*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
+variable algorithmTypeStatic KrylovNewton
 *endif
 set LoadCounter 0
 for {set i 1} { $i <= $Nsteps } {incr i 1} {
