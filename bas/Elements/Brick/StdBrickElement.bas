@@ -23,13 +23,14 @@
 *loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"stdBrick")==0)
 *if(VarCount==1)
-# nDMaterial Definition used by stdBrick Elements. (Only if they have not already been defined on this model domain)
+# nDMaterial Definition used by stdBrick Elements
+# (if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"stdBrick")==0)
-*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) *DomainNum)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(MaterialID==SelectedMaterial)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
 *include ..\..\Materials\nD\ElasticIsotropic.bas
@@ -53,8 +54,8 @@
 # stdBrick element definition: element stdBrick $eleTag $node1 $node2 $node3 $node4 $node5 $node6 $node7 $node8 $matTag <$b1 $b2 $b3>
 
 *endif
-*format "%6d%6d%6d%6d%6d%6d%6d%6d%6d   %8.3f%8.3f%8.3f"
-element stdBrick *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsConec(3) *ElemsConec(4) *ElemsConec(5) *ElemsConec(6) *ElemsConec(7) *ElemsConec(8) *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction) *ElemsMatProp(Z-Direction)
+*format "%6d%6d%6d%6d%6d%6d%6d%6d%6d   %8g%8g%8g"
+element stdBrick *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsConec(3) *ElemsConec(4) *ElemsConec(5) *ElemsConec(6) *ElemsConec(7) *ElemsConec(8) *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction) *ElemsMatProp(Z-Direction)
 *set var VarCount=VarCount+1
 *endif
 *end elems

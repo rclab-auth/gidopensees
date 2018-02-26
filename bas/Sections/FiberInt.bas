@@ -1,15 +1,15 @@
 *set var FiberIntTag=SectionID
 *if(ndime==2)
 *# uniaxial materials selected
-*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) )
-*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) )
-*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) )
+*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) *DomainNum)
+*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) *DomainNum)
+*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) *DomainNum)
 *set var SelectedRBMaterial=operation(SelectedRBMaterial+1000)
 *# Core material definition
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoreMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedCoreMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -19,6 +19,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
@@ -35,7 +37,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoverMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedCoverMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -45,6 +47,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
@@ -61,7 +65,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedRBMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *set var MaterialID=operation(MaterialID+1000)
 *if(SelectedRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
@@ -70,6 +74,10 @@
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
+*elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
+*include ..\Materials\Uniaxial\Hysteretic.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif

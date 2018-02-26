@@ -29,46 +29,37 @@
 # TCL macros
 #
 
-set ::VersionNumber "v2.2.5"
-set ::InfoWin .gid.transform
+namespace eval OpenSees {
 
-#
-# GiD TCL events
-#
+	variable VersionNumber "v2.5.0"
+	variable InterfaceName [_ "GiD+OpenSees Interface v2.5.0"]
+	variable OpenSeesProblemTypePath
+	variable OpenSeesPath
+	variable GiDPath
+	variable GiDProjectName
+	variable GiDProjectDir
+}
 
-proc InitGIDProject { dir } {
+proc OpenSees::InitGIDProject { dir } {
 
 	global MenuNames MenuEntries MenuCommands MenuAcceler
 	global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
-	global InterfaceName
-	global GidPriv
-	global OpenSeesProblemDir OpenSeesPath
+	variable OpenSeesProblemTypePath; # OpenSees problem type directory
+	variable OpenSeesPath; # OpenSees.exe path
 
-	set OpenSeesProblemDir $dir
+	set OpenSeesProblemTypePath $dir
 
-	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl BodyConstraints.tcl tkWidgets.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl UniformExcitation.tcl Nodes.tcl} {
-		source [file join $dir tcl $filename]
-	}
+	OpenSees::SetOpenSeesPath
+	OpenSees::SetProjectNameAndPath
+	OpenSees::SetGiDPath
 
-	set InterfaceName [_ "GiD+OpenSees Interface"]
-
-	set num [lsearch $MenuNamesP [_ "View results"]]
-
-	if { $num == -1 } {
-		WarnWin "OpenSees is not compatible with this GiD version"
-		return
-	}
-
-	GetOpenSeesPath
+	SetImagesAndColors
 
 	global splashdir
 	set splashdir 0
 	global keepsplash
 	set keepsplash 0
-
-	SetImagesAndColors
-
-	Splash $dir
+	OpenSees::Splash $dir
 	set splashdir $dir
 
 	OpenSees_Menu $dir
@@ -91,9 +82,23 @@ proc InitGIDProject { dir } {
 		set MenuAccelerP($ipos) [linsert $MenuAccelerP($ipos) 0 ""]
 	}
 
-	Toolbar1
-	Toolbar2
+	OpenSees::Toolbar1
+	OpenSees::Toolbar2
+	OpenSees::Toolbar3
 
+	OpenSees::ChangeData
+
+	after 1000 "{UpdateInfoBar}"
+
+	cd "$OpenSeesProblemTypePath/exe"
+
+	after 2000 exec {*}[auto_execok start] "CheckForUpdate.exe" "/q" &
+}
+
+proc OpenSees::ChangeData {} {
+
+	global GidPriv
+	variable InterfaceName;
 	set GidPriv(ProgName) $InterfaceName
 
 	GidChangeDataLabel "Conditions" ""
@@ -121,237 +126,209 @@ proc InitGIDProject { dir } {
 	GiD_DataBehaviour materials Solid_Elements geomlist {volumes}
 
 	GiDMenu::UpdateMenus
-
-	after 1000 "{UpdateInfoBar}"
-
-	cd "$OpenSeesProblemDir/exe"
-	after 2000 exec {*}[auto_execok start] "CheckForUpdate.exe" "/q"
 }
 
-proc EndGIDProject {} {
+# Get ProblemType path
 
-	bind .gid <Configure>	{}
-	bind .gid <Activate>	{}
-	bind .gid <Deactivate>	{}
-	bind .gid <Map>			{}
+proc OpenSees::GetProblemTypePath {} {
 
-	if {[winfo exist .ibar]} {destroy .ibar}
-
-	EndToolbar1
-	EndToolbar2
+	variable OpenSeesProblemTypePath;
+	return $OpenSeesProblemTypePath
 }
 
-# check problemtype version mismatch
+# Set/Get GiD installation path
 
-proc LoadGIDProject { filespd } {
+proc OpenSees::SetGiDPath {} {
 
-	global VersionNumber
-	global InfoWin
+	variable GiDPath;
 
-	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
+	set temp [GiD_Info problemtypepath]
 
-	# loading the problemtype itself, not a model
+	regsub -all {\\} $temp {/} temp
+
+	set pos [string last /problemtypes $temp]
+
+	set GiDPath [string range $temp 0 $pos-1]
+}
+
+proc OpenSees::GetGiDPath {} {
+
+	variable GiDPath;
+	return $GiDPath
+}
+
+# Set/Get project name and path
+
+proc OpenSees::SetProjectNameAndPath {} {
+
+	set lines [GiD_Info Project]
+	set ProblemType [lindex $lines 0]
+	set ProjectName [lindex $lines 1]
+
+	variable GiDProjectDir;
+	variable GiDProjectName;
+
+	# GiD_Info Project returns a list with project information { ProblemType ModelName .. .. .. }
+
+	if { $ProjectName == "UNNAMED" } {
+
+		set GiDProjectName "NONE"
+		set GiDProjectDir "NONE"
 
 	} else {
 
-		set spd_exist [file exist $filespd]
+		regsub -all {\\} $ProjectName {/} ProjectName
 
-		if {$spd_exist} {
-
-			set spd [open $filespd r]
-
-			set spd_data [read $spd]
-			set spd_data [string trim $spd_data]
-
-			close $spd
-
-		} else {
-
-			set spd_data "Unknown"
+		if { [file extension $ProjectName] == ".gid" } {
+				set ProjectName [file root $ProjectName]
 		}
 
-		set cmp [string compare "$spd_data" "$VersionNumber"]
+		set pos [string last / $ProjectName]
 
-		if { $cmp != 0 } {
+		# returns the characters between two points in the string
 
-			InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
-			if { ![winfo exists $InfoWin] } return ;
-			ttk::frame $InfoWin.top
-			ttk::label $InfoWin.top.title_text -text [= ""]
-			ttk::frame $InfoWin.information -relief raised
-			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
-			ttk::frame $InfoWin.bottom
-			ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "TransformAndClose"
-			ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
-			grid $InfoWin.top.title_text -sticky ew
-			grid $InfoWin.top -sticky new
-			grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
-			grid $InfoWin.information -sticky new
-			grid $InfoWin.bottom.continue $InfoWin.bottom.readlog -padx 10
-			grid $InfoWin.bottom -sticky sew -padx 10 -pady 10
-			if { $::tcl_version >= 8.5 } { grid anchor $InfoWin.bottom center }
-			grid rowconfigure $InfoWin 1 -weight 1
-			grid columnconfigure $InfoWin 0 -weight 1
-		}
+		set GiDProjectName [string range $ProjectName $pos+1 $pos+100]
+		set GiDProjectDir [string range $ProjectName 0 $pos-1]
+
+		append GiDProjectDir "/$GiDProjectName.gid"
 	}
 }
 
-proc SaveGIDProject { filespd } {
+proc OpenSees::GetProjectPath {} {
 
-	global VersionNumber
-
-	set spd [open $filespd w]
-	puts $spd $VersionNumber
-	close $spd
+	variable GiDProjectDir
+	return $GiDProjectDir
 }
 
-proc BeforeInitGIDPostProcess {} {
+proc OpenSees::GetProjectName {} {
 
-	# remove bindings
-
-	bind .gid <Configure>	{}
-	bind .gid <Activate>	{}
-	bind .gid <Deactivate>	{}
-	bind .gid <Map>			{}
-
-	if { [winfo exist .ibar]} {
-		destroy .ibar
-	}
+	variable GiDProjectName
+	return $GiDProjectName
 }
 
-proc EndGIDPostProcess {} {
+# Set/Get OpenSees path
 
-	after 2000 "{UpdateInfoBar}"
-}
+proc OpenSees::SetOpenSeesPath {} {
 
-#
-# Theme settings
-#
+	variable OpenSeesPath;
+	variable OpenSeesProblemTypePath
 
-set ::ibarBackgroundColor "#F0F0F0"
-set ::ibarTextColor "black"
-set ::ibarLineColor "#CFC5C3"
-set ::GiDtheme "Classic"
+	global GidProcWin
 
-proc GetAppDataDir { } {
+	set file "$OpenSeesProblemTypePath/OpenSees.path"
+	set fexists [file exist $file]
 
-	global env
-
-	if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
-
-		package require registry 1.0
-
-		set env_home [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders} {AppData}]
+	if { $fexists == 1 } {
+		set fp [open $file r]
+		set file_data [read $fp]
+		close $fp
+		set data [split $file_data \n]
+		set OpenSeesPath [lindex $data 0]
+		regsub -all {\\} $OpenSeesPath {/} OpenSeesPath
 
 	} else {
-
-		set env_home $env(HOME)
-	}
-
-	return $env_home
-}
-
-proc SetImagesAndColors {} {
-
-	global ibarBackgroundColor ibarTextColor ibarLineColor GiDtheme
-
-	set INI [file join [GetAppDataDir] "GiD" "gid.ini"]
-
-	set f [open $INI r]
-	set data [read $f]
-	close $f
-
-	set lines [split $data "\n"]
-
-	foreach line $lines {
-		if { $line == "Theme(Current) GiD_black" } {
-
-			set ibarBackgroundColor "#292929"
-			set ibarTextColor "white"
-			set ibarLineColor "#1A5B6B"
-
-			set GiDtheme "Black"
-
-			break
-		}
+				if { ![info exists GidProcWin(w)] || \
+						![winfo exists $GidProcWin(w).listbox#1] } {
+						set wbase .gid
+						set w ""
+				} else {
+						set wbase $GidProcWin(w)
+						set w $GidProcWin(w).listbox#1
+				}
+				tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees path was not found" ] error 0 [_ "Close"]
 	}
 }
 
-#
-# Toolbar 1 commands
-#
+proc OpenSees::GetOpenSeesPath {} {
 
-proc Opt1_1 { } {
-
-	GidOpenMaterials Standard_Uniaxial_Materials
-	HideInfoBar
+	variable OpenSeesPath;
+	return $OpenSeesPath
 }
 
-proc Opt1_2 { } {
+# Get OpenSees version
 
-	GidOpenMaterials Uniaxial_Concrete_Materials
-	HideInfoBar
+proc OpenSees::GetVersion {} {
+	variable VersionNumber;
+	return $VersionNumber
 }
 
-proc Opt1_3 { } {
+proc OpenSees::Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 
-	GidOpenMaterials Uniaxial_Steel_Materials
-	HideInfoBar
-}
+	global ToolbarBitmaps1 ToolbarCommands1 ToolbarHelp1 OpenSees1
+	variable OpenSeesProblemTypePath
+	global GiDtheme
 
-proc Opt1_4 {} {
+	#
+	# Toolbar 1 commands
+	#
 
-	GidOpenMaterials "Multidimensional_(nD)_Materials"
-	HideInfoBar
-}
+	proc Opt1_1 { } {
 
-proc Opt1_5 { } {
+		GidOpenMaterials Standard_Uniaxial_Materials
+		HideInforBar
+	}
 
-	GidOpenMaterials "Section_Force-Deformation"
-	HideInfoBar
-}
+	proc Opt1_2 { } {
 
-proc Opt1_6 { } {
+		GidOpenMaterials Uniaxial_Concrete_Materials
+		HideInforBar
+	}
 
-	GidOpenMaterials "Combined_Materials"
-	HideInfoBar
-}
+	proc Opt1_3 { } {
 
-proc Opt1_7 { } {
+		GidOpenMaterials Uniaxial_Steel_Materials
+		HideInforBar
+	}
 
-	GidOpenMaterials "Records"
-	HideInfoBar
+	proc Opt1_4 {} {
 
-}
-proc Opt1_8 { } {
+		GidOpenMaterials "Multidimensional_(nD)_Materials"
+		HideInforBar
+	}
 
-	GidOpenConditions Restraints
-	HideInfoBar
-}
+	proc Opt1_5 { } {
 
-proc Opt1_9 { } {
+		GidOpenMaterials "Section_Force-Deformation"
+		HideInforBar
+	}
 
-	GidOpenConditions Constraints
-	HideInfoBar
-}
+	proc Opt1_6 { } {
 
-proc Opt1_10 { } {
+		GidOpenMaterials "Combined_Materials"
+		HideInforBar
+	}
 
-	GidOpenConditions Mass/Damping
-	HideInfoBar
-}
+	proc Opt1_7 { } {
 
-proc Opt1_11 { } {
+		GidOpenMaterials "Records"
+		HideInforBar
 
-	GidOpenConditions Loads
-	HideInfoBar
-}
+	}
+	proc Opt1_8 { } {
 
-proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
+		GidOpenConditions Restraints
+		HideInforBar
+	}
 
-	global ToolbarNames1 ToolbarCommands1 ToolbarHelp1 OpenSees1 OpenSeesProblemDir GiDtheme
+	proc Opt1_9 { } {
 
-	set ToolbarNames1(0) " \
+		GidOpenConditions Constraints
+		HideInforBar
+	}
+
+	proc Opt1_10 { } {
+
+		GidOpenConditions Mass/Damping
+		HideInforBar
+	}
+
+	proc Opt1_11 { } {
+
+		GidOpenConditions Loads
+		HideInforBar
+	}
+
+	set ToolbarBitmaps1(0) " \
 		img/Toolbar/$GiDtheme/btn_Mat_Uni.png \
 		img/Toolbar/$GiDtheme/btn_Mat_UniC.png \
 		img/Toolbar/$GiDtheme/btn_Mat_UniS.png \
@@ -368,18 +345,18 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/$GiDtheme/btn_About.png \
 		"
 	set ToolbarCommands1(0) [list \
-		[list -np- Opt1_1] \
-		[list -np- Opt1_2] \
-		[list -np- Opt1_3] \
-		[list -np- Opt1_4] \
-		[list -np- Opt1_5] \
-		[list -np- Opt1_6] \
+		[list -np- OpenSees::Opt1_1] \
+		[list -np- OpenSees::Opt1_2] \
+		[list -np- OpenSees::Opt1_3] \
+		[list -np- OpenSees::Opt1_4] \
+		[list -np- OpenSees::Opt1_5] \
+		[list -np- OpenSees::Opt1_6] \
 		"" \
-		[list -np- Opt1_7] \
-		[list -np- Opt1_8] \
-		[list -np- Opt1_9] \
-		[list -np- Opt1_10] \
-		[list -np- Opt1_11] \
+		[list -np- OpenSees::Opt1_7] \
+		[list -np- OpenSees::Opt1_8] \
+		[list -np- OpenSees::Opt1_9] \
+		[list -np- OpenSees::Opt1_10] \
+		[list -np- OpenSees::Opt1_11] \
 		"" \
 		"-np- VisitWeb http://gidopensees.rclab.civil.auth.gr" \
 	]
@@ -401,161 +378,166 @@ proc Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		"GiD+OpenSees Website" \
 		}
 
-	set prefix Pre
-
 	set OpenSees1(toolbarwin) \
-		[CreateOtherBitmaps MyPreBar "OpenSees Pre-Processor Toolbar 1" \
-		ToolbarNames1 \
+		[CreateOtherBitmaps PreBar1 "OpenSees Pre-Processor Toolbar 1" \
+		ToolbarBitmaps1 \
 		ToolbarCommands1 \
 		ToolbarHelp1 \
-		$OpenSeesProblemDir \
-		Toolbar1 $type $prefix]
-		AddNewToolbar "OpenSees 1 toolbar" ${prefix}MyBarWindowGeom Toolbar1
+		$OpenSeesProblemTypePath \
+		OpenSees::Toolbar1 $type Pre]
+		AddNewToolbar "OpenSees 1 Toolbar" WindowGeom1 Toolbar1
 }
 
-proc EndToolbar1 {} {
-	global OpenSees1
+proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
-	ReleaseToolbar "OpenSees 1 toolbar"
-	rename Toolbar1 ""
+	global ToolbarBitmaps2 ToolbarCommands2 ToolbarHelp2 OpenSees2
+	variable OpenSeesProblemTypePath
+	global GiDtheme
 
-	catch { destroy $OpenSees1(toolbarwin) }
-}
+	#
+	# Toolbar 2 commands
+	#
 
-#
-# Toolbar 2 commands
-#
+	proc Opt2_1 { } {
 
-proc Opt2_1 { } {
+		GidOpenConditions ZeroLength_Elements
+		HideInforBar
+	}
 
-	GidOpenConditions ZeroLength_Elements
-	HideInfoBar
-}
+	proc Opt2_2 { } {
 
-proc Opt2_2 { } {
+		GidOpenMaterials Truss_Elements
+		HideInforBar
+	}
 
-	GidOpenMaterials Truss_Elements
-	HideInfoBar
-}
+	proc Opt2_3 { } {
 
-proc Opt2_3 { } {
+		GidOpenMaterials "Beam-Column_Elements"
+		HideInforBar
+	}
 
-	GidOpenMaterials "Beam-Column_Elements"
-	HideInfoBar
-}
+	proc Opt2_4 { } {
 
-proc Opt2_4 { } {
+		GidOpenMaterials Surface_Elements
+		HideInforBar
+	}
 
-	GidOpenMaterials Surface_Elements
-	HideInfoBar
-}
+	proc Opt2_5 { } {
 
-proc Opt2_5 { } {
+		GidOpenMaterials Solid_Elements
+		HideInforBar
+	}
 
-	GidOpenMaterials Solid_Elements
-	HideInfoBar
-}
+	proc Opt2_6 { } {
 
-proc Opt2_6 { } {
+		GidOpenProblemData "General_Data"
+		HideInforBar
+	}
 
-	GidOpenProblemData "General_Data"
-	HideInfoBar
-}
+	proc Opt2_7 { } {
 
-proc Opt2_7 { } {
+		GidOpenProblemData "Output_Options"
+		HideInforBar
+	}
 
-	GidOpenProblemData "Output_Options"
-	HideInfoBar
-}
+	proc Opt2_8 { } {
 
-proc Opt2_8 { } {
+		GiD_Process Mescape Data IDataWindow
+		HideInforBar
+	}
 
-	GiD_Process Mescape Data IDataWindow
-	HideInfoBar
-}
+	proc Opt2_9 { } {
 
-proc Opt2_9 { } {
+		GiD_Process Mescape Meshing generate
+		HideInforBar
+	}
 
-	GiD_Process Mescape Meshing generate
-	HideInfoBar
-}
+	proc Opt2_10 { } {
 
-proc Opt2_10 { } {
+		Opt1_dialog
+	}
 
-	Opt1_dialog
-}
+	variable NormalsDrawStatus 0
 
-set ::NormalsDrawStatus 0
+	proc Opt2_11 { } {
 
-proc Opt2_11 { } {
-
-	global NormalsDrawStatus
+	variable ElemDrawStatus
+	variable NormalsDrawStatus
+	variable ConditionsDrawStatus
 
 	switch $NormalsDrawStatus {
 
-		0 {
-			GiD_Process Mescape Utilities DrawNormals lines 1:100000
-			set NormalsDrawStatus 1
-		}
+			0 {
+					GiD_Process Mescape Utilities DrawNormals lines 1:100000
+					set NormalsDrawStatus 1
+					set ElemDrawStatus 0
+					set ConditionsDrawStatus 0
+			}
 
-		1 {
-			GiD_Process Mescape
-			set NormalsDrawStatus 0
+			1 {
+					GiD_Process Mescape
+					set NormalsDrawStatus 0
+			}
 		}
 	}
-}
 
-set ::ElemDrawStatus 0
+	variable ElemDrawStatus 0
 
-proc Opt2_12 { } { # Switch draw elements
+	proc Opt2_12 { } { # Switch draw elements
 
-	global ElemDrawStatus
+	variable ElemDrawStatus
+	variable NormalsDrawStatus
+	variable ConditionsDrawStatus
 
 	switch $ElemDrawStatus {
 
-		0 {
-			GiD_Process Mescape Data Materials DrawMaterial -DrawAll-
-			set ElemDrawStatus 1
-		}
+			0 {
+					GiD_Process Mescape
+					GiD_Process Mescape Data Materials DrawMaterial -DrawAll-
+					set ElemDrawStatus 1
+					set ConditionsDrawStatus 0
+					set NormalsDrawStatus 0
+			}
 
-		1 {
-			GiD_Process Mescape
-			set ElemDrawStatus 0
+			1 {
+					GiD_Process Mescape
+					set ElemDrawStatus 0
+			}
 		}
 	}
-}
 
-set ::ConditionsDrawStatus 0
+	variable ConditionsDrawStatus 0
 
-proc Opt2_13 { } { # Switch draw conditions
+	proc Opt2_13 { } { # Switch draw conditions
 
-	global ConditionsDrawStatus
+	variable ElemDrawStatus
+	variable NormalsDrawStatus
+	variable ConditionsDrawStatus
 
 	switch $ConditionsDrawStatus {
 
-		0 {
-			GiD_Process Mescape Data Conditions DrawCond -DrawAll-
-			set ConditionsDrawStatus 1
-		}
+			0 {
+					GiD_Process Mescape
+					GiD_Process Mescape Data Conditions DrawCond -DrawAll-
+					set ConditionsDrawStatus 1
+					set ElemDrawStatus 0
+					set NormalsDrawStatus 0
+			}
 
-		1 {
-			GiD_Process Mescape
-			set ConditionsDrawStatus 0
+			1 {
+					GiD_Process Mescape
+					set ConditionsDrawStatus 0
+			}
 		}
 	}
-}
 
-proc Opt2_14 { } {
+	proc Opt2_14 { } {
 
-	GiD_Process Mescape Data Intervals ChangeInterval
-	UpdateInfoBar
-}
+		GiD_Process Mescape Data Intervals ChangeInterval
+		UpdateInfoBar
+	}
 
-proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
-
-	global ToolbarNames2 ToolbarCommands2 ToolbarHelp2 OpenSees2 OpenSeesProblemDir GiDtheme
-
-	set ToolbarNames2(0) " \
+	set ToolbarBitmaps2(0) " \
 		img/Toolbar/$GiDtheme/btn_Elem_ZeroLength.png \
 		img/Toolbar/$GiDtheme/btn_Elem_Truss.png \
 		img/Toolbar/$GiDtheme/btn_Elem_Beam.png \
@@ -574,22 +556,22 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/$GiDtheme/btn_ActiveInterval.png \
 		"
 	set ToolbarCommands2(0) [list \
-		[list -np- Opt2_1] \
-		[list -np- Opt2_2] \
-		[list -np- Opt2_3] \
-		[list -np- Opt2_4] \
-		[list -np- Opt2_5] \
+		[list -np- OpenSees::Opt2_1] \
+		[list -np- OpenSees::Opt2_2] \
+		[list -np- OpenSees::Opt2_3] \
+		[list -np- OpenSees::Opt2_4] \
+		[list -np- OpenSees::Opt2_5] \
 		"" \
-		[list -np- Opt2_6] \
-		[list -np- Opt2_7] \
-		[list -np- Opt2_8] \
-		[list -np- Opt2_9] \
-		[list -np- Opt2_10] \
+		[list -np- OpenSees::Opt2_6] \
+		[list -np- OpenSees::Opt2_7] \
+		[list -np- OpenSees::Opt2_8] \
+		[list -np- OpenSees::Opt2_9] \
+		[list -np- OpenSees::Opt2_10] \
 		"" \
-		[list -np- Opt2_11] \
-		[list -np- Opt2_12] \
-		[list -np- Opt2_13] \
-		[list -np- Opt2_14]
+		[list -np- OpenSees::Opt2_11] \
+		[list -np- OpenSees::Opt2_12] \
+		[list -np- OpenSees::Opt2_13] \
+		[list -np- OpenSees::Opt2_14]
 	]
 
 	set ToolbarHelp2(0) { \
@@ -611,25 +593,614 @@ proc Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		"Select Active Interval" \
 		}
 
-	set prefix Pre
-
 	set OpenSees2(toolbarwin) \
-		[CreateOtherBitmaps MyBar "OpenSees Pre-Processor Toolbar 2" \
-		ToolbarNames2 \
+		[CreateOtherBitmaps PreBar2 "OpenSees Pre-Processor Toolbar 2" \
+		ToolbarBitmaps2 \
 		ToolbarCommands2 \
 		ToolbarHelp2 \
-		$OpenSeesProblemDir \
-		Toolbar2 $type $prefix]
-		AddNewToolbar "OpenSees 2 toolbar" ${prefix}MyBarWindowGeom Toolbar2
+		$OpenSeesProblemTypePath \
+		OpenSees::Toolbar2 $type Pre]
+		AddNewToolbar "OpenSees 2 Toolbar" WindowGeom2 Toolbar2
+}
+
+proc OpenSees::Toolbar3 {{type "DEFAULT INSIDELEFT"}} {
+
+	global ToolbarBitmaps3 ToolbarCommands3 ToolbarHelp3 OpenSees3
+	variable OpenSeesProblemTypePath
+	global GiDtheme
+
+	set ToolbarBitmaps3(0) " \
+		img/Toolbar/$GiDtheme-Macros/btn_EM.png \
+		img/Toolbar/$GiDtheme-Macros/btn_ES.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_X.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_Y.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_Z.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_RX.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_RY.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_RZ.png \
+		img/Toolbar/$GiDtheme-Macros/btn_Separator.png \
+		img/Toolbar/$GiDtheme-Macros/btn_RM.png \
+		img/Toolbar/$GiDtheme-Macros/btn_RS.png \
+		img/Toolbar/$GiDtheme-Macros/btn_Separator.png \
+		img/Toolbar/$GiDtheme-Macros/btn_DM.png \
+		img/Toolbar/$GiDtheme-Macros/btn_DS.png \
+		img/Toolbar/$GiDtheme-Macros/btn_Separator.png \
+		img/Toolbar/$GiDtheme-Macros/btn_ZL.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_X.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_Y.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_Z.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_RX.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_RY.png \
+		img/Toolbar/$GiDtheme-Macros/btn_small_RZ.png \
+		img/Toolbar/$GiDtheme-Macros/btn_Separator.png \
+		img/Toolbar/$GiDtheme-Macros/btn_M.png \
+		img/Toolbar/$GiDtheme-Macros/btn_Separator.png \
+		img/Toolbar/$GiDtheme-Macros/btn_DV.png \
+		img/Toolbar/$GiDtheme-Macros/btn_L.png \
+		img/Toolbar/$GiDtheme-Macros/btn_Separator.png \
+		img/Toolbar/$GiDtheme-Macros/btn_C.png \
+		"
+
+	set ToolbarCommands3(0) [list \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_Equal_constraint_master_node Equal_constraint_ID] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_Equal_constraint_slave_node Equal_constraint_ID] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond -ByColor- Point_Equal_constraint_slave_nodes X-Translation] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond -ByColor- Point_Equal_constraint_slave_nodes Y-Translation] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond -ByColor- Point_Equal_constraint_slave_nodes Z-Translation] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond -ByColor- Point_Equal_constraint_slave_nodes X-Rotation] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond -ByColor- Point_Equal_constraint_slave_nodes Y-Rotation] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond -ByColor- Point_Equal_constraint_slave_nodes Z-Rotation] \
+		"" \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_Rigid_link_master_node Rigid_link_ID] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_Rigid_link_slave_node Rigid_link_ID] \
+		"" \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_Rigid_diaphragm_master_node Rigid_diaphragm_ID] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_Rigid diaphragm_slave_node Rigid_diaphragm_ID] \
+		"" \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_ZeroLength ZeroLength_ID] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_ZeroLength Ux_material] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_ZeroLength Uy_material] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_ZeroLength Uz_material] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_ZeroLength Rx_material] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_ZeroLength Ry_material] \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_ZeroLength Rz_material] \
+		"" \
+		[list -np- GiD_Process Mescape Data Conditions DrawCond Point_Mass -draw-] \
+		"" \
+		[list -np- GiD_Process Mescape Meshing DrawNumOfDivisions Lines] \
+		[list -np- GiD_Process Mescape Meshing DrawSizes Lines ] \
+		"" \
+		[list -np- GiD_Process Mescape] \
+	]
+
+	set ToolbarHelp3(0) { \
+		"Equal constraint master node IDs" \
+		"Equal constraint slave node IDs" \
+		"Equal constraint slave X state" \
+		"Equal constraint slave Y state" \
+		"Equal constraint slave Z state" \
+		"Equal constraint slave RX state" \
+		"Equal constraint slave RY state" \
+		"Equal constraint slave RZ state" \
+		"" \
+		"Rigid link master node IDs" \
+		"Rigid link slave node IDs" \
+		"" \
+		"Rigid diaphragm master node IDs" \
+		"Rigid diaprhagm slave node IDs" \
+		"" \
+		"Zerolength elements IDs" \
+		"ZeroLength Ux material" \
+		"ZeroLength Uy material" \
+		"ZeroLength Uz material" \
+		"ZeroLength Rx material" \
+		"ZeroLength Ry material" \
+		"ZeroLength Rz material" \
+		"" \
+		"Point masses" \
+		"" \
+		"Line mesh divisions" \
+		"Line mesh sizes" \
+		"" \
+		"Clear" \
+		}
+
+	set OpenSees3(toolbarwin) \
+		[CreateOtherBitmaps PreBar3 "OpenSees Pre-Processor Toolbar 3" \
+		ToolbarBitmaps3 \
+		ToolbarCommands3 \
+		ToolbarHelp3 \
+		$OpenSeesProblemTypePath \
+		OpenSees::Toolbar3 $type Pre]
+		AddNewToolbar "OpenSees 3 Toolbar" WindowGeom3 Toolbar3
+}
+
+proc OpenSees::TransformAndClose { } {
+
+	global InfoWin
+
+	destroy $InfoWin
+
+	GiD_Process Mescape data defaults TransfProblem OpenSees
+}
+
+set ::InfoWin .gid.transform
+
+proc GetAppDataDir {} {
+
+	global env
+
+	if { [expr [string compare "$::tcl_platform(platform)" "windows" ] == 0] } {
+
+		package require registry 1.0
+
+		set env_home [registry get {HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders} {AppData}]
+
+	} else {
+
+		set env_home $env(HOME)
+	}
+
+	return $env_home
+}
+
+#
+# GiD TCL events
+#
+
+proc InitGIDProject { dir } {
+
+	foreach filename {FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl equalDOF.tcl RigidLink.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl UniformExcitation.tcl Nodes.tcl} {
+		source [file join $dir bas tcl $filename]
+	}
+
+	foreach filename {Various.tcl MinMax.tcl Records.tcl GenData.tcl Damage2p.tcl ElasticSection.tcl LayeredShell.tcl InitStressStrain.tcl ElasticBeamColumn.tcl Fiber.tcl FiberInt.tcl ForceBeamColumn.tcl DispBeamColumn.tcl DispInteractionBeamColumn.tcl PIMY.tcl PDMY.tcl IntvData.tcl nDmaterials.tcl Quad.tcl Shell.tcl Truss.tcl UniaxialConcrete.tcl UniaxialSteel.tcl OtherUniaxial.tcl ZeroLength.tcl SeriesParallel.tcl SecAggregator.tcl} {
+		source [file join $dir tcl $filename]
+	}
+
+	OpenSees::InitGIDProject $dir
+}
+
+proc EndGIDProject {} {
+
+	bind .gid <Configure>	{}
+	bind .gid <Activate>	{}
+	bind .gid <Deactivate>	{}
+	bind .gid <Map>			{}
+
+	if {[winfo exist .ibar]} {destroy .ibar}
+
+	EndToolbar1
+	EndToolbar2
+	EndToolbar3
+}
+
+# check problemtype version mismatch
+
+proc LoadGIDProject { filespd } {
+
+	set VersionNumber [OpenSees::GetVersion]
+	global InfoWin
+	variable GiDProjectDir
+
+	if { [file join {*}[lrange [file split $filespd] end-1 end]] == "OpenSees.gid/OpenSees.spd" } {
+
+	# loading the problemtype itself, not a model
+
+	} else {
+
+		set spd_exist [file exist $filespd]
+
+		if {$spd_exist} {
+
+				set spd [open $filespd r]
+
+				set spd_data [read $spd]
+				set spd_data [string trim $spd_data]
+
+				close $spd
+
+		} else {
+
+				set spd_data "Unknown"
+		}
+
+		set cmp [string compare "$spd_data" "$VersionNumber"]
+
+		if { $cmp != 0 } {
+
+				InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
+				if { ![winfo exists $InfoWin] } return ;
+				ttk::frame $InfoWin.top
+				ttk::label $InfoWin.top.title_text -text [= ""]
+				ttk::frame $InfoWin.information -relief raised
+				ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
+				ttk::frame $InfoWin.bottom
+				ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "OpenSees::TransformAndClose"
+				ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
+				grid $InfoWin.top.title_text -sticky ew
+				grid $InfoWin.top -sticky new
+				grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
+				grid $InfoWin.information -sticky new
+				grid $InfoWin.bottom.continue $InfoWin.bottom.readlog -padx 10
+				grid $InfoWin.bottom -sticky sew -padx 10 -pady 10
+				if { $::tcl_version >= 8.5 } { grid anchor $InfoWin.bottom center }
+				grid rowconfigure $InfoWin 1 -weight 1
+				grid columnconfigure $InfoWin 0 -weight 1
+		}
+	}
+}
+
+proc AfterLoadGIDProject { filespd } {
+
+	# Project name is set after complete load
+
+	OpenSees::SetProjectNameAndPath
+}
+
+proc SaveGIDProject { filespd } {
+
+	variable OldGiDProjectDir; # current project dir
+	variable OldGiDProjectName; # current project dir
+
+	set OldGiDProjectDir [OpenSees::GetProjectPath]
+	set OldGiDProjectName [OpenSees::GetProjectName]
+
+	set data [GiD_Info Project]
+	set NewFullPath [lindex $data 1]
+
+	regsub -all {\\} $NewFullPath {/} NewFullPath
+
+	if { [file extension $NewFullPath] == ".gid" } {
+		set NewFullPath [file root $NewFullPath]
+	}
+
+	set pos [string last / $NewFullPath]
+
+	set NewGiDProjectName [string range $NewFullPath $pos+1 $pos+100]; # New Project Name
+	set NewGiDProjectDir [string range $NewFullPath 0 $pos-1]; # New project dir
+
+	append NewGiDProjectDir "/$NewGiDProjectName.gid"
+
+	OpenSees::SetProjectNameAndPath; # Change old project dir to the new one
+
+	if { $OldGiDProjectDir != $NewGiDProjectDir} { # If project names are different
+
+		set fexists [file exists "$OldGiDProjectDir/Records"]
+		if {$fexists} {
+
+				file copy -force "$OldGiDProjectDir/Records" "$NewGiDProjectDir"
+		}
+
+		set fexists [file exists "$OldGiDProjectDir/Scripts"]
+		if {$fexists} {
+
+				file copy -force "$OldGiDProjectDir/Scripts" "$NewGiDProjectDir"
+		}
+
+		set fexists [file exists "$OldGiDProjectDir/$OldGiDProjectName.txt"]
+		if {$fexists} {
+
+				file copy -force "$OldGiDProjectDir/$OldGiDProjectName.txt" "$NewGiDProjectDir/$NewGiDProjectName.txt"
+		}
+	}
+
+	set VersionNumber [OpenSees::GetVersion]
+
+	set spd [open $filespd w]
+	puts $spd $VersionNumber
+	close $spd
+}
+
+proc BeforeInitGIDPostProcess {} {
+
+	# remove bindings
+
+	bind .gid <Configure>		{}
+	bind .gid <Activate>		{}
+	bind .gid <Deactivate>		{}
+	bind .gid <Map>						{}
+
+	if { [winfo exist .ibar]} {
+		destroy .ibar
+	}
+}
+
+proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
+
+	# if version earlier than v2.5.0, change some conditions of compatibillity
+	# Body Constraint -> Equal Constraint
+
+	set cond_points [GiD_Info conditions ovpnt]
+	set cond_lines [GiD_Info conditions ovline]
+
+	# Point body constraint master node -> Point equal constraint master node
+
+	set old_cond_name "Point_Body_constraint_master_node"
+	set new_cond_name "Point_Equal_constraint_master_node"
+	set exists [lsearch $cond_points $old_cond_name]
+	set points ""
+	set Ids ""
+	if {$exists > -1 } {
+	set count [GiD_Info conditions $old_cond_name geometry -count]
+		if {$count} {
+				set condition [GiD_Info conditions $old_cond_name geometry]
+
+				foreach data $condition {
+
+						lappend points [lindex $data 1]
+
+						lappend Ids [lindex $data 3]
+				}
+
+				foreach point $points ID $Ids {
+
+						set values [list $ID ""]
+						GiD_AssignData condition $new_cond_name points $values $point
+			}
+
+		GiD_UnAssignData condition $old_cond_name points "all"
+		}
+	}
+
+	# Point body constraint slave nodes -> Point equal constraint slave nodes
+
+	set old_cond_name "Point_Body_constraint_slave_nodes"
+	set new_cond_name "Point_Equal_constraint_slave_nodes"
+	set exists [lsearch $cond_points $old_cond_name]
+	set points ""
+	set Ids ""
+	set dofs ""
+
+	if {$exists > -1 } {
+	set count [GiD_Info conditions $old_cond_name geometry -count]
+		if {$count} {
+				set condition [GiD_Info conditions $old_cond_name geometry]
+
+				foreach data $condition {
+
+						lappend points [lindex $data 1]
+
+						lappend Ids [lindex $data 3]
+
+						lappend dofs [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9]]
+				}
+
+				foreach point $points ID $Ids dof $dofs {
+
+						set values [list $ID [lindex $dof 0] [lindex $dof 1] [lindex $dof 2] [lindex $dof 3] [lindex $dof 4] [lindex $dof 5] ]
+						GiD_AssignData condition $new_cond_name points $values $point
+				}
+
+		GiD_UnAssignData condition $old_cond_name points "all"
+		}
+	}
+
+	# Line body constraint slave nodes -> Line equal constraint slave nodes
+
+	set old_cond_name "Line_Body_constraint_slave_nodes"
+	set new_cond_name "Line_Equal_constraint_slave_nodes"
+	set exists [lsearch $cond_lines $old_cond_name]
+	set lines ""
+	set Ids ""
+	set dofs ""
+
+	if {$exists > -1 } {
+	set count [GiD_Info conditions $old_cond_name geometry -count]
+
+		if {$count} {
+				set condition [GiD_Info conditions $old_cond_name geometry]
+
+				foreach data $condition {
+
+						lappend lines [lindex $data 1]
+
+						lappend Ids [lindex $data 3]
+
+						lappend dofs [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9]]
+				}
+
+				foreach line $lines ID $Ids dof $dofs {
+
+						set values [list $ID [lindex $dof 0] [lindex $dof 1] [lindex $dof 2] [lindex $dof 3] [lindex $dof 4] [lindex $dof 5] ]
+						GiD_AssignData condition $new_cond_name lines $values $line
+				}
+
+		GiD_UnAssignData condition $old_cond_name lines "all"
+		}
+	}
+
+	# Diaphragm_ID_number field changed to : Rigid_diaphragm_ID
+
+	set old_cond_name "Point_Rigid_diaphragm_master_node"
+	set new_cond_name "Point_Rigid_diaphragm_master_node"
+	set exists [lsearch $cond_points $old_cond_name]
+	set points ""
+	set Idold ""
+	set Idnew ""
+
+	if {$exists > -1 } {
+	set count [GiD_Info conditions $old_cond_name geometry -count]
+		if {$count} {
+				set condition [GiD_Info conditions $old_cond_name geometry]
+
+				foreach data $condition {
+
+						lappend points [lindex $data 1]
+
+						lappend Idold [lindex $data 3]
+
+						lappend Idnew [lindex $data 3]
+			}
+
+				GiD_UnAssignData condition $old_cond_name points "all"
+
+				foreach point $points IDold $Idold IDnew $Idnew {
+
+						if { $IDold == "-" } {
+
+							break;
+
+						} else {
+
+								set values [list $IDold $IDold ""]
+								GiD_AssignData condition $new_cond_name points $values $point
+						}
+				}
+		}
+	}
+
+	set old_cond_name "Point_Rigid_diaphragm_slave_nodes"
+	set new_cond_name "Point_Rigid_diaphragm_slave_nodes"
+	set exists [lsearch $cond_points $old_cond_name]
+	set points ""
+	set Idold ""
+	set Idnew ""
+	set Planes ""
+
+	if {$exists > -1 } {
+	set count [GiD_Info conditions $old_cond_name geometry -count]
+		if {$count} {
+				set condition [GiD_Info conditions $old_cond_name geometry]
+
+				foreach data $condition {
+
+						lappend points [lindex $data 1]
+
+						lappend Idold [lindex $data 3]
+
+						lappend Idnew [lindex $data 4]
+
+						lappend Planes [lindex $data 5]
+				}
+
+				GiD_UnAssignData condition $old_cond_name points "all"
+
+				foreach point $points IDold $Idold IDnew $Idnew plane $Planes {
+
+						# - means new user v2.5.0 and later
+						if {$IDold == "-"} {
+
+								break;
+
+						} else {
+
+								set values [list $IDold $IDold $plane ""]
+								GiD_AssignData condition $new_cond_name points $values $point
+						}
+				}
+		}
+	}
+
+	set old_cond_name "Line_Rigid_diaphragm_slave_nodes"
+	set new_cond_name "Line_Rigid_diaphragm_slave_nodes"
+	set exists [lsearch $cond_lines $old_cond_name]
+	set lines ""
+	set Idold ""
+	set Idnew ""
+	set Planes ""
+
+	if {$exists > -1 } {
+	set count [GiD_Info conditions $old_cond_name geometry -count]
+		if {$count} {
+				set condition [GiD_Info conditions $old_cond_name geometry]
+
+				foreach data $condition {
+
+						lappend lines [lindex $data 1]
+
+						lappend Idold [lindex $data 3]
+
+						lappend Idnew [lindex $data 4]
+
+						lappend Planes [lindex $data 5]
+				}
+
+				GiD_UnAssignData condition $old_cond_name lines "all"
+
+				foreach line $lines IDold $Idold IDnew $Idnew plane $Planes {
+
+						# - means new user v2.5.0 and later
+						if {$IDold == "-"} {
+
+								break;
+
+						} else {
+
+								set values [list $IDold $IDold $plane ""]
+								GiD_AssignData condition $new_cond_name lines $values $line
+						}
+				}
+		}
+	}
+
+	set old_cond_name "ZeroLength"
+	set new_cond_name "Point_ZeroLength"
+	set exists [lsearch $cond_points $old_cond_name]
+	set points ""
+	set Idold ""
+	set options ""
+
+	if {$exists > -1 } {
+	set count [GiD_Info conditions $old_cond_name geometry -count]
+		if {$count} {
+
+				set condition [GiD_Info conditions $old_cond_name geometry]
+				WarnWinText "$condition"
+				foreach data $condition {
+						WarnWinText "$data"
+						lappend points [lindex $data 1]
+
+						lappend Idold [lindex $data 3]
+
+						lappend options [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9] [lindex $data 10] [lindex $data 11] [lindex $data 12] [lindex $data 13] [lindex $data 14] [lindex $data 15] ]
+				}
+
+				GiD_UnAssignData condition $old_cond_name points "all"
+
+				foreach point $points IDold $Idold opt $options {
+
+					# means new user v2.5.0 and later
+
+					set values [list $IDold [lindex $opt 0] [lindex $opt 1] [lindex $opt 2] [lindex $opt 3] [lindex $opt 4] [lindex $opt 5] [lindex $opt 6] [lindex $opt 7] [lindex $opt 8] [lindex $opt 9] [lindex $opt 10] [lindex $opt 11] ]
+					GiD_AssignData condition $new_cond_name points $values $point
+				}
+		}
+	}
+
+	GiD_Process Mescape Meshing generate Yes 1 MeshingParametersFrom=Preferences
+}
+
+proc EndGIDPostProcess {} {
+
+	after 2000 "{UpdateInfoBar}"
+}
+
+proc EndToolbar1 {} {
+	global OpenSees1
+
+	ReleaseToolbar "OpenSees 1 Toolbar"
+	rename OpenSees::Toolbar1 ""
+
+	catch { destroy $OpenSees1(toolbarwin) }
 }
 
 proc EndToolbar2 {} {
 	global OpenSees2
 
-	ReleaseToolbar "OpenSees 2 toolbar"
-	rename Toolbar2 ""
+	ReleaseToolbar "OpenSees 2 Toolbar"
+	rename OpenSees::Toolbar2 ""
 
 	catch { destroy $OpenSees2(toolbarwin) }
+}
+
+proc EndToolbar3 {} {
+	global OpenSees3
+
+	ReleaseToolbar "OpenSees 3 Toolbar"
+	rename OpenSees::Toolbar3 ""
+
+	catch { destroy $OpenSees3(toolbarwin) }
 }
 
 proc HelpOnOpenSees { dir } {
@@ -638,9 +1209,28 @@ proc HelpOnOpenSees { dir } {
 						"http://opensees.berkeley.edu/wiki/index.php/Main_Page "]]
 }
 
-proc Splash { dir } {
+# Returns the project dimensions. Checking if there is any point outside the X-Y Plane. If so, the model is considered as 3D
 
-	global VersionNumber ibarBackgroundColor ibarTextColor GiDtheme
+proc OpenSees::ReturnProjectDimensions { } {
+	set ndm 2
+	foreach layername [GiD_Info layers] {
+		foreach i [GiD_Info layers -entities points $layername] {
+				set zcoord [lindex [GiD_Geometry get point $i] 3]
+						if {$zcoord!=0} {
+								set ndm 3
+								break
+						}
+				}
+		}
+	return $ndm
+}
+
+proc OpenSees::Splash { dir } {
+
+	variable VersionNumber
+	global ibarBackgroundColor
+	global ibarTextColor
+	global GiDtheme
 
 	if { [.gid.central.s disable windows] } { return }
 
@@ -681,18 +1271,53 @@ proc Splash { dir } {
 	update
 }
 
+#
+# Theme Settings
+#
+
+set ::ibarBackgroundColor "#F0F0F0"
+set ::ibarTextColor "black"
+set ::ibarLineColor "#CFC5C3"
+set ::GiDtheme "Classic"
+
+proc SetImagesAndColors {} {
+
+	global ibarBackgroundColor ibarTextColor ibarLineColor GiDtheme
+
+	set INI [file join [GetAppDataDir] "GiD" "gid.ini"]
+
+	set f [open $INI r]
+	set data [read $f]
+	close $f
+
+	set lines [split $data "\n"]
+
+	foreach line $lines {
+		if { $line == "Theme(Current) GiD_black" } {
+
+				set ibarBackgroundColor "#292929"
+				set ibarTextColor "white"
+				set ibarLineColor "#1A5B6B"
+
+				set GiDtheme "Black"
+
+				break
+		}
+	}
+}
+
 proc UpdateInfoBar { } {
 
 	# remove bindings
 
-	bind .gid <Configure>	{}
-	bind .gid <Activate>	{}
-	bind .gid <Deactivate>	{}
-	bind .gid <Map>			{}
+	bind .gid <Configure>		{}
+	bind .gid <Activate>		{}
+	bind .gid <Deactivate>		{}
+	bind .gid <Map>						{}
 
 	global ibarBackgroundColor ibarTextColor ibarLineColor
-	global OpenSeesProblemDir
-	global VersionNumber
+	set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
+	set VersionNumber [OpenSees::GetVersion]
 
 	if { [winfo exist .ibar] } {
 		destroy .ibar
@@ -715,14 +1340,15 @@ proc UpdateInfoBar { } {
 	set x [winfo rootx .gid.central.s]
 	set y [winfo rooty .gid.central.s]
 	set w [winfo width .gid.central.s]
+	set h [winfo height .gid.central.s]
 
 	set geom "[winfo width .gid.central.s]x25+$x+$y"
 
 	wm geometry .ibar $geom
 
-	# set infobar rext
+	# set infobar text
 
-	set dim "[ReturnProjectDimensions]D"
+	set dim "[OpenSees::ReturnProjectDimensions]D"
 
 	set n [GiD_Info intvdata num]
 	set act "Active Interval : [format "%2d" [lindex $n 0]]"
@@ -736,9 +1362,11 @@ proc UpdateInfoBar { } {
 	.ibar.c create line 100  0 100 24 -fill $ibarLineColor
 	.ibar.c create line 240  0 240 24 -fill $ibarLineColor
 
-	.ibar.c create text  30 12 -text $VersionNumber	-font "calibri 12" -fill $ibarTextColor -anchor center
-	.ibar.c create text  80 12 -text $dim			-font "calibri 12" -fill $ibarTextColor -anchor center
-	.ibar.c create text 170 12 -text $act			-font "calibri 12" -fill $ibarTextColor -anchor center
+	#.ibar.c create line  [expr $w-1] 0 [expr $w-1] 24 -fill $ibarLineColor
+
+	.ibar.c create text  30 12 -text $VersionNumber		-font "calibri 12" -fill $ibarTextColor -anchor center
+	.ibar.c create text  80 12 -text $dim				-font "calibri 12" -fill $ibarTextColor -anchor center
+	.ibar.c create text 170 12 -text $act				-font "calibri 12" -fill $ibarTextColor -anchor center
 
 	set off 10
 	.ibar.c create text [expr $w-$off] 12 -text "Lab of R/C and Masonry Structures, AUTh" -font "calibri 10" -fill $ibarLineColor -anchor e
@@ -748,12 +1376,13 @@ proc UpdateInfoBar { } {
 
 	# add bindings
 
-	bind .gid <Configure>	{RefreshInfoBar}
-	bind .gid <Activate>	{RefreshInfoBar}
-	bind .gid <Deactivate>	{HideInfoBar}
-	bind .gid <Map>			{UpdateInfoBar}
+	bind .gid <Configure>		{RefreshInfoBar}
+	bind .gid <Activate>		{RefreshInfoBar}
+	bind .gid <Deactivate>		{HideInforBar}
+	bind .gid <Map>				{UpdateInfoBar}
 
 	focus .gid.central.s
+
 	update
 }
 
@@ -773,98 +1402,8 @@ proc RefreshInfoBar { } {
 	}
 }
 
-proc HideInfoBar { } {
+proc HideInforBar { } {
 
 	lower .ibar
 	update
-}
-
-proc TransformAndClose { } {
-
-	global InfoWin
-
-	destroy $InfoWin
-
-	GiD_Process Mescape data defaults TransfProblem OpenSees
-}
-
-# This procedure is called only once, when Problem type is loaded from InitGIDProject
-
-proc GetOpenSeesPath { } {
-
-	global OpenSeesPath GidProcWin OpenSeesProblemDir
-
-	set file "$OpenSeesProblemDir/OpenSees.path"
-	set fexists [file exist $file]
-	if { $fexists == 1 } {
-		set fp [open $file r]
-		set file_data [read $fp]
-		close $fp
-		set data [split $file_data \n]
-		set OpenSeesPath [lindex $data 0]
-		regsub -all {\\} $OpenSeesPath {/} OpenSeesPath
-
-	} else {
-			if { ![info exists GidProcWin(w)] || \
-				![winfo exists $GidProcWin(w).listbox#1] } {
-				set wbase .gid
-				set w ""
-			} else {
-				set wbase $GidProcWin(w)
-				set w $GidProcWin(w).listbox#1
-			}
-			tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees path was not found" ] error 0 [_ "Close"]
-	}
-}
-
-# Get project directory path
-
-proc GetProjectDirPath {} {
-
-	set lines [GiD_Info Project]
-	set ProblemType [lindex $lines 0]
-	set ProjectName [lindex $lines 1]
-
-	global GiDProjectDir
-	global GiDProjectName
-
-	# GiD_Info Project returns a list with project information { ProblemType ModelName .. .. .. }
-
-	if { $ProjectName == "UNNAMED" } {
-
-		set GiDProjectName "NONE"
-		set GiDProjectDir "NONE"
-
-	} else {
-
-		regsub -all {\\} $ProjectName {/} ProjectName
-
-		if { [file extension $ProjectName] == ".gid" } {
-			set ProjectName [file root $ProjectName]
-		}
-
-		set pos [string last / $ProjectName]
-
-		# returns the characters between two points in the string
-
-		set GiDProjectName [string range $ProjectName $pos+1 $pos+100]
-		set GiDProjectDir [string range $ProjectName 0 $pos-1]
-
-		append GiDProjectDir "/$GiDProjectName.gid"
-	}
-}
-
-# This procedure sets the GiD installation path
-
-proc GetGiDPath { } {
-
-	global GiDPath
-
-	set temp [GiD_Info problemtypepath]
-
-	regsub -all {\\} $temp {/} temp
-
-	set pos [string last /problemtypes $temp]
-
-	set GiDPath [string range $temp 0 $pos-1]
 }

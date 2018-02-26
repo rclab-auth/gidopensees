@@ -1,5 +1,6 @@
 set iDmax [list]
 set Nsteps *steps
+set committedSteps 1
 set IDctrlNode *IntvData(Control_node,int)
 set IDctrlDOF *NodeCtrlDOF
 *set var NMatrix=IntvData(Displacement_peaks-cycles,int)
@@ -57,7 +58,7 @@ foreach Dmax $iDmax Ncycles $iNcycles {
     if {$Dmax<0} {; # avoid the divide by zero
         set dx [expr -$DispIncr]
     } else {
-        set dx $DispIncr;
+        set dx $DispIncr
     }
     for {set i 1} {$i <= $Nsteps} {incr i 1} {; # zero to one
         set Disp [expr $Disp + $dx]
@@ -82,21 +83,27 @@ foreach Dmax $iDmax Ncycles $iNcycles {
             set D1 $Dstep
             set Dincr [expr $D1 - $D0]
             integrator DisplacementControl  $IDctrlNode $IDctrlDOF $Dincr
+            set t [getTime]
+            puts -nonewline "LF (*IntvNum)$t "
             set AnalOk [analyze 1]; # first analyze command
             if {$AnalOk != 0} { ; # if fails
 *if(IntvData(Use_initial_stiffness_iterations,int)==0)
                 if {$AnalOk != 0} {
-                    puts "\nTrying Newton with Initial Tangent\n"
-                    test NormDispIncr   $TolStatic 2000 *LoggingFlag
+                    puts "\nTrying Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr   $TolStatic 1000 *LoggingFlag
                     algorithm Newton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
-                    puts "\nTrying Modified Newton with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Modified Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -104,16 +111,20 @@ foreach Dmax $iDmax Ncycles $iNcycles {
 *else
                 if {$AnalOk != 0} {
                     puts "\nTrying Newton\n"
-                    test NormDispIncr   $TolStatic 2000 *LoggingFlag
+                    test NormDispIncr   $TolStatic 1000 *LoggingFlag
                     algorithm Newton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
                     puts "\nTrying Modified Newton\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -122,12 +133,16 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                 if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk != 0} {
                     puts "\nTrying NewtonWithLineSearch\n"
                     algorithm NewtonLineSearch 0.8
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -135,14 +150,21 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                     puts "\nAnalysis FAILED\n"
                     return -1
                 }; # end if
+                if {$AnalOk == 0} {
+                    set committedSteps [expr $committedSteps+1]
+                }
             }; # end if
+            if {$AnalOk == 0} {
+                set committedSteps [expr $committedSteps+1]
+            }
             set D0 $D1; # move to next step
         }; # end Dstep
     }; # end i
 }; # end of iDmax
 
 if {$AnalOk == 0} {
-    puts "\nAnalysis completed SUCCESSFULLY\n"
+    puts "\nAnalysis completed SUCCESSFULLY"
+    puts "Committed steps : $committedSteps\n"
 } else {
     puts "\nAnalysis FAILED\n"
 }

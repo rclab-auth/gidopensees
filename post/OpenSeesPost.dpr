@@ -36,7 +36,7 @@ const
 
 var
     i,j,k,n,
-    ndm          : integer;
+    ndm,cnt       : integer;
     s,line,
     GiDPath,
     ModelPath,
@@ -44,33 +44,35 @@ var
     ModelName,
     OutFile,
     ResFileASCII,
-    ResFileBin   : string;
+    ResFileBin    : string;
     Tag,
-    Str          : ArrayStr;
+    Str           : ArrayStr;
     TCL,
     PER,
     LOC,
-    LOG          : TStringList;
-    MSH          : TStreamWriter;
-    RES          : TextFile;
-    Period       : string;
+    LOG           : TStringList;
+    MSH           : TStreamWriter;
+    RES           : TextFile;
+    Period        : string;
     Vx,Vy,
-    Vz,Ang       : array[1..3] of double;
-    senb         : double;
-    Int_Type     : ArrayStr;
-    Int_Steps    : array of integer;
-    Str_Titles,
-    Str_Steps    : array of string;
-    Step         : integer;
+    Vz,Ang        : array[1..3] of double;
+    senb          : double;
+    Int_Type      : ArrayStr;
+    Int_Steps,
+    Int_StepsInit : array of integer;
+    Int_Time      : array of double;
+    Str_IntNames,
+    Str_Steps     : array of string;
+    Step          : integer;
 
     // console
 
-    BufferInfo   : TConsoleScreenBufferInfo;
-    LastMode     : word;
-    TextAttr     : byte;
+    BufferInfo    : TConsoleScreenBufferInfo;
+    LastMode      : word;
+    TextAttr      : byte;
     StdOut,
-    StdErr       : THandle;
-    CCI          : TConsoleCursorInfo;
+    StdErr        : THandle;
+    CCI           : TConsoleCursorInfo;
 
 // console color text
 
@@ -255,38 +257,204 @@ end;
 
 // get analysis type from step
 
-function GetIntervalTitle(Step : integer) : string;
+function GetIntervalNumber(Step : integer) : integer;
 var
     i,Sum : integer;
 
 begin
-    Result := '';
+    Result := 0;
     Sum := 0;
 
     for i := 0 to Length(Int_Type)-1 do
     begin
         if Step >= Sum then
-            Result := 'Interval '+IntToStr(i+1)+' - '+Int_Type[i];
+            Result := i+1;
 
-        Sum := Sum + Int_Steps[i]+1;
+        Sum := Sum + Int_Steps[i];
     end;
 end;
 
-function GetIntervalStep(Step : integer) : string;
+function GetIntervalStep(Step : integer) : integer;
 var
     i,Sum : integer;
 
 begin
-    Result := '';
+    Result := 0;
     Sum := 0;
 
     for i := 0 to Length(Int_Type)-1 do
     begin
         if Step >= Sum then
-            Result := IntToStr(Step - Sum);
+            Result := Step - Sum;
 
-        Sum := Sum + Int_Steps[i]+1;
+        Sum := Sum + Int_Steps[i];
     end;
+end;
+
+// extract log statistics
+
+procedure GetStatistics(LogFile : string);
+var
+    STAT      : TStringList;
+    Valid,
+    Found     : boolean;
+    i,j       : integer;
+    Mult,
+    StepTime,
+    TotTime   : double;
+    ElemID,
+    ElemCrash : array of integer;
+    ElemType  : array of string;
+    Elem      : integer;
+
+begin
+    if not FileExists(LogFile) then
+        Exit;
+
+    LOG := TStringList.Create;
+    LOG.LoadFromFile(LogFile);
+
+    Valid := false;
+    i := 0;
+
+    while i < LOG.Count do
+    begin
+        if (Pos('iteration:',LOG.Strings[i]) <> 0) then
+            if (Pos('iteration: 1',LOG.Strings[i]) = 0) then
+            begin
+                Valid := true;
+                Break;
+            end;
+
+        Inc(i);
+    end;
+
+    if Valid then
+    begin
+        STAT := TStringList.Create;
+        STAT.Add('Interval'#9'Interval step'#9'Total step'#9'Time step'#9'Time'#9'Iterations'#9'Norm'#9'Criterion'#9'Step multiplier');
+
+        i := 0;
+        cnt := 0;
+        Mult := 1;
+        TotTime := 0;
+
+        while i < LOG.Count do
+        begin
+            if LOG.Strings[i] = 'Back to initial time step ..' then
+                Mult := 1
+            else if LOG.Strings[i] = 'Initial time step is divided by 2 ..' then
+                Mult := 1/2
+            else if LOG.Strings[i] = 'Initial time step is divided by 4 ..' then
+                Mult := 1/4
+            else if LOG.Strings[i] = 'Initial time step is divided by 8 ..' then
+                Mult := 1/8
+            else if LOG.Strings[i] = 'Initial time step is divided by 16 ..' then
+                Mult := 1/16;
+
+            if (Pos('iteration:',LOG.Strings[i]) <> 0) then
+            begin
+                if GetIntervalStep(cnt) = 0 then
+                    TotTime := 0;
+
+                if Int_Time[GetIntervalNumber(cnt)-1] <> 0 then
+                    StepTime := Mult * Int_Time[GetIntervalNumber(cnt)-1]
+                else
+                    StepTime := 0;
+
+                TotTime := TotTime+StepTime;
+
+                STAT.Add( IntToStr(GetIntervalNumber(cnt))+#9+
+                          IntToStr(GetIntervalStep(cnt))+#9+
+                          IntToStr(cnt+1)+#9+
+                          FloatToStr(StepTime)+#9+
+                          FloatToStr(TotTime)+#9+
+                          Trim(Copy(LOG.Strings[i],Pos('iteration:',LOG.Strings[i])+10,Pos(' current',LOG.Strings[i])-Pos('iteration:',LOG.Strings[i])-10 ))+#9+
+                          Trim(Copy(LOG.Strings[i],Pos('Norm:',LOG.Strings[i])+5,Pos(' (max',LOG.Strings[i])-Pos('iteration:',LOG.Strings[i])-5 ))+#9+
+                          Trim(Copy(LOG.Strings[i],Pos('CTest',LOG.Strings[i])+5,Pos('::',LOG.Strings[i])-Pos('CTest',LOG.Strings[i])-5 ))+#9+
+                          FloatToStr(Mult));
+
+                Inc(cnt);
+            end;
+
+            Inc(i);
+        end;
+
+        STAT.SaveToFile(ExtractFilePath(LogFile)+'Analysis performance.out');
+        STAT.Free;
+    end;
+
+    // find issues
+
+    Valid := false;
+    i := 0;
+
+    while i < LOG.Count do
+    begin
+        if (Pos('for element:',LOG.Strings[i]) <> 0) then
+        begin
+            Valid := true;
+            Break;
+        end;
+
+        Inc(i);
+    end;
+
+    i := 0;
+
+    if Valid then
+    begin
+        STAT := TStringList.Create;
+        STAT.Add('Element'#9'Type'#9'Crashes');
+
+        while i < LOG.Count do
+        begin
+            if (Pos('for element:',LOG.Strings[i]) <> 0) then
+            begin
+                Elem := StrToInt(Copy(LOG.Strings[i],Pos('for element:',LOG.Strings[i])+12,Pos('(dW',LOG.Strings[i])-Pos('for element:',LOG.Strings[i])-12));
+
+                Found := false;
+
+                if Length(ElemID) <> 0 then
+                begin
+                    for j := 0 to Length(ElemID)-1 do
+                        if Elem = ElemID[j] then
+                        begin
+                            Found := true;
+                            ElemCrash[j] := ElemCrash[j]+1;
+
+                            Break;
+                        end;
+                end;
+
+                if not Found then
+                begin
+                    SetLength(ElemID,Length(ElemID)+1);
+                    ElemID[Length(ElemID)-1] := Elem;
+
+                    SetLength(ElemCrash,Length(ElemCrash)+1);
+                    ElemCrash[Length(ElemCrash)-1] := 1;
+
+                    SetLength(ElemType,Length(ElemType)+1);
+                    ElemType[Length(ElemType)-1] := Copy(LOG.Strings[i],Pos('WARNING -',LOG.Strings[i])+9,Pos('::',LOG.Strings[i])-Pos('WARNING -',LOG.Strings[i])-9);
+                end
+                else
+                begin
+                end;
+            end;
+
+            Inc(i);
+        end;
+
+        for i := 0 to Length(ElemID)-1 do
+            STAT.Add(IntToStr(ElemID[i])+#9+ElemType[i]+#9+IntToStr(ElemCrash[i]));
+
+        STAT.SaveToFile(ExtractFilePath(LogFile)+'Analysis problems.out');
+        STAT.Free;
+    end;
+
+
+    LOG.Free;
 end;
 
 //
@@ -360,6 +528,7 @@ begin
 
     LOG.SaveToFile(FileName);
 
+    {
     for i := 0 to LOG.Count-1 do
         if Pos('Analysis FAILED',LOG.Strings[i]) <> 0 then
         begin
@@ -369,22 +538,51 @@ begin
             LOG.Free;
             Exit;
         end;
+    }
 
-    i := 1;  // after analysis summary
+    i := 0;
+    cnt := 0;
 
-    while LOG.Strings[i] <> '' do
+    while i < LOG.Count do
     begin
-        SetLength(Int_Type,Length(Int_Type)+1);
-        SetLength(Int_Steps,Length(Int_Steps)+1);
+        if Pos('Interval',LOG.Strings[i]) <> 0 then
+        begin
+            SetLength(Int_Type,Length(Int_Type)+1);
+            Int_Type[cnt] := Trim(Copy(LOG.Strings[i],Pos(':',LOG.Strings[i])+1,Pos('-',LOG.Strings[i])-Pos(':',LOG.Strings[i])-1 ));
 
-        Int_Type[i-1] := Copy(LOG.Strings[i],Pos('-',LOG.Strings[i])+2,Pos(':',LOG.Strings[i])-Pos('-',LOG.Strings[i])-3);
+            SetLength(Int_StepsInit,Length(Int_StepsInit)+1);
+            Int_StepsInit[cnt] := StrToInt(Trim(Copy(LOG.Strings[i],Pos('-',LOG.Strings[i])+1,Pos('steps',LOG.Strings[i])-Pos('-',LOG.Strings[i])-1 )));
 
-        Int_Steps[i-1] := StrToInt(Copy(LOG.Strings[i],Pos(':',LOG.Strings[i])+8,100));
+            SetLength(Int_Time,Length(Int_Time)+1);
+            if Pos('x',LOG.Strings[i]) <> 0 then
+                Int_Time[cnt] := StrToFloat(Trim(Copy(LOG.Strings[i],Pos('x',LOG.Strings[i])+1,Length(LOG.Strings[i])-Pos('x',LOG.Strings[i])-1 )))
+            else
+                Int_Time[cnt] := 0;
+
+            Inc(cnt);
+        end;
+
+        Inc(i);
+    end;
+
+    i := 0;
+    cnt := 0;
+
+    while i < LOG.Count do
+    begin
+        if Pos('Committed',LOG.Strings[i]) <> 0 then
+        begin
+            SetLength(Int_Steps,Length(Int_Steps)+1);
+            Int_Steps[cnt] := StrToInt(Trim(Copy(LOG.Strings[i], Pos(':',LOG.Strings[i])+1,10)));
+            Inc(cnt);
+        end;
 
         Inc(i);
     end;
 
     LOG.Free;
+
+    GetStatistics(FileName);
 
     // check .tcl file
 
@@ -405,6 +603,16 @@ begin
         writeln;
         Exit;
     end;
+
+    for i := 0 to Length(Int_Type)-1 do
+    begin
+        if i <= Length(Int_Steps)-1 then
+            writeln('Interval '+IntToStr(i+1)+' ('+Int_Type[i]+') : Steps = '+IntToStr(Int_StepsInit[i])+' - Committed = '+IntToStr(Int_Steps[i]))
+        else
+            writeln('Interval '+IntToStr(i+1)+' ('+Int_Type[i]+') : Steps = '+IntToStr(Int_StepsInit[i])+' - Committed unknown (interrupted)');
+    end;
+
+    writeln;
 
     // get basic model parameters
 
@@ -556,7 +764,9 @@ begin
     end;
 
     if FileExists(ModelPath+'\OpenSees\Truss_axialForce.out') or
+       FileExists(ModelPath+'\OpenSees\Truss_deformations.out') or
        FileExists(ModelPath+'\OpenSees\CorotTruss_axialForce.out') or
+       FileExists(ModelPath+'\OpenSees\CorotTruss_deformations.out') or
        FileExists(ModelPath+'\OpenSees\ElasticBeamColumn_localForce.out')or
        FileExists(ModelPath+'\OpenSees\ElasticTimoshenkoBeamColumn_localForce.out') or
        FileExists(ModelPath+'\OpenSees\ForceBeamColumn_localForce.out') or
@@ -587,18 +797,18 @@ begin
 
         i := 0;
 
-        SetLength(Str_Titles,0);
+        SetLength(Str_IntNames,0);
         SetLength(Str_Steps,0);
 
         repeat
 
             Readln(RES,line);
 
-            SetLength(Str_Titles,Length(Str_Titles)+1);
+            SetLength(Str_IntNames,Length(Str_IntNames)+1);
             SetLength(Str_Steps,Length(Str_Steps)+1);
 
-            Str_Titles[i] := GetIntervalTitle(i);
-            Str_Steps[i] := GetIntervalStep(i);
+            Str_IntNames[i] := 'Interval '+IntToStr(GetIntervalNumber(i))+' - '+Int_Type[GetIntervalNumber(i)-1];
+            Str_Steps[i] := IntToStr(GetIntervalStep(i));
 
             Inc(i);
 
@@ -700,7 +910,7 @@ begin
 
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Local_Axes" "'+Str_Titles[i]+'" '+Str_Steps[i]+' LocalAxes OnGaussPoints "Line_Axes"');
+                MSH.Writeline('Result "Local_Axes" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' LocalAxes OnGaussPoints "Line_Axes"');
 
                 for j := 1 to LOC.Count-1 do
                     MSH.Writeline(LOC[j]);
@@ -810,16 +1020,16 @@ begin
 
                 MSH.Writeline('');
 
-                if Pos('Static',GetIntervalTitle(i)) <> 0 then
+                if Pos('Static',Str_IntNames[i]) <> 0 then
                 begin
-                    MSH.Writeline('Result "Load Factor" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Scalar OnNodes');
+                    MSH.Writeline('Result "Load Factor" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Scalar OnNodes');
                     MSH.Writeline('ComponentNames "LF"');
                     MSH.Writeline('Unit " "');
                 end;
 
-                if Pos('Transient',GetIntervalTitle(i)) <> 0 then
+                if Pos('Transient',Str_IntNames[i]) <> 0 then
                 begin
-                    MSH.Writeline('Result "Time" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Scalar OnNodes');
+                    MSH.Writeline('Result "Time" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Scalar OnNodes');
                     MSH.Writeline('ComponentNames "Time"');
                     MSH.Writeline('Unit "s"');
                 end;
@@ -884,7 +1094,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Nodes//Displacements" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                MSH.Writeline('Result "Nodes//Displacements" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
 
                 if ndm = 3 then
                     s := 'ComponentNames "Ux" "Uy" "Uz"'
@@ -955,7 +1165,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Nodes//Rotations" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                MSH.Writeline('Result "Nodes//Rotations" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
 
                 if ndm = 3 then
                     s := 'ComponentNames "Rx" "Ry" "Rz"'
@@ -1031,7 +1241,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Nodes//Force reactions" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                MSH.Writeline('Result "Nodes//Force reactions" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
 
                 if ndm = 3  then
                     s := 'ComponentNames "Rx" "Ry" "Rz"'
@@ -1102,7 +1312,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Nodes//Moment reactions" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                MSH.Writeline('Result "Nodes//Moment reactions" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
 
                 if ndm = 3 then
                     s := 'ComponentNames "RMx" "RMy" "RMz"'
@@ -1155,13 +1365,13 @@ begin
         Sleep(200);
     end;
 
-    // relative accelerations
+    // accelerations
 
-    OutFile := ModelPath+'\OpenSees\Node_relativeAccelerations.out';
+    OutFile := ModelPath+'\OpenSees\Node_accelerations.out';
 
     if FileExists(OutFile) then
     begin
-        write('Reading relative accelerations ');
+        write('Reading accelerations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1178,7 +1388,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Nodes//Rel. Accelerations" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                MSH.Writeline('Result "Nodes//Accelerations" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
 
                 if ndm = 3 then
                     s := 'ComponentNames "ax" "ay" "az"'
@@ -1226,13 +1436,13 @@ begin
         Sleep(200);
     end;
 
-    // relative velocities
+    // rotational accelerations
 
-    OutFile := ModelPath+'\OpenSees\Node_relativeVelocities.out';
+    OutFile := ModelPath+'\OpenSees\Node_rotAccelerations.out';
 
     if FileExists(OutFile) then
     begin
-        write('Reading relative velocities ');
+        write('Reading rotational accelerations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1249,7 +1459,78 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Nodes//Rel. Velocities" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                MSH.Writeline('Result "Nodes//Rot.Accelerations" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+
+                if ndm = 3 then
+                    s := 'ComponentNames "arx" "ary" "arz"'
+                else
+                    s := 'ComponentNames "arx (zero)" "ary (zero)" "arz"';
+
+                MSH.Writeline(s);
+
+                MSH.Writeline('Unit "m/s^2"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,n*ndm,true);  // read all values from current step
+
+                for j := 0 to n-1 do
+                begin
+
+                    if ndm = 3 then
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + Str[ndm*j]+' '+Str[ndm*j+1]+' '+Str[ndm*j+2]
+                    else
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + ' 0 0 '+Str[j];
+
+                    MSH.Writeline(s);
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(RES) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        CloseFile(RES);
+
+        writeln;
+
+        Sleep(200);
+    end;
+
+    // velocities
+
+    OutFile := ModelPath+'\OpenSees\Node_velocities.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading velocities ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
+
+        AssignFile(RES,OutFile);
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Nodes//Velocities" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
 
                 if ndm = 3 then
                     s := 'ComponentNames "vx" "vy" "vz"'
@@ -1270,6 +1551,77 @@ begin
                         s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + Str[ndm*j]+' '+Str[ndm*j+1]+' '+Str[ndm*j+2]
                     else
                         s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + Str[ndm*j]+' '+Str[ndm*j+1]+' 0';
+
+                    MSH.Writeline(s);
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(RES) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        CloseFile(RES);
+
+        writeln;
+
+        Sleep(200);
+    end;
+
+    // rotational velocities
+
+    OutFile := ModelPath+'\OpenSees\Node_rotVelocities.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading rotational velocities ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
+
+        AssignFile(RES,OutFile);
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Nodes//Rot.Velocities" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+
+                if ndm = 3 then
+                    s := 'ComponentNames "vrx" "vry" "vrz"'
+                else
+                    s := 'ComponentNames "vrx (zero)" "vry (zero)" "vrz"';
+
+                MSH.Writeline(s);
+
+                MSH.Writeline('Unit "m/s"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,n*ndm,true);  // read all values from current step
+
+                for j := 0 to n-1 do
+                begin
+
+                    if ndm = 3 then
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + Str[ndm*j]+' '+Str[ndm*j+1]+' '+Str[ndm*j+2]
+                    else
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + ' 0 0 '+Str[j];
 
                     MSH.Writeline(s);
                 end;
@@ -1332,7 +1684,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//stdBrick//Forces" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "stdbrick_Node"');
+                MSH.Writeline('Result "Elements//stdBrick//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "stdbrick_Node"');
                 MSH.Writeline('ComponentNames "Fx" "Fy" "Fz"');
                 MSH.Writeline('Unit "kN"');
                 MSH.Writeline('Values');
@@ -1401,7 +1753,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//stdBrick//Stresses" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "stdbrick_GP"');
+                MSH.Writeline('Result "Elements//stdBrick//Stresses" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "stdbrick_GP"');
                 MSH.Writeline('ComponentNames "s11" "s22" "s33" "s12" "s23" "s13"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -1470,7 +1822,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//stdBrick//Strains" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "stdbrick_GP"');
+                MSH.Writeline('Result "Elements//stdBrick//Strains" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "stdbrick_GP"');
                 MSH.Writeline('ComponentNames "e11" "e22" "e33" "e12" "e23" "e13"');
                 MSH.Writeline('Unit "m-1"');
                 MSH.Writeline('Values');
@@ -1545,7 +1897,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Forces" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_Node"');
+                MSH.Writeline('Result "Elements//ShellMITC4//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_Node"');
                 MSH.Writeline('ComponentNames "Fx" "Fy" "Fz"');
                 MSH.Writeline('Unit "kN"');
                 MSH.Writeline('Values');
@@ -1595,7 +1947,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Moments" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_Node"');
+                MSH.Writeline('Result "Elements//ShellMITC4//Moments" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_Node"');
                 MSH.Writeline('ComponentNames "Mx" "My" "Mz"');
                 MSH.Writeline('Unit "kNm"');
                 MSH.Writeline('Values');
@@ -1666,7 +2018,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Membrane" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellMITC4_GP"');
+                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Membrane" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellMITC4_GP"');
                 MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -1716,7 +2068,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Bending" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellMITC4_GP"');
+                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Bending" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellMITC4_GP"');
                 MSH.Writeline('ComponentNames "m11" "m22" "m33 (zero)" "m12" "m23 (zero)" "m13 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -1766,7 +2118,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Shear" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_GP"');
+                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Shear" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_GP"');
                 MSH.Writeline('ComponentNames "q1" "q2" "q3 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -1841,7 +2193,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Forces" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
                 MSH.Writeline('ComponentNames "Fx" "Fy" "Fz"');
                 MSH.Writeline('Unit "kN"');
                 MSH.Writeline('Values');
@@ -1891,7 +2243,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Moments" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Moments" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
                 MSH.Writeline('ComponentNames "Mx" "My" "Mz"');
                 MSH.Writeline('Unit "kNm"');
                 MSH.Writeline('Values');
@@ -1962,7 +2314,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Membrane" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Membrane" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
                 MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -2012,7 +2364,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Bending" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Bending" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
                 MSH.Writeline('ComponentNames "m11" "m22" "m33 (zero)" "m12" "m23 (zero)" "m13 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -2062,7 +2414,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Shear" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_GP"');
+                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Shear" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_GP"');
                 MSH.Writeline('ComponentNames "q1" "q2" "q3 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -2135,7 +2487,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Quad//Forces" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "Quad_Node"');
+                MSH.Writeline('Result "Elements//Quad//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "Quad_Node"');
                 MSH.Writeline('ComponentNames "Fx" "Fy" "Fz (zero)"');
                 MSH.Writeline('Unit "kN"');
                 MSH.Writeline('Values');
@@ -2204,7 +2556,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Quad//Stresses" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Quad_GP"');
+                MSH.Writeline('Result "Elements//Quad//Stresses" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Quad_GP"');
                 MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -2273,7 +2625,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Quad//Strains" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Quad_GP"');
+                MSH.Writeline('Result "Elements//Quad//Strains" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Quad_GP"');
                 MSH.Writeline('ComponentNames "e11" "e22" "e33 (zero)" "e12" "e23 (zero)" "e13 (zero)"');
                 MSH.Writeline('Unit "m-1"');
                 MSH.Writeline('Values');
@@ -2346,7 +2698,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Triangular//Forces" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "Tri31_Node"');
+                MSH.Writeline('Result "Elements//Triangular//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "Tri31_Node"');
                 MSH.Writeline('ComponentNames "Fx" "Fy" "Fz (zero)"');
                 MSH.Writeline('Unit "kN"');
                 MSH.Writeline('Values');
@@ -2415,7 +2767,7 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Triangular//Stresses" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Tri31_GP"');
+                MSH.Writeline('Result "Elements//Triangular//Stresses" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Tri31_GP"');
                 MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
                 MSH.Writeline('Unit "kPa"');
                 MSH.Writeline('Values');
@@ -2479,8 +2831,70 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Truss//Axial" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Scalar OnGaussPoints "Line_Nodes"');
+                MSH.Writeline('Result "Elements//Truss//Axial" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Scalar OnGaussPoints "Line_Nodes"');
                 MSH.Writeline('Unit "kN"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,n,true);  // read all values from current step (1 value per element)
+
+                for j := 0 to n-1 do
+                begin
+                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[j];
+
+                    MSH.Writeline(s);
+
+                    s := StringOfChar(' ',INDENT) + Str[j];
+
+                    MSH.Writeline(s);
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(RES) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        CloseFile(RES);
+
+        writeln;
+
+        Sleep(200);
+    end;
+    OutFile := ModelPath+'\OpenSees\Truss_deformations.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading truss deformations ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# Truss')+1],3,10));  // number of trusses
+
+        StrToArray(TCL[TCL.IndexOf('# Truss')+2],Tag,n,true);  // read all tags
+
+        AssignFile(RES,OutFile);
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Elements//Truss//Deformation" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Scalar OnGaussPoints "Line_Nodes"');
+                MSH.Writeline('Unit "m"');
                 MSH.Writeline('Values');
 
                 StrToArray(line,Str,n,true);  // read all values from current step (1 value per element)
@@ -2546,7 +2960,70 @@ begin
             begin
 
                 MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Corotational_Truss//Axial" "'+Str_Titles[i]+'" '+Str_Steps[i]+' Scalar OnGaussPoints "Line_Nodes"');
+                MSH.Writeline('Result "Elements//Corotational_Truss//Axial" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Scalar OnGaussPoints "Line_Nodes"');
+                MSH.Writeline('Unit "kN"');
+                MSH.Writeline('Values');
+
+                StrToArray(line,Str,n,true);  // read all values from current step (1 value per element)
+
+                for j := 0 to n-1 do
+                begin
+                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[j];
+
+                    MSH.Writeline(s);
+
+                    s := StringOfChar(' ',INDENT) + Str[j];
+
+                    MSH.Writeline(s);
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(i+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(RES) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(i);
+
+        until EOF(RES);
+
+        CloseFile(RES);
+
+        writeln;
+
+        Sleep(200);
+    end;
+
+    OutFile := ModelPath+'\OpenSees\CorotTruss_deformations.out';
+
+    if FileExists(OutFile) then
+    begin
+        write('Reading corotational truss deformations ');
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# CorotTruss')+1],3,10));  // number of corotational trusses
+
+        StrToArray(TCL[TCL.IndexOf('# CorotTruss')+2],Tag,n,true);  // read all tags
+
+        AssignFile(RES,OutFile);
+        Reset(RES);
+
+        i := 0;
+
+        repeat
+
+            Readln(RES,line);
+
+            if (i = 0) or EOF(RES) or (i mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+                MSH.Writeline('Result "Elements//Corotational_Truss//Deformation" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Scalar OnGaussPoints "Line_Nodes"');
                 MSH.Writeline('Unit "kN"');
                 MSH.Writeline('Values');
 
@@ -2616,7 +3093,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//V" Scalar');
@@ -2629,7 +3106,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//Vy" Scalar');
@@ -2726,7 +3203,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//V" Scalar');
@@ -2739,7 +3216,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Vy" Scalar');
@@ -2838,7 +3315,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//V" Scalar');
@@ -2851,7 +3328,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//Vy" Scalar');
@@ -2946,7 +3423,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation" Scalar');
@@ -2957,7 +3434,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation_z" Scalar');
@@ -3048,7 +3525,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation" Scalar');
@@ -3059,7 +3536,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation_z" Scalar');
@@ -3154,7 +3631,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//V" Scalar');
@@ -3167,7 +3644,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//Vy" Scalar');
@@ -3262,7 +3739,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Rotation" Scalar');
@@ -3273,7 +3750,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Rotation_z" Scalar');
@@ -3364,7 +3841,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Rotation" Scalar');
@@ -3375,7 +3852,7 @@ begin
 
                 if ndm = 3 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Axial" Scalar');
                     MSH.Writeline('Unit "m"');
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Rotation_z" Scalar');
@@ -3471,7 +3948,7 @@ begin
 
                 if ndm = 2 then
                 begin
-                    MSH.Writeline('ResultGroup "'+Str_Titles[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
+                    MSH.Writeline('ResultGroup "'+Str_IntNames[i]+'" '+Str_Steps[i]+' OnGaussPoints "Line_Nodes"');
                     MSH.Writeline('ResultDescription "Elements//Flexure_Shear_Interaction_Displacement_Beam-Column//Actions//N" Scalar');
                     MSH.Writeline('Unit "kN"');
                     MSH.Writeline('ResultDescription "Elements//Flexure_Shear_Interaction_Displacement_Beam-Column//Actions//V" Scalar');

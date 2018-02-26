@@ -62,25 +62,30 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *set var GeomTransfPrinted=1
 *endif
-# Sections Definition used by forceBeamColumn Elements. (Only if they have not already been defined on this model domain)
+# Sections Definition used by forceBeamColumn Elements
+# (ïnly if they have not already been defined on this model domain)
 
 *# Searching all assigned forceBeamColumn elements to check all Sections that they need
 *loop materials
 *if(strcmp(MatProp(Element_type:),"forceBeamColumn")==0)
-*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedSection)
 *# IF IT HAS NOT BEEN DEFINED YET
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if the Section is FOUND
 *if(SelectedSection==SectionID)
 *# Add it to the used "Materials"
 *set var dummy=tcl(AddUsedMaterials *SelectedSection)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
 *include ..\..\Sections\Fiber.bas
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*include ..\..\Sections\FiberCustom.bas
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *include ..\..\Sections\SectionAggregator.bas
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*include ..\..\Sections\ElasticSection.bas
 *endif
 *break
 *endif
@@ -141,26 +146,30 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *endif
 *format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e%g"
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real) *\
 *endif
 *format "%g"
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSection==SectionID)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *if(MatProp(Select_section,int)==1)
-*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
+*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) *DomainNum)
 *loop materials *NotUsed
-*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSectionTobeAggregated==SectionTobeAggregated)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *else
 *MessageBox Invalid Section was selected for Section Aggregator. Only Fiber is supported.
 *endif
@@ -169,11 +178,15 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *else
 *set var FiberArea=0.0
 *endif
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *endif
 *endif
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
-*format "%8.2f"
+*format "%8g"
 -mass *MassPerLength
 *# if it is FBC
 *endif
@@ -200,24 +213,29 @@ geomTransf Corotational *TransfTag3
 
 *set var GeomTransfPrinted=1
 *endif
-# Sections Definition used by forceBeamColumn Elements. (Only if they have not already been defined on this model domain)
+# Sections Definition used by forceBeamColumn Elements
+# (if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"forceBeamColumn")==0)
-*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedSection)
 *# IF IT HAS NOT BEEN DEFINED YET
 *if(MaterialExists==-1)
 *# meta valto sti lista me ta used materials
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# Section FOUND
 *if(SelectedSection==SectionID)
 *set var dummy=tcl(AddUsedMaterials *SelectedSection)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
 *include ..\..\Sections\Fiber.bas
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*include ..\..\Sections\FiberCustom.bas
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *include ..\..\Sections\SectionAggregator.bas
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*include ..\..\Sections\ElasticSection.bas
 *endif
 *break
 *endif
@@ -244,25 +262,29 @@ geomTransf Corotational *TransfTag3
 *set var TransfTag=TransfTag3
 *endif
 *format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e%g"
 -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real) *\
 *endif
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSection==SectionID)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *if(MatProp(Select_section,int)==1)
-*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
+*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) *DomainNum)
 *loop materials *NotUsed
-*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSectionTobeAggregated==SectionTobeAggregated)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *else
 *MessageBox Invalid Section was selected for Section Aggregator. Only Fiber is supported.
 *endif
@@ -271,11 +293,15 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *else
 *set var FiberArea=0.0
 *endif
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *endif
 *endif
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
-*format "%8.2f"
+*format "%8g"
 -mass *MassPerLength
 *# if it is FBC
 *endif

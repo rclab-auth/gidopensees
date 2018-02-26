@@ -1,10 +1,10 @@
 *set var PlateThickness=MatProp(Plate_thickness_h,real)
 *set var PlateFiberTag=SectionID
-*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedMaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)

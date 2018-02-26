@@ -62,17 +62,18 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *set var GeomTransfPrinted=1
 *endif
-# Sections Definition used by dispBeamColumn Elements. (Only if they have not already been defined on this model domain)
+# Sections Definition used by dispBeamColumn Elements
+# (if they have not already been defined on this model domain)
 
 *# Searching all assigned dispBeamColumn elements to check all Sections that they need
 *loop materials
 *if(strcmp(MatProp(Element_type:),"dispBeamColumn")==0)
-*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedSection)
 *# IF IT HAS NOT BEEN DEFINED YET
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if the Section is FOUND
 *if(SelectedSection==SectionID)
 *# Add it to the used "Materials"
@@ -81,6 +82,10 @@ geomTransf Corotational *TransfTag6 0 1 0
 *include ..\..\Sections\Fiber.bas
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *include ..\..\Sections\SectionAggregator.bas
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*include ..\..\Sections\ElasticSection.bas
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*include ..\..\Sections\FiberCustom.bas
 *endif
 *break
 *endif
@@ -141,21 +146,25 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *endif
 *format "%3d%6d%6d%3d%3d%4d%g"
-element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
+element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
+*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSection==SectionID)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *if(MatProp(Select_section,int)==1)
-*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
+*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) *DomainNum)
 *loop materials *NotUsed
-*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSectionTobeAggregated==SectionTobeAggregated)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *else
 *MessageBox Invalid Section was selected for Section Aggregator. Only Fiber is supported.
 *endif
@@ -164,11 +173,15 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *else
 *set var FiberArea=0.0
 *endif
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *endif
 *endif
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
-*format "%8.2f"
+*format "%8g"
 -mass *MassPerLength
 *# if it is DBC
 *endif
@@ -195,17 +208,18 @@ geomTransf Corotational *TransfTag3
 
 *set var GeomTransfPrinted=1
 *endif
-# Sections Definition used by dispBeamColumn Elements. (Only if they have not already been defined on this model domain)
+# Sections Definition used by dispBeamColumn Elements
+# (if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"dispBeamColumn")==0)
-*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedSection)
 *# IF IT HAS NOT BEEN DEFINED YET
 *if(MaterialExists==-1)
 *# meta valto sti lista me ta used materials
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# Section FOUND
 *if(SelectedSection==SectionID)
 *set var dummy=tcl(AddUsedMaterials *SelectedSection)
@@ -213,6 +227,10 @@ geomTransf Corotational *TransfTag3
 *include ..\..\Sections\Fiber.bas
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *include ..\..\Sections\SectionAggregator.bas
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*include ..\..\Sections\ElasticSection.bas
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*include ..\..\Sections\FiberCustom.bas
 *endif
 *break
 *endif
@@ -239,22 +257,26 @@ geomTransf Corotational *TransfTag3
 *set var TransfTag=TransfTag3
 *endif
 *format "%3d%6d%6d%3d%3d%g"
-element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag *\
+element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
 *# Mass is calculated for Displacement Beam Column.
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSection==SectionID)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *elseif(strcmp(MatProp(Section:),"SectionAggregator")==0)
 *if(MatProp(Select_section,int)==1)
-*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
+*set var SelectedSectionTobeAggregated=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) *DomainNum)
 *loop materials *NotUsed
-*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionTobeAggregated=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSectionTobeAggregated==SectionTobeAggregated)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
-*set var FiberArea=MatProp(Cross_section_Area,real)
+*set var FiberArea=MatProp(Cross_section_area,real)
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *else
 *MessageBox Invalid Section was selected for Section Aggregator. Only Fiber is supported.
 *endif
@@ -263,11 +285,15 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *else
 *set var FiberArea=0.0
 *endif
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*set var FiberArea=MatProp(ElasticSection_Area,real)
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*set var FiberArea=MatProp(Cross_section_area,real)
 *endif
 *endif
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
-*format "%8.2f"
+*format "%8g"
 -mass *MassPerLength
 *# end if it is DBC
 *endif

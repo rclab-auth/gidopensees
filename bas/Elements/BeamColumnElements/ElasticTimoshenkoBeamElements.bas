@@ -112,9 +112,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *set var Avz=A
 *endif
 *#-----------------------------Material Properties------------------------
-*set var SelMatID=tcl(FindMaterialNumber *elemsMatProp(Material))
+*set var SelMatID=tcl(FindMaterialNumber *elemsMatProp(Material) *DomainNum)
 *loop materials *NotUsed
-*set var matID=tcl(FindMaterialNumber *MatProp(0))
+*set var matID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelMatID==matID)
 *set var E=MatProp(Elastic_modulus_E,real)
 *set var Pr=MatProp(Poisson's_ratio,real)
@@ -153,9 +153,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
+*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *else
 *# NOT VERTICAL ELEMENTS
@@ -168,9 +168,9 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
+*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *endif
 *#-----------------Y axis as Vertical Axis--------------
@@ -186,9 +186,9 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
+*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *# Not Vertical Elements
 *else
@@ -201,9 +201,9 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.15f%10.15f%10.15f%10.6f%10.6f   "
+*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *endif
 *endif
@@ -233,6 +233,7 @@ geomTransf Linear *TransfTag1
 geomTransf PDelta *TransfTag2
 geomTransf Corotational *TransfTag3
 
+*set var GeomTransfPrinted=1
 *endif
 # Elastic Timoshenko Beam Element Definition
 
@@ -269,9 +270,9 @@ geomTransf Corotational *TransfTag3
 *endif
 *#------------------------Material Properties----------------------
 *# SelMatID : Id number of the material that user selected from the ElasticBeamColumn Definition
-*set var SelMatID=tcl(FindMaterialNumber *ElemsMatProp(Material))
+*set var SelMatID=tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum)
 *loop materials *NotUsed
-*set var matID=tcl(FindMaterialNumber *MatProp(0))
+*set var matID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelMatID==matID)
 *# WHEN WE FIND THE SELECTED MATERIAL , WE TAKE THE PROPERTIES TO BE PRINTED
 *set var E=MatProp(Elastic_modulus_E,real)
@@ -300,9 +301,9 @@ geomTransf Corotational *TransfTag3
 *endif
 *format "%6d%6d%6d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10.0f%10.0f%10.6f%10.15f%10.6f   "
+*format "%10g%10g%10g%10g%10g   "
 *E *G *A *Iz *Avy *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *set var VarCount=VarCount+1
 *endif

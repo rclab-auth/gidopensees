@@ -103,9 +103,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *set var J=ElemsMatProp(Torsional_moment_of_inertia_Iyz,real)
 *endif
 *#----------------Material Properties ----------------------
-*set var SelMatID=tcl(FindMaterialNumber *elemsMatProp(Material))
+*set var SelMatID=tcl(FindMaterialNumber *elemsMatProp(Material) *DomainNum)
 *loop materials *NotUsed
-*set var matID=tcl(FindMaterialNumber *MatProp(0))
+*set var matID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelMatID==matID)
 *set var E=MatProp(Elastic_modulus_E,real)
 *set var Pr=MatProp(Poisson's_ratio,real)
@@ -140,9 +140,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
+*format "%10g%10g%10g%10g%10g%10g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *else
 *# NOT VERTICAL ELEMENTS
@@ -155,9 +155,9 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
+*format "%10g%10g%10g%10g%10g%10g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *endif
 *#-----------------Y axis as Vertical Axis--------------
@@ -173,9 +173,9 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
+*format "%10g%10g%10g%10g%10g%10g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *# Not Vertical Elements
 *else
@@ -188,9 +188,9 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.0f%10.10f%10.10f%10.10f   "
+*format "%10g%10g%10g%10g%10g%10g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *endif
 *endif
@@ -245,9 +245,9 @@ geomTransf Corotational *TransfTag3
 *set var Iz=ElemsMatProp(Moment_of_inertia_about_local-z_Izz,real)
 *endif
 *# SelMatID : Id number of the material that user selected from the ElasticBeamColumn Definition
-*set var SelMatID=tcl(FindMaterialNumber *ElemsMatProp(Material))
+*set var SelMatID=tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum)
 *loop materials *NotUsed
-*set var matID=tcl(FindMaterialNumber *MatProp(0))
+*set var matID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelMatID==matID)
 *# WHEN WE FIND THE SELECTED MATERIAL , WE TAKE THE PROPERTIES TO BE PRINTED
 *set var E=MatProp(Elastic_modulus_E,real)
@@ -272,9 +272,9 @@ geomTransf Corotational *TransfTag3
 *endif
 *format "%6d%6d%6d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10.6f%10.0f%10.10f   "
+*format "%10g%10g%10g   "
 *A *E *Iz *TransfTag   -mass *\
-*format "%8.3f"
+*format "%8g"
 *MassPerLength
 *set var VarCount=VarCount+1
 *endif

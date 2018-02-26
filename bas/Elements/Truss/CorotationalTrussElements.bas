@@ -20,17 +20,18 @@
 *loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
 *if(VarCount==1)
-# Uniaxial Materials definition used by Corotational Truss Elements. (Only if they have not been already defined on this model domain)
+# Uniaxial Materials definition used by Corotational Truss Elements
+# (ïnly if they have not been already defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"CorotationalTruss")==0)
 *# We set the variable SelectedMaterial the IDnumber of the material that user choosed from the Material field , in the element that he/she assigned!
-*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
 *# We set the variable MaterialID the IDnumber of each material(NotUsed) and we check which is the material that user choosed in Material field in element definition.
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *#we check which is the material that user choosed in Material field in element definition.
 *if(MaterialID==SelectedMaterial)
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
@@ -44,6 +45,8 @@
 *include ..\..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
 *include ..\..\Materials\Uniaxial\ElasticPPwithGap.bas
 *elseif(strcmp(MatProp(Material:),"Viscous")==0)
@@ -60,6 +63,20 @@
 *include ..\..\Materials\Uniaxial\HyperbolicGap.bas
 *elseif(strcmp(MatProp(Material:),"Parallel")==0 || strcmp(MatProp(Material:),"Series")==0)
 *include ..\..\Materials\Uniaxial\SeriesParallel.bas
+*elseif(strcmp(MatProp(Material:),"Concrete01")==0)
+*include ..\..\Materials\Uniaxial\Concrete01.bas
+*elseif(strcmp(MatProp(Material:),"Concrete02")==0)
+*include ..\..\Materials\Uniaxial\Concrete02.bas
+*elseif(strcmp(MatProp(Material:),"Concrete04")==0)
+*include ..\..\Materials\Uniaxial\Concrete04.bas
+*elseif(strcmp(MatProp(Material:),"Concrete06")==0)
+*include ..\..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\..\Materials\Uniaxial\ConcreteCM.bas
+*elseif(strcmp(MatProp(Material:),"BondSP01")==0)
+*include ..\..\Materials\Uniaxial\BondSP01.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Invalid uniaxial material selected for truss element
 *endif
@@ -69,6 +86,7 @@
 *endif
 *endif
 *end materials
+
 # Corotational Truss Definition : element corotTruss $eleTag $iNode $jNode $A $matTag -rho $rho -cMass $cFlag -doRayleigh $rFlag
 *set var VarCount=operation(VarCount+1)
 
@@ -101,9 +119,9 @@
 *#--------------------------------------------
 *format "%6d%6d%6d"
 element corotTruss *ElemsNum *elemsConec *\
-*format "%8.3f"
-*A *tcl(FindMaterialNumber *ElemsMatProp(Material) )   -rho *\
-*format "%8.3f%d%d"
+*format "%12g"
+*A *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum)   -rho *\
+*format "%8g%d%d"
 *MassPerLength -cMass *ElemsMatProp(Consider_consistent_mass_matrix,int) -doRayleigh *ElemsMatProp(Include_Rayleigh_damping,int)
 *endif
 *end elems

@@ -1,10 +1,10 @@
 *set var InitStressTag=MaterialID
-*set var OtherMaterial=tcl(FindMaterialNumber *MatProp(Material_for_defining_initial_stress))
+*set var OtherMaterial=tcl(FindMaterialNumber *MatProp(Material_for_defining_initial_stress) *DomainNum)
 *# Define Other Material first, if has not been yet
 *set var MaterialExists=tcl(CheckUsedMaterials *OtherMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(OtherMaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *OtherMaterial)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
@@ -25,6 +25,8 @@
 *include Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"ElasticPerfectlyPlasticwithGap")==0)
 *include ElasticPPwithGap.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)

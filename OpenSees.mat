@@ -47,7 +47,7 @@ DEPENDENCIES: (Force-Deformation,HIDE,Material_type,#CURRENT#,HIDE,Concrete_clas
 DEPENDENCIES: (Moment-Rotation,HIDE,Material_type,#CURRENT#,HIDE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,HIDE,Elastic_modulus_E,#CURRENT#,HIDE,Stiffness_K,#CURRENT#,RESTORE,Moment_per_rotation_unit,#CURRENT#)
 QUESTION: Material_type#CB#(Concrete,Steel,Custom)
 VALUE: Custom
-TKWIDGET: TK_GenerateUniaxialMaterialsProperties
+TKWIDGET: OtherUniaxMaterials::GenerateValues
 DEPENDENCIES: (Concrete,RESTORE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_class,#CURRENT#,RESTORE,Steel_grade,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#)
@@ -79,7 +79,7 @@ DEPENDENCIES: (Force-Deformation,HIDE,Material_type,#CURRENT#,HIDE,Concrete_clas
 DEPENDENCIES: (Moment-Rotation,HIDE,Material_type,#CURRENT#,HIDE,Concrete_class,#CURRENT#,HIDE,Strength_type,#CURRENT#,HIDE,Steel_grade,#CURRENT#,HIDE,Elastic_modulus_E,#CURRENT#,HIDE,Stiffness_K,#CURRENT#,HIDE,Deformation_epsN,#CURRENT#,HIDE,Deformation_epsP,#CURRENT#,HIDE,Strain_epsN,#CURRENT#,HIDE,Strain_epsP,#CURRENT#,HIDE,Initial_strain_eps0,#CURRENT#,HIDE,Initial_deformation_eps0,#CURRENT#,RESTORE,Moment_per_rotation_unit,#CURRENT#,RESTORE,Rotation_epsP,#CURRENT#,RESTORE,Rotation_epsN,#CURRENT#,RESTORE,Initial_rotation_eps0,#CURRENT#)
 QUESTION: Material_type#CB#(Concrete,Steel,Custom)
 VALUE: Custom
-TKWIDGET: TK_GenerateUniaxialMaterialsProperties
+TKWIDGET: OtherUniaxMaterials::GenerateValues
 DEPENDENCIES: (Concrete,RESTORE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_class,#CURRENT#,RESTORE,Steel_grade,#CURRENT#,HIDE,Strength_type,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,HIDE,Strength_type,#CURRENT#)
@@ -133,7 +133,7 @@ DEPENDENCIES: (Force-Deformation,HIDE,Elastic_modulus_E,#CURRENT#,HIDE,Concrete_
 DEPENDENCIES: (Moment-Rotation,HIDE,Elastic_modulus_E,#CURRENT#,HIDE,Concrete_class,#CURRENT#,HIDE,Strength_type,#CURRENT#,HIDE,Steel_grade,#CURRENT#,HIDE,Strain_gap,#CURRENT#,HIDE,Yield_Stress_Fy,#CURRENT#,HIDE,Material_type,#CURRENT#,HIDE,Stiffness_K,#CURRENT#,HIDE,Force_Fy,#CURRENT#,HIDE,Deformation_gap,#CURRENT#,RESTORE,Moment_per_rotation_unit,#CURRENT#,RESTORE,Moment_My,#CURRENT#,RESTORE,Rotation_gap,#CURRENT#)
 QUESTION: Material_type#CB#(Concrete,Steel,Custom)
 VALUE: Custom
-TKWIDGET: TK_GenerateUniaxialMaterialsProperties
+TKWIDGET: OtherUniaxMaterials::GenerateValues
 DEPENDENCIES: (Concrete,RESTORE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_class,#CURRENT#,RESTORE,Steel_grade,#CURRENT#,RESTORE,Yield_Stress_Fy,#CURRENT#,HIDE,Strength_type,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_class,#CURRENT#,HIDE,Steel_grade,#CURRENT#,RESTORE,Yield_Stress_Fy,#CURRENT#,HIDE,Strength_type,#CURRENT#)
@@ -214,6 +214,92 @@ VALUE: -2.54 cm
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
+MATERIAL: PySimple1
+COMMENT: \n
+QUESTION: Material:#CB#(_)
+VALUE: PySimple1
+QUESTION: p-y_backbone_curve#CB#(Soft_clay,Sand)
+VALUE: Soft clay
+HELP: Soft clay corresponds to Matlock (1970) relation. Sand corresponds to API (1993) relation
+QUESTION: Ultimate_capacity_pult#UNITS#
+VALUE: 4000 kN
+QUESTION: Displacement_at_which_the_50%_of_pult_is_mobilized_in_monotonic_loading#UNITS#
+VALUE: 0.02 m
+HELP: Displacement at which the 50% of pult is mobilized in monotonic loading
+QUESTION: Coefficient_Cd
+VALUE: 0.0
+HELP: Sets the drag resistance within a fully-mobilized gap as Cd*pult
+QUESTION: Viscous_damping_coefficient#UNITS#
+VALUE: 0.0 kNsec/m
+HELP: Nonzero values are used to represent radiation damping effects
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
+MATERIAL: TzSimple1
+COMMENT: \n
+QUESTION: Material:#CB#(_)
+VALUE: TzSimple1
+QUESTION: t-z_backbone_curve#CB#(Reese_and_O'Neill_relation,Mosher_relation)
+VALUE: Reese_and_O'Neill_relation
+QUESTION: Ultimate_capacity_tult#UNITS#
+VALUE: 4000 kN
+QUESTION: Displacement_at_which_the_50%_of_tult_is_mobilized_in_monotonic_loading#UNITS#
+VALUE: 0.02 m
+HELP: Displacement at which the 50% of tult is mobilized in monotonic loading
+QUESTION: Viscous_damping_coefficient#UNITS#
+VALUE: 0.0 kNsec/m
+HELP: Nonzero values are used to represent radiation damping effects
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
+MATERIAL: QzSimple1
+COMMENT: \n
+QUESTION: Material:#CB#(_)
+VALUE: QzSimple1
+QUESTION: q-z_backbone_curve#CB#(Reese_and_O'Neill_relation,Vijayvergiya_relation)
+VALUE: Reese_and_O'Neill_relation
+HELP: Reese and O'Neil relation is for drilled shafts in clay. Vijayvergiya relation is for piles in sand.
+QUESTION: Ultimate_capacity_qult#UNITS#
+VALUE: 4000 kN
+QUESTION: Displacement_at_which_the_50%_of_qult_is_mobilized_in_monotonic_loading#UNITS#
+VALUE: 0.02 m
+HELP: Displacement at which the 50% of qult is mobilized in monotonic loading
+QUESTION: Suction
+VALUE: 0.0
+HELP: Uplift resistance is equal to suction*qult. Valid values: between 0.0 - 0.1
+QUESTION: Viscous_damping_coefficient#UNITS#
+VALUE: 0.0 kNsec/m
+HELP: Nonzero values are used to represent radiation damping effects
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
+MATERIAL: BondSP01
+COMMENT: \n\tSelect Force-Slip formulation\n\tin order to use this material for zeroLength elements.\n
+QUESTION: Material:#CB#(_)
+VALUE: BondSP01
+IMAGE: img/Materials/BondSP01.png
+QUESTION: Formulation#CB#(Stress-Slip,Force-Slip)
+VALUE: Force-slip
+DEPENDENCIES: (Stress-Slip,RESTORE,Yield_stress_Fy,#CURRENT#,RESTORE,Ultimate_stress_Fu,#CURRENT#,HIDE,Yield_force_Fy,#CURRENT#,HIDE,Ultimate_Force_Fu,#CURRENT#)
+DEPENDENCIES: (Force-Slip,RESTORE,Yield_force_Fy,#CURRENT#,RESTORE,Ultimate_Force_Fu,#CURRENT#,HIDE,Yield_stress_Fy,#CURRENT#,HIDE,Ultimate_stress_Fu,#CURRENT#)
+QUESTION: Yield_stress_Fy#UNITS#
+VALUE: 500 MPa
+QUESTION: Yield_force_Fy#UNITS#
+VALUE: 157 kN
+QUESTION: Rebar_slip_at_Fy#UNITS#
+VALUE: 1 mm
+QUESTION: Ultimate_stress_Fu#UNITS#
+VALUE: 675 MPa
+QUESTION: Ultimate_Force_Fu#UNITS#
+VALUE: 212 kN
+QUESTION: Rebar_slip_at_the_loaded_end_at_the_bar_fracture_strength#UNITS#
+VALUE: 2 mm
+QUESTION: Initial_hardening
+VALUE: 0.4
+QUESTION: Pinching_factor_for_the_cyclic_slip_vs_bar_response
+VALUE: 0.5
+END MATERIAL
+
 
 BOOK: Uniaxial_Steel_Materials
 
@@ -231,8 +317,8 @@ DEPENDENCIES: (Stress-Strain,RESTORE,Steel_grade,#CURRENT#,RESTORE,Yield_Stress_
 DEPENDENCIES: (Force-Deformation,HIDE,Steel_grade,#CURRENT#,HIDE,Yield_Stress_Fy,#CURRENT#,HIDE,Initial_elastic_tangent_E0,#CURRENT#,RESTORE,Force_Fy,#CURRENT#,RESTORE,Initial_stiffness_K,#CURRENT#,HIDE,Moment_My,#CURRENT#,HIDE,Moment_per_rotation_unit,#CURRENT#)
 DEPENDENCIES: (Moment-Rotation,HIDE,Steel_grade,#CURRENT#,HIDE,Yield_Stress_Fy,#CURRENT#,HIDE,Initial_elastic_tangent_E0,#CURRENT#,HIDE,Force_Fy,#CURRENT#,HIDE,Initial_stiffness_K,#CURRENT#,RESTORE,Moment_My,#CURRENT#,RESTORE,Moment_per_rotation_unit,#CURRENT#)
 QUESTION: Steel_grade#CB#(S235,S275,S355,S450,B500C,Custom)
-VALUE: B500C
-TKWIDGET: TK_GenerateUniaxialSteelProperties
+VALUE: Custom
+TKWIDGET: SteelUniaxMaterial::GenerateValues
 QUESTION: Yield_Stress_Fy#UNITS#
 VALUE: 500 MPa
 QUESTION: Force_Fy#UNITS#
@@ -273,8 +359,8 @@ DEPENDENCIES: (Stress-Strain,RESTORE,Steel_grade,#CURRENT#,RESTORE,Yield_Stress_
 DEPENDENCIES: (Force-Deformation,HIDE,Steel_grade,#CURRENT#,HIDE,Yield_Stress_Fy,#CURRENT#,HIDE,Initial_elastic_tangent_E0,#CURRENT#,RESTORE,Force_Fy,#CURRENT#,RESTORE,Initial_stiffness_K,#CURRENT#,HIDE,Moment_My,#CURRENT#,HIDE,Moment_per_rotation_unit,#CURRENT#,HIDE,Initial_stress,#CURRENT#,RESTORE,Initial_force,#CURRENT#,HIDE,Initial_moment,#CURRENT#)
 DEPENDENCIES: (Moment-Rotation,HIDE,Steel_grade,#CURRENT#,HIDE,Yield_Stress_Fy,#CURRENT#,HIDE,Initial_elastic_tangent_E0,#CURRENT#,HIDE,Force_Fy,#CURRENT#,HIDE,Initial_stiffness_K,#CURRENT#,RESTORE,Moment_My,#CURRENT#,RESTORE,Moment_per_rotation_unit,#CURRENT#,HIDE,Initial_stress,#CURRENT#,HIDE,Initial_force,#CURRENT#,RESTORE,Initial_moment,#CURRENT#)
 QUESTION: Steel_grade#CB#(S235,S275,S355,S450,B500C,Custom)
-VALUE: B500C
-TKWIDGET: TK_GenerateUniaxialSteelProperties
+VALUE: Custom
+TKWIDGET: SteelUniaxMaterial::GenerateValues
 QUESTION: Yield_Stress_Fy#UNITS#
 VALUE: 500 MPa
 QUESTION: Force_Fy#UNITS#
@@ -324,8 +410,8 @@ VALUE: ReinforcingSteel
 IMAGE: img/Materials/ReinfSteel.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Steel_grade#CB#(B500C,Custom)
-VALUE: B500C
-TKWIDGET: TK_GenerateUniaxialSteelProperties
+VALUE: Custom
+TKWIDGET: SteelUniaxMaterial::GenerateValues
 QUESTION: Yield_stress_fy#UNITS#
 VALUE: 500 MPa
 QUESTION: Ultimate_stress_fsu#UNITS#
@@ -436,6 +522,26 @@ VALUE: 0.0#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
+MATERIAL: Ramberg-Osgood steel
+COMMENT: \n\tUpdate material window to assign selected Grade.\n\tSelect 'Custom' to enter user values.\n
+QUESTION: Material:#CB#(_)
+VALUE: RambergOsgoodSteel
+IMAGE: img/Materials/RambergOsgoodSteel.png
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Steel_grade#CB#(B500C,Custom)
+VALUE: Custom
+TKWIDGET: SteelUniaxMaterial::GenerateValues
+QUESTION: Yield_stress_fy#UNITS#
+VALUE: 500 MPa
+QUESTION: Initial_elastic_tangent_E0#UNITS#
+VALUE: 200 GPa
+QUESTION: Yield_offset
+VALUE: 0.002#WIDTH#(10)
+QUESTION: Parameter_n_to_control_transition_from_elastic_to_plastic_branches
+VALUE: 5#WIDTH#(10)
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
 
 BOOK: Uniaxial_Concrete_Materials
 
@@ -448,8 +554,8 @@ HELP: uniaxial Kent-Scott-Park concrete material object with degraded linear unl
 IMAGE: img/Materials/Concrete01.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Strength_class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
-VALUE: C20/25
-TKWIDGET: TK_GenerateUniaxialConcreteProperties
+VALUE: Custom
+TKWIDGET: ConcreteUniaxMaterial::GenerateValues
 DEPENDENCIES: (C12/15,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C16/20,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C20/25,RESTORE,Strength_type,#CURRENT#)
@@ -485,8 +591,8 @@ VALUE: Concrete02
 IMAGE: img/Materials/Concrete02.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Strength_class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
-VALUE: C20/25
-TKWIDGET: TK_GenerateUniaxialConcreteProperties
+VALUE: Custom
+TKWIDGET: ConcreteUniaxMaterial::GenerateValues
 DEPENDENCIES: (C12/15,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C16/20,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C20/25,RESTORE,Strength_type,#CURRENT#)
@@ -528,8 +634,8 @@ VALUE: Concrete04
 IMAGE: img/Materials/Concrete04.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Strength_class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
-VALUE: C20/25
-TKWIDGET: TK_GenerateUniaxialConcreteProperties
+VALUE: Custom
+TKWIDGET: ConcreteUniaxMaterial::GenerateValues
 DEPENDENCIES: (C12/15,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C16/20,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C20/25,RESTORE,Strength_type,#CURRENT#)
@@ -566,12 +672,11 @@ MATERIAL: Concrete06
 COMMENT: \n\tUpdate material window to assign selected Class/Type.\n\tSelect 'Custom' to enter user values.\n
 QUESTION: Material:#CB#(Concrete06)
 VALUE: Concrete06
-HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
 IMAGE: img/Materials/Concrete06C.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Strength_class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
-VALUE: C20/25
-TKWIDGET: TK_GenerateUniaxialConcreteProperties
+VALUE: Custom
+TKWIDGET: ConcreteUniaxMaterial::GenerateValues
 DEPENDENCIES: (C12/15,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C16/20,RESTORE,Strength_type,#CURRENT#)
 DEPENDENCIES: (C20/25,RESTORE,Strength_type,#CURRENT#)
@@ -610,6 +715,59 @@ VALUE: 7.700e-004#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
+MATERIAL: ConcreteCM
+COMMENT: \n\tUpdate material window to assign selected Class/Type.\n\tSelect 'Custom' to enter user values.\n
+QUESTION: Material:#CB#(ConcreteCM)
+VALUE: ConcreteCM
+IMAGE: img/Materials/ConcreteCM.png
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Strength_class#CB#(C12/15,C16/20,C20/25,C25/30,C30/37,C35/45,C40/50,C45/55,C50/60,C55/67,C60/75,C70/85,C80/95,C90/105,Custom)
+VALUE: Custom
+TKWIDGET: ConcreteUniaxMaterial::GenerateValues
+DEPENDENCIES: (C12/15,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C16/20,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C20/25,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C25/30,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C30/37,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C35/45,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C40/50,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C45/55,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C50/60,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C60/75,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C70/85,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C80/95,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (C90/105,RESTORE,Strength_type,#CURRENT#)
+DEPENDENCIES: (Custom,HIDE,Strength_type,#CURRENT#)
+HELP: Choose concrete strength category, to generate fast properties in the following fields.
+QUESTION: Strength_type#CB#(Mean,Characteristic)
+VALUE: Characteristic
+QUESTION: Concrete_compressive_strength_fpcc#UNITS#
+VALUE: -20 MPa
+QUESTION: Strain_at_compressive_strength_epcc
+VALUE: -2.0e-3#WIDTH#(15)
+QUESTION: Initial_tangent_modulus_Ec#UNITS#
+VALUE: 30 GPa
+QUESTION: Shape_parameter_rc_in_Tsai's_equation_for_compression
+VALUE: 7#WIDTH#(15)
+QUESTION: Critical_strain_on_compression_envelope
+VALUE: 1.035#WIDTH#(15)
+QUESTION: Tensile_strength_ft#UNITS#
+VALUE: 2.2 MPa
+QUESTION: Strain_at_tensile_strength_et
+VALUE: 1.100e-004#WIDTH#(15)
+QUESTION: Shape_parameter_rc_in_Tsai's_equation_for_tension
+VALUE: 1.2#WIDTH#(15)
+QUESTION: Critical_strain_on_tension_envelope
+VALUE: 10000#WIDTH#(15)
+QUESTION: Consider_gap_closure#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Gap_parameter,#CURRENT#) (0,HIDE,Gap_parameter,#CURRENT#)
+QUESTION: Gap_parameter
+VALUE: 1
+STATE: HIDDEN
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
 
 BOOK: Combined_Materials
 
@@ -619,7 +777,7 @@ COMMENT: \n
 QUESTION: Material:#CB#(Series)
 VALUE: Series
 IMAGE: img/Materials/SeriesMaterial.png
-TKWIDGET: TK_SeriesParallel_CheckValidOptions
+TKWIDGET: SeriesParallel::CheckFieldValues
 QUESTION: Activate_1st_material#CB#(0,1)
 VALUE: 1
 IMAGE: img/Materials/SeriesMaterialExample.png
@@ -654,7 +812,7 @@ COMMENT: \n
 QUESTION: Material:#CB#(Parallel)
 VALUE: Parallel
 IMAGE: img/Materials/ParallelMaterial.png
-TKWIDGET: TK_SeriesParallel_CheckValidOptions
+TKWIDGET: SeriesParallel::CheckFieldValues
 QUESTION: Activate_1st_material#CB#(0,1)
 VALUE: 1
 IMAGE: img/Materials/ParallelMaterialExample.png
@@ -692,7 +850,7 @@ VALUE: SectionAggregator
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: All uniaxial materials except Viscous/ViscousDamper/HyperbolicGap
 QUESTION: Compatible_sections:#CB#(_)
-VALUE: Fiber
+VALUE: Elastic/Fiber
 TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
 QUESTION: Select_section#CB#(1,0)
@@ -701,7 +859,7 @@ IMAGE: Img/Materials/SectionAggregator.png
 DEPENDENCIES: (1,RESTORE,Section_to_be_aggregated,#CURRENT#) (0,HIDE,Section_to_be_aggregated,#CURRENT#)
 QUESTION: Section_to_be_aggregated#MAT#(Section_Force-Deformation)
 VALUE: Fiber
-TKWIDGET: TK_SectionAggregator_CheckValidOptions
+TKWIDGET: SecAggregator::CheckFieldValues
 QUESTION: Activate_P#CB#(1,0)
 VALUE: 0
 DEPENDENCIES: (1,RESTORE,Axial_force-deformation,#CURRENT#) (0,SET,Axial_force-deformation,#CURRENT#)
@@ -747,7 +905,7 @@ VALUE: InitStrain
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Material_for_defining_initial_strain#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Standard_Uniaxial_Materials)
 VALUE: Elastic
-TKWIDGET: TK_InitialStrainStress_CheckValidOptions
+TKWIDGET: InitStressStrain::CheckFieldValues
 QUESTION: Initial_strain
 VALUE: 0.0004#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
@@ -760,9 +918,41 @@ VALUE: InitStress
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Material_for_defining_initial_stress#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Standard_Uniaxial_Materials)
 VALUE: Elastic
-TKWIDGET: TK_InitialStrainStress_CheckValidOptions
+TKWIDGET: InitStressStrain::CheckFieldValues
 QUESTION: Initial_stress#UNITS#
 VALUE: -10 MPa
+TKWIDGET: TK_MaterialWikiInfo
+END MATERIAL
+
+MATERIAL: MinMax
+COMMENT: \n\tThe behaviour for this material is provided by another material.\n\tIf the strain/deformation/rotation falls below or above min/max\n\tvalues the material is assumed to have failed.\n\tFrom that point on, zero values are returned for the tangent\n\tand stress/force/rotation.\n\t
+QUESTION: Material:#CB#(_)
+VALUE: MinMax
+TKWIDGET: TK_UpdateInfoBar
+QUESTION: Formulation#CB#(Stress-Strain,Force-Deformation,Moment-Rotation)
+VALUE: Stress-Strain
+DEPENDENCIES: (Stress-Strain,RESTORE,Minimum_strain,#CURRENT#,RESTORE,Maximum_strain,#CURRENT#,HIDE,Minimum_deformation,#CURRENT#,HIDE,Maximum_deformation,#CURRENT#,HIDE,Minimum_rotation,#CURRENT#,HIDE,Maximum_rotation,#CURRENT#,RESTORE,Material_for_defining_stress-strain_behaviour,#CURRENT#,HIDE,Material_for_defining_force-deformation_behaviour,#CURRENT#,HIDE,Material_for_defining_moment-rotation_behaviour,#CURRENT#)
+DEPENDENCIES: (Force-Deformation,HIDE,Minimum_strain,#CURRENT#,HIDE,Maximum_strain,#CURRENT#,RESTORE,Minimum_deformation,#CURRENT#,RESTORE,Maximum_deformation,#CURRENT#,HIDE,Minimum_rotation,#CURRENT#,HIDE,Maximum_rotation,#CURRENT#,HIDE,Material_for_defining_stress-strain_behaviour,#CURRENT#,RESTORE,Material_for_defining_force-deformation_behaviour,#CURRENT#,HIDE,Material_for_defining_moment-rotation_behaviour,#CURRENT#)
+DEPENDENCIES: (Moment-Rotation,HIDE,Minimum_strain,#CURRENT#,HIDE,Maximum_strain,#CURRENT#,HIDE,Minimum_deformation,#CURRENT#,HIDE,Maximum_deformation,#CURRENT#,RESTORE,Minimum_rotation,#CURRENT#,RESTORE,Maximum_rotation,#CURRENT#,HIDE,Material_for_defining_stress-strain_behaviour,#CURRENT#,HIDE,Material_for_defining_force-deformation_behaviour,#CURRENT#,RESTORE,Material_for_defining_moment-rotation_behaviour,#CURRENT#)
+TKWIDGET: MinMax::CheckFieldValues
+QUESTION: Material_for_defining_stress-strain_behaviour#MAT#(Uniaxial_Steel_Materials,Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials)
+VALUE: Steel01
+QUESTION: Material_for_defining_force-deformation_behaviour#MAT#(Uniaxial_Steel_Materials,Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials)
+VALUE: Steel01
+QUESTION: Material_for_defining_moment-rotation_behaviour#MAT#(Uniaxial_Steel_Materials,Standard_Uniaxial_Materials,Uniaxial_Concrete_Materials)
+VALUE: Steel01
+QUESTION: Minimum_strain
+VALUE: -1.0e16
+QUESTION: Maximum_strain
+VALUE: 1.0e16
+QUESTION: Minimum_deformation#UNITS#
+VALUE: -1.0e16 m
+QUESTION: Maximum_deformation#UNITS#
+VALUE: 1.0e16 m
+QUESTION: Minimum_rotation#UNITS#
+VALUE: -1.0e16 rad
+QUESTION: Maximum_rotation#UNITS#
+VALUE: 1.0e16 rad
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
@@ -776,8 +966,8 @@ QUESTION: Material:#CB#(ElasticIsotropic)
 VALUE: ElasticIsotropic
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Material_type#CB#(Concrete,Steel,Custom)
-VALUE: Concrete
-TKWIDGET: TK_GenerateNDMaterialsProperties
+VALUE: Custom
+TKWIDGET: nD::GenerateValues
 DEPENDENCIES: (Concrete,RESTORE,Concrete_class,#CURRENT#)
 DEPENDENCIES: (Steel,HIDE,Concrete_class,#CURRENT#)
 DEPENDENCIES: (Custom,HIDE,Concrete_class,#CURRENT#)
@@ -849,7 +1039,7 @@ QUESTION: Concrete_compressive_strength#UNITS#
 VALUE: -20MPa
 QUESTION: Calculate_default_values_(update_to_apply)#CB#(1,0)
 VALUE: 1
-TKWIDGET: TK_Damage2pDefaultValues
+TKWIDGET: Damage2p::GenerateDefaultValues
 QUESTION: Young_Modulus#UNITS#
 VALUE: 21.243GPa
 QUESTION: Concrete_tensile_strength#UNITS#
@@ -877,8 +1067,8 @@ QUESTION: Material:#CB#(PressureIndependMultiYield)
 VALUE: PressureIndependMultiYield
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Soil_type#CB#(Soft_Clay,Medium_Clay,Stiff_Clay,Custom)
-VALUE: Medium_Clay
-TKWIDGET: TK_PIMY_FastProperties
+VALUE: Custom
+TKWIDGET: PIMY::TK_GenerateRecommendedValues
 QUESTION: Saturated_soil_mass_density#UNITS#
 VALUE: 1.5ton/m^3
 QUESTION: Reference_shear_modulus_Gr#UNITS#
@@ -904,7 +1094,7 @@ VALUE: 0
 DEPENDENCIES: (0,HIDE,Activate_plastic_response_at_interval,#CURRENT#) (1,RESTORE,Activate_plastic_response_at_interval,#CURRENT#)
 QUESTION: Activate_plastic_response_at_interval
 VALUE: 2#WIDTH#(4)
-TKWIDGET: TK_CheckIntegerIntvNum
+TKWIDGET: PIMY::CheckIntvNum
 QUESTION: Automatic_surface_generation#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,RESTORE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#) (1,HIDE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#)
@@ -920,8 +1110,8 @@ QUESTION: Material:#CB#(PressureDependMultiYield)
 VALUE: PressureDependMultiYield
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Soil_type#CB#(Loose_Sand,Medium_Sand,Medium-dense_Sand,Dense_Sand,Custom)
-VALUE: Loose_Sand
-TKWIDGET: TK_PDMY_FastProperties
+VALUE: Custom
+TKWIDGET: PDMY::GenerateRecommendedValues
 QUESTION: Saturated_soil_mass_density#UNITS#
 VALUE: 1.7ton/m^3
 QUESTION: Reference_shear_modulus_Gr#UNITS#
@@ -974,7 +1164,7 @@ VALUE: 0
 DEPENDENCIES: (0,HIDE,Activate_plastic_response_at_interval,#CURRENT#) (1,RESTORE,Activate_plastic_response_at_interval,#CURRENT#)
 QUESTION: Activate_plastic_response_at_interval
 VALUE: 2#WIDTH#(4)
-TKWIDGET: TK_CheckIntegerIntvNum
+TKWIDGET: PDMY::CheckIntvNum
 QUESTION: Automatic_surface_generation#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,RESTORE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#) (1,HIDE,Define_yield_surfaces_based_on_shear_modulus_reduction_curve,#CURRENT#)
@@ -988,12 +1178,87 @@ END MATERIAL
 BOOK: Section_Force-Deformation
 
 
+MATERIAL: Elastic_Section
+COMMENT: \n
+TITLE: General
+QUESTION: Section:#CB#(ElasticSection)
+VALUE: ElasticSection
+TKWIDGET: TK_SectionWikiInfo
+TITLE: Material
+QUESTION: Elastic_modulus_E#UNITS#
+VALUE: 28 GPa
+QUESTION: Calculate_Shear_modulus_(update_to_apply)#CB#(0,1)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Poisson's_ratio,#CURRENT#) (1,RESTORE,Poisson's_ratio,#CURRENT#)
+TKWIDGET: ElasticSection::CalcShearModulus
+QUESTION: Poisson's_ratio
+VALUE: 0.2#WIDTH#(10)
+STATE: HIDDEN
+QUESTION: Shear_modulus_G#UNITS#
+VALUE: 11.66666667 GPa
+TITLE: Section_properties
+QUESTION: _#CB#(Hover_for_local_axes_info)
+VALUE: Hover for local axes info
+STATE: DISABLED
+HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Problem data options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule
+QUESTION: Cross_section#CB#(Rectangular,Tee,Circular,General)
+VALUE: Rectangular
+DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (Circular,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,RESTORE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (Tee,RESTORE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,RESTORE,Height_hf,#CURRENT#,RESTORE,Width_bf,#CURRENT#,RESTORE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+DEPENDENCIES: (General,HIDE,Height_h,#CURRENT#,HIDE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bw,#CURRENT#,RESTORE,Area_A,#CURRENT#,RESTORE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,RESTORE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,RESTORE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
+QUESTION: Height_h#UNITS#
+VALUE: 0.5m
+QUESTION: Width_b#UNITS#
+VALUE: 0.3m
+IMAGE: img/Sections/sec_Rect.png
+QUESTION: Diameter_d#UNITS#
+VALUE: 0.5m
+IMAGE: img/Sections/sec_Circular.png
+QUESTION: Width_bf#UNITS#
+VALUE: 0.4m
+IMAGE: img/Sections/sec_Tee.png
+QUESTION: Height_hf#UNITS#
+VALUE: 0.15m
+QUESTION: Width_bw#UNITS#
+VALUE: 0.25m
+QUESTION: Area_A#UNITS#
+VALUE: 1.0 m^2
+IMAGE: img/Sections/sec_General.png
+QUESTION: ElasticSection_Area#UNITS#
+VALUE: 0.15 m^2
+STATE: HIDDEN
+TKWIDGET: ElasticSection::CalcArea
+QUESTION: Moment_of_inertia_about_local-y_Iyy#UNITS#
+VALUE: 0.5 m^4
+QUESTION: Moment_of_inertia_about_local-z_Izz#UNITS#
+VALUE: 0.5 m^4
+QUESTION: Torsional_moment_of_inertia_Iyz#UNITS#
+VALUE: 1.0 m^4
+QUESTION: Set_modification_factors#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,mod._A,#CURRENT#,RESTORE,mod._Iyy,#CURRENT#,RESTORE,mod._Izz,#CURRENT#,RESTORE,mod._Iyz,#CURRENT#,RESTORE,mod._Sy,#CURRENT#,RESTORE,mod._Sz,#CURRENT#)
+DEPENDENCIES: (0,HIDE,mod._A,#CURRENT#,HIDE,mod._Iyy,#CURRENT#,HIDE,mod._Izz,#CURRENT#,HIDE,mod._Iyz,#CURRENT#,HIDE,mod._Sy,#CURRENT#,HIDE,mod._Sz,#CURRENT#)
+QUESTION: mod._A
+VALUE: 1
+QUESTION: mod._Sy
+VALUE: 1
+QUESTION: mod._Sz
+VALUE: 1
+QUESTION: mod._Iyy
+VALUE: 1
+QUESTION: mod._Izz
+VALUE: 1
+QUESTION: mod._Iyz
+VALUE: 1
+END MATERIAL
+
 MATERIAL: Fiber
 COMMENT: \n
 TITLE: General
 QUESTION: Section:#CB#(Fiber)
 VALUE: Fiber
-TKWIDGET: TK_CheckFieldValuesForFiber
+TKWIDGET: Fiber::CheckFieldValues
 QUESTION: Compatible_materials:#CB#(_)
 VALUE: Concrete uniaxial materials/InitStrain/InitStress/Steel uniaxial materials
 TKWIDGET: TK_SectionWikiInfo
@@ -1037,7 +1302,7 @@ QUESTION: Include_additional_part#CB#(1,0)
 VALUE: 1
 DEPENDENCIES: (1,RESTORE,Additional_slab_thickness_ts3,#CURRENT#,RESTORE,Sidewalk_width_bsw,#CURRENT#,RESTORE,Sidewalk_thickness,#CURRENT#,RESTORE,Beam_width_b,#CURRENT#,RESTORE,Beam_height,#CURRENT#,RESTORE,Fibers_along_beam_height,#CURRENT#,RESTORE,Fibers_along_beam_width,#CURRENT#,RESTORE,Bars_on_top_layer_of_additional_slab,#CURRENT#,RESTORE,Bars_on_bottom_layer_of_additional_slab,#CURRENT#,RESTORE,Bars_along_beam_height,#CURRENT#,RESTORE,Bars_along_beam_width,#CURRENT#,RESTORE,Additional_slab_bar_size,#CURRENT#,RESTORE,Beam_bar_size,#CURRENT#,RESTORE,Additional_slab_bar_area,#CURRENT#,RESTORE,Beam_bar_area,#CURRENT#,RESTORE,Additional_part_material,#CURRENT#,RESTORE,Additional_slab_reinforcing_bar_material,#CURRENT#,RESTORE,Beam_reinforcing_bar_material,#CURRENT#)
 DEPENDENCIES: (0,HIDE,Additional_slab_thickness_ts3,#CURRENT#,HIDE,Sidewalk_width_bsw,#CURRENT#,HIDE,Sidewalk_thickness,#CURRENT#,HIDE,Beam_width_b,#CURRENT#,HIDE,Beam_height,#CURRENT#,HIDE,Fibers_along_beam_height,#CURRENT#,HIDE,Fibers_along_beam_width,#CURRENT#,HIDE,Bars_on_top_layer_of_additional_slab,#CURRENT#,HIDE,Bars_on_bottom_layer_of_additional_slab,#CURRENT#,HIDE,Bars_along_beam_height,#CURRENT#,HIDE,Bars_along_beam_width,#CURRENT#,HIDE,Additional_slab_bar_size,#CURRENT#,HIDE,Beam_bar_size,#CURRENT#,HIDE,Additional_slab_bar_area,#CURRENT#,HIDE,Beam_bar_area,#CURRENT#,HIDE,Additional_part_material,#CURRENT#,HIDE,Additional_slab_reinforcing_bar_material,#CURRENT#,HIDE,Beam_reinforcing_bar_material,#CURRENT#)
-TKWIDGET: TK_Fiber_BridgeDeck_IncludeAddPart
+TKWIDGET: Fiber::BridgeDeck_IncludeAddPart
 QUESTION: Additional_slab_thickness_ts3#UNITS#
 VALUE: 0.5 m
 QUESTION: Sidewalk_thickness_ts4#UNITS#
@@ -1052,11 +1317,11 @@ QUESTION: Solid_Section#CB#(1,0)
 VALUE: 0
 DEPENDENCIES: (1,SET,Void_width_dv,0.0m,SET,Number_of_voids,0,HIDE,External_web_thickness_tw,#CURRENT#,HIDE,Fibers_along_internal_web_thickness,#CURRENT#)
 DEPENDENCIES: (0,RESTORE,Void_width_dv,#CURRENT#,RESTORE,Number_of_voids,#CURRENT#,RESTORE,External_web_thickness_tw,#CURRENT#,RESTORE,Fibers_along_internal_web_thickness,#CURRENT#)
-TKWIDGET: TK_Fiber_BridgeDeck_Solid
-QUESTION: Cross_section_Area#UNITS#
+TKWIDGET: Fiber::BridgeDeck_Solid
+QUESTION: Cross_section_area#UNITS#
 VALUE: 0.25m^2
 STATE: HIDDEN
-TKWIDGET: TK_CalcFiberCrossSectionArea
+TKWIDGET: Fiber::CalcArea
 QUESTION: Activate_torsional_stiffness#CB#(1,0)
 VALUE: 0
 DEPENDENCIES: (1,RESTORE,Torsional_stiffness_GJ,#CURRENT#)
@@ -1134,7 +1399,7 @@ QUESTION: Beam_bar_size#UNITS#
 VALUE: 20 mm
 QUESTION: Calculate_bar_areas_(update_to_apply)#CB#(0,1)
 VALUE: 1
-TKWIDGET: Calculate_Reinf_Areas_for_Fiber
+TKWIDGET: Fiber::CalcReinfBarArea
 QUESTION: Corner_bar_area#UNITS#
 VALUE: 5.027e-005 m^2
 QUESTION: Middle_bar_area#UNITS#
@@ -1167,7 +1432,7 @@ QUESTION: Fibers:#CB#(_)
 VALUE:
 QUESTION: Suggest_fiber_mesh_(update_to_apply)#CB#(0,1)
 VALUE: 0
-TKWIDGET: TK_Suggest_Fibers_for_Fiber_Section
+TKWIDGET: Fiber::SuggestFibers
 QUESTION: Fibers_in_local_z_direction
 VALUE: 15#WIDTH#(10)
 QUESTION: Fibers_in_local_y_direction
@@ -1199,24 +1464,102 @@ QUESTION: Core_material#MAT#(Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
 QUESTION: Cover_material#MAT#(Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
-QUESTION: Reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
+QUESTION: Reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Steel01
 QUESTION: Main_section_material#MAT#(Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
-QUESTION: Top_slab_reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
+QUESTION: Top_slab_reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Steel01
-QUESTION: Bottom_slab_reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
+QUESTION: Bottom_slab_reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Steel01
 QUESTION: Additional_part_material#MAT#(Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Concrete01_(Zero_tensile_strength)
 QUESTION: Additional_slab_reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel01
-QUESTION: Beam_reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials)
+QUESTION: Beam_reinforcing_bar_material#MAT#(Uniaxial_Steel_Materials,Combined_Materials)
 VALUE: Steel01
 #QUESTION: External_web_tendon_material#MAT#(Uniaxial_Steel_Materials)
 #VALUE: Steel01
 #QUESTION: Internal_web_tendon_material#MAT#(Uniaxial_Steel_Materials)
 #VALUE: Steel01
+END MATERIAL
+
+MATERIAL: Fiber_Custom
+COMMENT: \n\tEach region consists of one material. Material Tags should be entered as \$MatTag at each TCL Code\n\tand are automatically handled by the Interface. Use TCL code only if project is already saved.\n\tArea is considered only for the mass per unit length of the non-linear fiber element and/or for dead loads if activated.\n
+TITLE: General
+QUESTION: Section:#CB#(FiberCustom)
+VALUE: FiberCustom
+TKWIDGET: TK_SectionWikiInfo
+TITLE: Section_properties
+QUESTION: Cross_section_area#UNITS#
+VALUE: 0.0 m^2
+QUESTION: Activate_torsional_stiffness#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (1,RESTORE,Torsional_stiffness_GJ,#CURRENT#)
+DEPENDENCIES: (0,HIDE,Torsional_stiffness_GJ,#CURRENT#)
+QUESTION: Torsional_stiffness_GJ#UNITS#
+VALUE: 10000 kNm^2
+QUESTION: Region_1_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Concrete01_(Zero_tensile_strength)
+QUESTION: Script1
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_2_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Concrete01_(Zero_tensile_strength)
+QUESTION: Script2
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_3_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script3
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_4_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script4
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_5_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script5
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_6_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script6
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+
+QUESTION: Region_7_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script7
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_8_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script8
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_9_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script9
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
+QUESTION: Region_10_material:#MAT#(Uniaxial_Concrete_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+VALUE: Steel02
+QUESTION: Script10
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Fiber::Script
 END MATERIAL
 
 MATERIAL: FiberInt
@@ -1235,7 +1578,7 @@ STATE: DISABLED
 HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element tranverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule
 QUESTION: Left_subsection(-y_direction):#CB#(_)
 VALUE:
-TKWIDGET: TK_FiberInt_CheckValues
+TKWIDGET: FiberInt::CheckFieldValues
 QUESTION: Thickness#UNITS#
 VALUE: 0.5 m
 IMAGE: img/Sections/sec_FiberInt.png
@@ -1316,19 +1659,79 @@ VALUE: 0.0ton/m^3
 TKWIDGET: TK_SectionWikiInfo
 END MATERIAL
 
+MATERIAL: LayeredShell
+COMMENT: \n\tEnter the properties of the rectangular section to be modelled with Shell elements\n\tusing a layered/composite integrated section for each in-plane integration point.\n\tMaterial properties and thicknesses are assigned by 10 layers according to the\n\tsize of the wall and the reinforcement distribution.\n
+TITLE: General
+QUESTION: Section:#CB#(LayeredShell)
+VALUE: LayeredShell
+TKWIDGET: TK_SectionWikiInfo
+TITLE: Section_properties
+QUESTION: Height#UNITS#
+VALUE: 3 m
+QUESTION: Thickness#UNITS#
+VALUE: 0.2 m
+QUESTION: Width#UNITS#
+VALUE: 0.5 m
+QUESTION: Cover_depth_for_bars#UNITS#
+VALUE: 5 cm
+QUESTION: Longitudinal_bars
+VALUE: 8#WIDTH#(10)
+QUESTION: Transverse_reinforcement_space#UNITS#
+VALUE: 100 mm
+QUESTION: Longitudinal_bar_size#UNITS#
+VALUE: 16 mm
+QUESTION: Transverse_bar_size#UNITS#
+VALUE: 8 mm
+QUESTION: Calculate_bar_areas_(update_to_apply)#CB#(0,1)
+VALUE: 1
+TKWIDGET: LayeredShell::CalcBarAreas
+QUESTION: Longitudinal_bar_area#UNITS#
+VALUE: 2.011e-004 m^2
+QUESTION: Transverse_bar_area#UNITS#
+VALUE: 5.027e-005 m^2
+TITLE: Materials
+QUESTION: Concrete_compressive_strength#UNITS#
+VALUE: 20 MPa
+HELP: positive value
+TKWIDGET: LayeredShell::CheckFieldValues
+QUESTION: Concrete_tensile_strength#UNITS#
+VALUE: 2.2 MPa
+HELP: positive value
+QUESTION: Concrete_crushing_strength#UNITS#
+VALUE: -17.0 MPa
+HELP: negative value
+QUESTION: Concrete_strain_at_maximum_strength
+VALUE: -2.0e-3
+HELP: negative value
+QUESTION: Concrete_strain_at_crushing_strength
+VALUE: -3.5e-3
+HELP: negative value
+QUESTION: Ultimate_tensile_strain
+VALUE: 1.0e-3
+HELP: positive value
+QUESTION: Shear_retention_factor
+VALUE: 0.08
+QUESTION: Shear_modulus_of_out_plane#UNITS#
+VALUE: 12.5 GPa
+QUESTION: Longitudinal_bar_material#MAT#(Uniaxial_Steel_Materials)
+VALUE: Steel02
+QUESTION: Transverse_bar_material#MAT#(Uniaxial_Steel_Materials)
+VALUE: Steel02
+END MATERIAL
+
 
 BOOK: Records
 
 
 MATERIAL: Ground_Motion_Record
-COMMENT: \n
+COMMENT: \n\tWhen choosing a file, it is automatically copied\n\tto the Records folder in the project directory.\n\tUpdate window to apply changes of the record parameters\n\tand before using the button functions.\n
 QUESTION: Record_file
 VALUE:
-TKWIDGET: TK_RecordFileButton
+TKWIDGET: Records::FileButton
 QUESTION: Record_type#CB#(Acceleration,Displacement,Velocity,Function)
 VALUE: Acceleration
 QUESTION: Record_file_format#CB#(PEER_format,Single_value_per_line,Time_and_value_per_line)
-VALUE: PEER_format
+VALUE: Time_and_value_per_line
 DEPENDENCIES: (PEER_format,HIDE,Lines_to_skip,#CURRENT#,HIDE,Time_step,#CURRENT#,HIDE,Time_column,#CURRENT#,HIDE,Value_column,#CURRENT#)
 DEPENDENCIES: (Single_value_per_line,HIDE,Time_column,#CURRENT#,HIDE,Value_column,#CURRENT#,RESTORE,Lines_to_skip,#CURRENT#,RESTORE,Time_step,#CURRENT#)
 DEPENDENCIES: (Time_and_value_per_line,RESTORE,Lines_to_skip,#CURRENT#,HIDE,Time_step,#CURRENT#,RESTORE,Time_column,#CURRENT#,RESTORE,Value_column,#CURRENT#)
@@ -1336,12 +1739,21 @@ QUESTION: Lines_to_skip
 VALUE: 1#WIDTH#(5)
 QUESTION: Time_step
 VALUE: 0.005#WIDTH#(10)
-QUESTION: Time_column#CB#(1,2)
+QUESTION: Time_column#CB#(1,2,3,4)
 VALUE: 1
-QUESTION: Value_column#CB#(1,2)
+QUESTION: Value_column#CB#(1,2,3,4)
 VALUE: 2
 QUESTION: Scale_factor
 VALUE: 9.81#WIDTH#(10)
+QUESTION: Record_open
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Records::OpenFile
+QUESTION: Record_viewer
+VALUE:
+STATE: HIDDEN
+TKWIDGET: Records::Display
+
 END MATERIAL
 
 
@@ -1360,7 +1772,7 @@ TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
-TKWIDGET: TK_CheckMaterialForElasticBeamColumn
+TKWIDGET: EBC::CheckMaterial
 TITLE: Section_properties
 QUESTION: _#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info
@@ -1429,7 +1841,7 @@ TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
-TKWIDGET: TK_CheckMaterialForElasticBeamColumn
+TKWIDGET: EBC::CheckMaterial
 TITLE: Section_properties
 QUESTION: _#CB#(Hover_for_local_axes_info)
 VALUE: Hover for local axes info
@@ -1498,7 +1910,7 @@ QUESTION: Element_type:#CB#(forceBeamColumn)
 VALUE: forceBeamColumn
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Compatible_Sections:#CB#(_)
-VALUE: Fiber/SectionAggregator
+VALUE: Elastic/Fiber/SectionAggregator
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Integration
 QUESTION: Integration_type#CB#(Lobatto)
@@ -1514,7 +1926,7 @@ VALUE: a finer mesh is recommended for modeling structural members instead of on
 TITLE: Section
 QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
 VALUE: Fiber
-TKWIDGET: TK_CheckSectionForFBC
+TKWIDGET: FBC::CheckSection
 TITLE: Element_Geometry
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta,Corotational)
 VALUE: Linear
@@ -1524,7 +1936,7 @@ VALUE: 1
 DEPENDENCIES: (1,RESTORE,Maximum_Iterations,#CURRENT#,RESTORE,Tolerance,#CURRENT#) (0,HIDE,Maximum_Iterations,#CURRENT#,HIDE,Tolerance,#CURRENT#)
 QUESTION: Maximum_Iterations
 VALUE: 10#WIDTH#(10)
-HELP: 	maximum number of iterations to undertake to satisfy element compatibility
+HELP: maximum number of iterations to undertake to satisfy element compatibility
 QUESTION: Tolerance
 VALUE: 1.0e-6#WIDTH#(10)
 HELP: tolerance for satisfaction of element compatibility
@@ -1542,7 +1954,7 @@ QUESTION: Element_type:#CB#(dispBeamColumn)
 VALUE: dispBeamColumn
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Compatible_Sections:#CB#(_)
-VALUE: Fiber/SectionAggregator
+VALUE: Elastic/Fiber/SectionAggregator
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Integration
 QUESTION: Number_of_integration_points
@@ -1556,7 +1968,7 @@ VALUE: a finer mesh is recommended for modeling structural members instead of on
 TITLE: Section
 QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
 VALUE: Fiber
-TKWIDGET: TK_CheckSectionForDBC
+TKWIDGET: DBC::CheckSection
 TITLE: Element_Geometry
 QUESTION: Geometric_transformation#CB#(Linear,P-Delta,Corotational)
 VALUE: Linear
@@ -1588,7 +2000,7 @@ VALUE: a finer mesh is recommended for modeling structural members instead of on
 TITLE: Section
 QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
 VALUE: FiberInt
-TKWIDGET: TK_DBCI_CheckSection
+TKWIDGET: DIBC::CheckSection
 QUESTION: Fraction_of_the_height_from_bottom_to_the_rotation_center
 VALUE: 0.4#WIDTH#(15)
 TITLE: Element_Geometry
@@ -1613,13 +2025,13 @@ QUESTION: Element_type:#CB#(Truss)
 VALUE: Truss
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Compatible_materials:#CB#(_)
-VALUE: Standard Uniaxial Materials/Steel Uniaxial Materials/Series/Parallel/InitStrain/InitStress
+VALUE: Standard/Steel/Concrete Uniaxial Materials/Series/Parallel/InitStrain/InitStress
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use its parameters.
-TKWIDGET: TK_Truss_CheckFieldValues
+TKWIDGET: Truss::CheckFieldValues
 TITLE: Mass-Weight
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
@@ -1668,13 +2080,13 @@ QUESTION: Element_type:#CB#(CorotationalTruss)
 VALUE: CorotationalTruss
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Compatible_materials:#CB#(_)
-VALUE: Standard Uniaxial Materials/Steel Uniaxial Materials/Series/Parallel/InitStrain/InitStress
+VALUE: Standard/Steel/Concrete Uniaxial Materials/Series/Parallel/InitStrain/InitStress
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use its parameters.
-TKWIDGET: TK_Truss_CheckFieldValues
+TKWIDGET: Truss::CheckFieldValues
 TITLE: Mass-Weight
 QUESTION: Mass_density#UNITS#
 VALUE: 0.0ton/m^3
@@ -1727,7 +2139,7 @@ QUESTION: Element_type:#CB#(Quad)
 VALUE: Quad
 HELP: Four node quadrilateral element object which uses a bilinear isoparametric formulation
 IMAGE: img/Materials/Quad_Shell.png
-TKWIDGET: TK_CheckQuadFieldOptions
+TKWIDGET: Quad::CheckFieldValues
 QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
 QUESTION: Define_equalDOF_between_nodes_of_the_same_vertical_location#CB#(0,1)
@@ -1773,7 +2185,7 @@ TKWIDGET: TK_ElementWikiInfo
 TITLE: Section
 QUESTION: Type#MAT#(Section_Force-Deformation)
 VALUE: Elastic_Membrane_Plate
-TKWIDGET: TK_Shell_CheckFieldValues
+TKWIDGET: Shell::CheckFieldValues
 TITLE: Weight
 QUESTION: Weight_density#UNITS#
 VALUE: 25 kN/m^3
@@ -1792,7 +2204,7 @@ TKWIDGET: TK_ElementWikiInfo
 TITLE: Section
 QUESTION: Type#MAT#(Section_Force-Deformation)
 VALUE: Elastic_Membrane_Plate
-TKWIDGET: TK_Shell_CheckFieldValues
+TKWIDGET: Shell::CheckFieldValues
 TITLE: Weight
 QUESTION: Weight_density#UNITS#
 VALUE: 25 kN/m^3

@@ -25,15 +25,16 @@
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
 *set var thickness=ElemsMatProp(Thickness,real)
 *if(VarCount==1)
-# nDMaterial Definition used by Quad Elements. (Only if they have not already been defined on this model domain)
+# nDMaterial Definition used by Quad Elements
+# (ïnly if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Quad")==0)
-*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(MaterialID==SelectedMaterial)
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
@@ -59,15 +60,15 @@
 # Quad elements Definition : element quad $EleTag $Nodei $Nodej Nodek $Nodel $thick $type $MatTag
 
 *endif
-*format "%6d%6d%6d%6d%6d%8.3f"
+*format "%6d%6d%6d%6d%6d%8g"
 element quad *ElemsNum *ElemsConec *thickness  *\
 *if(strcmp(ElemsMatProp(Plane_behavior),"PlaneStrain")==0)
-*set var ID=tcl(FindMaterialNumber *ElemsMatProp(Material))
-*format "%3d%8.3f%8.3f%8.3f%8.3f"
+*set var ID=tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum)
+*format "%3d%8g%8g%8g%8g"
 PlaneStrain *ID *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
 *elseif(strcmp(ElemsMatProp(Plane_behavior),"PlaneStress")==0)
-*set var ID=tcl(FindMaterialNumber *ElemsMatProp(Material))
-*format "%3d%8.3f%8.3f%8.3f%8.3f"
+*set var ID=tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum)
+*format "%3d%8g%8g%8g%8g"
 PlaneStress *ID *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
 *endif
 *set var VarCount=VarCount+1

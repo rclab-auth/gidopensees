@@ -10,6 +10,7 @@ set Dmax *IntvData(Total_rotation,real)
 set Dincr *DispIncr
 *format "%d"
 set Nsteps *steps
+set committedSteps 1
 set IDctrlNode *IntvData(Control_node,int)
 set IDctrlDOF *NodeCtrlDOF
 
@@ -31,8 +32,8 @@ variable testTypeStatic RelativeEnergyIncr
 variable testTypeStatic FixedNumIter
 *endif
 *format "%g"
-variable TolStatic *IntvData(Tolerance,real);
-variable maxNumIterStatic *IntvData(Max_Iterations_per_Step,int);
+variable TolStatic *IntvData(Tolerance,real)
+variable maxNumIterStatic *IntvData(Max_Iterations_per_Step,int)
 *if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
 variable algorithmTypeStatic Newton
 *elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
@@ -46,34 +47,49 @@ variable algorithmTypeStatic BFGS
 *elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
 variable algorithmTypeStatic KrylovNewton
 *endif
-set AnalOk [analyze $Nsteps]
+for {set i 1} { $i <= $Nsteps } {incr i 1} {
+    set t [getTime]
+    puts -nonewline "LF (*IntvNum)$t "
+    set AnalOk [analyze 1]
+    if {$AnalOk !=0} {
+        break
+    } else {
+        set committedSteps [expr $committedSteps+1]
+    }
+}
 
 if {$AnalOk != 0} {
     # if analysis fails, different algorithms are applied
-    set Dstep 0.0;
-    set AnalOk 0;
-    set Nk 1;
+    set Dstep 0.0
+    set AnalOk 0
+    set Nk 1
     while {$Dstep <= 1.0 && $AnalOk == 0} {
         set controlDisp [nodeDisp $IDctrlNode $IDctrlDOF]
         set Dstep [expr $controlDisp/$Dmax]
         if {($Nk==2 && $AnalOk==0) || ($Nk==1 && $AnalOk==0)} {
         set Nk 1
-		puts "\nApplying initial stepping\n"
+        puts "\nApplying initial step\n"
         integrator DisplacementControl  $IDctrlNode $IDctrlDOF $Dincr; # bring back to original increment
+        set t [getTime]
+        puts -nonewline "LF (*IntvNum)$t "
         set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==0)
-			if {$AnalOk != 0} {
-                    puts "\nTrying Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+            if {$AnalOk != 0} {
+                    puts "\nTrying Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
             }
             if {$AnalOk !=0} {
-                    puts "\nTrying Modified Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Modified Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -81,16 +97,20 @@ if {$AnalOk != 0} {
 *else
             if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
             }
             if {$AnalOk !=0} {
                     puts "\nTrying Modified Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -99,47 +119,59 @@ if {$AnalOk != 0} {
             if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
             }
             if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson with Line Search\n"
                     algorithm NewtonLineSearch
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
             }
             if {$AnalOk !=0} {
                     puts "\nTrying BFGS\n"
                     algorithm BFGS
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
             }
-                # if {$AnalOk != 0} { ; # stop if still fails to converge
-                #    puts "Problem...."
-                #    return -1
-                # }; # end if
+
+            if {$AnalOk == 0} {
+                    set committedSteps [expr $committedSteps+1]
+            }
         }
 
         if {($AnalOk !=0 && $Nk==1) || ($AnalOk==0 && $Nk==4)} {; # reduce step size if still fails to converge
             set Nk 2;  # reduce step size
-			puts "\nApplying substepping /2\n"
-            set DincrReduced [expr $Dincr/$Nk];
+            puts "\nApplying substepping / 2\n"
+            set DincrReduced [expr $Dincr/$Nk]
             integrator DisplacementControl  $IDctrlNode $IDctrlDOF $DincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
+                set t [getTime]
+                puts -nonewline "LF (*IntvNum)$t "
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==0)
                 if {$AnalOk != 0} {
-                    puts "\nTrying Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
-                    puts "\nTrying Modified Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Modified Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -147,16 +179,20 @@ if {$AnalOk != 0} {
 *else
                 if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
                     puts "\nTrying Modified Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -165,49 +201,60 @@ if {$AnalOk != 0} {
                 if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson with Line Search\n"
                     algorithm NewtonLineSearch
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
                     puts "\nTrying BFGS\n"
                     algorithm BFGS
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
-                # if {$AnalOk != 0} { ; # stop if still fails to converge
-                #    puts "Problem...."
-                #    return -1
-                # }; # end if
-            };
+                if {$AnalOk == 0} {
+                    set committedSteps [expr $committedSteps+1]
+                }
+            }
         }
 
         # if step size bisection is not enough, it is bisected again
         if {($AnalOk !=0 && $Nk==2) || ($AnalOk==0 && $Nk==8)} {
             set Nk 4; # reduce step size
-			puts "\nApplying substepping /4\n"
-            set DincrReduced [expr $Dincr/$Nk];
+            puts "\nApplying substepping / 4\n"
+            set DincrReduced [expr $Dincr/$Nk]
             integrator DisplacementControl  $IDctrlNode $IDctrlDOF $DincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
+                set t [getTime]
+                puts -nonewline "LF (*IntvNum)$t "
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
                 if {$AnalOk != 0} {
-                    puts "\nTrying Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
-                    puts "\nTrying Modified Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Modified Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -215,16 +262,20 @@ if {$AnalOk != 0} {
 *else
                 if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
                 puts "\nTrying Modified Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -233,20 +284,29 @@ if {$AnalOk != 0} {
                 if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1 ]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson with Line Search\n"
                     algorithm NewtonLineSearch
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
                     puts "\nTrying BFGS\n"
                     algorithm BFGS
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
+                }
+                if {$AnalOk == 0} {
+                    set committedSteps [expr $committedSteps+1]
                 }
             }
         }
@@ -254,24 +314,30 @@ if {$AnalOk != 0} {
         # if step size double bisection is not enough, it is bisected again
         if {$AnalOk !=0 && $Nk==4} {
             set Nk 8; # reduce step size
-			puts "\nApplying substepping /8\n"
-            set DincrReduced [expr $Dincr/$Nk];
+            puts "\nApplying substepping / 8\n"
+            set DincrReduced [expr $Dincr/$Nk]
             integrator DisplacementControl  $IDctrlNode $IDctrlDOF $DincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
+                set t [getTime]
+                puts -nonewline "LF (*IntvNum)$t "
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
                 if {$AnalOk != 0} {
-                    puts "\nTrying Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
-                    puts "\nTrying Modified Newton-Raphson with Initial Tangent\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    puts "\nTrying Modified Newton-Raphson with Initial Stiffness\n"
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton -initial
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -279,16 +345,20 @@ if {$AnalOk != 0} {
 *else
                 if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm Newton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
                     puts "\nTrying Modified Newton-Raphson\n"
-                    test NormDispIncr $TolStatic 2000 0
+                    test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -297,28 +367,38 @@ if {$AnalOk != 0} {
                 if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
-                    set AnalOk [analyze 1 ]
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
+                    set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson with LineSearch\n"
                     algorithm NewtonLineSearch
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
                 if {$AnalOk !=0} {
                     puts "\nTrying BFGS\n"
                     algorithm BFGS
+                    set t [getTime]
+                    puts -nonewline "LF (*IntvNum)$t "
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
+                }
+                if {$AnalOk == 0} {
+                    set committedSteps [expr $committedSteps+1]
                 }
             }
         }; # end if Nk=8
     }; # end while loop
-}; # end if AnalOk !
+}; # end if AnalOk
 
 if {$AnalOk != 0 } {
     puts "\nAnalysis FAILED\n"
 } else {
-    puts "\nAnalysis completed SUCCESSFULLY\n"
+    puts "\nAnalysis completed SUCCESSFULLY"
+    puts "Committed steps : $committedSteps\n"
 }

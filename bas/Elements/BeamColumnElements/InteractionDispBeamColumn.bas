@@ -26,17 +26,18 @@
 
 geomTransf LinearInt *TransfTag1
 
-# Sections Definition used by dispBeamColumnInt Elements. (Only if they have not already been defined on this model domain)
+# Sections Definition used by dispBeamColumnInt Elements
+# (if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"dispBeamColumnInt")==0)
-*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) )
+*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedSection)
 *# IF IT HAS NOT BEEN DEFINED YET
 *if(MaterialExists==-1)
 *# meta valto sti lista me ta used materials
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# Section FOUND
 *if(SelectedSection==SectionID)
 *set var dummy=tcl(AddUsedMaterials *SelectedSection)
@@ -63,10 +64,10 @@ geomTransf LinearInt *TransfTag1
 *set var VarCount=VarCount+1
 *endif
 *format "%3d%6d%6d%3d%3d%g"
-element dispBeamColumnInt *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section)) *TransfTag1 *ElemsMatProp(Fraction_of_the_height_from_bottom_to_the_rotation_center,real) *\
-*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) )
+element dispBeamColumnInt *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag1 *ElemsMatProp(Fraction_of_the_height_from_bottom_to_the_rotation_center,real) *\
+*set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedSection==SectionID)
 *if(strcmp(MatProp(Section:),"FiberInt")==0)
 *set var t1=MatProp(Thickness,real)
@@ -86,7 +87,7 @@ element dispBeamColumnInt *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integrat
 *endif
 *end materials
 *set var MassPerLength=operation(FiberIntArea*ElemsMatProp(Mass_density,real))
-*format "%8.3f"
+*format "%8g"
 -mass *MassPerLength
 *endif
 *end elems

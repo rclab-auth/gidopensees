@@ -2,15 +2,19 @@
 *set var SectionAggregatorTag=SectionID
 *set var DefineSection=MatProp(Select_section,int)
 *if(DefineSection==1)
-*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) )
+*set var SelectedSection=tcl(FindMaterialNumber *MatProp(Section_to_be_aggregated) *DomainNum)
 *set var SectionExists=tcl(CheckUsedMaterials *SelectedSection)
 *if(SectionExists==-1)
 *loop materials *NotUsed
-*set var SectionID=tcl(FindMaterialNumber *MatProp(0) )
+*set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SectionID==SelectedSection)
 *set var dummy=tcl(AddUsedMaterials *SectionID)
 *if(strcmp(MatProp(Section:),"Fiber")==0)
 *include Fiber.bas
+*elseif(strcmp(MatProp(Section:),"ElasticSection")==0)
+*include ElasticSection.bas
+*elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
+*include FiberCustom.bas
 *else
 *MessageBox Error: Unsupported Section selected for Section Aggregator
 *endif
@@ -27,11 +31,11 @@
 *set var DefineTmaterial=MatProp(Activate_T,int)
 *# Axial force-deformation definition
 *if(DefinePmaterial==1)
-*set var SelectedPmaterial=tcl(FindMaterialNumber *MatProp(Axial_force-deformation))
+*set var SelectedPmaterial=tcl(FindMaterialNumber *MatProp(Axial_force-deformation) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedPmaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedPmaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *MaterialID)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
@@ -44,8 +48,12 @@
 *include ..\Materials\Uniaxial\Steel01.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
 *elseif(strcmp(MatProp(Material:),"Concrete02")==0)
@@ -54,6 +62,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
@@ -76,11 +86,11 @@
 *# Moment-curvature about z-z definition (Mz)
 *#------------------------
 *if(DefineMzmaterial==1)
-*set var SelectedMzmaterial=tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z))
+*set var SelectedMzmaterial=tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMzmaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedMzmaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *MaterialID)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
@@ -93,6 +103,8 @@
 *include ..\Materials\Uniaxial\Steel01.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
@@ -103,6 +115,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
@@ -125,11 +139,11 @@
 *# Vy definition
 *#-----
 *if(DefineVymaterial==1)
-*set var SelectedVymaterial=tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) )
+*set var SelectedVymaterial=tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedVymaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedVymaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *MaterialID)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
@@ -142,6 +156,8 @@
 *include ..\Materials\Uniaxial\Steel01.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
@@ -152,6 +168,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
@@ -174,11 +192,11 @@
 *# My definition
 *#-----
 *if(DefineMymaterial==1)
-*set var SelectedMymaterial=tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_y-y) )
+*set var SelectedMymaterial=tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_y-y) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMymaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedMymaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *MaterialID)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
@@ -191,6 +209,8 @@
 *include ..\Materials\Uniaxial\Steel01.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
@@ -201,6 +221,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
@@ -223,11 +245,11 @@
 *# Vz definition
 *#-----
 *if(DefineVzmaterial==1)
-*set var SelectedVzmaterial=tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_z-z) )
+*set var SelectedVzmaterial=tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_z-z) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedVzmaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedVzmaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *MaterialID)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
@@ -240,6 +262,8 @@
 *include ..\Materials\Uniaxial\Steel01.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
@@ -250,6 +274,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
@@ -272,11 +298,11 @@
 *# T definition
 *#-----
 *if(DefineTmaterial==1)
-*set var SelectedTmaterial=tcl(FindMaterialNumber *MatProp(Torsion_force-deformation) )
+*set var SelectedTmaterial=tcl(FindMaterialNumber *MatProp(Torsion_force-deformation) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedTmaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(SelectedTmaterial==MaterialID)
 *set var dummy=tcl(AddUsedMaterials *MaterialID)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
@@ -289,6 +315,8 @@
 *include ..\Materials\Uniaxial\Steel01.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
 *elseif(strcmp(MatProp(Material:),"Concrete01")==0)
@@ -299,6 +327,8 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"Series")==0 || strcmp(MatProp(Material:),"Parallel")==0)
 *include ..\Materials\Uniaxial\SeriesParallel.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
@@ -320,22 +350,22 @@
 *if(ndime==3)
 section Aggregator *SectionAggregatorTag *\
 *if(DefinePmaterial==1)
-*tcl(FindMaterialNumber *MatProp(Axial_force-deformation) ) P *\
+*tcl(FindMaterialNumber *MatProp(Axial_force-deformation) *DomainNum) P *\
 *endif
 *if(DefineMzmaterial==1)
-*tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z) ) Mz *\
+*tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z) *DomainNum) Mz *\
 *endif
 *if(DefineVymaterial==1)
-*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) ) Vy *\
+*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) *DomainNum) Vy *\
 *endif
 *if(DefineMymaterial==1)
-*tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_y-y) ) My *\
+*tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_y-y) *DomainNum) My *\
 *endif
 *if(DefineVzmaterial==1)
-*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_z-z) ) Vz *\
+*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_z-z) *DomainNum) Vz *\
 *endif
 *if(DefineTmaterial==1)
-*tcl(FindMaterialNumber *MatProp(Torsion_force-deformation) ) T *\
+*tcl(FindMaterialNumber *MatProp(Torsion_force-deformation) *DomainNum) T *\
 *endif
 *if(DefineSection==1)
 *# optional
@@ -347,13 +377,13 @@ section Aggregator *SectionAggregatorTag *\
 *else
 section Aggregator *SectionAggregatorTag *\
 *if(DefinePmaterial==1)
-*tcl(FindMaterialNumber *MatProp(Axial_force-deformation) ) P *\
+*tcl(FindMaterialNumber *MatProp(Axial_force-deformation) *DomainNum) P *\
 *endif
 *if(DefineMzmaterial==1)
-*tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z) ) Mz *\
+*tcl(FindMaterialNumber *MatProp(Moment-curvature_about_local_z-z) *DomainNum) Mz *\
 *endif
 *if(DefineVymaterial==1)
-*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) ) Vy *\
+*tcl(FindMaterialNumber *MatProp(Shear_force-deformation_along_local_y-y) *DomainNum) Vy *\
 *endif
 *if(DefineSection==1)
 *# optional

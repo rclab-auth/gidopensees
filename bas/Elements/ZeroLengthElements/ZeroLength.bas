@@ -6,18 +6,18 @@
 *loop elems
 *set var NumberOfElements=NumberOfElements+1
 *end elems
-*# We save the ID numbers (cond(1) ) on a list
+*# We save the ID numbers (cond) on a list
 *set var dummy=tcl(ClearZeroLengthLists )
 *set var IDExists=-1
-*set Cond ZeroLength *nodes
+*set cond Point_ZeroLength *nodes
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
 *if(LoopVar!=1)
-*set var IDExists=tcl(CheckZeroLengthID *Cond(1,int))
+*set var IDExists=tcl(CheckZeroLengthID *Cond(1))
 *endif
 *if(IDExists==-1)
-*set var dummy=tcl(AddZeroLengthID *Cond(1,int))
+*set var dummy=tcl(AddZeroLengthID *Cond(1))
 *endif
 *endif
 *end nodes
@@ -35,19 +35,20 @@
 *#
 *set var ZLActiveDirections=0
 *if(VarCount==1)
-# Uniaxial materials definition used by ZeroLength elements. (Only if they have not already been defined on this model domain)
+# Uniaxial materials definition used by ZeroLength elements
+# (if they have not already been defined on this model domain)
 
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
 *for(ii=2;ii<=12;ii=ii+2)
 *if(Cond(*ii,int)==1)
-*set var SelMatID=tcl(FindMaterialNumber *Cond(*operation(ii+1)) )
+*set var SelMatID=tcl(FindMaterialNumber *Cond(*operation(ii+1)) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelMatID )
 *if(MaterialExists==-1)
 *set var dummy=tcl(AddUsedMaterials *SelMatID)
 *loop materials *NotUsed
-*set Var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(MaterialID==SelMatID)
 *if(strcmp(MatProp(Material:),"Elastic")==0)
 *include ..\..\Materials\Uniaxial\Elastic.bas
@@ -65,6 +66,8 @@
 *include ..\..\Materials\Uniaxial\Concrete02.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"Viscous")==0)
 *include ..\..\Materials\Uniaxial\Viscous.bas
 *elseif(strcmp(MatProp(Material:),"ViscousDamper")==0)
@@ -75,6 +78,14 @@
 *include ..\..\Materials\Uniaxial\InitialStress.bas
 *elseif(strcmp(MatProp(Material:),"HyperbolicGap")==0)
 *include ..\..\Materials\Uniaxial\HyperbolicGap.bas
+*elseif(strcmp(MatProp(Material:),"PySimple1")==0)
+*include ..\..\Materials\Uniaxial\PySimple1.bas
+*elseif(strcmp(MatProp(Material:),"TzSimple1")==0)
+*include ..\..\Materials\Uniaxial\TzSimple1.bas
+*elseif(strcmp(MatProp(Material:),"QzSimple1")==0)
+*include ..\..\Materials\Uniaxial\QzSimple1.bas
+*elseif(strcmp(MatProp(Material:),"BondSP01")==0)
+*include ..\..\Materials\Uniaxial\BondSP01.bas
 *#
 *# ------------------- Start of Series/Parallel Uniaxial Material Definition ---------------------
 *#
@@ -99,12 +110,13 @@
 *endif
 *#set var ExtraElem=ExtraElem+1
 *#set var ZeroLengthElemTag=operation(NumberOfElements+ExtraElem)
-*set var ZeroLengthID=tcl(ZeroLengthIDnumber *i)
+*#set var ZeroLengthID=tcl(ZeroLengthIDnumber *i)
 *set var ZLNodes=0
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
-*if(Cond(1,int)==ZeroLengthID)
+*set var CorrectID=tcl(IsThisZeroLengthID *Cond(1) *i)
+*if(CorrectID==1)
 *if(ZLNodes==0)
 *set var ZeroLengthFirstNode=NodesNum
 *endif
@@ -113,13 +125,14 @@
 *endif
 *end nodes
 *if(ZLNodes==1)
-*MessageBox Error: ZeroLength Element with only 1 node. ZeroLength elements must be assigned to at least 2 nodes. Also check if you assigned ZeroLength between nodes with different dof. ZeroLength Element's nodes MUST have same dof.
+*MessageBox Error: ZeroLength Element with only 1 node. ZeroLength elements must be assigned to at least 2 nodes. Also check if you have assigned ZeroLength between nodes with different DOFs. ZeroLength Element's nodes MUST have the same number of DOFs.
 *endif
 *# Counting in how many directions current ZeroLength is active
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
-*if(Cond(1,int)==ZeroLengthID)
+*set var CorrectID=tcl(IsThisZeroLengthID *Cond(1) *i)
+*if(CorrectID==1)
 *for(ii=2;ii<=12;ii=ii+2)
 *if(Cond(*ii,int)==1)
 *set var ZLActiveDirections=operation(ZLActiveDirections+1)
@@ -137,7 +150,8 @@
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
-*if(Cond(1,int)==ZeroLengthID)
+*set var CorrectID=tcl(IsThisZeroLengthID *Cond(1) *i)
+*if(CorrectID==1)
 *if(CountLoop==k)
 *set var ExtraElem=ExtraElem+1
 *set var ZeroLengthElemTag=operation(NumberOfElements+ExtraElem)
@@ -154,26 +168,28 @@ element zeroLength *ZeroLengthElemTag *ZeroLengthFirstNode *ZeroLengthSecondNode
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
-*if(Cond(1,int)==ZeroLengthID)
+*set var CorrectID=tcl(IsThisZeroLengthID *Cond(1) *i)
+*if(CorrectID==1)
 *for(ii=2;ii<=12;ii=ii+2)
 *if(Cond(*ii,int)==1)
 *format "%6d"
-*tcl(FindMaterialNumber *Cond(*operation(ii+1)) ) *\
+*tcl(FindMaterialNumber *Cond(*operation(ii+1)) *DomainNum) *\
 *endif
 *endfor
 *break
 *endif
 *endif
 *end nodes
--dir *\
+-dir*\
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
-*if(Cond(1,int)==ZeroLengthID)
+*set var CorrectID=tcl(IsThisZeroLengthID *Cond(1) *i)
+*if(CorrectID==1)
 *for(ii=2;ii<=12;ii=ii+2)
 *if(Cond(*ii,int)==1)
-*format "%6d"
-*operation(ii/2) *\
+*format "%d"
+ *operation(ii/2)*\
 *endif
 *endfor
 *break

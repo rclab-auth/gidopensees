@@ -2,14 +2,14 @@
 *if(ndime==3)
 *if(strcmp(Matprop(Cross_section),"Bridge_Deck")!=0)
 *# if it is a Fiber Section, We need to check which uniaxial materials we need to define
-*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) )
-*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) )
-*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) )
+*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) *DomainNum)
+*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) *DomainNum)
+*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) *DomainNum)
 *# CORE MATERIAL DEFINITION
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoreMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedCoreMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -19,10 +19,14 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Core material for Fiber Section
 *endif
@@ -35,7 +39,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoverMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedCoverMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -45,10 +49,14 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Cover material for Fiber Section
 *endif
@@ -61,7 +69,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedRBMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -69,8 +77,12 @@
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -82,14 +94,14 @@
 *endif
 *# bridge deck
 *else
-*set var SelectedMainMaterial=tcl(FindMaterialNumber *MatProp(Main_section_material) )
-*set var SelectedTopRBMaterial=tcl(FindMaterialNumber *MatProp(Top_slab_reinforcing_bar_material) )
-*set var SelectedBottomRBMaterial=tcl(FindMaterialNumber *MatProp(Bottom_slab_reinforcing_bar_material) )
+*set var SelectedMainMaterial=tcl(FindMaterialNumber *MatProp(Main_section_material) *DomainNum)
+*set var SelectedTopRBMaterial=tcl(FindMaterialNumber *MatProp(Top_slab_reinforcing_bar_material) *DomainNum)
+*set var SelectedBottomRBMaterial=tcl(FindMaterialNumber *MatProp(Bottom_slab_reinforcing_bar_material) *DomainNum)
 *# MAIN MATERIAL DEFINITION
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMainMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedMainMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -99,10 +111,14 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Main material for Fiber Section
 *endif
@@ -115,7 +131,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedTopRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedTopRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -123,8 +139,12 @@
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -137,7 +157,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedBottomRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedBottomRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -145,8 +165,12 @@
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -156,14 +180,14 @@
 *end materials
 *endif
 *if(MatProp(Include_additional_part,int)==1)
-*set var SelectedAddMaterial=tcl(FindMaterialNumber *MatProp(Additional_part_material) )
-*set var SelectedAddSlabRBMaterial=tcl(FindMaterialNumber *MatProp(Additional_slab_reinforcing_bar_material) )
-*set var SelectedAddBeamRBMaterial=tcl(FindMaterialNumber *MatProp(Beam_reinforcing_bar_material) )
+*set var SelectedAddMaterial=tcl(FindMaterialNumber *MatProp(Additional_part_material) *DomainNum)
+*set var SelectedAddSlabRBMaterial=tcl(FindMaterialNumber *MatProp(Additional_slab_reinforcing_bar_material) *DomainNum)
+*set var SelectedAddBeamRBMaterial=tcl(FindMaterialNumber *MatProp(Beam_reinforcing_bar_material) *DomainNum)
 *# Additional part material
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedAddMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedAddMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -173,10 +197,14 @@
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Main material for Fiber Section
 *endif
@@ -189,7 +217,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedAddSlabRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedAddSlabRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -197,8 +225,12 @@
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -211,7 +243,7 @@
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedAddBeamRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedAddBeamRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -219,8 +251,12 @@
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -634,14 +670,14 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *# --------------------------------------------- 2D ---------------------------------------------------
 *elseif(ndime==2)
 *if(strcmp(Matprop(Cross_section),"Bridge_Deck")!=0)
-*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) )
-*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) )
-*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) )
+*set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) *DomainNum)
+*set var SelectedCoverMaterial=tcl(FindMaterialNumber *MatProp(Cover_material) *DomainNum)
+*set var SelectedRBMaterial=tcl(FindMaterialNumber *MatProp(Reinforcing_Bar_material) *DomainNum)
 *# CORE MATERIAL DEFINITION
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoreMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedCoreMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -651,10 +687,14 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Core material for Fiber Section
 *endif
@@ -667,7 +707,7 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedCoverMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedCoverMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -677,10 +717,14 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Cover material for Fiber Section
 *endif
@@ -693,7 +737,7 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedRBMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -701,8 +745,12 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -714,14 +762,14 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *endif
 *# bridge deck
 *else
-*set var SelectedMainMaterial=tcl(FindMaterialNumber *MatProp(Main_section_material) )
-*set var SelectedTopRBMaterial=tcl(FindMaterialNumber *MatProp(Top_slab_reinforcing_bar_material) )
-*set var SelectedBottomRBMaterial=tcl(FindMaterialNumber *MatProp(Bottom_slab_reinforcing_bar_material) )
+*set var SelectedMainMaterial=tcl(FindMaterialNumber *MatProp(Main_section_material) *DomainNum)
+*set var SelectedTopRBMaterial=tcl(FindMaterialNumber *MatProp(Top_slab_reinforcing_bar_material) *DomainNum)
+*set var SelectedBottomRBMaterial=tcl(FindMaterialNumber *MatProp(Bottom_slab_reinforcing_bar_material) *DomainNum)
 *# MAIN MATERIAL DEFINITION
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMainMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedMainMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -731,10 +779,14 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Main material for Fiber Section
 *endif
@@ -747,7 +799,7 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedTopRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedTopRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -755,8 +807,12 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -769,7 +825,7 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedBottomRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedBottomRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -777,8 +833,12 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -788,14 +848,14 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *end materials
 *endif
 *if(MatProp(Include_additional_part,int)==1)
-*set var SelectedAddMaterial=tcl(FindMaterialNumber *MatProp(Additional_part_material) )
-*set var SelectedAddSlabRBMaterial=tcl(FindMaterialNumber *MatProp(Additional_slab_reinforcing_bar_material) )
-*set var SelectedAddBeamRBMaterial=tcl(FindMaterialNumber *MatProp(Beam_reinforcing_bar_material) )
+*set var SelectedAddMaterial=tcl(FindMaterialNumber *MatProp(Additional_part_material) *DomainNum)
+*set var SelectedAddSlabRBMaterial=tcl(FindMaterialNumber *MatProp(Additional_slab_reinforcing_bar_material) *DomainNum)
+*set var SelectedAddBeamRBMaterial=tcl(FindMaterialNumber *MatProp(Beam_reinforcing_bar_material) *DomainNum)
 *# Additional part material
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedAddMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0))
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedAddMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Concrete01")==0)
 *include ..\Materials\Uniaxial\Concrete01.bas
@@ -805,10 +865,14 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Concrete04.bas
 *elseif(strcmp(MatProp(Material:),"Concrete06")==0)
 *include ..\Materials\Uniaxial\Concrete06.bas
+*elseif(strcmp(MatProp(Material:),"ConcreteCM")==0)
+*include ..\Materials\Uniaxial\ConcreteCM.bas
 *elseif(strcmp(MatProp(Material:),"InitStrain")==0)
 *include ..\Materials\Uniaxial\InitialStrain.bas
 *elseif(strcmp(MatProp(Material:),"InitStress")==0)
 *include ..\Materials\Uniaxial\InitialStress.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Main material for Fiber Section
 *endif
@@ -821,7 +885,7 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedAddSlabRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedAddSlabRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -829,8 +893,12 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif
@@ -843,7 +911,7 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedAddBeamRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) )
+*set var MaterialID=tcl(FindMaterialNumber *Matprop(0) *DomainNum)
 *if(SelectedAddBeamRBMaterial==MaterialID)
 *if(strcmp(MatProp(Material:),"Steel01")==0)
 *include ..\Materials\Uniaxial\Steel01.bas
@@ -851,8 +919,12 @@ DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID
 *include ..\Materials\Uniaxial\Steel02.bas
 *elseif(strcmp(MatProp(Material:),"ReinforcingSteel")==0)
 *include ..\Materials\Uniaxial\ReinforcingSteel.bas
+*elseif(strcmp(MatProp(Material:),"RambergOsgoodSteel")==0)
+*include ..\Materials\Uniaxial\RambergOsgoodSteel.bas
 *elseif(strcmp(MatProp(Material:),"Hysteretic")==0)
 *include ..\Materials\Uniaxial\Hysteretic.bas
+*elseif(strcmp(MatProp(Material:),"MinMax")==0)
+*include ..\Materials\Uniaxial\MinMax.bas
 *else
 *MessageBox Error: Unsupported Rebar material for Fiber Section
 *endif

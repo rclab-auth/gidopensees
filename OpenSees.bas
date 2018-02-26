@@ -9,7 +9,7 @@
 #                           |_|                                                                                
 #
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2017
+# Copyright (C) 2016-2018
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -47,6 +47,44 @@
 # Moment : *Units(MOMENT)
 # Stress : *Units(STRESS)
 # Mass   : *Units(MASS)
+
+# --------------------------------------------------------------------------------------------------------------
+# E L E M E N T S  U S E D
+# --------------------------------------------------------------------------------------------------------------
+
+*loop materials
+*set var ElementCounter=0
+# *MatProp(0) *\
+*loop elems
+*if(strcmp(MatProp(0),ElemsMatProp(0))==0)
+*set var ElementCounter=operation(ElementCounter+1)
+*endif
+*end elems
+(*ElementCounter)
+*end materials
+*set var dummy=tcl(ClearZeroLengthLists )
+*set var nZL=0
+*set cond Point_ZeroLength *nodes
+*loop nodes *OnlyInCond
+*set var IDExists=tcl(CheckZeroLengthID *Cond(1))
+*if(IDExists==-1)
+*set var dummy=tcl(AddZeroLengthID *Cond(1))
+*endif
+*end nodes
+*set var HowManyZeroLengthID=tcl(HowManyZeroLengthID)
+*if(HowManyZeroLengthID>=1)
+*for(i=1;i<=HowManyZeroLengthID;i=i+1)
+*set var ZLNodes=0
+*loop nodes *OnlyInCond
+*set var CorrectID=tcl(IsThisZeroLengthID *Cond(1) *i)
+*if(CorrectID==1)
+*set var ZLNodes=operation(ZLNodes+1)
+*endif
+*end nodes
+*set var nZL=operation(nZL+(ZLNodes-1))
+*endfor
+# ZeroLength (*nZL)
+*endif
 *set var TwoDOF=0
 *set var ThreeDOF=0
 *set var ThreePDOF=0
@@ -123,13 +161,22 @@
 *set var cntTruss=0
 *set var cntCorotTruss=0
 *#
+*# Initialize some materials tags
+*#
+*set var PlaneStressUserMaterialTag=200
+*set var PlateFromPlaneStressMaterialTag=300
+*set var PlateRebarLongTag=400
+*set var PlateRebarTransvTag=500
 *# Clear the lists of nodeTags for each Group (each domain)
 *set var dummy=tcl(ClearGroupNodes )
 *# Clear the list of Quad/QuadUP Nodes, used for automatic equalDOF commands (if chosen)
 *set var dummy=tcl(ClearQuadMasterNodeList )
 *set var dummy=tcl(ClearQuadUPMasterNodeList )
+*#
+*set var DomainNum=0
 *loop groups
 *if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0 || strcmp(GroupName,"3PDOF")==0)
+*set var DomainNum=operation(DomainNum+1)
 *#
 *# Specify the current ndf
 *#
@@ -139,7 +186,11 @@
 *break
 *end nodes
 
-# Model domain *GroupName
+# --------------------------------------------------------------------------------------------------------------
+#
+# M O D E L  D O M A I N  *DomainNum  (*GroupName)
+#
+# --------------------------------------------------------------------------------------------------------------
 
 *if(currentDOF==30)
 *format "%d%d"
@@ -147,6 +198,7 @@ model BasicBuilder -ndm *ndime -ndf 3
 *else
 model BasicBuilder -ndm *ndime -ndf *currentDOF
 *endif
+
 *#
 *# General Variables
 *#
@@ -166,19 +218,23 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 *#
 *# Nodes
 *#
-*include bas\Nodes.bas
+*include bas\Model\Nodes.bas
 *#
 *# Restraints
 *#
-*include bas\Restraints.bas
+*include bas\Boundary\Restraints.bas
 *#
 *# Rigid Diaphragms
 *#
-*include bas\rigidDiaphragm.bas
+*include bas\Boundary\rigidDiaphragm.bas
+*#
+*# Rigid Links
+*#
+*include bas\Boundary\RigidLink.bas
 *#
 *# Masses
 *#
-*include bas\Mass.bas
+*include bas\Actions\Mass.bas
 *#
 *# Elastic Beam Column Elements
 *#
@@ -237,36 +293,54 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 *include bas\Elements\ZeroLengthElements\ZeroLength.bas
 *endif
 *end groups
+
+# --------------------------------------------------------------------------------------------------------------
+#
+# D O M A I N  C O M M O N S
+#
+# --------------------------------------------------------------------------------------------------------------
 *#
 *# Equal DOFs
 *#
-*include bas\equalDOF.bas
-*include bas\Recorders.bas
+*include bas\Boundary\equalDOF.bas
+*#
+*# Recorders
+*#
+*include bas\Model\Recorders.bas
 
 *tcl(LogFile)
 
-# --------------------------------------------------------------------------------------------------------------
-
-puts "Analysis Summary"
+puts "\n--------------------------------------------------------------------------------------------------------"
+puts "\nGiD+OpenSees Interface *tcl(OpenSees::GetVersion)"
+puts "\nAnalysis summary\n"
+*set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
-*format "%g"
-puts "Interval *IntvNum - *IntvData(Analysis_type) : Steps *\
-*if(strcmp(IntvData(Analysis_type),"Static")==0)
+*if(IntvData(Enabled,int)==1)
 *format "%d"
-*IntvData(Analysis_steps,int)"
+puts "Interval *IntvNum : *IntvData(Analysis_type) - *\
+*if(strcmp(IntvData(Analysis_type),"Static")==0)
+*if(strcmp(IntvData(Loading_path),"Monotonic")==0)
+*format "%d%g"
+[expr int(1+*IntvData(Analysis_steps,int))] steps"
+*else
+*set var index=operation(IntvNum*2)
+*set var cycles=IntvData(Displacement_peaks-cycles,*index,real)
+[expr int(1+*operation(4*cycles*IntvData(Analysis_steps,int)))] steps"
+*endif
 *elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
-*format "%g%g"
-[expr int(*IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))]"
+*format "%g%g%g"
+[expr int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))] steps x *IntvData(Analysis_time_step,real) s"
+*endif
 *endif
 *end intervals
 puts ""
 set time_start [clock seconds]
-puts "\nAnalysis started  : [clock format $time_start -format %H:%M:%S]"
-puts ""
+puts "Starting analyis at [clock format $time_start -format %H:%M:%S]\n"
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
+*if(IntvData(Enabled,int)==1)
 
 # --------------------------------------------------------------------------------------------------------------
 #
@@ -274,34 +348,34 @@ puts ""
 #
 # --------------------------------------------------------------------------------------------------------------
 
-puts "Interval *IntvNum"
-puts ""
-
-*include bas\Loads.bas
-*include bas\UpdateMaterialStage.bas
-*include bas\UpdateParameters.bas
+puts "Running interval *IntvNum ...\n"
+*include bas\Actions\Loads.bas
+*include bas\Analysis\UpdateMaterialStage.bas
+*include bas\Analysis\UpdateParameters.bas
 
 # recording the initial status
 
 record;
-*#
-*# Analysis Options
-*#
-*include bas\Analyze.bas
+
+*include bas\Analysis\Analyze.bas
 *if(IntvData(Keep_this_loading_active_until_the_end_of_analysis,int)==1)
 
 # all previously defined patterns are constant for so on.
+
 loadConst -time 0.0
 *endif
-*include bas\RemovePattern.bas
+*include bas\Analysis\RemovePattern.bas
 *if(IntvData(Reset_at_the_end_of_the_interval_analysis,int)==1)
 
 # reset all components to the initial state
+
 reset
 *endif
 *if(IntvData(Set_time_at_the_end_of_the_interval_analysis,int)==1)
 
+*format "%g"
 setTime *IntvData(Time_to_be_set,real)
+*endif
 *endif
 *end intervals
 
@@ -309,9 +383,9 @@ setTime *IntvData(Time_to_be_set,real)
 
 set time_end [clock seconds]
 set analysisTime [expr $time_end-$time_start]
-puts "Analysis finished : [clock format $time_end -format %H:%M:%S]"
-puts "Analysis time     : $analysisTime seconds"
+puts "Analysis finished at [clock format $time_end -format %H:%M:%S]\n"
+puts "Analysis time $analysisTime seconds"
 *#
 *# Metadata
 *#
-*include bas\Meta.bas
+*include bas\Model\Meta.bas

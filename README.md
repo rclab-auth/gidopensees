@@ -1,6 +1,6 @@
 # GiD + OpenSees Interface
 
-*(c) 2016-2017*
+*(c) 2016-2018*
 
 *Lab of R/C and Masonry Structures, School of Civil Engineering, Aristotle University of Thessaloniki, Greece*
 
@@ -19,8 +19,8 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ### KNOWN ISSUES
 
 ---
+- In order to view the generated .tcl file ('Create and view .tcl only' menu option), first associate the .tcl extension with your favourite text editor (e.g. Notepad, Notepad++ etc.).
 - GiD may occasionally crash when spaces are used in new material/element names. Please do not use spaces in names until this issue is resolved in GiD.
-- Due to the large number of new features, transforming older models to version 2.0.0 onwards may lead to some non-updated data (loads, boundary conditions, analysis options etc.). It is highly recommended to check your transformed model thorougly, before running it in the latest version.
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
    - Intersection joints that belong to two lines with different constraints should be handled seperately.
    - Intersection lines that belong to two surfaces with different constraints should be handled seperately.
@@ -29,6 +29,33 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ---
 
 ### VERSION HISTORY
+
+---
+
+**Version 2.5.0 (25/02/2018)**
+
+###Introducing the new GID+OpenSees Interface User Manual
+
+- Added : **Custom Fiber** Section. Any fiber section can be described using explicit TCL code inside the Interface. This code is kept into .tcl files inside /Scripts folder in the project directory and injected in the main .tcl file
+- Added : **Record viewer** in Records window
+- Added : **LayeredShell** section for RC walls
+- Αdded : **Rigid Link** constraint type
+- Added : **Elastic Section** force-deformation model
+- Added : **ConcreteCM** uniaxial concrete material
+- Added : **Ramberg-Osgood** uniaxial steel material
+- Added : **BondSP01** uniaxial material
+- Added : **MinMax** uniaxial material
+- Added : **PySimple1** uniaxial material
+- Added : **QzSimple1** uniaxial material
+- Added : **TzSimple1** uniaxial material
+- Added : **Macros toolbar** for constraint/zerolength IDs/directions, point masses and mesh divisions/sizes
+- Added : **Performance and troubleshooting data** (*OpenSees/Analysis performance.out* and *OpenSees/Analysis problems.out*) are generated when **medium** logging level is selected in intervals
+- Added : Tolerance relaxation option after failed substepping (in Interval Data)
+- Added : Interval enable/disable option
+- Added : Interval description field
+- Improved : Global Rayleigh damping can be calculated using mode periods
+- Improved : Alphanumeric IDs are supported for equal constraints, rigid links and diaphragms
+- Minor bug fixes
 
 ---
 

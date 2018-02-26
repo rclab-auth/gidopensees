@@ -126,7 +126,7 @@ global
 0
 0
 geo/Mass.geo
-cond Point_Body_constraint_master_node
+cond Point_Equal_constraint_master_node
 1
 global
 1
@@ -134,7 +134,7 @@ global
 0
 0
 geo/Constraint.geo
-cond Point_Body_constraint_slave_nodes
+cond Point_Equal_constraint_slave_nodes
 1
 global
 1
@@ -142,7 +142,7 @@ global
 0
 0
 geo/Constraint.geo
-cond Line_Body_constraint_slave_nodes
+cond Line_Equal_constraint_slave_nodes
 1
 global
 1
@@ -174,7 +174,7 @@ global
 0
 0
 geo/Diaphragm.geo
-cond ZeroLength
+cond Point_ZeroLength
 1
 global
 1

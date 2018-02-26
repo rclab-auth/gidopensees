@@ -28,11 +28,11 @@
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Tri31")==0)
-*set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set Var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set Var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(MaterialID==SelectedMaterial)
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(1),"ElasticIsotropic")==0)
@@ -58,14 +58,14 @@
 # Tri31 elements Definition : element tri31 $eleTag $iNode $jNode $kNode $thick $type $matTag <$pressure $rho $b1 $b2>
 
 *endif
-*format "%6d%6d%6d%6d%8.3f"
+*format "%6d%6d%6d%6d%8g"
 element tri31 *ElemsNum *ElemsConec *thickness  *\
 *if(strcmp(ElemsMatProp(Plane_behavior),"PlaneStrain")==0)
-*format "%8.3f%8.3f%8.3f%8.3f"
-PlaneStrain   *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
+*format "%8g%8g%8g%8g"
+PlaneStrain   *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
 *elseif(strcmp(ElemsMatProp(Plane_behavior),"PlaneStress")==0)
-*format "%8.3f%8.3f%8.3f%8.3f"
-PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material)) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
+*format "%8g%8g%8g%8g"
+PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
 *endif
 *set var VarCount=VarCount+1
 *endif

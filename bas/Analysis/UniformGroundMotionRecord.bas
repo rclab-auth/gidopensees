@@ -16,7 +16,7 @@ set iGMdirection 5
 *elseif(strcmp(IntvData(Ground_motion_direction),"Rz")==0)
 set iGMdirection 6
 *endif
-*set var fileID=tcl(FindMaterialNumber *IntvData(Record_file))
+*set var fileID=tcl(FindMaterialNumber *IntvData(Record_file) *DomainNum)
 *set var dummy=tcl(AddGMFileID *fileID)
 *# 2 GM directions
 *elseif(IntvData(Directions,int)==2)
@@ -47,8 +47,8 @@ set secondGMdirection 5
 set secondGMdirection 6
 *endif
 set iGMdirection "$firstGMdirection $secondGMdirection"
-*set var firstFileID=tcl(FindMaterialNumber *IntvData(First_record_file))
-*set var secondFileID=tcl(FindMaterialNumber *IntvData(Second_record_file))
+*set var firstFileID=tcl(FindMaterialNumber *IntvData(First_record_file) *DomainNum)
+*set var secondFileID=tcl(FindMaterialNumber *IntvData(Second_record_file) *DomainNum)
 *set var dummy=tcl(AddGMFileID *firstFileID)
 *set var dummy=tcl(AddGMFileID *secondFileID)
 *# 3 GM directions
@@ -93,9 +93,9 @@ set thirdGMdirection 5
 set thirdGMdirection 6
 *endif
 set iGMdirection "$firstGMdirection $secondGMdirection $thirdGMdirection"
-*set var firstFileID=tcl(FindMaterialNumber *IntvData(First_record_file))
-*set var secondFileID=tcl(FindMaterialNumber *IntvData(Second_record_file))
-*set var thirdFileID=tcl(FindMaterialNumber *IntvData(Third_record_file))
+*set var firstFileID=tcl(FindMaterialNumber *IntvData(First_record_file) *DomainNum)
+*set var secondFileID=tcl(FindMaterialNumber *IntvData(Second_record_file) *DomainNum)
+*set var thirdFileID=tcl(FindMaterialNumber *IntvData(Third_record_file) *DomainNum)
 *set var dummy=tcl(AddGMFileID *firstFileID)
 *set var dummy=tcl(AddGMFileID *secondFileID)
 *set var dummy=tcl(AddGMFileID *thirdFileID)
@@ -109,7 +109,7 @@ set TmaxAnalysis *IntvData(Analysis_duration,real)
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
@@ -164,7 +164,7 @@ proc ReadPEERfile {inFilename recordValues dt} {
     # Close the input file
     close $inFileID
     }
-};
+}
 *set var procReadPeerFilePrinted=1
 
 *endif
@@ -174,6 +174,8 @@ proc ReadPEERfile {inFilename recordValues dt} {
 proc LoadRecordValues {filename recordValues skiplines} {
     set currentLine 0
     upvar $recordValues RecValues
+    # clear list
+    set RecValues " "
 
     if [catch {open $filename r} inFileID] {
         puts stderr "Cannot open $filename for reading"
@@ -199,6 +201,9 @@ proc LoadRecordTimeandValues {filename recordValues recordTimes skiplines tcol v
     set currentLine 0
     upvar $recordValues RecValues
     upvar $recordTimes RecTimes
+    # clear lists
+    set RecValues " "
+    set RecTimes " "
 
     if [catch {open $filename r} inFileID] {
         puts stderr "Cannot open $filename for reading"
@@ -230,7 +235,7 @@ set iGMfile "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 {../Records/*MatProp(Record_file)} *\
@@ -244,7 +249,7 @@ set iGMfact "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *format "%1.3f"
@@ -259,7 +264,7 @@ set iGMFormat "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
@@ -279,7 +284,7 @@ set iGMType "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_type),"Acceleration")==0)
@@ -298,7 +303,7 @@ set iGMdt "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
@@ -317,7 +322,7 @@ set iGMskip "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
@@ -336,7 +341,7 @@ set iGMvalCol "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
@@ -354,7 +359,7 @@ set iGMtimeCol "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0))
+*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
@@ -371,9 +376,9 @@ set iGMtimeCol "*\
 set IDGMLoadPatternTag *operation(100*IntvNum+50)
 
 foreach GMdirection $iGMdirection GMfile $iGMfile GMfact $iGMfact GMtype $iGMType GMformat $iGMFormat GMdt $iGMdt GMskip $iGMskip GMvalCol $iGMvalCol GMtimeCol $iGMtimeCol {
-	incr IDGMLoadPatternTag
-	if {$GMformat=="PEER"} {
-        ReadPEERfile $GMfile recordValues dt;
+    incr IDGMLoadPatternTag
+    if {$GMformat=="PEER"} {
+        ReadPEERfile $GMfile recordValues dt
             if {$GMtype == "-accel"} {
             set AccelSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
             pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -accel $AccelSeries
@@ -382,7 +387,7 @@ foreach GMdirection $iGMdirection GMfile $iGMfile GMfact $iGMfact GMtype $iGMTyp
             pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -disp $DispSeries
         }
 
-	} elseif {$GMformat == "Value"} {
+    } elseif {$GMformat == "Value"} {
         LoadRecordValues $GMfile recordValues $GMskip
         set dt $GMdt
         if {$GMtype == "-accel"} {
@@ -403,144 +408,4 @@ foreach GMdirection $iGMdirection GMfile $iGMfile GMfact $iGMfact GMtype $iGMTyp
         }
     }
 }
-
-*if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
-variable testTypeDynamic NormUnbalance
-*elseif(strcmp(IntvData(Convergence_criterion),"Norm_Displacement_Increment")==0)
-variable testTypeDynamic NormDispIncr
-*elseif(strcmp(IntvData(Convergence_criterion),"Energy_Increment")==0)
-variable testTypeDynamic EnergyIncr
-*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Unbalance")==0)
-variable testTypeDynamic RelativeNormUnbalance
-*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Displacement_Increment")==0)
-variable testTypeDynamic RelativeNormDispIncr
-*elseif(strcmp(IntvData(Convergence_criterion),"Total_Relative_Norm_Displacement_Increment")==0)
-variable testTypeDynamic RelativeTotalNormDispIncr
-*elseif(strcmp(IntvData(Convergence_criterion),"Relative_Energy_Increment")==0)
-variable testTypeDynamic RelativeEnergyIncr
-*elseif(strcmp(IntvData(Convergence_criterion),"Fixed_Number_of_Iterations")==0)
-variable testTypeDynamic FixedNumIter
-*endif
-*format "%g"
-variable TolDynamic *IntvData(Tolerance,real);
-variable maxNumIterDynamic *IntvData(Max_Iterations_per_Step,int);
-*if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
-variable algorithmTypeDynamic Newton
-*elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
-variable algorithmTypeDynamic ModifiedNewton
-*elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
-variable algorithmTypeDynamic NewtonLineSearch
-*elseif(strcmp(IntvData(Solution_algorithm),"Broyden")==0)
-variable algorithmTypeDynamic Broyden
-*elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
-variable algorithmTypeDynamic BFGS
-*elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-variable algorithmTypeDynamic KrylovNewton
-*endif
-set Nsteps [expr int($TmaxAnalysis/$DtAnalysis)];
-set AnalOk [analyze $Nsteps $DtAnalysis]; # perform analysis - returns 0 if analysis was successful
-
-if {$AnalOk != 0} { ; # analysis was not successful
-    # --------------------------------------------------------------------------------------------------
-    # change some analysis parameters to achieve convergence
-    # performance is slower inside this loop
-    # Time-controlled analysis
-    set AnalOk 0;
-    set controlTime [getTime];
-	set Nk 1; # dt = dt/Nk
-    while {$controlTime < $TmaxAnalysis && $AnalOk == 0} {
-        set controlTime [getTime]
-        if { ($Nk == 1 && $AnalOk == 0) || ($Nk == 2 && $AnalOk == 0) } {
-        set Nk 1
-        set AnalOk [analyze 1 $DtAnalysis]
-            if {$AnalOk != 0} {
-                puts "\nTrying Newton with Initial Tangent\n"
-                test NormDispIncr $TolDynamic 1000  *LoggingFlag
-                algorithm Newton -initial
-                set AnalOk [analyze 1 $DtAnalysis]
-                test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
-                algorithm $algorithmTypeDynamic
-			}
-			if {$AnalOk != 0} {
-                puts "\nTrying Broyden\n"
-                algorithm Broyden 8
-                set AnalOk [analyze 1 $DtAnalysis]
-                algorithm $algorithmTypeDynamic
-            }
-            if {$AnalOk != 0} {
-                puts "\nTrying NewtonWithLineSearch\n"
-                algorithm NewtonLineSearch .8
-                set AnalOk [analyze 1 $DtAnalysis]
-                algorithm $algorithmTypeDynamic
-            }
-        }
-		
-		if {($Nk == 1 && $AnalOk!=0) || ($Nk == 4 && $AnalOk==0)} {
-			set Nk 2.0
-            set curTime [getTime]
-            set curStep [expr int($curTime/$DtAnalysis)]
-            set remStep [expr int(($Nsteps-$curStep)**2.0)]
-            set ReducedDtAnalysis [expr $DtAnalysis/2.0]
-            for {set ik 1} {$ik <= $Nk} {incr ik 1} {
-            set AnalOk [analyze 1 $ReducedDtAnalysis]
-                if {$AnalOk != 0} {
-                    puts "\nTrying Newton with Initial Tangent\n"
-                    test NormDispIncr $TolDynamic 1000  *LoggingFlag
-                    algorithm Newton -initial
-                    set AnalOk [analyze 1 $ReducedDtAnalysis]
-                    test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
-                    algorithm $algorithmTypeDynamic
-                }
-                if {$AnalOk != 0} {
-                    puts "\nTrying Broyden\n"
-                    algorithm Broyden 8
-                    set AnalOk [analyze 1 $ReducedDtAnalysis]
-                    algorithm $algorithmTypeDynamic
-                }
-                if {$AnalOk != 0} {
-                    puts "\nTrying NewtonWithLineSearch\n"
-                    algorithm NewtonLineSearch .8
-                    set AnalOk [analyze 1 $ReducedDtAnalysis]
-                    algorithm $algorithmTypeDynamic
-                }
-            }
-        }
-		
-        if {($Nk == 2 && $AnalOk!=0)} {
-            set Nk 4.0
-            set currTime [getTime]
-            set curStep [expr ($currTime-$curTime)/$ReducedDtAnalysis]
-            set remainStep [expr int(($remStep-$curStep)**2.0)]
-            set ReducedDtAnalysis [expr $ReducedDtAnalysis/2.0]
-            for {set ik 1} {$ik <= $Nk} {incr ik 1} {
-                set AnalOk [analyze 1 $ReducedDtAnalysis]
-                if {$AnalOk != 0} {
-                    puts "\nTrying Newton with Initial Tangent\n"
-                    test NormDispIncr $TolDynamic 1000  *LoggingFlag
-                    algorithm Newton -initial
-                    set AnalOk [analyze 1 $ReducedDtAnalysis]
-                    test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
-                    algorithm $algorithmTypeDynamic
-				}
-                if {$AnalOk != 0} {
-                    puts "\nTrying Broyden\n"
-                    algorithm Broyden 8
-                    set AnalOk [analyze 1 $ReducedDtAnalysis]
-                    algorithm $algorithmTypeDynamic
-				}
-                if {$AnalOk != 0} {
-                    puts "\nTrying NewtonWithLineSearch\n"
-                    algorithm NewtonLineSearch .8
-                    set AnalOk [analyze 1 $ReducedDtAnalysis]
-                    algorithm $algorithmTypeDynamic
-                }
-            }
-        }
-    }
-}; # end if ok !
-
-if {$AnalOk == 0} {
-    puts "\nAnalysis completed SUCCESSFULLY\n"
-} else {
-    puts "\nAnalysis FAILED\n"
-}
+*include SolutionAlgorithmsDynamic.bas

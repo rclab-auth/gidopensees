@@ -24,15 +24,16 @@
 *if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
 *set var thickness=ElemsMatProp(Thickness,real)
 *if(VarCount==1)
-# nDMaterial Definition used by QuadUP Elements. (Only if they have not already been defined on this model domain)
+# nDMaterial Definition used by QuadUP Elements
+# (if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"QuadUP")==0)
-*set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) )
+*set Var SelectedMaterial=tcl(FindMaterialNumber *MatProp(Material) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedMaterial)
 *if(MaterialExists==-1)
 *loop materials *NotUsed
-*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) )
+*set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(MaterialID==SelectedMaterial)
 *set var dummy=tcl(AddUsedMaterials *SelectedMaterial)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
@@ -60,10 +61,10 @@
 # QuadUP elements Definition : element quadUP $eleTag $iNode $jNode $kNode $lNode $thick $matTag $bulk $fmass $hPerm $vPerm <$b1 $b2 $t>
 
 *endif
-*format "%3d%6d%6d%6d%6d%8.3f"
+*format "%3d%6d%6d%6d%6d%8g"
 element quadUP *ElemsNum *ElemsConec *thickness  *\
-*set var ID=tcl(FindMaterialNumber *ElemsMatProp(Material))
-*format "%3d%8.3f%8.6f%8.6f%8.6f%8.3f%8.3f%8.3f"
+*set var ID=tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum)
+*format "%3d%8g%8g%8g%8g%8g%8g%8g"
 *ID *ElemsMatProp(Combined_undrained_bulk_modulus_Bc,real) *ElemsMatProp(Fluid_mass_density,real) *ElemsMatProp(Permeability_coefficient_in_horizontal_direction,real) *ElemsMatProp(Permeability_coefficient_in_vertical_direction,real) *ElemsMatProp(X-acceleration,real) *ElemsMatProp(Y-acceleration,real) *ElemsMatProp(Uniform_normal_traction,real)
 *set var VarCount=VarCount+1
 *endif
