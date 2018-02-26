@@ -34,7 +34,7 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 **Version 2.5.0 (25/02/2018)**
 
-###Introducing the new GID+OpenSees Interface User Manual
+**Introducing the new GID+OpenSees Interface User Manual**
 
 - Added : **Custom Fiber** Section. Any fiber section can be described using explicit TCL code inside the Interface. This code is kept into .tcl files inside /Scripts folder in the project directory and injected in the main .tcl file
 - Added : **Record viewer** in Records window
