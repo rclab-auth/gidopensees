@@ -40,7 +40,7 @@ TKWIDGET: GenData::Description
 TITLE: Modeling_Options
 QUESTION: __#CB#(_)
 VALUE:
-QUESTION: Model_dimensions#CB#(2)
+QUESTION: Model_dimensions#CB#(3)
 VALUE: 2
 STATE: DISABLED
 DEPENDENCIES: (2,SET,Vertical_axis,Y)
@@ -167,7 +167,7 @@ QUESTION: Enabled#CB#(1,0)
 VALUE: 1
 QUESTION: Description
 VALUE:
-TKWIDGET: GidUtils::TkwidgetEntryConfigure {-width 50}
+#TKWIDGET: GidUtils::TkwidgetEntryConfigure {-width 50}
 QUESTION: System_of_equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM)
 VALUE: BandGeneral
 TKWIDGET: TK_EditInterval

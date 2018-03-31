@@ -336,7 +336,7 @@ puts "Interval *IntvNum : *IntvData(Analysis_type) - *\
 *end intervals
 puts ""
 set time_start [clock seconds]
-puts "Starting analyis at [clock format $time_start -format %H:%M:%S]\n"
+puts "Starting analysis at [clock format $time_start -format %H:%M:%S]\n"
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
@@ -384,7 +384,7 @@ setTime *IntvData(Time_to_be_set,real)
 set time_end [clock seconds]
 set analysisTime [expr $time_end-$time_start]
 puts "Analysis finished at [clock format $time_end -format %H:%M:%S]\n"
-puts "Analysis time $analysisTime seconds"
+puts "Analysis time : $analysisTime seconds"
 *#
 *# Metadata
 *#

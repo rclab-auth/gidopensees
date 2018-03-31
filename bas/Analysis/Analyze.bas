@@ -55,8 +55,10 @@ rayleigh *GenData(alphaM,real) *GenData(betaK,real) *GenData(betaKinit,real) *Ge
 *include Regions.bas
 *endif
 *endif
+*set var PrintTime=1
 *if(strcmp(IntvData(Logging_level),"Low")==0)
 *set var LoggingFlag=0
+*set var PrintTime=0
 *elseif(strcmp(IntvData(Logging_level),"Medium")==0)
 *set var LoggingFlag=2
 *elseif(strcmp(IntvData(Logging_level),"High")==0)

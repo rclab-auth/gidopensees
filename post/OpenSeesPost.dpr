@@ -854,15 +854,15 @@ begin
         begin
             Tag[0] := Trim(Copy(TCL[i],4,6));
 
-            Vx[1] := StrToFloat(Copy(TCL[i],47,6));
-            Vx[2] := StrToFloat(Copy(TCL[i],54,6));
-            Vx[3] := StrToFloat(Copy(TCL[i],61,6));
-            Vy[1] := StrToFloat(Copy(TCL[i],74,6));
-            Vy[2] := StrToFloat(Copy(TCL[i],81,6));
-            Vy[3] := StrToFloat(Copy(TCL[i],88,6));
-            Vz[1] := StrToFloat(Copy(TCL[i],101,6));
-            Vz[2] := StrToFloat(Copy(TCL[i],108,6));
-            Vz[3] := StrToFloat(Copy(TCL[i],115,6));
+            Vx[1] := StrToFloat(Copy(TCL[i],47,8));
+            Vx[2] := StrToFloat(Copy(TCL[i],56,8));
+            Vx[3] := StrToFloat(Copy(TCL[i],65,8));
+            Vy[1] := StrToFloat(Copy(TCL[i],80,8));
+            Vy[2] := StrToFloat(Copy(TCL[i],89,8));
+            Vy[3] := StrToFloat(Copy(TCL[i],98,8));
+            Vz[1] := StrToFloat(Copy(TCL[i],113,8));
+            Vz[2] := StrToFloat(Copy(TCL[i],122,8));
+            Vz[3] := StrToFloat(Copy(TCL[i],131,8));
 
             if (Vz[3] < 1.0-EPS) and (Vz[3] > -1.0+EPS) then
             begin

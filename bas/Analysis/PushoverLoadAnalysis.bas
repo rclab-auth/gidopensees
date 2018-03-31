@@ -42,7 +42,9 @@ variable algorithmTypeStatic KrylovNewton
 set LoadCounter 0
 for {set i 1} { $i <= $Nsteps } {incr i 1} {
     set t [format "%7.5f" [expr [getTime] + $Lincr]]
+*if(PrintTime==1)
     puts -nonewline "LF (*IntvNum)$t "
+*endif
     set AnalOk [analyze 1]
     if {$AnalOk !=0} {
         break
@@ -63,7 +65,9 @@ if {$AnalOk != 0} {
             puts "\nApplying initial step\n"
             integrator LoadControl $Lincr; # bring back to original increment
             set t [format "%7.5f" [expr [getTime] + $Lincr]]
+*if(PrintTime==1)
             puts -nonewline "LF (*IntvNum)$t "
+*endif
             set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
             if {$AnalOk == 0} {
                 set LoadCounter [expr $LoadCounter+1.0/$Nk]
@@ -78,7 +82,9 @@ if {$AnalOk != 0} {
             integrator LoadControl $LincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
                 set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                 puts -nonewline "LF (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==0)
                 if {$AnalOk != 0} {
@@ -86,7 +92,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm Newton -initial
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -96,7 +104,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm ModifiedNewton -initial
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -107,7 +117,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm Newton
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -117,7 +129,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm ModifiedNewton
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -127,7 +141,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -135,7 +151,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson with Line Search\n"
                     algorithm NewtonLineSearch
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -143,7 +161,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying BFGS\n"
                     algorithm BFGS
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -163,7 +183,9 @@ if {$AnalOk != 0} {
             integrator LoadControl $LincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
                 set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                 puts -nonewline "LF (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
                 if {$AnalOk != 0} {
@@ -171,7 +193,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm Newton -initial
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -181,7 +205,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm ModifiedNewton -initial
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -192,7 +218,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm Newton
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -202,7 +230,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm ModifiedNewton
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -212,7 +242,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -220,7 +252,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson with Line Search\n"
                     algorithm NewtonLineSearch
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -228,7 +262,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying BFGS\n"
                     algorithm BFGS
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -247,7 +283,9 @@ if {$AnalOk != 0} {
             integrator LoadControl $LincrReduced
             for {set ik 1} {$ik <=$Nk} {incr ik 1} {
                 set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                 puts -nonewline "LF (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1]; # this will return zero if no convergence problems were encountered
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
                 if {$AnalOk != 0} {
@@ -255,7 +293,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm Newton -initial
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -265,7 +305,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm ModifiedNewton -initial
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -276,7 +318,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm Newton
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -286,7 +330,9 @@ if {$AnalOk != 0} {
                     test NormDispIncr $TolStatic 2000 0
                     algorithm ModifiedNewton
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -296,7 +342,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1 ]
                     algorithm $algorithmTypeStatic
                 }
@@ -304,7 +352,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying Newton-Raphson with LineSearch\n"
                     algorithm NewtonLineSearch
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -312,7 +362,9 @@ if {$AnalOk != 0} {
                     puts "\nTrying BFGS\n"
                     algorithm BFGS
                     set t [format "%7.5f" [expr [getTime] + $LincrReduced]]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }

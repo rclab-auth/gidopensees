@@ -32,6 +32,12 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 2.5.1 (31/03/2018)**
+
+- Minor bug fixes
+
+---
+
 **Version 2.5.0 (25/02/2018)**
 
 **Introducing the new GID+OpenSees Interface User Manual**

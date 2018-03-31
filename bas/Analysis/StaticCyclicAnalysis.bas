@@ -84,7 +84,9 @@ foreach Dmax $iDmax Ncycles $iNcycles {
             set Dincr [expr $D1 - $D0]
             integrator DisplacementControl  $IDctrlNode $IDctrlDOF $Dincr
             set t [getTime]
+*if(PrintTime==1)
             puts -nonewline "LF (*IntvNum)$t "
+*endif
             set AnalOk [analyze 1]; # first analyze command
             if {$AnalOk != 0} { ; # if fails
 *if(IntvData(Use_initial_stiffness_iterations,int)==0)
@@ -93,7 +95,9 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                     test NormDispIncr   $TolStatic 1000 *LoggingFlag
                     algorithm Newton -initial
                     set t [getTime]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -103,7 +107,9 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                     test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton -initial
                     set t [getTime]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -114,7 +120,9 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                     test NormDispIncr   $TolStatic 1000 *LoggingFlag
                     algorithm Newton
                     set t [getTime]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -124,7 +132,9 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                     test NormDispIncr $TolStatic 1000 0
                     algorithm ModifiedNewton
                     set t [getTime]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
                     algorithm $algorithmTypeStatic
@@ -134,7 +144,9 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                     puts "\nTrying Broyden\n"
                     algorithm Broyden 8
                     set t [getTime]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }
@@ -142,7 +154,9 @@ foreach Dmax $iDmax Ncycles $iNcycles {
                     puts "\nTrying NewtonWithLineSearch\n"
                     algorithm NewtonLineSearch 0.8
                     set t [getTime]
+*if(PrintTime==1)
                     puts -nonewline "LF (*IntvNum)$t "
+*endif
                     set AnalOk [analyze 1]
                     algorithm $algorithmTypeStatic
                 }

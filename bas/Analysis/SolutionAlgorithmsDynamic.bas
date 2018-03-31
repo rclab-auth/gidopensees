@@ -36,7 +36,9 @@ set committedSteps 1
 set Nsteps [expr int($TmaxAnalysis/$DtAnalysis)]
 for {set i 1} { $i <= $Nsteps } {incr i 1} {
     set t [format "%7.5f" [expr [getTime] + $DtAnalysis]]
+*if(PrintTime==1)
     puts -nonewline "Time (*IntvNum)$t "
+*endif
     set AnalOk [analyze 1 $DtAnalysis]; # perform analysis - returns 0 if analysis was successful
     if {$AnalOk == 0} {
         set committedSteps [expr $committedSteps+1]
@@ -137,7 +139,9 @@ test FixedNumIter *IntvData(Max_Iterations_per_Step) *LoggingFlag
 set SkipFirstLoopForToleranceRelaxFlag 0
 *endif
         set t [format "%7.5f" [expr [getTime] + $DtAnalysis]]
+*if(PrintTime==1)
         puts -nonewline "Time (*IntvNum)$t "
+*endif
         set AnalOk [analyze 1 $DtAnalysis]
 *if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
             if {$AnalOk != 0} {
@@ -145,7 +149,9 @@ set SkipFirstLoopForToleranceRelaxFlag 0
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm Newton -initial
                 set t [format "%7.5f" [expr [getTime] + $DtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $DtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -157,7 +163,9 @@ set SkipFirstLoopForToleranceRelaxFlag 0
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm ModifiedNewton -initial
                 set t [format "%7.5f" [expr [getTime] + $DtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $DtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -180,7 +188,9 @@ puts "\nInitial time step is divided by 2 ..\n"
                     break
                 }
             set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
             puts -nonewline "Time (*IntvNum)$t "
+*endif
             set AnalOk [analyze 1 $ReducedDtAnalysis]
 *if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
             if {$AnalOk != 0} {
@@ -188,7 +198,9 @@ puts "\nInitial time step is divided by 2 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm Newton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -200,7 +212,9 @@ puts "\nInitial time step is divided by 2 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm ModifiedNewton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -250,7 +264,9 @@ puts "\nInitial time step is divided by 4 ..\n"
                     break
                 }
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
 *if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
             if {$AnalOk != 0} {
@@ -258,7 +274,9 @@ puts "\nInitial time step is divided by 4 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm Newton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -270,7 +288,9 @@ puts "\nInitial time step is divided by 4 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm ModifiedNewton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -320,7 +340,9 @@ puts "\nInitial time step is divided by 8 ..\n"
                     break
                 }
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
 *if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
             if {$AnalOk != 0} {
@@ -328,7 +350,9 @@ puts "\nInitial time step is divided by 8 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm Newton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -340,7 +364,9 @@ puts "\nInitial time step is divided by 8 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm ModifiedNewton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -390,7 +416,9 @@ puts "\nInitial time step is divided by 16 ..\n"
                     break
                 }
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
 *if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
             if {$AnalOk != 0} {
@@ -398,7 +426,9 @@ puts "\nInitial time step is divided by 16 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm Newton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic
@@ -410,7 +440,9 @@ puts "\nInitial time step is divided by 16 ..\n"
                 test NormDispIncr $TolDynamic $maxNumIterDynamic  *LoggingFlag
                 algorithm ModifiedNewton -initial
                 set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
+*if(PrintTime==1)
                 puts -nonewline "Time (*IntvNum)$t "
+*endif
                 set AnalOk [analyze 1 $ReducedDtAnalysis]
                 test $testTypeDynamic $TolDynamic $maxNumIterDynamic *LoggingFlag
                 algorithm $algorithmTypeDynamic

@@ -178,13 +178,13 @@
 *endif
 *if(frames!=0)
 
-# ----------------------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------
 #
 # F R A M E   L O C A L   A X E S   O R I E N T A T I O N
 #
-# ----------------------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------
 #
-#      ID                           Type                    Local-x                    Local-y                    Local-z          Literal
+#      ID                           Type                          Local-x                          Local-y                          Local-z          Literal
 #
 *loop elems
 *set var exist=0
@@ -280,29 +280,35 @@
 *set var Vz2=operation(Vz2/L)
 *set var Vz3=operation(Vz3/L)
 *# write axis in vector form
-*format "     {%+5.3f %+5.3f %+5.3f}     {%+5.3f %+5.3f %+5.3f}     {%+5.3f %+5.3f %+5.3f}"
+*format "     {%+7.5f %+7.5f %+7.5f}     {%+7.5f %+7.5f %+7.5f}     {%+7.5f %+7.5f %+7.5f}"
 *Vx1*Vx2*Vx3*Vy1*Vy2*Vy3*Vz1*Vz2*Vz3     {*\
 *# write literal axes
 *for(i=1;i<=3;i=i+1)
 *set var check=0
 *if(i==1)
-*set var check=operation(Vx1*100+Vx2*10+Vx3)
+*set var V1=Vx1
+*set var V2=Vx2
+*set var V3=Vx3
 *elseif(i==2)
-*set var check=operation(Vy1*100+Vy2*10+Vy3)
+*set var V1=Vy1
+*set var V2=Vy2
+*set var V3=Vy3
 *elseif(i==3)
-*set var check=operation(Vz1*100+Vz2*10+Vz3)
+*set var V1=Vz1
+*set var V2=Vz2
+*set var V3=Vz3
 *endif
-*if(abs(check-100)<1e-12)
+*if((V1==1) && (V2==0) && (V3 == 0))
  +X*\
-*elseif(abs(check+100)<1e-12)
+*elseif((V1==-1) && (V2==0) && (V3 == 0))
  -X*\
-*elseif(abs(check-10)<1e-12)
+*elseif((V1==0) && (V2==1) && (V3 == 0))
  +Y*\
-*elseif(abs(check+10)<1e-12)
+*elseif((V1==0) && (V2==-1) && (V3 == 0))
  -Y*\
-*elseif(abs(check-1)<1e-12)
+*elseif((V1==0) && (V2==0) && (V3 == 1))
  +Z*\
-*elseif(abs(check+1)<1e-12)
+*elseif((V1==0) && (V2==0) && (V3 == -1))
  -Z*\
 *else
   O*\

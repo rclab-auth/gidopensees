@@ -1,5 +1,5 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2017
+# Copyright (C) 2016-2018
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -31,8 +31,8 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.5.0"
-	variable InterfaceName [_ "GiD+OpenSees Interface v2.5.0"]
+	variable VersionNumber "v2.5.1"
+	variable InterfaceName [_ "GiD+OpenSees Interface v2.5.1"]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesPath
 	variable GiDPath
