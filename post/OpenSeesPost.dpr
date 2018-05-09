@@ -15,6 +15,7 @@ type
 
 const
     INDENT       = 7;
+    EPS          = 1e-2;
 
     Black        = 0;
     Blue         = 1;
@@ -863,17 +864,17 @@ begin
             Vz[2] := StrToFloat(Copy(TCL[i],122,8));
             Vz[3] := StrToFloat(Copy(TCL[i],131,8));
 
-            if Abs(Vz[3]) < 1.0 then
+            if (Vz[3] < 1.0-EPS) and (Vz[3] > -1.0+EPS) then
             begin
                 senb := Sqrt(1.0-Vz[3]*Vz[3]);
 
                 Ang[2] := ArcCos(Vz[3]);
-                Ang[3] := ArcCos(Min(1,Vz[2]/senb));
+                Ang[3] := ArcCos(Vz[2]/senb);
 
                 if Vz[1]/senb < 0 then
                     Ang[3] := 2*PI-Ang[3];
 
-                Ang[1] := ArcCos(Min(1,Vy[3]/senb));
+                Ang[1] := ArcCos(Vy[3]/senb);
 
                 if Vx[3]/senb < 0 then
                     Ang[1] := 2*PI-Ang[1];
