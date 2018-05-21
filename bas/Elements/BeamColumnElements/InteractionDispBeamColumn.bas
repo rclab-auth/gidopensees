@@ -63,8 +63,9 @@ geomTransf LinearInt *TransfTag1
 
 *set var VarCount=VarCount+1
 *endif
-*format "%3d%6d%6d%3d%3d%g"
-element dispBeamColumnInt *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag1 *ElemsMatProp(Fraction_of_the_height_from_bottom_to_the_rotation_center,real) *\
+*set var SecTag=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
+*format "%6d%6d%7d%2d%6d%2d%4g"
+element dispBeamColumnInt *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *SecTag *TransfTag1 *ElemsMatProp(Fraction_of_the_height_from_bottom_to_the_rotation_center,real) *\
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
 *set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
@@ -88,7 +89,7 @@ element dispBeamColumnInt *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integrat
 *end materials
 *set var MassPerLength=operation(FiberIntArea*ElemsMatProp(Mass_density,real))
 *format "%8g"
--mass *MassPerLength
+  -mass *MassPerLength
 *endif
 *end elems
 *else

@@ -31,8 +31,8 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.5.1"
-	variable InterfaceName [_ "GiD+OpenSees Interface v2.5.1"]
+	variable VersionNumber "v2.5.5"
+	variable InterfaceName [_ "GiD+OpenSees Interface v2.5.5"]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesPath
 	variable GiDPath
@@ -51,7 +51,6 @@ proc OpenSees::InitGIDProject { dir } {
 
 	OpenSees::SetOpenSeesPath
 	OpenSees::SetProjectNameAndPath
-	OpenSees::SetGiDPath
 
 	SetImagesAndColors
 
@@ -136,27 +135,6 @@ proc OpenSees::GetProblemTypePath {} {
 	return $OpenSeesProblemTypePath
 }
 
-# Set/Get GiD installation path
-
-proc OpenSees::SetGiDPath {} {
-
-	variable GiDPath;
-
-	set temp [GiD_Info problemtypepath]
-
-	regsub -all {\\} $temp {/} temp
-
-	set pos [string last /problemtypes $temp]
-
-	set GiDPath [string range $temp 0 $pos-1]
-}
-
-proc OpenSees::GetGiDPath {} {
-
-	variable GiDPath;
-	return $GiDPath
-}
-
 # Set/Get project name and path
 
 proc OpenSees::SetProjectNameAndPath {} {
@@ -180,7 +158,7 @@ proc OpenSees::SetProjectNameAndPath {} {
 		regsub -all {\\} $ProjectName {/} ProjectName
 
 		if { [file extension $ProjectName] == ".gid" } {
-				set ProjectName [file root $ProjectName]
+			set ProjectName [file root $ProjectName]
 		}
 
 		set pos [string last / $ProjectName]
@@ -227,15 +205,15 @@ proc OpenSees::SetOpenSeesPath {} {
 		regsub -all {\\} $OpenSeesPath {/} OpenSeesPath
 
 	} else {
-				if { ![info exists GidProcWin(w)] || \
-						![winfo exists $GidProcWin(w).listbox#1] } {
-						set wbase .gid
-						set w ""
-				} else {
-						set wbase $GidProcWin(w)
-						set w $GidProcWin(w).listbox#1
-				}
-				tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees path was not found" ] error 0 [_ "Close"]
+		if { ![info exists GidProcWin(w)] || \
+			![winfo exists $GidProcWin(w).listbox#1] } {
+			set wbase .gid
+			set w ""
+		} else {
+			set wbase $GidProcWin(w)
+			set w $GidProcWin(w).listbox#1
+		}
+		tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees path was not found" ] error 0 [_ "Close"]
 	}
 }
 
@@ -304,6 +282,7 @@ proc OpenSees::Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 		HideInforBar
 
 	}
+	
 	proc Opt1_8 { } {
 
 		GidOpenConditions Restraints
@@ -461,47 +440,47 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
 	proc Opt2_11 { } {
 
-	variable ElemDrawStatus
-	variable NormalsDrawStatus
-	variable ConditionsDrawStatus
+		variable ElemDrawStatus
+		variable NormalsDrawStatus
+		variable ConditionsDrawStatus
 
-	switch $NormalsDrawStatus {
+		switch $NormalsDrawStatus {
 
-			0 {
-					GiD_Process Mescape Utilities DrawNormals lines 1:100000
-					set NormalsDrawStatus 1
-					set ElemDrawStatus 0
-					set ConditionsDrawStatus 0
-			}
-
-			1 {
-					GiD_Process Mescape
-					set NormalsDrawStatus 0
-			}
+		0 {
+			GiD_Process Mescape Utilities DrawNormals lines 1:100000
+			set NormalsDrawStatus 1
+			set ElemDrawStatus 0
+			set ConditionsDrawStatus 0
 		}
+
+		1 {
+			GiD_Process Mescape
+			set NormalsDrawStatus 0
+		}
+	}
 	}
 
 	variable ElemDrawStatus 0
 
 	proc Opt2_12 { } { # Switch draw elements
 
-	variable ElemDrawStatus
-	variable NormalsDrawStatus
-	variable ConditionsDrawStatus
+		variable ElemDrawStatus
+		variable NormalsDrawStatus
+		variable ConditionsDrawStatus
 
-	switch $ElemDrawStatus {
+		switch $ElemDrawStatus {
 
 			0 {
-					GiD_Process Mescape
-					GiD_Process Mescape Data Materials DrawMaterial -DrawAll-
-					set ElemDrawStatus 1
-					set ConditionsDrawStatus 0
-					set NormalsDrawStatus 0
+				GiD_Process Mescape
+				GiD_Process Mescape Data Materials DrawMaterial -DrawAll-
+				set ElemDrawStatus 1
+				set ConditionsDrawStatus 0
+				set NormalsDrawStatus 0
 			}
 
 			1 {
-					GiD_Process Mescape
-					set ElemDrawStatus 0
+				GiD_Process Mescape
+				set ElemDrawStatus 0
 			}
 		}
 	}
@@ -510,23 +489,23 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
 	proc Opt2_13 { } { # Switch draw conditions
 
-	variable ElemDrawStatus
-	variable NormalsDrawStatus
-	variable ConditionsDrawStatus
+		variable ElemDrawStatus
+		variable NormalsDrawStatus
+		variable ConditionsDrawStatus
 
-	switch $ConditionsDrawStatus {
+		switch $ConditionsDrawStatus {
 
 			0 {
-					GiD_Process Mescape
-					GiD_Process Mescape Data Conditions DrawCond -DrawAll-
-					set ConditionsDrawStatus 1
-					set ElemDrawStatus 0
-					set NormalsDrawStatus 0
+				GiD_Process Mescape
+				GiD_Process Mescape Data Conditions DrawCond -DrawAll-
+				set ConditionsDrawStatus 1
+				set ElemDrawStatus 0
+				set NormalsDrawStatus 0
 			}
 
 			1 {
-					GiD_Process Mescape
-					set ConditionsDrawStatus 0
+				GiD_Process Mescape
+				set ConditionsDrawStatus 0
 			}
 		}
 	}
@@ -763,10 +742,10 @@ proc InitGIDProject { dir } {
 
 proc EndGIDProject {} {
 
-	bind .gid <Configure>	{}
-	bind .gid <Activate>	{}
-	bind .gid <Deactivate>	{}
-	bind .gid <Map>			{}
+	bind .gid <Configure>		{}
+	bind .gid <Activate>		{}
+	bind .gid <Deactivate>		{}
+	bind .gid <Map>				{}
 
 	if {[winfo exist .ibar]} {destroy .ibar}
 
@@ -793,40 +772,40 @@ proc LoadGIDProject { filespd } {
 
 		if {$spd_exist} {
 
-				set spd [open $filespd r]
+			set spd [open $filespd r]
 
-				set spd_data [read $spd]
-				set spd_data [string trim $spd_data]
+			set spd_data [read $spd]
+			set spd_data [string trim $spd_data]
 
-				close $spd
+			close $spd
 
 		} else {
 
-				set spd_data "Unknown"
+			set spd_data "Unknown"
 		}
 
 		set cmp [string compare "$spd_data" "$VersionNumber"]
 
 		if { $cmp != 0 } {
 
-				InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
-				if { ![winfo exists $InfoWin] } return ;
-				ttk::frame $InfoWin.top
-				ttk::label $InfoWin.top.title_text -text [= ""]
-				ttk::frame $InfoWin.information -relief raised
-				ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
-				ttk::frame $InfoWin.bottom
-				ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "OpenSees::TransformAndClose"
-				ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
-				grid $InfoWin.top.title_text -sticky ew
-				grid $InfoWin.top -sticky new
-				grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
-				grid $InfoWin.information -sticky new
-				grid $InfoWin.bottom.continue $InfoWin.bottom.readlog -padx 10
-				grid $InfoWin.bottom -sticky sew -padx 10 -pady 10
-				if { $::tcl_version >= 8.5 } { grid anchor $InfoWin.bottom center }
-				grid rowconfigure $InfoWin 1 -weight 1
-				grid columnconfigure $InfoWin 0 -weight 1
+			InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
+			if { ![winfo exists $InfoWin] } return ;
+			ttk::frame $InfoWin.top
+			ttk::label $InfoWin.top.title_text -text [= ""]
+			ttk::frame $InfoWin.information -relief raised
+			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
+			ttk::frame $InfoWin.bottom
+			ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "OpenSees::TransformAndClose"
+			ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
+			grid $InfoWin.top.title_text -sticky ew
+			grid $InfoWin.top -sticky new
+			grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
+			grid $InfoWin.information -sticky new
+			grid $InfoWin.bottom.continue $InfoWin.bottom.readlog -padx 10
+			grid $InfoWin.bottom -sticky sew -padx 10 -pady 10
+			if { $::tcl_version >= 8.5 } { grid anchor $InfoWin.bottom center }
+			grid rowconfigure $InfoWin 1 -weight 1
+			grid columnconfigure $InfoWin 0 -weight 1
 		}
 	}
 }
@@ -869,19 +848,19 @@ proc SaveGIDProject { filespd } {
 		set fexists [file exists "$OldGiDProjectDir/Records"]
 		if {$fexists} {
 
-				file copy -force "$OldGiDProjectDir/Records" "$NewGiDProjectDir"
+			file copy -force "$OldGiDProjectDir/Records" "$NewGiDProjectDir"
 		}
 
 		set fexists [file exists "$OldGiDProjectDir/Scripts"]
 		if {$fexists} {
 
-				file copy -force "$OldGiDProjectDir/Scripts" "$NewGiDProjectDir"
+			file copy -force "$OldGiDProjectDir/Scripts" "$NewGiDProjectDir"
 		}
 
 		set fexists [file exists "$OldGiDProjectDir/$OldGiDProjectName.txt"]
 		if {$fexists} {
 
-				file copy -force "$OldGiDProjectDir/$OldGiDProjectName.txt" "$NewGiDProjectDir/$NewGiDProjectName.txt"
+			file copy -force "$OldGiDProjectDir/$OldGiDProjectName.txt" "$NewGiDProjectDir/$NewGiDProjectName.txt"
 		}
 	}
 
@@ -896,10 +875,10 @@ proc BeforeInitGIDPostProcess {} {
 
 	# remove bindings
 
-	bind .gid <Configure>		{}
-	bind .gid <Activate>		{}
-	bind .gid <Deactivate>		{}
-	bind .gid <Map>						{}
+	bind .gid <Configure>	{}
+	bind .gid <Activate>	{}
+	bind .gid <Deactivate>	{}
+	bind .gid <Map>			{}
 
 	if { [winfo exist .ibar]} {
 		destroy .ibar
@@ -924,22 +903,22 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 	if {$exists > -1 } {
 	set count [GiD_Info conditions $old_cond_name geometry -count]
 		if {$count} {
-				set condition [GiD_Info conditions $old_cond_name geometry]
+			set condition [GiD_Info conditions $old_cond_name geometry]
 
-				foreach data $condition {
+			foreach data $condition {
 
-						lappend points [lindex $data 1]
+				lappend points [lindex $data 1]
 
-						lappend Ids [lindex $data 3]
-				}
-
-				foreach point $points ID $Ids {
-
-						set values [list $ID ""]
-						GiD_AssignData condition $new_cond_name points $values $point
+				lappend Ids [lindex $data 3]
 			}
 
-		GiD_UnAssignData condition $old_cond_name points "all"
+			foreach point $points ID $Ids {
+
+				set values [list $ID ""]
+				GiD_AssignData condition $new_cond_name points $values $point
+			}
+
+			GiD_UnAssignData condition $old_cond_name points "all"
 		}
 	}
 
@@ -955,24 +934,24 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 	if {$exists > -1 } {
 	set count [GiD_Info conditions $old_cond_name geometry -count]
 		if {$count} {
-				set condition [GiD_Info conditions $old_cond_name geometry]
+			set condition [GiD_Info conditions $old_cond_name geometry]
 
-				foreach data $condition {
+			foreach data $condition {
 
-						lappend points [lindex $data 1]
+				lappend points [lindex $data 1]
 
-						lappend Ids [lindex $data 3]
+				lappend Ids [lindex $data 3]
 
-						lappend dofs [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9]]
-				}
+				lappend dofs [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9]]
+			}
 
-				foreach point $points ID $Ids dof $dofs {
+			foreach point $points ID $Ids dof $dofs {
 
-						set values [list $ID [lindex $dof 0] [lindex $dof 1] [lindex $dof 2] [lindex $dof 3] [lindex $dof 4] [lindex $dof 5] ]
-						GiD_AssignData condition $new_cond_name points $values $point
-				}
+				set values [list $ID [lindex $dof 0] [lindex $dof 1] [lindex $dof 2] [lindex $dof 3] [lindex $dof 4] [lindex $dof 5] ]
+				GiD_AssignData condition $new_cond_name points $values $point
+			}
 
-		GiD_UnAssignData condition $old_cond_name points "all"
+			GiD_UnAssignData condition $old_cond_name points "all"
 		}
 	}
 
@@ -989,24 +968,24 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 	set count [GiD_Info conditions $old_cond_name geometry -count]
 
 		if {$count} {
-				set condition [GiD_Info conditions $old_cond_name geometry]
+			set condition [GiD_Info conditions $old_cond_name geometry]
 
-				foreach data $condition {
+			foreach data $condition {
 
-						lappend lines [lindex $data 1]
+				lappend lines [lindex $data 1]
 
-						lappend Ids [lindex $data 3]
+				lappend Ids [lindex $data 3]
 
-						lappend dofs [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9]]
-				}
+				lappend dofs [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9]]
+			}
 
-				foreach line $lines ID $Ids dof $dofs {
+			foreach line $lines ID $Ids dof $dofs {
 
-						set values [list $ID [lindex $dof 0] [lindex $dof 1] [lindex $dof 2] [lindex $dof 3] [lindex $dof 4] [lindex $dof 5] ]
-						GiD_AssignData condition $new_cond_name lines $values $line
-				}
+				set values [list $ID [lindex $dof 0] [lindex $dof 1] [lindex $dof 2] [lindex $dof 3] [lindex $dof 4] [lindex $dof 5] ]
+				GiD_AssignData condition $new_cond_name lines $values $line
+			}
 
-		GiD_UnAssignData condition $old_cond_name lines "all"
+			GiD_UnAssignData condition $old_cond_name lines "all"
 		}
 	}
 
@@ -1022,31 +1001,31 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 	if {$exists > -1 } {
 	set count [GiD_Info conditions $old_cond_name geometry -count]
 		if {$count} {
-				set condition [GiD_Info conditions $old_cond_name geometry]
+			set condition [GiD_Info conditions $old_cond_name geometry]
 
-				foreach data $condition {
+			foreach data $condition {
 
-						lappend points [lindex $data 1]
+				lappend points [lindex $data 1]
 
-						lappend Idold [lindex $data 3]
+				lappend Idold [lindex $data 3]
 
-						lappend Idnew [lindex $data 3]
-			}
+				lappend Idnew [lindex $data 3]
+	}
 
-				GiD_UnAssignData condition $old_cond_name points "all"
+			GiD_UnAssignData condition $old_cond_name points "all"
 
-				foreach point $points IDold $Idold IDnew $Idnew {
+			foreach point $points IDold $Idold IDnew $Idnew {
 
-						if { $IDold == "-" } {
+				if { $IDold == "-" } {
 
-							break;
+						break;
 
-						} else {
+				} else {
 
-								set values [list $IDold $IDold ""]
-								GiD_AssignData condition $new_cond_name points $values $point
-						}
+					set values [list $IDold $IDold ""]
+					GiD_AssignData condition $new_cond_name points $values $point
 				}
+			}
 		}
 	}
 
@@ -1061,34 +1040,34 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 	if {$exists > -1 } {
 	set count [GiD_Info conditions $old_cond_name geometry -count]
 		if {$count} {
-				set condition [GiD_Info conditions $old_cond_name geometry]
+			set condition [GiD_Info conditions $old_cond_name geometry]
 
-				foreach data $condition {
+			foreach data $condition {
 
-						lappend points [lindex $data 1]
+				lappend points [lindex $data 1]
 
-						lappend Idold [lindex $data 3]
+				lappend Idold [lindex $data 3]
 
-						lappend Idnew [lindex $data 4]
+				lappend Idnew [lindex $data 4]
 
-						lappend Planes [lindex $data 5]
+				lappend Planes [lindex $data 5]
+			}
+
+			GiD_UnAssignData condition $old_cond_name points "all"
+
+			foreach point $points IDold $Idold IDnew $Idnew plane $Planes {
+
+				# - means new user v2.5.0 and later
+				if {$IDold == "-"} {
+
+						break;
+
+				} else {
+
+						set values [list $IDold $IDold $plane ""]
+						GiD_AssignData condition $new_cond_name points $values $point
 				}
-
-				GiD_UnAssignData condition $old_cond_name points "all"
-
-				foreach point $points IDold $Idold IDnew $Idnew plane $Planes {
-
-						# - means new user v2.5.0 and later
-						if {$IDold == "-"} {
-
-								break;
-
-						} else {
-
-								set values [list $IDold $IDold $plane ""]
-								GiD_AssignData condition $new_cond_name points $values $point
-						}
-				}
+			}
 		}
 	}
 
@@ -1103,34 +1082,34 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 	if {$exists > -1 } {
 	set count [GiD_Info conditions $old_cond_name geometry -count]
 		if {$count} {
-				set condition [GiD_Info conditions $old_cond_name geometry]
+			set condition [GiD_Info conditions $old_cond_name geometry]
 
-				foreach data $condition {
+			foreach data $condition {
 
-						lappend lines [lindex $data 1]
+				lappend lines [lindex $data 1]
 
-						lappend Idold [lindex $data 3]
+				lappend Idold [lindex $data 3]
 
-						lappend Idnew [lindex $data 4]
+				lappend Idnew [lindex $data 4]
 
-						lappend Planes [lindex $data 5]
+				lappend Planes [lindex $data 5]
+			}
+
+			GiD_UnAssignData condition $old_cond_name lines "all"
+
+			foreach line $lines IDold $Idold IDnew $Idnew plane $Planes {
+
+				# - means new user v2.5.0 and later
+				if {$IDold == "-"} {
+
+					break;
+
+				} else {
+
+					set values [list $IDold $IDold $plane ""]
+					GiD_AssignData condition $new_cond_name lines $values $line
 				}
-
-				GiD_UnAssignData condition $old_cond_name lines "all"
-
-				foreach line $lines IDold $Idold IDnew $Idnew plane $Planes {
-
-						# - means new user v2.5.0 and later
-						if {$IDold == "-"} {
-
-								break;
-
-						} else {
-
-								set values [list $IDold $IDold $plane ""]
-								GiD_AssignData condition $new_cond_name lines $values $line
-						}
-				}
+			}
 		}
 	}
 
@@ -1145,26 +1124,26 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 	set count [GiD_Info conditions $old_cond_name geometry -count]
 		if {$count} {
 
-				set condition [GiD_Info conditions $old_cond_name geometry]
-				WarnWinText "$condition"
-				foreach data $condition {
-						WarnWinText "$data"
-						lappend points [lindex $data 1]
+			set condition [GiD_Info conditions $old_cond_name geometry]
+			WarnWinText "$condition"
+			foreach data $condition {
+				WarnWinText "$data"
+				lappend points [lindex $data 1]
 
-						lappend Idold [lindex $data 3]
+				lappend Idold [lindex $data 3]
 
-						lappend options [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9] [lindex $data 10] [lindex $data 11] [lindex $data 12] [lindex $data 13] [lindex $data 14] [lindex $data 15] ]
-				}
+				lappend options [list [lindex $data 4] [lindex $data 5] [lindex $data 6] [lindex $data 7] [lindex $data 8] [lindex $data 9] [lindex $data 10] [lindex $data 11] [lindex $data 12] [lindex $data 13] [lindex $data 14] [lindex $data 15] ]
+			}
 
-				GiD_UnAssignData condition $old_cond_name points "all"
+			GiD_UnAssignData condition $old_cond_name points "all"
 
-				foreach point $points IDold $Idold opt $options {
+			foreach point $points IDold $Idold opt $options {
 
-					# means new user v2.5.0 and later
+				# means new user v2.5.0 and later
 
-					set values [list $IDold [lindex $opt 0] [lindex $opt 1] [lindex $opt 2] [lindex $opt 3] [lindex $opt 4] [lindex $opt 5] [lindex $opt 6] [lindex $opt 7] [lindex $opt 8] [lindex $opt 9] [lindex $opt 10] [lindex $opt 11] ]
-					GiD_AssignData condition $new_cond_name points $values $point
-				}
+				set values [list $IDold [lindex $opt 0] [lindex $opt 1] [lindex $opt 2] [lindex $opt 3] [lindex $opt 4] [lindex $opt 5] [lindex $opt 6] [lindex $opt 7] [lindex $opt 8] [lindex $opt 9] [lindex $opt 10] [lindex $opt 11] ]
+				GiD_AssignData condition $new_cond_name points $values $point
+			}
 		}
 	}
 
@@ -1212,15 +1191,16 @@ proc HelpOnOpenSees { dir } {
 # Returns the project dimensions. Checking if there is any point outside the X-Y Plane. If so, the model is considered as 3D
 
 proc OpenSees::ReturnProjectDimensions { } {
+
 	set ndm 2
 	foreach layername [GiD_Info layers] {
 		foreach i [GiD_Info layers -entities points $layername] {
-				set zcoord [lindex [GiD_Geometry get point $i] 3]
-						if {$zcoord!=0} {
-								set ndm 3
-								break
-						}
+			set zcoord [lindex [GiD_Geometry get point $i] 3]
+				if {$zcoord!=0} {
+					set ndm 3
+					break
 				}
+			}
 		}
 	return $ndm
 }
@@ -1295,13 +1275,13 @@ proc SetImagesAndColors {} {
 	foreach line $lines {
 		if { $line == "Theme(Current) GiD_black" } {
 
-				set ibarBackgroundColor "#292929"
-				set ibarTextColor "white"
-				set ibarLineColor "#1A5B6B"
+			set ibarBackgroundColor "#292929"
+			set ibarTextColor "white"
+			set ibarLineColor "#1A5B6B"
 
-				set GiDtheme "Black"
+			set GiDtheme "Black"
 
-				break
+			break
 		}
 	}
 }
@@ -1310,10 +1290,10 @@ proc UpdateInfoBar { } {
 
 	# remove bindings
 
-	bind .gid <Configure>		{}
-	bind .gid <Activate>		{}
-	bind .gid <Deactivate>		{}
-	bind .gid <Map>						{}
+	bind .gid <Configure>				{}
+	bind .gid <Activate>				{}
+	bind .gid <Deactivate>				{}
+	bind .gid <Map>												{}
 
 	global ibarBackgroundColor ibarTextColor ibarLineColor
 	set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
@@ -1376,22 +1356,21 @@ proc UpdateInfoBar { } {
 
 	# add bindings
 
-	bind .gid <Configure>		{RefreshInfoBar}
-	bind .gid <Activate>		{RefreshInfoBar}
-	bind .gid <Deactivate>		{HideInforBar}
-	bind .gid <Map>				{UpdateInfoBar}
+	bind .gid <Configure>	{RefreshInfoBar}
+	bind .gid <Activate>	{RefreshInfoBar}
+	bind .gid <Deactivate>	{HideInforBar}
+	bind .gid <Map>			{RefreshInfoBar}
 
 	focus .gid.central.s
-
 	update
 }
 
 proc RefreshInfoBar { } {
 
 	if { [winfo exists .ibar] } {
+
 		set x [winfo rootx .gid.central.s]
 		set y [winfo rooty .gid.central.s]
-		set w [winfo width .gid.central.s]
 
 		set geom "[winfo width .gid.central.s]x25+$x+$y"
 

@@ -2,27 +2,29 @@
 
 proc ExecutePost {} {
 
-	set temp1 [OpenSees::GetGiDPath]
-	regsub -all {/} $temp1 {\\} temp1
-	set temp2 [OpenSees::GetProjectPath]
-	regsub -all {/} $temp2 {\\} temp2
+	set param1 [OpenSees::GetProblemTypePath]
+	regsub -all {\\} $param1 {/} param1
+	set pos [string last /problemtypes $param1]
+	set param1 [string range $param1 0 $pos-1]
+	regsub -all {/} $param1 {\\} param1
 
-	set OutputStep [GiD_AccessValue get gendata Output_step_frequency]
+	set param2 [OpenSees::GetProjectPath]
+	regsub -all {/} $param2 {\\} param2
+
+	set OutputStep [GiD_AccessValue get GenData Output_step_frequency]
 	set OutputStep [lindex [split $OutputStep #] 0]
 
-	set probDir [OpenSees::GetProblemTypePath]
-
-	cd "$probDir/exe"
+	cd "[OpenSees::GetProblemTypePath]/exe"
 
 	# run OpenSeesPost
 
-	if {[GiD_AccessValue get gendata use_binary_format] == 0 } {
+	if {[GiD_AccessValue get GenData use_binary_format] == 0 } {
 
-		exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep"
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep"
 
 	} else {
 
-		exec {*}[auto_execok start] "OpenSeesPost.exe" "$temp1" "$temp2" "$OutputStep" "/b"
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep" "/b"
 
 	}
 }
@@ -42,14 +44,14 @@ proc CheckLogAndPost { projectDir projectName doPost } {
 	foreach line $data {
 
 		if { ([string match *Analysis* $line]) == 1 && ([string match *time* $line] == 1) } {
-			set words [split $line]
-			if { [lindex $words 0] == "Analysis" && [lindex $words 1] == "time" } {
+						set words [split $line]
+						if { [lindex $words 0] == "Analysis" && [lindex $words 1] == "time" } {
 
-				set pos [string last ":" $line]
-				set ElapsedTime [string range $line $pos+2 $pos+100]
+								set pos [string last ":" $line]
+								set ElapsedTime [string range $line $pos+2 $pos+100]
 
-				break
-			}
+								break
+						}
 		}
 	}
 
@@ -189,7 +191,6 @@ return [join [list logFile \"[OpenSees::GetProjectName].log\"] ]
 proc Run_existing_tcl {w doPost} {
 
 	destroy $w
-
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
 	set OpenSeesPath [OpenSees::GetOpenSeesPath]
@@ -332,114 +333,114 @@ proc AnalysisInformationWindow { analResult } {
 	switch $analResult {
 
 		"NoRun" {
-				set w .gid.win_example
-				InitWindow $w [= "Analysis failed"] ErrorInfo "" "" 1
-				if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
-				ttk::frame $w.top
-				ttk::label $w.top.title_text -text [= ""]
-				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "\tAnalysis could not run !\n\n\tPlease check generated .tcl file and report any issues to https://github.com/rclab-auth/gidopensees/issues\t"]
-				ttk::frame $w.bottom
-				ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
-				grid $w.top.title_text -sticky ew
-				grid $w.top -sticky new
-				grid $w.information.errormessage -sticky w -padx 6 -pady 6
-				grid $w.information -sticky nsew
-				grid $w.bottom.close -padx 6
-				grid $w.bottom -sticky sew -padx 6 -pady 6
-				if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-				grid rowconfigure $w 1 -weight 1
-				grid columnconfigure $w 0 -weight 1
+			set w .gid.win_example
+			InitWindow $w [= "Analysis failed"] ErrorInfo "" "" 1
+			if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
+			ttk::frame $w.top
+			ttk::label $w.top.title_text -text [= ""]
+			ttk::frame $w.information -relief raised
+			ttk::label $w.information.errormessage -text [= "\tAnalysis could not run !\n\n\tPlease check generated .tcl file and report any issues to https://github.com/rclab-auth/gidopensees/issues\t"]
+			ttk::frame $w.bottom
+			ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
+			grid $w.top.title_text -sticky ew
+			grid $w.top -sticky new
+			grid $w.information.errormessage -sticky w -padx 6 -pady 6
+			grid $w.information -sticky nsew
+			grid $w.bottom.close -padx 6
+			grid $w.bottom -sticky sew -padx 6 -pady 6
+			if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+			grid rowconfigure $w 1 -weight 1
+			grid columnconfigure $w 0 -weight 1
 		}
 
 		"RunFailed" {
-				set w .gid.win_example
-				InitWindow $w [= "Analysis failed"] ErrorInfo "" "" 1
-				if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
-				ttk::frame $w.top
-				ttk::label $w.top.title_text -text [= ""]
-				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "\tAnalysis run with errors !\n\n\tErrors were reported during analysis, please check generated .log file for more information.\t"]
-				ttk::frame $w.bottom
-				ttk::button $w.bottom.openlog -text [= "Open Log file"] -command "OpenLogFile $w"
-				ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
-				grid $w.top.title_text -sticky ew
-				grid $w.top -sticky new
-				grid $w.information.errormessage -sticky w -padx 6 -pady 6
-				grid $w.information -sticky nsew
-				grid $w.bottom.openlog $w.bottom.close -padx 6
-				grid $w.bottom -sticky sew -padx 6 -pady 6
-				if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-				grid rowconfigure $w 1 -weight 1
-				grid columnconfigure $w 0 -weight 1
+			set w .gid.win_example
+			InitWindow $w [= "Analysis failed"] ErrorInfo "" "" 1
+			if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
+			ttk::frame $w.top
+			ttk::label $w.top.title_text -text [= ""]
+			ttk::frame $w.information -relief raised
+			ttk::label $w.information.errormessage -text [= "\tAnalysis run with errors !\n\n\tErrors were reported during analysis, please check generated .log file for more information.\t"]
+			ttk::frame $w.bottom
+			ttk::button $w.bottom.openlog -text [= "Open Log file"] -command "OpenLogFile $w"
+			ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
+			grid $w.top.title_text -sticky ew
+			grid $w.top -sticky new
+			grid $w.information.errormessage -sticky w -padx 6 -pady 6
+			grid $w.information -sticky nsew
+			grid $w.bottom.openlog $w.bottom.close -padx 6
+			grid $w.bottom -sticky sew -padx 6 -pady 6
+			if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+			grid rowconfigure $w 1 -weight 1
+			grid columnconfigure $w 0 -weight 1
 		}
 
 		"RunFailedPost" {
-				set w .gid.win_example
-				InitWindow $w [= "Analysis failed"] ErrorInfo "" "" 1
-				if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
-				ttk::frame $w.top
-				ttk::label $w.top.title_text -text [= ""]
-				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "\tAnalysis run with errors !\n\n\tErrors were reported during analysis, please check generated .log file for more information.\t"]
-				ttk::frame $w.bottom
-				ttk::button $w.bottom.openlog -text [= "Open Log file"] -command "OpenLogFile $w"
-				ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
-				ttk::button $w.bottom.ignore -text [= "Ignore"] -command "GoToPostProcess $w"
-				grid $w.top.title_text -sticky ew
-				grid $w.top -sticky new
-				grid $w.information.errormessage -sticky w -padx 6 -pady 6
-				grid $w.information -sticky nsew
-				grid $w.bottom.openlog $w.bottom.ignore $w.bottom.close -padx 6
-				grid $w.bottom -sticky sew -padx 6 -pady 6
-				if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-				grid rowconfigure $w 1 -weight 1
-				grid columnconfigure $w 0 -weight 1
+			set w .gid.win_example
+			InitWindow $w [= "Analysis failed"] ErrorInfo "" "" 1
+			if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
+			ttk::frame $w.top
+			ttk::label $w.top.title_text -text [= ""]
+			ttk::frame $w.information -relief raised
+			ttk::label $w.information.errormessage -text [= "\tAnalysis run with errors !\n\n\tErrors were reported during analysis, please check generated .log file for more information.\t"]
+			ttk::frame $w.bottom
+			ttk::button $w.bottom.openlog -text [= "Open Log file"] -command "OpenLogFile $w"
+			ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
+			ttk::button $w.bottom.ignore -text [= "Ignore"] -command "GoToPostProcess $w"
+			grid $w.top.title_text -sticky ew
+			grid $w.top -sticky new
+			grid $w.information.errormessage -sticky w -padx 6 -pady 6
+			grid $w.information -sticky nsew
+			grid $w.bottom.openlog $w.bottom.ignore $w.bottom.close -padx 6
+			grid $w.bottom -sticky sew -padx 6 -pady 6
+			if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+			grid rowconfigure $w 1 -weight 1
+			grid columnconfigure $w 0 -weight 1
 		}
 
 		"RunSuccess" {
-				global ElapsedTime
-				set w .gid.win_example
-				InitWindow $w [= "Analysis successful"] ErrorInfo "" "" 1
-				if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
-				ttk::frame $w.top
-				ttk::label $w.top.title_text -text [= ""]
-				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "\tAnalysis completed successfully after $ElapsedTime\t"]
-				ttk::frame $w.bottom
-				ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
-				grid $w.top.title_text -sticky ew
-				grid $w.top -sticky new
-				grid $w.information.errormessage -sticky w -padx 6 -pady 6
-				grid $w.information -sticky nsew
-				grid $w.bottom.close -padx 6
-				grid $w.bottom -sticky sew -padx 6 -pady 6
-				if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-				grid rowconfigure $w 1 -weight 1
-				grid columnconfigure $w 0 -weight 1
+			global ElapsedTime
+			set w .gid.win_example
+			InitWindow $w [= "Analysis successful"] ErrorInfo "" "" 1
+			if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
+			ttk::frame $w.top
+			ttk::label $w.top.title_text -text [= ""]
+			ttk::frame $w.information -relief raised
+			ttk::label $w.information.errormessage -text [= "\tAnalysis completed successfully after $ElapsedTime\t"]
+			ttk::frame $w.bottom
+			ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
+			grid $w.top.title_text -sticky ew
+			grid $w.top -sticky new
+			grid $w.information.errormessage -sticky w -padx 6 -pady 6
+			grid $w.information -sticky nsew
+			grid $w.bottom.close -padx 6
+			grid $w.bottom -sticky sew -padx 6 -pady 6
+			if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+			grid rowconfigure $w 1 -weight 1
+			grid columnconfigure $w 0 -weight 1
 		}
 
 		"RunSuccessPost" {
-				global ElapsedTime
-				set w .gid.win_example
-				InitWindow $w [= "Analysis successful"] ErrorInfo "" "" 1
-				if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
-				ttk::frame $w.top
-				ttk::label $w.top.title_text -text [= ""]
-				ttk::frame $w.information -relief raised
-				ttk::label $w.information.errormessage -text [= "\tAnalysis completed successfully after $ElapsedTime\t\n\n\tContinue to postprocessing ?"]
-				ttk::frame $w.bottom
-				ttk::button $w.bottom.post -text [= "Postprocess"] -command "GoToPostProcess $w"
-				ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
-				grid $w.top.title_text -sticky ew
-				grid $w.top -sticky new
-				grid $w.information.errormessage -sticky w -padx 6 -pady 6
-				grid $w.information -sticky nsew
-				grid $w.bottom.post $w.bottom.close -padx 6
-				grid $w.bottom -sticky sew -padx 6 -pady 6
-				if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
-				grid rowconfigure $w 1 -weight 1
-				grid columnconfigure $w 0 -weight 1
+			global ElapsedTime
+			set w .gid.win_example
+			InitWindow $w [= "Analysis successful"] ErrorInfo "" "" 1
+			if { ![winfo exists $w] } return ;# windows disabled || usemorewindows == 0
+			ttk::frame $w.top
+			ttk::label $w.top.title_text -text [= ""]
+			ttk::frame $w.information -relief raised
+			ttk::label $w.information.errormessage -text [= "\tAnalysis completed successfully after $ElapsedTime\t\n\n\tContinue to postprocessing ?"]
+			ttk::frame $w.bottom
+			ttk::button $w.bottom.post -text [= "Postprocess"] -command "GoToPostProcess $w"
+			ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
+			grid $w.top.title_text -sticky ew
+			grid $w.top -sticky new
+			grid $w.information.errormessage -sticky w -padx 6 -pady 6
+			grid $w.information -sticky nsew
+			grid $w.bottom.post $w.bottom.close -padx 6
+			grid $w.bottom -sticky sew -padx 6 -pady 6
+			if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+			grid rowconfigure $w 1 -weight 1
+			grid columnconfigure $w 0 -weight 1
 		}
 	}
 }
@@ -451,7 +452,7 @@ proc WantToRegenMeshMessage {} {
 	switch -- $answer {
 
 		yes {
-			GiD_Process Mescape Meshing generate
+						GiD_Process Mescape Meshing generate
 		}
 		no destroy
 	}
@@ -544,7 +545,7 @@ proc Opt2_dialog { } {
 
 		} else {
 
-			Create_tcl_file $w
+						Create_tcl_file $w
 		}
 	}
 	return ""
@@ -589,7 +590,7 @@ proc Opt3_dialog { } {
 
 		} else {
 
-			Create_and_open_tcl_file $w
+						Create_and_open_tcl_file $w
 		}
 	}
 	return ""
@@ -714,6 +715,130 @@ proc Opt7_dialog { } {
 	return ""
 }
 
+proc Import_dialog { } {
+
+	set types {
+		{{OpenSees .tcl files} {.tcl}}
+		{{All Files} *}
+	}
+
+	set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
+	set tcl [tk_getOpenFile -filetypes $types]
+	regsub -all {/} $tcl {\\} tcl
+
+	if {$tcl ne ""} {
+	
+		# wait message
+
+		global ibarBackgroundColor ibarTextColor ibarLineColor
+
+		if { [winfo exist .wait] } {
+			destroy .wait
+		}
+
+		toplevel .wait
+
+		wm attributes .wait -topmost 1
+		wm overrideredirect .wait 1
+		wm transient .wait .gid
+
+		.wait configure -background #292929
+		.wait configure -bd 0
+
+		set x [expr [winfo rootx .gid.central.s] + [winfo width .gid.central.s] / 2 - 300 / 2]
+		set y [expr [winfo rooty .gid.central.s] + [winfo height .gid.central.s] / 2 - 50 / 2 ]
+
+		set geom "300x50+$x+$y"
+
+		wm geometry .wait $geom
+
+		canvas .wait.c -width 300 -height 50 -background $ibarBackgroundColor
+
+		.wait.c create line   0  0  299   0 -fill $ibarLineColor
+		.wait.c create line 299  0  299  49 -fill $ibarLineColor
+		.wait.c create line 299  49   0  49 -fill $ibarLineColor
+		.wait.c create line   0  49   0   0 -fill $ibarLineColor
+
+		.wait.c create text  150 23 -text "Importing geometry, please wait..." -font "calibri 12" -fill $ibarTextColor -anchor center
+
+		pack .wait.c
+		lower .wait .gid
+		focus .gid.central.s
+		update
+
+		cd "$OpenSeesProblemTypePath/exe"
+
+		set OpenSeesPath [OpenSees::GetOpenSeesPath]
+		regsub -all {/} $OpenSeesPath {\\} OpenSeesPath
+
+		exec {*}[auto_execok start] "tcl_Import.exe" "$OpenSeesPath" "$tcl"
+
+		set bch [file root $tcl]
+		append bch ".bch"
+
+		if {[file exists $bch] } {
+
+			raise .wait .gid
+			focus .gid.central.s
+			update
+
+			# read batch
+
+			GiD_Process Mescape Files BatchFile $bch
+
+			file delete -force $bch
+
+			GiD_Process 'Rotate Angle -120 10
+			GiD_Process 'Zoom Frame
+
+			lower .wait .gid
+			update
+
+			set w .gid.win_example
+			InitWindow $w [= "Import finished"] ErrorInfo "" "" 1
+			if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
+			ttk::frame $w.top
+			ttk::label $w.top.title_text -text [= ""]
+			ttk::frame $w.information -relief raised
+			ttk::label $w.information.errormessage -text [= "\tGeometry was successfully imported from $tcl\t\t"]
+			ttk::frame $w.bottom
+			ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
+			grid $w.top.title_text -sticky ew
+			grid $w.top -sticky new
+			grid $w.information.errormessage -sticky w -padx 6 -pady 6
+			grid $w.information -sticky nsew
+			grid $w.bottom.close -padx 6
+			grid $w.bottom -sticky sew -padx 6 -pady 6
+			if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+			grid rowconfigure $w 1 -weight 1
+			grid columnconfigure $w 0 -weight 1
+
+		} else {
+
+			set w .gid.win_example
+			InitWindow $w [= "Import failed"] ErrorInfo "" "" 1
+			if { ![winfo exists $w] } return ; # windows disabled || usemorewindows == 0
+			ttk::frame $w.top
+			ttk::label $w.top.title_text -text [= ""]
+			ttk::frame $w.information -relief raised
+			ttk::label $w.information.errormessage -text [= "\tCould not import model geometry.\t\n\n\tPlease report your model to GitHub issues.\t\n\t(https://github.com/rclab-auth/gidopensees/issues)\t\t"]
+			ttk::frame $w.bottom
+			ttk::button $w.bottom.close -text [= "Close"] -command "destroy $w"
+			grid $w.top.title_text -sticky ew
+			grid $w.top -sticky new
+			grid $w.information.errormessage -sticky w -padx 6 -pady 6
+			grid $w.information -sticky nsew
+			grid $w.bottom.close -padx 6
+			grid $w.bottom -sticky sew -padx 6 -pady 6
+			if { $::tcl_version >= 8.5 } { grid anchor $w.bottom center }
+			grid rowconfigure $w 1 -weight 1
+			grid columnconfigure $w 0 -weight 1
+		}
+	}
+
+	return ""
+}
+
 # About option in GiD+OpenSees Menu
 
 proc AboutOpenSeesProbType { } {
@@ -761,6 +886,7 @@ proc OpenSees_Menu { dir } {
 	# Tab labels
 
 	set tabs [list  \
+	[= "Import geometry from existing .tcl (beta)"] \
 	[= "Create .tcl, run analysis and postprocess"] \
 	"---" \
 	[= "Create .tcl only"] \
@@ -785,6 +911,7 @@ proc OpenSees_Menu { dir } {
 	# Selection commands
 
 	set cmds { \
+	{Import_dialog} \
 	{Opt1_dialog} \
 	{} \
 	{Opt2_dialog} \
@@ -809,6 +936,7 @@ proc OpenSees_Menu { dir } {
 	# Tab icons
 
 	set icons { \
+	mnu_Import.png \
 	mnu_Analysis.png \
 	"" \
 	mnu_TCL.png \
@@ -833,10 +961,10 @@ proc OpenSees_Menu { dir } {
 	set position 0
 
 	foreach tab $tabs command $cmds  icon $icons {
-			set full_path_icon [file normalize [file join $dir img Menu $icon]]
-				GiDMenu::InsertOption "GiD+OpenSees" [list $tab] $position PRE $command "" $full_path_icon
-				incr position
-			}
+		set full_path_icon [file normalize [file join $dir img Menu $icon]]
+		GiDMenu::InsertOption "GiD+OpenSees" [list $tab] $position PRE $command "" $full_path_icon
+		incr position
+	}
 
 	GiDMenu::UpdateMenus
 }

@@ -298,6 +298,15 @@
 *set var V2=Vz2
 *set var V3=Vz3
 *endif
+*if((V1<1e-6) && (V1>-1e-6))
+*set var V1=0
+*endif
+*if((V2<1e-6) && (V2>-1e-6))
+*set var V2=0
+*endif
+*if((V3<1e-6) && (V3>-1e-6))
+*set var V3=0
+*endif
 *if((V1==1) && (V2==0) && (V3 == 0))
  +X*\
 *elseif((V1==-1) && (V2==0) && (V3 == 0))

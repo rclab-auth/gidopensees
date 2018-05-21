@@ -19,16 +19,23 @@ V.K. Papanikolaou, Assistant Professor AUTh
 ### KNOWN ISSUES
 
 ---
-- In order to view the generated .tcl file ('Create and view .tcl only' menu option), first associate the .tcl extension with your favourite text editor (e.g. Notepad, Notepad++ etc.).
+- In order to view the generated .tcl file ('Create and view .tcl only' menu option), first associate the .tcl extension with your favorite text editor (e.g. Notepad, Notepad++ etc.).
 - GiD may occasionally crash when spaces are used in new material/element names. Please do not use spaces in names until this issue is resolved in GiD.
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
-   - Intersection joints that belong to two lines with different constraints should be handled seperately.
-   - Intersection lines that belong to two surfaces with different constraints should be handled seperately.
+   - Intersection joints that belong to two lines with different constraints should be handled separately.
+   - Intersection lines that belong to two surfaces with different constraints should be handled separately.
 - The horizontal information bar stays in front of GiD material/condition windows when the respective menu options are used; please use the toolbar buttons instead. However, there's no way at the moment to hide the information bar behind the GiD Layer and Copy windows.
 
 ---
 
 ### VERSION HISTORY
+
+---
+
+**Version 2.5.5 (21/05/2018)**
+
+- **New feature (beta) : Import geometry from existing .tcl file**
+- Fixed bug in GiD local axes display when global Y is selected as vertical axis (thanks to tejeswar91 for feedback)
 
 ---
 

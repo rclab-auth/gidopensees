@@ -89,6 +89,9 @@
 *#
 *set var WeightDensity=ElemsMatProp(Weight_density,real)
 *set var DeadLoad=operation(WeightDensity*A)
+*if((DeadLoad<1e-6) && (DeadLoad>-1e-6))
+*set var DeadLoad=0
+*endif
 *if(DeadLoad != 0)
 *# end coordinates
 *set var x1=NodesCoord(1,1)
@@ -103,23 +106,31 @@
 *# vertical elems
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
 *if(y2>y1)
-*format "%d%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 0 *operation(-DeadLoad)
+*format "%6d%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
 *else
-*format "%d%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 0 *DeadLoad
+*format "%6d%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *DeadLoad
 *endif
 *# not vertical elems
 *else
-*set var arithmitis=operation(fabs(y2-y1))
-*set var paranomastis=operation(sqrt((x2-x1)*(x2-x1)+(z2-z1)*(z2-z1)))
-*set var theta=operation(atan((arithmitis/paranomastis)))
+*set var num=operation(fabs(y2-y1))
+*set var denum=operation(sqrt((x2-x1)*(x2-x1)+(z2-z1)*(z2-z1)))
+*set var theta=operation(atan(num/denum))
+*set var stheta=operation(sin(theta))
+*set var ctheta=operation(cos(theta))
+*if((stheta<1e-6) && (stheta>-1e-6))
+*set var stheta=0
+*endif
+*if((ctheta<1e-6) && (ctheta>-1e-6))
+*set var ctheta=0
+*endif
 *if(y2>=y1)
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 *operation(-DeadLoad*cos(theta)) *operation(-DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *else
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 *operation(-DeadLoad*cos(theta)) *operation(DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *endif
 *endif
 *# 2D analysis
@@ -127,32 +138,40 @@
 *# vertical elems
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
 *if(y2>y1)
-*format "%d%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 *operation(-DeadLoad)
+*format "%6d%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad)
 *else
-*format "%d%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 *DeadLoad
+*format "%6d%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0 *DeadLoad
 *endif
 *# not vertical elems
 *else
-*set var arithmitis=operation(fabs(y2-y1))
-*set var paranomastis=operation(sqrt((x2-x1)*(x2-x1)+(z2-z1)*(z2-z1)))
-*set var theta=operation(atan((arithmitis/paranomastis)))
+*set var num=operation(fabs(y2-y1))
+*set var denum=operation(sqrt((x2-x1)*(x2-x1)+(z2-z1)*(z2-z1)))
+*set var theta=operation(atan(num/denum))
+*set var stheta=operation(sin(theta))
+*set var ctheta=operation(cos(theta))
+*if((stheta<1e-6) && (stheta>-1e-6))
+*set var stheta=0
+*endif
+*if((ctheta<1e-6) && (ctheta>-1e-6))
+*set var ctheta=0
+*endif
 *if(y2>=y1)
 *if(x2>x1)
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*cos(theta)) *operation(-DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *else
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*cos(theta)) *operation(-DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *endif
 *else
 *if(x2<x1)
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*cos(theta)) *operation(DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *else
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*cos(theta)) *operation(DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *endif
 *endif
 *endif
@@ -162,23 +181,31 @@
 *# vertical elems
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,2)==NodesCoord(2,2))
 *if(z2>z1)
-*format "%d%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 0 *operation(-DeadLoad)
+*format "%6d%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
 *else
-*format "%d%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 0 *DeadLoad
+*format "%6d%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *DeadLoad
 *endif
 *# not vertical elems
 *else
-*set var arithmitis=operation(fabs(z2-z1))
-*set var paranomastis=operation(sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)))
-*set var theta=operation(atan((arithmitis/paranomastis)))
+*set var num=operation(fabs(z2-z1))
+*set var denum=operation(sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)))
+*set var theta=operation(atan(num/denum))
+*set var stheta=operation(sin(theta))
+*set var ctheta=operation(cos(theta))
+*if((stheta<1e-6) && (stheta>-1e-6))
+*set var stheta=0
+*endif
+*if((ctheta<1e-6) && (ctheta>-1e-6))
+*set var ctheta=0
+*endif
 *if(z2>=z1)
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 *operation(-DeadLoad*cos(theta)) *operation(-DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *else
-*format "%d%g%g"
-  eleLoad -ele *ElemsNum -type -beamUniform 0 *operation(-DeadLoad*cos(theta)) *operation(DeadLoad*sin(theta))
+*format "%6d%8g%8g"
+  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *endif
 *endif
 *endif
@@ -218,22 +245,25 @@
 *set var WeightDensity=ElemsMatProp(Weight_density,real)
 *set var Length=operation(fabs(sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)+(z2-z1)*(z2-z1))))
 *set var DeadLoad=operation(WeightDensity*A*Length/2)
+*if((DeadLoad<1e-6) && (DeadLoad>-1e-6))
+*set var DeadLoad=0
+*endif
 *if(ndime==3)
 *if(strcmp(GenData(Vertical_axis),"Y")==0)
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(1) 0.0 *operation(-DeadLoad) 0.0
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(2) 0.0 *operation(-DeadLoad) 0.0
 *else
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(1) 0.0 0.0 *operation(-DeadLoad)
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(2) 0.0 0.0 *operation(-DeadLoad)
 *endif
 *else
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(1) 0.0 *operation(-DeadLoad)
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(2) 0.0 *operation(-DeadLoad)
 *endif
 *endif
@@ -298,24 +328,27 @@
 *set var A=operation((magn1*magn2*sin(theta1))/2+(magn3*magn4*sin(theta2))/2)
 *set var WeightDensity=ElemsMatProp(Weight_density,real)
 *set var DeadLoad=operation(WeightDensity*A*thickness/4)
+*if((DeadLoad<1e-6) && (DeadLoad>-1e-6))
+*set var DeadLoad=0
+*endif
 *if(ndime==3)
 *if(strcmp(GenData(Vertical_axis),"Y")==0)
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(1) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(2) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(3) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(4) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
 *else
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(1) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(2) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(3) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
-*format "%d%g"
+*format "%6d%8g"
   load *ElemsConec(4) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
 *endif
 *endif

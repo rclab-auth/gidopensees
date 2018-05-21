@@ -42,7 +42,7 @@ proc TK_EditInterval { event args } {
 		CLOSE {
 
 			UpdateInfoBar
-
+			
 			return ""
 		}
 	}
@@ -79,17 +79,16 @@ proc TK_EditModelDim { event args } {
 
 		INIT {
 
-			set SelectedVerticalAxis [GiD_AccessValue get gendata Vertical_axis]
+			set SelectedVerticalAxis [GiD_AccessValue get GenData Vertical_axis]
 			set dim [OpenSees::ReturnProjectDimensions]
 			set dummy [DWLocalSetValue $GDN $STRUCT $QUESTION $dim]
 
 			if {$dim == 2} {
-
-				set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Y"]
-
+					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Y"]
 			} else {
-				set dummy [GiD_AccessValue set gendata Vertical_axis $SelectedVerticalAxis]
+					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis $SelectedVerticalAxis]
 			}
+
 			return ""
 		}
 	}
@@ -113,43 +112,43 @@ proc TK_ElementWikiInfo { event args } {
 			switch $ElemType {
 
 				"ElasticBeamColumn" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Beam_Column_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Beam_Column_Element"
 				}
 				"ElasticTimoshenkoBeamColumn" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Timoshenko_Beam_Column_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Timoshenko_Beam_Column_Element"
 				}
 				"forceBeamColumn" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Force-Based_Beam-Column_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Force-Based_Beam-Column_Element"
 				}
 				"Truss" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Truss_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Truss_Element"
 				}
 				"CorotationalTruss" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Corotational_Truss_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Corotational_Truss_Element"
 				}
 				"Quad" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Quad_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Quad_Element"
 				}
 				"Shell" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Shell_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Shell_Element"
 				}
 				"ShellDKGQ" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ShellDKGQ"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ShellDKGQ"
 				}
 				"Tri31" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Tri31_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Tri31_Element"
 				}
 				"QuadUP" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Four_Node_Quad_u-p_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Four_Node_Quad_u-p_Element"
 				}
 				"stdBrick" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Standard_Brick_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Standard_Brick_Element"
 				}
 				"dispBeamColumn" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Displacement-Based_Beam-Column_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Displacement-Based_Beam-Column_Element"
 				}
 				"dispBeamColumnInt" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Flexure-Shear_Interaction_Displacement-Based_Beam-Column_Element"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Flexure-Shear_Interaction_Displacement-Based_Beam-Column_Element"
 				}
 
 			}
@@ -181,94 +180,94 @@ proc TK_MaterialWikiInfo { event args } {
 			switch $MatType {
 
 				"Elastic" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Uniaxial_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Uniaxial_Material"
 				}
 				"ElasticPerfectlyPlastic" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic-Perfectly_Plastic_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic-Perfectly_Plastic_Material"
 				}
 				"ElasticPerfectlyPlasticwithGap" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic-Perfectly_Plastic_Gap_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic-Perfectly_Plastic_Gap_Material"
 				}
 				"Viscous" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Viscous_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Viscous_Material"
 				}
 				"Concrete01" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete01_Material_--_Zero_Tensile_Strength"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete01_Material_--_Zero_Tensile_Strength"
 				}
 				"Concrete02" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete02_Material_--_Linear_Tension_Softening"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete02_Material_--_Linear_Tension_Softening"
 				}
 				"Concrete06" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete06_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete06_Material"
 				}
 				"Concrete04" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete04_Material_--_Popovics_Concrete_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Concrete04_Material_--_Popovics_Concrete_Material"
 				}
 				"ConcreteCM" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ConcreteCM_-_Complete_Concrete_Model_by_Chang_and_Mander_(1994)"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ConcreteCM_-_Complete_Concrete_Model_by_Chang_and_Mander_(1994)"
 				}
 				"Steel01" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Steel01_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Steel01_Material"
 				}
 				"Steel02" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Steel02_Material_--_Giuffr%C3%A9-Menegotto-Pinto_Model_with_Isotropic_Strain_Hardening"
 				}
 				"ReinforcingSteel" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Reinforcing_Steel_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Reinforcing_Steel_Material"
 				}
 				"RambergOsgoodSteel" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/RambergOsgoodSteel_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/RambergOsgoodSteel_Material"
 				}
 				"ElasticIsotropic" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Isotropic_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Isotropic_Material"
 				}
 				"ElasticOrthotropic" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Orthotropic_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Orthotropic_Material"
 				}
 				"J2Plasticity" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/J2_Plasticity_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/J2_Plasticity_Material"
 				}
 				"Damage2p" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Damage2p"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Damage2p"
 				}
 				"PressureIndependMultiYield" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/PressureIndependMultiYield_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/PressureIndependMultiYield_Material"
 				}
 				"PressureDependMultiYield" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/PressureDependMultiYield_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/PressureDependMultiYield_Material"
 				}
 				"Series" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Series_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Series_Material"
 				}
 				"Parallel" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Parallel_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Parallel_Material"
 				}
 				"Hysteretic" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Hysteretic_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Hysteretic_Material"
 				}
 				"InitStrain" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Initial_Strain_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Initial_Strain_Material"
 				}
 				"InitStress" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Initial_Stress_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Initial_Stress_Material"
 				}
 				"ViscousDamper" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ViscousDamper_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ViscousDamper_Material"
 				}
 				"HyperbolicGap" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Hyperbolic_Gap_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Hyperbolic_Gap_Material"
 				}
 				"PySimple1" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/PySimple1_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/PySimple1_Material"
 				}
 				"TzSimple1" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/TzSimple1_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/TzSimple1_Material"
 				}
 				"QzSimple1" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/QzSimple1_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/QzSimple1_Material"
 				}
 				"MinMax" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/MinMax_Material"
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/MinMax_Material"
 				}
 			}
 
@@ -298,30 +297,30 @@ proc TK_SectionWikiInfo { event args } {
 
 			switch $SecType {
 
-				"ElasticSection" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Section"
-				}
-				"Fiber" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fiber_Section"
-				}
-				"FiberInt" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Flexure-Shear_Interaction_Displacement-Based_Beam-Column_Element"
-				}
-				"PlateFiber" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Plate_Fiber_Section"
-				}
-				"ElasticMembranePlate" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Membrane_Plate_Section"
-				}
-				"SectionAggregator" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Section_Aggregator"
-				}
-				"LayeredShell" {
-					set cmd "VisitWeb http://www.luxinzheng.net/publication6/Shell_wall_element_OpenSees_FEAD_2015.htm"
-				}
-				"FiberCustom" {
-					set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fiber_Section"
-				}
+					"ElasticSection" {
+							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Section"
+					}
+					"Fiber" {
+							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fiber_Section"
+					}
+					"FiberInt" {
+							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Flexure-Shear_Interaction_Displacement-Based_Beam-Column_Element"
+					}
+					"PlateFiber" {
+							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Plate_Fiber_Section"
+					}
+					"ElasticMembranePlate" {
+							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Elastic_Membrane_Plate_Section"
+					}
+					"SectionAggregator" {
+							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Section_Aggregator"
+					}
+					"LayeredShell" {
+							set cmd "VisitWeb http://www.luxinzheng.net/publication6/Shell_wall_element_OpenSees_FEAD_2015.htm"
+					}
+					"FiberCustom" {
+							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fiber_Section"
+					}
 			}
 
 			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
@@ -348,7 +347,6 @@ proc TK_ZeroLengthWikiInfo { event args } {
 			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
 			set b [Button $PARENT.wikiinfo -image img -text [= " Element Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
-
 		}
 	}
 
@@ -410,7 +408,6 @@ proc TK_RigidLinkWikiInfo { event args } {
 	}
 
 	return ""
-
 }
 
 proc TK_EqualDOFWikiInfo { event args } {
@@ -533,6 +530,7 @@ proc TK_RegionWikiInfo { event args } {
 	switch $event {
 
 		INIT {
+		
 			set PARENT [lindex $args 0]
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Region_Command"
@@ -542,6 +540,8 @@ proc TK_RegionWikiInfo { event args } {
 			grid $b -column 1 -row [expr $ROW+2] -sticky nw -pady 5
 		}
 	}
+
+	return ""
 }
 
 proc TK_OpenRecordsWindow { event args } {
@@ -593,29 +593,29 @@ proc TK_DWSet { GDN STRUCT QUESTION VALUE {STATE ""}} {
 		error [_ "Invalid question access in DWSetValue for : %s" $QUESTION]
 	} else {
 		if {$STATE eq ""} {
-			set GidData($STRUCT,VALUE,$ifld) $VALUE
+				set GidData($STRUCT,VALUE,$ifld) $VALUE
 		} else {
-			array set action {
-			normal   DepActionRESTORE
-			hidden   DepActionHIDE
-			disabled DepActionSET
-			}
-			# no state checking!!!
-			$action($STATE) $GDN $STRUCT $ifld $VALUE
+				array set action {
+				normal   DepActionRESTORE
+				hidden   DepActionHIDE
+				disabled DepActionSET
+				}
+				# no state checking!!!
+				$action($STATE) $GDN $STRUCT $ifld $VALUE
 		}
 	}
 }
 
 proc Bas_round { x y } {
 
-set ans [expr int($x/$y)]
-return $ans
+	set ans [expr int($x/$y)]
+	return $ans
 
 }
 
 proc Bas_mod { x y } {
 
-set ans [expr fmod ($x,$y)]
+	set ans [expr fmod ($x,$y)]
 
 return $ans
 }
@@ -632,26 +632,27 @@ proc TK_PMY-ID { event args } {
 			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
 
 			if { $MatType == "PressureDependMultiYield" || $MatType == "PressureIndependMultiYield" } {
-				set matnumber [expr [lsearch [GiD_Info materials] $ChosenMaterial]+1]
-				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION $matnumber]
+					set matnumber [expr [lsearch [GiD_Info materials] $ChosenMaterial]+1]
+					set ok [DWLocalSetValue $GDN $STRUCT $QUESTION $matnumber]
 
 			} else {
-				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION 0]
+					set ok [DWLocalSetValue $GDN $STRUCT $QUESTION 0]
 			}
 
 		}
 
 		SYNC {
+		
 			lassign $args GDN STRUCT QUESTION
 			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT "Material"]
 			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
 
 			if { $MatType == "PressureDependMultiYield" || $MatType == "PressureIndependMultiYield" } {
-				set matnumber [expr [lsearch [GiD_Info materials] $ChosenMaterial]+1]
-				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION $matnumber]
+					set matnumber [expr [lsearch [GiD_Info materials] $ChosenMaterial]+1]
+					set ok [DWLocalSetValue $GDN $STRUCT $QUESTION $matnumber]
 
 			} else {
-				set ok [DWLocalSetValue $GDN $STRUCT $QUESTION 0]
+					set ok [DWLocalSetValue $GDN $STRUCT $QUESTION 0]
 			}
 		}
 	}

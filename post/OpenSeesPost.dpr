@@ -15,7 +15,7 @@ type
 
 const
     INDENT       = 7;
-    EPS          = 1e-2;
+    EPS          = 1e-9;
 
     Black        = 0;
     Blue         = 1;
@@ -56,7 +56,7 @@ var
     Period        : string;
     Vx,Vy,
     Vz,Ang        : array[1..3] of double;
-    senb          : double;
+    zxy           : double;
     Int_Type      : ArrayStr;
     Int_Steps,
     Int_StepsInit : array of integer;
@@ -864,29 +864,26 @@ begin
             Vz[2] := StrToFloat(Copy(TCL[i],122,8));
             Vz[3] := StrToFloat(Copy(TCL[i],131,8));
 
-            if (Vz[3] < 1.0-EPS) and (Vz[3] > -1.0+EPS) then
+            // calculation of euler angles (http://geom3d.com/data/documents/Calculation=20of=20Euler=20angles.pdf)
+
+            zxy := Sqrt(Vz[1]*Vz[1]+Vz[2]*Vz[2]);
+
+            if zxy > EPS then
             begin
-                senb := Sqrt(1.0-Vz[3]*Vz[3]);
-
-                Ang[2] := ArcCos(Vz[3]);
-                Ang[3] := ArcCos(Vz[2]/senb);
-
-                if Vz[1]/senb < 0 then
-                    Ang[3] := 2*PI-Ang[3];
-
-                Ang[1] := ArcCos(Vy[3]/senb);
-
-                if Vx[3]/senb < 0 then
-                    Ang[1] := 2*PI-Ang[1];
+                Ang[1] := ArcTan2(Vy[1]*Vz[2]-Vy[2]*Vz[1],Vx[1]*Vz[2]-Vx[2]*Vz[1]);
+                Ang[2] := ArcTan2(zxy,Vz[3]);
+                Ang[3] := -ArcTan2(-Vz[1],Vz[2]);
             end
             else
             begin
-                Ang[2] := ArcCos(Vz[3]);
-                Ang[1] := 0.0;
-                Ang[3] := ArcCos(Vx[1]);
+                Ang[1] := 0;
 
-                if -Vx[2] < 0 then
-                    Ang[3] := 2*PI-Ang[3];
+                if Vz[3] > 0 then
+                    Ang[2] := 0
+                else
+                    Ang[2] := PI;
+
+                Ang[3] := -ArcTan2(Vx[2],Vx[1]);
             end;
 
             LOC.Add(Tag[0] + StringOfChar(' ',INDENT-Length(Tag[0])) + Format('%7.4f  %7.4f  %7.4f',[Ang[1],Ang[2],Ang[3]]));

@@ -40,16 +40,19 @@ TKWIDGET: GenData::Description
 TITLE: Modeling_Options
 QUESTION: __#CB#(_)
 VALUE:
-QUESTION: Model_dimensions#CB#(3)
+QUESTION: Model_dimensions#CB#(2,3)
 VALUE: 2
 STATE: DISABLED
 DEPENDENCIES: (2,SET,Vertical_axis,Y)
 TKWIDGET: TK_EditModelDim
-QUESTION: Vertical_axis#CB#(Z,Y)
-VALUE: Y
-HELP: In a 3D model, vertical axis defines how the vector Vxz with be\nFor an non vertical element,Vxz is in same direction with Vertical Axis\nFor vertical elements,Vxz is in opposite direction with Global X axis\nSo, for an horizontal element local z is Global Vertical axis\nFor a vertical element, local z axis is opposite to the Global X axis\nIn 2D model, vertical axis is Y axis by default
-TITLE: Eigenvalue_Analysis
 QUESTION: ___#CB#(_)
+VALUE: If a 3D model is detected, this value will automatically switch to 3.
+QUESTION: Vertical_axis#CB#(Y,Z)
+VALUE: Y
+QUESTION: ____#CB#(_)
+VALUE: Default vertical axis is global Y. For 3D models, selecting global Z is recommended.
+TITLE: Eigenvalue_Analysis
+QUESTION: _____#CB#(_)
 VALUE:
 QUESTION: Activate_eigenvalue_analysis#CB#(0,1)
 VALUE: 0
@@ -59,7 +62,7 @@ VALUE: 3#WIDTH#(10)
 QUESTION: Solver#CB#(genBandArpack,fullGenLapack,symmBandLapack)
 VALUE: fullGenLapack
 TITLE: Rayleigh_Damping
-QUESTION: ____#CB#(_)
+QUESTION: ______#CB#(_)
 VALUE:
 TKWIDGET: TK_RayleighLabel
 QUESTION: Activate_global_Rayleigh_damping#CB#(0,1)
@@ -89,7 +92,7 @@ VALUE: 0.0
 QUESTION: betaKcomm
 VALUE: 0.0
 TITLE: EqualDOF
-QUESTION: _____#CB#(_)
+QUESTION: _______#CB#(_)
 VALUE:
 QUESTION: Activate_automatic_equalDOF_between_nodes_of_different_domains_with_identical_coordinates#CB#(1,0)
 VALUE: 0
@@ -99,16 +102,16 @@ BOOK: Output_Options
 
 
 TITLE: General
-QUESTION: ______#CB#(_)
+QUESTION: ________#CB#(_)
 VALUE:
 QUESTION: Use_binary_format#CB#(1,0)
 VALUE: 0
-QUESTION: _______#CB#(_)
+QUESTION: _________#CB#(_)
 VALUE:
 QUESTION: Output_step_frequency
 VALUE: 1#WIDTH#(5)
 TITLE: Nodes
-QUESTION: ________#CB#(_)
+QUESTION: __________#CB#(_)
 VALUE:
 QUESTION: Nodal_displacements#CB#(1,0)
 STATE: DISABLED
@@ -126,7 +129,7 @@ VALUE: 1
 QUESTION: Nodal_rotational_velocities#CB#(1,0)
 VALUE: 0
 TITLE: Beam_Column_Elements
-QUESTION: _________#CB#(_)
+QUESTION: ___________#CB#(_)
 VALUE:
 QUESTION: Local_forces#CB#(1,0)
 VALUE: 1
@@ -135,14 +138,14 @@ VALUE: 1
 QUESTION: Plastic_deformation#CB#(1,0)
 VALUE: 1
 TITLE: Truss_Elements
-QUESTION: __________#CB#(_)
+QUESTION: ____________#CB#(_)
 VALUE:
 QUESTION: Axial_force#CB#(1,0)
 VALUE: 1
 QUESTION: Axial_deformation#CB#(1,0)
 VALUE: 1
 TITLE: Surface_Elements
-QUESTION: ___________#CB#(_)
+QUESTION: _____________#CB#(_)
 VALUE:
 QUESTION: Stresses#CB#(1,0)
 VALUE: 1
@@ -151,7 +154,7 @@ VALUE: 1
 QUESTION: Forces#CB#(1,0)
 VALUE: 1
 TITLE: Solid_Elements
-QUESTION: ____________#CB#(_)
+QUESTION: ______________#CB#(_)
 VALUE:
 QUESTION: _Stresses#CB#(1,0)
 VALUE: 1

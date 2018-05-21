@@ -138,9 +138,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *else
 *set var TransfTag=TransfTag5
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -153,9 +153,9 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *else
 *set var TransfTag=TransfTag6
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -171,9 +171,9 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *else
 *set var TransfTag=TransfTag5
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -186,9 +186,9 @@ element elasticBeamColumn *ElemsNum *elemsConec *\
 *else
 *set var TransfTag=TransfTag6
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g   "
 *A *E *G *J *Iy *Iz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -270,7 +270,7 @@ geomTransf Corotational *TransfTag3
 *set var A=operation(A*Amod)
 *set var Iz=operation(Iz*Izmod)
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element elasticBeamColumn *ElemsNum *elemsConec *\
 *format "%10g%10g%10g   "
 *A *E *Iz *TransfTag   -mass *\

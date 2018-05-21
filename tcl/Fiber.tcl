@@ -972,7 +972,7 @@ proc Fiber::CheckFieldValues { event args } {
 
 		CLOSE {
 
-				UpdateInfoBar
+			UpdateInfoBar
 
 		}
 	}
@@ -1211,7 +1211,7 @@ proc Fiber::SaveScriptFile { Material Region } {
 
 	if { $ProjectName != "UNNAMED" } {
 
-        set filename [Fiber::GetScriptName $Material $Region]
+		set filename [Fiber::GetScriptName $Material $Region]
 		set folderpath [file join $GiDProjectDir Scripts]
 		set filepath [file join $GiDProjectDir Scripts $filename]
 

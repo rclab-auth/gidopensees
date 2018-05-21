@@ -145,8 +145,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *endif
 *endif
-*format "%3d%6d%6d%3d%3d%4d%g"
-element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
+*set var SecTag=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
+*format "%6d%6d%7d%2d%6d%2d"
+element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *SecTag *TransfTag *\
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
 *set var SectionID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
@@ -182,7 +183,7 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
 *format "%8g"
--mass *MassPerLength
+  -mass *MassPerLength
 *# if it is DBC
 *endif
 *end elems
@@ -256,8 +257,9 @@ geomTransf Corotational *TransfTag3
 *else
 *set var TransfTag=TransfTag3
 *endif
-*format "%3d%6d%6d%3d%3d%g"
-element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
+*set var SecTag=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
+*format "%6d%6d%7d%2d%6d%2d"
+element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *SecTag *TransfTag *\
 *# Mass is calculated for Displacement Beam Column.
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
@@ -294,7 +296,7 @@ element dispBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
 *format "%8g"
--mass *MassPerLength
+  -mass *MassPerLength
 *# end if it is DBC
 *endif
 *end elems

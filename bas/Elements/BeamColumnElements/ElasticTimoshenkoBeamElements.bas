@@ -97,9 +97,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *set var Avz=A
 *elseif(strcmp(elemsMatProp(Cross_section),"Circular")==0)
 *set var D=elemsMatProp(Diameter_D,real)
-*set var A=operation(3.14*D*D/4)
-*set var Iz=operation(3.14*D*D*D*D/64)
-*set var Iy=operation(3.14*D*D*D*D/64)
+*set var A=operation(3.14159*D*D/4)
+*set var Iz=operation(3.14159*D*D*D*D/64)
+*set var Iy=operation(3.14159*D*D*D*D/64)
 *set var J=operation(Iz+Iy)
 *set var Avy=A
 *set var Avz=A
@@ -151,9 +151,9 @@ geomTransf Corotational *TransfTag6 0 1 0
 *else
 *set var TransfTag=TransfTag5
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g%12g%12g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -166,9 +166,9 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *else
 *set var TransfTag=TransfTag6
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g%12g%12g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -184,9 +184,9 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *else
 *set var TransfTag=TransfTag5
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g%12g%12g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -199,9 +199,9 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *else
 *set var TransfTag=TransfTag6
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
-*format "%10g%10g%10g%10g%10g%10g%10g%10g   "
+*format "%10g%10g%10g%12g%12g%12g%12g%12g   "
 *E *G *A *J *Iy *Iz *Avy *Avz *TransfTag   -mass *\
 *format "%8g"
 *MassPerLength
@@ -299,7 +299,7 @@ geomTransf Corotational *TransfTag3
 *else
 *set var TransfTag=TransfTag3
 *endif
-*format "%6d%6d%6d"
+*format "%6d%6d%7d"
 element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *format "%10g%10g%10g%10g%10g   "
 *E *G *A *Iz *Avy *TransfTag   -mass *\

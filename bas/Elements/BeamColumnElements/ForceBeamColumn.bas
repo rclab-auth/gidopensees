@@ -145,11 +145,12 @@ geomTransf Corotational *TransfTag6 0 1 0
 *endif
 *endif
 *endif
-*format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
+*set var SecTag=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
+*format "%6d%6d%7d%2d%6d%2d"
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *SecTag *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e%g"
--iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real) *\
+  -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real) *\
 *endif
 *format "%g"
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
@@ -187,7 +188,7 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
 *format "%8g"
--mass *MassPerLength
+  -mass *MassPerLength
 *# if it is FBC
 *endif
 *end elems
@@ -261,11 +262,12 @@ geomTransf Corotational *TransfTag3
 *else
 *set var TransfTag=TransfTag3
 *endif
-*format "%6d%6d%6d%3d%3d"
-element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum) *TransfTag *\
+*set var SecTag=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
+*format "%6d%6d%7d%2d%6d%2d"
+element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integration_points,int) *SecTag *TransfTag *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
-*format "%4d%10.2e%g"
--iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real) *\
+*format "%4d%10.2e"
+  -iter *ElemsMatProp(Maximum_Iterations,int) *ElemsMatProp(Tolerance,real) *\
 *endif
 *set var SelectedSection=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *loop materials *NotUsed
@@ -302,7 +304,7 @@ element forceBeamColumn *ElemsNum *ElemsConec *ElemsMatProp(Number_of_integratio
 *end materials
 *set var MassPerLength=operation(FiberArea*ElemsMatProp(Mass_density,real))
 *format "%8g"
--mass *MassPerLength
+  -mass *MassPerLength
 *# if it is FBC
 *endif
 *end elems

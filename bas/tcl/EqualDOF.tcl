@@ -29,7 +29,7 @@ proc ECID { index } {
 
 proc IsThisECID { id index } {
 
-global EqualConstraintIDList
+	global EqualConstraintIDList
 
 	if {$id == [lindex $EqualConstraintIDList [expr $index-1] ] } {
 
@@ -39,6 +39,7 @@ global EqualConstraintIDList
 }
 
 proc exportECConditions { Tx Ty Tz Rx Ry Rz } {
+
 	global EqualConstraintConditions
 
 	set mylist [list $Tx $Ty $Tz $Rx $Ry $Rz]
