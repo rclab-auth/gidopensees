@@ -234,7 +234,7 @@
 *elseif(ndime==3)
 *# vertical axis Y
 *if(strcmp(GenData(Vertical_axis),"Y")==0)
-*if(x1!=x2 || z1!=z2)
+*if((fabs(x1-x2)/L>1e-3) || (fabs(z1-z2)/L>1e-3))
 *# vertical axis Y - oblique element
 *set var Vecxz1=0.0
 *set var Vecxz2=1.0
@@ -248,7 +248,7 @@
 *endif
 *# vertical axis Z
 *if(strcmp(GenData(Vertical_axis),"Z")==0)
-*if(x1!=x2 || y1!=y2)
+*if((fabs(x1-x2)/L>1e-3) || (fabs(y1-y2)/L>1e-3))
 *# vertical axis Z - oblique element
 *set var Vecxz1=0.0
 *set var Vecxz2=0.0
@@ -307,17 +307,17 @@
 *if((V3<1e-6) && (V3>-1e-6))
 *set var V3=0
 *endif
-*if((V1==1) && (V2==0) && (V3 == 0))
+*if((V1==1) && (V2==0) && (V3==0))
  +X*\
-*elseif((V1==-1) && (V2==0) && (V3 == 0))
+*elseif((V1==-1) && (V2==0) && (V3==0))
  -X*\
-*elseif((V1==0) && (V2==1) && (V3 == 0))
+*elseif((V1==0) && (V2==1) && (V3==0))
  +Y*\
-*elseif((V1==0) && (V2==-1) && (V3 == 0))
+*elseif((V1==0) && (V2==-1) && (V3==0))
  -Y*\
-*elseif((V1==0) && (V2==0) && (V3 == 1))
+*elseif((V1==0) && (V2==0) && (V3==1))
  +Z*\
-*elseif((V1==0) && (V2==0) && (V3 == -1))
+*elseif((V1==0) && (V2==0) && (V3==-1))
  -Z*\
 *else
   O*\

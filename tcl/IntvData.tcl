@@ -8,6 +8,7 @@ proc IntvData::MotionDirections { event args } {
 
 			lassign $args GDN STRUCT QUESTION ACTION VALUE
 			set Dirs [DWLocalGetValue $GDN $STRUCT Directions]
+
 			if { $ACTION == "RESTORE" } {
 				set exc_type [DWLocalGetValue $GDN $STRUCT Excitation_type]
 				if { $exc_type == "Sine" } {
@@ -56,12 +57,10 @@ proc IntvData::MotionDirections { event args } {
 						set dummy [TK_DWSet $GDN $STRUCT "First_ground_motion_direction" "#CURRENT#" normal]
 						set dummy [TK_DWSet $GDN $STRUCT "Second_ground_motion_direction" "#CURRENT#" normal]
 						set dummy [TK_DWSet $GDN $STRUCT "Third_ground_motion_direction" "#CURRENT#" normal]
-
 					}
 				}
 			}
 		}
-
 	}
 
 	return ""
@@ -74,6 +73,7 @@ proc IntvData::ExcitationType { event args } {
 		DEPEND {
 
 			lassign $args GDN STRUCT QUESTION ACTION VALUE
+
 			if { $ACTION == "RESTORE" } {
 				set exc_type [DWLocalGetValue $GDN $STRUCT $QUESTION]
 				if { $exc_type == "Sine" } {
@@ -105,8 +105,9 @@ proc IntvData::Integrator { event args } {
 
 		DEPEND {
 
-		lassign $args GDN STRUCT QUESTION ACTION VALUE
-		if { $ACTION == "RESTORE" } {
+			lassign $args GDN STRUCT QUESTION ACTION VALUE
+
+			if { $ACTION == "RESTORE" } {
 				set integrator_type [DWLocalGetValue $GDN $STRUCT $QUESTION]
 				set analysis_type [DWLocalGetValue $GDN $STRUCT Analysis_type]
 
@@ -142,14 +143,18 @@ proc IntvData::LoadingPath { event args } {
 
 	switch $event {
 
-	DEPEND {
+		DEPEND {
 
-	lassign $args GDN STRUCT QUESTION ACTION VALUE
-		if { $ACTION == "SET" } {
+			lassign $args GDN STRUCT QUESTION ACTION VALUE
 
-				set dummy [TK_DWSet $GDN $STRUCT $QUESTION $VALUE normal]
-				set dummy [TK_DWSet $GDN $STRUCT $QUESTION $VALUE disabled]
+			set integrator_type [DWLocalGetValue $GDN $STRUCT Integrator_type]
 
+			if { $ACTION == "RESTORE" } {
+
+				if { $integrator_type == "Load_control" } {
+
+					set dummy [TK_DWSet $GDN $STRUCT "Loading_path" "Monotonic" disabled]
+				}
 			}
 		}
 	}
@@ -163,8 +168,10 @@ proc IntvData::LoadingType { event args } {
 
 		DEPEND {
 
-		lassign $args GDN STRUCT QUESTION ACTION VALUE
-		if { $ACTION == "RESTORE" } {
+			lassign $args GDN STRUCT QUESTION ACTION VALUE
+
+			if { $ACTION == "RESTORE" } {
+
 				set loading_type [DWLocalGetValue $GDN $STRUCT $QUESTION]
 				set integrator_type [DWLocalGetValue $GDN $STRUCT Integrator_type]
 
@@ -188,12 +195,22 @@ proc IntvData::LoadingType { event args } {
 				Multiple_support_excitation \
 				Function \
 				"
+
 				if { [lsearch $StaticIntegratorTypes $integrator_type] == -1 && [lsearch $StaticLoadingTypes $loading_type] != -1 } {
 					set dummy [TK_DWSet $GDN $STRUCT $QUESTION Uniform_excitation normal]
 				}
 
 				if { [lsearch $TransientIntegratorTypes $integrator_type] == -1 && [lsearch $TransientLoadingTypes $loading_type] != -1 } {
 					set dummy [TK_DWSet $GDN $STRUCT $QUESTION Linear normal]
+				}
+
+				if { $integrator_type == "Load_control" } {
+
+					set dummy [TK_DWSet $GDN $STRUCT "Loading_path" "Monotonic" disabled]
+
+				} elseif { $integrator_type == "Displacement_control" } {
+
+					set dummy [TK_DWSet $GDN $STRUCT "Loading_path" "#CURRENT#" normal]
 				}
 			}
 		}
@@ -209,6 +226,7 @@ proc IntvData::CtrlNodeDirection {event args } {
 		DEPEND {
 
 			lassign $args GDN STRUCT QUESTION ACTION VALUE
+
 			if { $ACTION == "RESTORE" } {
 				set CtrlNodeDir [DWLocalGetValue $GDN $STRUCT $QUESTION]
 				if { $CtrlNodeDir == "UX" } {
@@ -238,6 +256,7 @@ proc IntvData::ToleranceRelaxation {event args} {
 		DEPEND {
 
 			lassign $args GDN STRUCT QUESTION ACTION VALUE
+
 			if { $ACTION == "RESTORE" } {
 				set Checked [DWLocalGetValue $GDN $STRUCT $QUESTION]
 				if { $Checked } {
@@ -252,6 +271,7 @@ proc IntvData::ToleranceRelaxation {event args} {
 			}
 		}
 	}
+
 	return ""
 
 }

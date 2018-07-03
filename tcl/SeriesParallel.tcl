@@ -68,6 +68,7 @@ proc SeriesParallel::CheckFieldValues { event args } {
 		CLOSE {
 
 			UpdateInfoBar
+
 		}
 	}
 

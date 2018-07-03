@@ -32,9 +32,19 @@ V.K. Papanikolaou, Assistant Professor AUTh
 
 ---
 
+**Version 2.6.0 (03/07/2018)**
+
+- Improved : Nonlinear static analysis solution scheme (load control, displacement control, cyclic displacement control)
+- Improved : Information bar displays model state (not created, created, solved, ready to postprocess)
+- Supporting the new HDF5 binary format for postprocess
+- Added : Open .tcl model file toolbar button
+- Minor improvements and bug fixes
+
+---
+
 **Version 2.5.5 (21/05/2018)**
 
-- **New feature (beta) : Import geometry from existing .tcl file**
+- New feature (beta) : Import geometry from existing .tcl file
 - Fixed bug in GiD local axes display when global Y is selected as vertical axis (thanks to tejeswar91 for feedback)
 
 ---

@@ -9,7 +9,7 @@ proc SecAggregator::CheckFieldValues { event args } {
 			set PARENT [lindex $args 0]
 			upvar [lindex $args 1] ROW
 
-			set label [label $PARENT.info -text [= "Section Force-Deformation response for a particular section DOF:"]  ]
+			set label [label $PARENT.info -text [= "Section Force-Deformation response for a particular section DOF:"] ]
 			grid $label -column 0 -row [expr $ROW+0] -sticky nw
 		}
 

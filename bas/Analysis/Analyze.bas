@@ -4,7 +4,7 @@
 *if(IntvNum==1 && GenData(Activate_eigenvalue_analysis,int)==1)
 # Perform eigenvalue analysis
 
-puts "Running eigenvalue analysis ...\n"
+puts "Running eigenvalue analysis\n"
 
 set numModes *GenData(Number_of_eigenvalues,int)
 
@@ -208,12 +208,12 @@ analysis *IntvData(Analysis_type)
 *#
 *# Pushover analysis (Displacement Control)
 *#
-*include PushoverAnalysis.bas
+*include StaticDisplacementControl.bas
 *elseif(strcmp(IntvData(Solution_algorithm),"Linear")!=0 && strcmp(IntvData(Integrator_type),"Load_control")==0)
 *#
 *# Pushover analysis analysis (Load Control)
 *#
-*include PushoverLoadAnalysis.bas
+*include StaticLoadControl.bas
 *else
 *#
 *# Linear analysis
@@ -230,9 +230,10 @@ for {set i 1} { $i <= *steps } {incr i 1} {
 }
 if {$AnalOk == 0} {
     puts "\nAnalysis completed SUCCESSFULLY"
-    puts "Committed steps : *steps\n"
+    puts "Committed steps : $committedSteps\n"
 } else {
-    puts "\nAnalysis FAILED\n"
+    puts "\nAnalysis FAILED"
+    puts "Committed steps : $committedSteps\n"
 }
 *endif
 *#

@@ -54,7 +54,7 @@ proc ReadPEERfile {inFilename recordValues dt} {
     # Close the input file
     close $inFileID
     }
-};
+}
 *set var procReadPeerFilePrinted=1
 *endif
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)

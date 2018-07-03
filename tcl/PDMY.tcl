@@ -18,9 +18,9 @@ proc PDMY::GenerateRecommendedValues { event args } {
 				switch $Soil_type {
 
 					"Loose_Sand" {
-						set rho 1.7 ;# ton/m^3
+						set rho 1.7; # ton/m^3
 						set Gr 55; # MPa
-						set Bulk 150 ;# MPa
+						set Bulk 150; # MPa
 						set gammamax 0.1
 						set Fangle 29
 						set d 0.5
@@ -50,9 +50,9 @@ proc PDMY::GenerateRecommendedValues { event args } {
 						set ok [DWLocalSetValue $GDN $STRUCT Initial_void_ratio $voidratio]
 					}
 					"Medium_Sand" {
-						set rho 1.9 ;# ton/m^3
+						set rho 1.9; # ton/m^3
 						set Gr 75; # MPa
-						set Bulk 200 ;# MPa
+						set Bulk 200; # MPa
 						set gammamax 0.1
 						set Fangle 33
 						set d 0.5
@@ -82,9 +82,9 @@ proc PDMY::GenerateRecommendedValues { event args } {
 						set ok [DWLocalSetValue $GDN $STRUCT Initial_void_ratio $voidratio]
 					}
 					"Medium-dense_Sand" {
-						set rho 2.0 ;# ton/m^3
+						set rho 2.0; # ton/m^3
 						set Gr 100; # MPa
-						set Bulk 300 ;# MPa
+						set Bulk 300; # MPa
 						set gammamax 0.1
 						set Fangle 37
 						set d 0.5
@@ -114,13 +114,13 @@ proc PDMY::GenerateRecommendedValues { event args } {
 						set ok [DWLocalSetValue $GDN $STRUCT Initial_void_ratio $voidratio]
 					}
 					"Dense_Sand" {
-						set rho 2.1 ;# ton/m^3
+						set rho 2.1; # ton/m^3
 						set Gr 135; # MPa
-						set Bulk 390 ;# MPa
+						set Bulk 390; # MPa
 						set gammamax 0.1
 						set Fangle 40
 						set d 0.5
-						set pr 80; #kPa
+						set pr 80; # kPa
 						set ptang 27
 						set contraction 0.03
 						set dilat1 0.8

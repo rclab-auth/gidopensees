@@ -279,7 +279,7 @@ set iGMFormat "*\
 *end materials
 *endfor
 "
-*# set the list of record type; accel or disp
+*# set the list of record type : accel or disp
 set iGMType "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)

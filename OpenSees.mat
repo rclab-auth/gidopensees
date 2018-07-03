@@ -298,6 +298,7 @@ QUESTION: Initial_hardening
 VALUE: 0.4
 QUESTION: Pinching_factor_for_the_cyclic_slip_vs_bar_response
 VALUE: 0.5
+TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
 
@@ -1197,10 +1198,10 @@ STATE: HIDDEN
 QUESTION: Shear_modulus_G#UNITS#
 VALUE: 11.66666667 GPa
 TITLE: Section_properties
-QUESTION: _#CB#(Hover_for_local_axes_info)
-VALUE: Hover for local axes info
-STATE: DISABLED
-HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element transverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Modeling Options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_LocalAxesInfo
 QUESTION: Cross_section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
 DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
@@ -1263,10 +1264,10 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Concrete uniaxial materials/InitStrain/InitStress/Steel uniaxial materials
 TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
-QUESTION: _#CB#(Hover_for_local_axes_info)
-VALUE: Hover for local axes info
-STATE: DISABLED
-HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element transverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Modeling Options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_LocalAxesInfo
 QUESTION: Cross_section#CB#(Rectangular_Column,Rectangular_Beam,Tee_Beam,Circular_Column,Bridge_Deck)
 VALUE: Rectangular_Column
 DEPENDENCIES: (Rectangular_Column,RESTORE,Core_material,#CURRENT#,RESTORE,Cover_material,#CURRENT#,RESTORE,Reinforcing_bar_material,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Bottom_beam_bar_area,#CURRENT#,HIDE,Bottom_beam_bar_size,#CURRENT#,HIDE,Bottom_beam_bars,#CURRENT#,HIDE,Slab_bar_area,#CURRENT#,HIDE,Top_beam_bar_area,#CURRENT#,HIDE,Web_width_bw,#CURRENT#,HIDE,Slab_thickness_hf,#CURRENT#,HIDE,Top_beam_bars,#CURRENT#,HIDE,Slab_bars,#CURRENT#,HIDE,Slab_bar_size,#CURRENT#,HIDE,Top_beam_bar_size,#CURRENT#,HIDE,Top_bars,#CURRENT#,HIDE,Bottom_bars,#CURRENT#,HIDE,Top_bar_size,#CURRENT#,HIDE,Bottom_bar_size,#CURRENT#,HIDE,Top_bar_area,#CURRENT#,HIDE,Bottom_bar_area,#CURRENT#,HIDE,Bar_area,#CURRENT#,RESTORE,Height_h,#CURRENT#,RESTORE,Width_b,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Bars_along_arc,#CURRENT#,HIDE,Bar_size,#CURRENT#,HIDE,Fibers_in_the_circumferential_direction,#CURRENT#,HIDE,Fibers_in_the_radial_direction,#CURRENT#,RESTORE,Bars_along_z_axis_face,#CURRENT#,RESTORE,Bars_along_y_axis_face,#CURRENT#,RESTORE,Corner_bar_size,#CURRENT#,RESTORE,Middle_bar_size,#CURRENT#,RESTORE,Corner_bar_area,#CURRENT#,RESTORE,Middle_bar_area,#CURRENT#,RESTORE,Fibers_in_local_z_direction,#CURRENT#,RESTORE,Fibers_in_local_y_direction,#CURRENT#,HIDE,Top_slab_width_wt,#CURRENT#,HIDE,Bottom_slab_width_wb,#CURRENT#,HIDE,Top_slab_thickness_ts1,#CURRENT#,HIDE,Bottom_slab_thickness_ts2,#CURRENT#,HIDE,Height_hv,#CURRENT#,HIDE,External_web_thickness_tw,#CURRENT#,HIDE,Include_additional_part,#CURRENT#,HIDE,Solid_Section,#CURRENT#,HIDE,Bars_on_top_layer_of_top_slab,#CURRENT#,HIDE,Bars_on_bottom_layer_of_top_slab,#CURRENT#,HIDE,Bars_on_top_layer_of_bottom_slab,#CURRENT#,HIDE,Bars_on_bottom_layer_of_bottom_slab,#CURRENT#,HIDE,Bars_along_beam_height,#CURRENT#,HIDE,Bars_along_beam_width,#CURRENT#,HIDE,Top_slab_bar_size,#CURRENT#,HIDE,Bottom_slab_bar_size,#CURRENT#,HIDE,Top_slab_bar_area,#CURRENT#,HIDE,Bottom_slab_bar_area,#CURRENT#,HIDE,Fibers_along_top_slab_width,#CURRENT#,HIDE,Fibers_along_top_slab_thickness,#CURRENT#,HIDE,Fibers_along_bottom_slab_width,#CURRENT#,HIDE,Fibers_along_bottom_slab_thickness,#CURRENT#,HIDE,Fibers_along_external_web_thickness,#CURRENT#,HIDE,Fibers_along_internal_web_thickness,#CURRENT#,HIDE,Fibers_along_web_height,#CURRENT#,HIDE,Main_section_material,#CURRENT#,HIDE,Top_slab_reinforcing_bar_material,#CURRENT#,HIDE,Bottom_slab_reinforcing_bar_material,#CURRENT#)
@@ -1572,10 +1573,10 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Concrete uniaxial materials/InitStrain/InitStress/Steel uniaxial materials
 TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
-QUESTION: _#CB#(Hover_for_local_axes_info)
-VALUE: Hover for local axes info
-STATE: DISABLED
-HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element transverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Modeling Options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_LocalAxesInfo
 QUESTION: Left_subsection(-y_direction):#CB#(_)
 VALUE:
 TKWIDGET: FiberInt::CheckFieldValues
@@ -1774,10 +1775,10 @@ QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: EBC::CheckMaterial
 TITLE: Section_properties
-QUESTION: _#CB#(Hover_for_local_axes_info)
-VALUE: Hover for local axes info
-STATE: DISABLED
-HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element transverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Modeling Options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_LocalAxesInfo
 QUESTION: Cross_section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
 DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)
@@ -1843,10 +1844,10 @@ QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: EBC::CheckMaterial
 TITLE: Section_properties
-QUESTION: _#CB#(Hover_for_local_axes_info)
-VALUE: Hover for local axes info
-STATE: DISABLED
-HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\nShown in figure are the element transverse local-y and local-z axes\n\nIN A 2D PROBLEM :\n\nHeight refers to the local-y axis\nWidth refers to the local-z axis\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Modeling Options\n\nHeight refers to the local-z axis\nWidth refers to the local-y axis\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_LocalAxesInfo
 QUESTION: Cross_section#CB#(Rectangular,Tee,Circular,General)
 VALUE: Rectangular
 DEPENDENCIES: (Rectangular,RESTORE,Height_h,#CURRENT#,RESTORE,Width_B,#CURRENT#,HIDE,Diameter_d,#CURRENT#,HIDE,Height_hf,#CURRENT#,HIDE,Width_bf,#CURRENT#,HIDE,Width_bw,#CURRENT#,HIDE,Area_A,#CURRENT#,HIDE,Moment_of_inertia_about_local-y_Iyy,#CURRENT#,HIDE,Moment_of_inertia_about_local-z_Izz,#CURRENT#,HIDE,Torsional_moment_of_inertia_Iyz,#CURRENT#)

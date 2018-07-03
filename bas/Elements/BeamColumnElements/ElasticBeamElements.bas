@@ -126,7 +126,7 @@ geomTransf Corotational *TransfTag6 0 1 0
 *set var Iy=operation(Iy*Iymod)
 *set var J=operation(J*Jmod)
 *endif
-*#NODESCOORD(1,2) : y coordinate of the 1st node!
+*#NodesCoord(1,2) : y coordinate of the 1st node!
 *#----------------Z axis as Vertical Axis----------------
 *if(strcmp(GenData(Vertical_axis),"Z")==0)
 *# VERTICAL ELEMENTS //Z AXIS

@@ -299,13 +299,15 @@ var
     Valid,
     Found     : boolean;
     i,j       : integer;
-    Mult,
-    StepTime,
-    TotTime   : double;
+    Mult      : double;
     ElemID,
     ElemCrash : array of integer;
     ElemType  : array of string;
     Elem      : integer;
+    s         : string;
+    Intv,
+    IntPrev,
+    Sum       : integer;
 
 begin
     if not FileExists(LogFile) then
@@ -332,55 +334,71 @@ begin
     if Valid then
     begin
         STAT := TStringList.Create;
-        STAT.Add('Interval'#9'Interval step'#9'Total step'#9'Time step'#9'Time'#9'Iterations'#9'Norm'#9'Criterion'#9'Step multiplier');
+        STAT.Add('Interval'#9'Interval step'#9'Total step'#9'Step multiplier'#9'LF/Time'#9'Iterations'#9'Algorithm'#9'Criterion'#9'Norm');
 
         i := 0;
         cnt := 0;
         Mult := 1;
-        TotTime := 0;
+        IntPrev := 0;
+        Sum := 0;
 
         while i < LOG.Count do
         begin
-            if LOG.Strings[i] = 'Back to initial time step ..' then
+            if LOG.Strings[i] = 'Back to initial step' then
                 Mult := 1
-            else if LOG.Strings[i] = 'Initial time step is divided by 2 ..' then
+            else if LOG.Strings[i] = 'Initial step is divided by 2' then
                 Mult := 1/2
-            else if LOG.Strings[i] = 'Initial time step is divided by 4 ..' then
+            else if LOG.Strings[i] = 'Initial step is divided by 4' then
                 Mult := 1/4
-            else if LOG.Strings[i] = 'Initial time step is divided by 8 ..' then
+            else if LOG.Strings[i] = 'Initial step is divided by 8' then
                 Mult := 1/8
-            else if LOG.Strings[i] = 'Initial time step is divided by 16 ..' then
+            else if LOG.Strings[i] = 'Initial step is divided by 16' then
                 Mult := 1/16;
 
-            if (Pos('iteration:',LOG.Strings[i]) <> 0) then
+            if (Copy(LOG.Strings[i],1,1) = '(') and (Pos('- iteration:',LOG.Strings[i]) <> 0) then
             begin
-                if GetIntervalStep(cnt) = 0 then
-                    TotTime := 0;
-
-                if Int_Time[GetIntervalNumber(cnt)-1] <> 0 then
-                    StepTime := Mult * Int_Time[GetIntervalNumber(cnt)-1]
-                else
-                    StepTime := 0;
-
-                TotTime := TotTime+StepTime;
-
-                STAT.Add( IntToStr(GetIntervalNumber(cnt))+#9+
-                          IntToStr(GetIntervalStep(cnt))+#9+
-                          IntToStr(cnt+1)+#9+
-                          FloatToStr(StepTime)+#9+
-                          FloatToStr(TotTime)+#9+
-                          Trim(Copy(LOG.Strings[i],Pos('iteration:',LOG.Strings[i])+10,Pos(' current',LOG.Strings[i])-Pos('iteration:',LOG.Strings[i])-10 ))+#9+
-                          Trim(Copy(LOG.Strings[i],Pos('Norm:',LOG.Strings[i])+5,Pos(' (max',LOG.Strings[i])-Pos('iteration:',LOG.Strings[i])-5 ))+#9+
-                          Trim(Copy(LOG.Strings[i],Pos('CTest',LOG.Strings[i])+5,Pos('::',LOG.Strings[i])-Pos('CTest',LOG.Strings[i])-5 ))+#9+
-                          FloatToStr(Mult));
-
                 Inc(cnt);
+                Inc(Sum);
+
+                Intv := StrToInt(Trim(Copy( LOG.Strings[i],Pos('(',LOG.Strings[i])+1,Pos(')',LOG.Strings[i])-Pos('(',LOG.Strings[i])-1 )));
+
+                if Intv <> IntPrev then
+                begin
+                    cnt := 1;
+                    IntPrev := Intv;
+                end;
+
+                s :=     IntToStr(Intv)+#9;
+                s := s + IntToStr(cnt)+#9;
+                s := s + IntToStr(Sum)+#9;
+
+                s := s + FloatToStr(Mult)+#9;
+
+                if Pos('Time',LOG.Strings[i]) <> 0 then
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('Time ',LOG.Strings[i])+5,Pos(' CTest',LOG.Strings[i])-Pos('Time ',LOG.Strings[i])-5 ))+#9;
+
+                if Pos('LF',LOG.Strings[i]) <> 0 then
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('LF ',LOG.Strings[i])+3,Pos(' CTest',LOG.Strings[i])-Pos('LF ',LOG.Strings[i])-3 ))+#9;
+
+                s := s + Trim(Copy( LOG.Strings[i],Pos('iteration:',LOG.Strings[i])+10,Pos(' current',LOG.Strings[i])-Pos('iteration:',LOG.Strings[i])-10 ))+#9;
+
+                if Pos('Time',LOG.Strings[i]) <> 0 then
+                    s := s + Trim(Copy( LOG.Strings[i],Pos(') ',LOG.Strings[i])+2,Pos(' Time',LOG.Strings[i])-Pos(') ',LOG.Strings[i])-2 ))+#9;
+
+                if Pos('LF',LOG.Strings[i]) <> 0 then
+                    s := s + Trim(Copy( LOG.Strings[i],Pos(') ',LOG.Strings[i])+2,Pos(' LF',LOG.Strings[i])-Pos(') ',LOG.Strings[i])-2 ))+#9;
+
+                s := s + Trim(Copy( LOG.Strings[i],Pos('CTest',LOG.Strings[i])+5,Pos('::',LOG.Strings[i])-Pos('CTest',LOG.Strings[i])-5 ))+#9;
+
+                s := s + Trim(Copy( LOG.Strings[i],Pos('Norm:',LOG.Strings[i])+5,Pos(' (max',LOG.Strings[i])-Pos('Norm:',LOG.Strings[i])-5 ));
+
+                STAT.Add(s);
             end;
 
             Inc(i);
         end;
 
-        STAT.SaveToFile(ExtractFilePath(LogFile)+'Analysis performance.out');
+        STAT.SaveToFile(ExtractFilePath(LogFile)+'Analysis performance.xls');
         STAT.Free;
     end;
 
@@ -449,7 +467,7 @@ begin
         for i := 0 to Length(ElemID)-1 do
             STAT.Add(IntToStr(ElemID[i])+#9+ElemType[i]+#9+IntToStr(ElemCrash[i]));
 
-        STAT.SaveToFile(ExtractFilePath(LogFile)+'Analysis problems.out');
+        STAT.SaveToFile(ExtractFilePath(LogFile)+'Analysis problems.xls');
         STAT.Free;
     end;
 
@@ -4006,11 +4024,11 @@ begin
 
     writeln;
 
-    if ParamStr(3) = '/b' then
+    if ParamStr(4) = '/b' then
     begin
         TextColor(LightGreen);
 
-        write('Creating binary results file...');
+        write('Creating HDF5 binary results file...');
 
         // convert to binary
 
@@ -4023,7 +4041,7 @@ begin
     begin
         write('Text results file...');
 
-        RenameFile(ResFileASCII,ResFileBin);
+        RenameFile(ResFileASCII,ResFileBin);  // ASCII just becomes post.res
     end;
 
     writeln(#8#8#8' : '+GetFileSize(ResFileBin));

@@ -1,11 +1,9 @@
 #
-#  _____ _______       _____                  _____                  _____      _             __               
-# |  __ (_)  _  \  _  |  _  |                /  ___|                |_   _|    | |           / _|              
-# | |  \/_| | | |_| |_| | | |_ __   ___ _ __ \ `--.  ___  ___  ___    | | _ __ | |_ ___ _ __| |_ __ _  ___ ___ 
-# | | __| | | | |_   _| | | | '_ \ / _ \ '_ \ `--. \/ _ \/ _ \/ __|   | || '_ \| __/ _ \ '__|  _/ _` |/ __/ _ \
-# | |_\ \ | |/ /  |_| \ \_/ / |_) |  __/ | | /\__/ /  __/  __/\__ \  _| || | | | ||  __/ |  | || (_| | (_|  __/
-#  \____/_|___/        \___/| .__/ \___|_| |_\____/ \___|\___||___/  \___/_| |_|\__\___|_|  |_| \__,_|\___\___|
-#                           | |                                                                                
+#   ____ _ ____         ___                   ____                   ___       _             __                
+#  / ___(_)  _ \   _   / _ \ _ __   ___ _ __ / ___|  ___  ___  ___  |_ _|_ __ | |_ ___ _ __ / _| __ _  ___ ___ 
+# | |  _| | | | |_| |_| | | | '_ \ / _ \ '_ \\___ \ / _ \/ _ \/ __|  | || '_ \| __/ _ \ '__| |_ / _` |/ __/ _ \
+# | |_| | | |_| |_   _| |_| | |_) |  __/ | | |___) |  __/  __/\__ \  | || | | | ||  __/ |  |  _| (_| | (_|  __/
+#  \____|_|____/  |_|  \___/| .__/ \___|_| |_|____/ \___|\___||___/ |___|_| |_|\__\___|_|  |_|  \__,_|\___\___|
 #                           |_|                                                                                
 #
 # GiD + OpenSees Interface - An Integrated FEA Platform
@@ -310,9 +308,14 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 
 *tcl(LogFile)
 
-puts "\n--------------------------------------------------------------------------------------------------------"
-puts "\nGiD+OpenSees Interface *tcl(OpenSees::GetVersion)"
-puts "\nAnalysis summary\n"
+puts ""
+puts " __   __       __          __                   _       "
+puts "/ _ .|  \\ _|_ /  \\ _  _ _ (_  _ _ _  | _ |_ _ _(_ _  _ _"
+puts "\\__)||__/  |  \\__/|_)(-| )__)(-(-_)  || )|_(-| | (_|(_(-"
+puts "                  |                                     "
+puts "                                                  *tcl(OpenSees::GetVersion)"
+puts "Analysis summary"
+puts ""
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
@@ -335,6 +338,8 @@ puts "Interval *IntvNum : *IntvData(Analysis_type) - *\
 *endif
 *end intervals
 puts ""
+puts "----------------"
+puts ""
 set time_start [clock seconds]
 puts "Starting analysis at [clock format $time_start -format %H:%M:%S]\n"
 *set var IntvNum=0
@@ -348,14 +353,14 @@ puts "Starting analysis at [clock format $time_start -format %H:%M:%S]\n"
 #
 # --------------------------------------------------------------------------------------------------------------
 
-puts "Running interval *IntvNum ...\n"
+puts "Running interval *IntvNum\n"
 *include bas\Actions\Loads.bas
 *include bas\Analysis\UpdateMaterialStage.bas
 *include bas\Analysis\UpdateParameters.bas
 
 # recording the initial status
 
-record;
+record
 
 *include bas\Analysis\Analyze.bas
 *if(IntvData(Keep_this_loading_active_until_the_end_of_analysis,int)==1)
@@ -381,10 +386,67 @@ setTime *IntvData(Time_to_be_set,real)
 
 # --------------------------------------------------------------------------------------------------------------
 
+set hour 0.0
+set minute 0.0
+set second 0.0
 set time_end [clock seconds]
 set analysisTime [expr $time_end-$time_start]
+
 puts "Analysis finished at [clock format $time_end -format %H:%M:%S]\n"
-puts "Analysis time : $analysisTime seconds"
+
+if {$analysisTime<60} {
+    if {$analysisTime==0} {
+        puts "Analysis time : less than one second"
+    } elseif {$analysisTime==1} {
+        puts "Analysis time : 1 second"
+    } else {
+        puts "Analysis time : $analysisTime seconds"
+    }
+
+}  elseif {$analysisTime<3600} {
+    set minutes [expr $analysisTime/60]
+    set seconds [expr $analysisTime%60]
+
+    if {$minutes==1} {
+        puts -nonewline "Analysis time : 1 minute"
+    } else {
+        puts -nonewline "Analysis time : $minutes minutes"
+    }
+
+    if {$seconds==0} {
+        puts ""
+    } elseif {$seconds==1} {
+        puts " and 1 second"
+    } else {
+        puts " and $seconds seconds"
+    }
+
+} else  {
+    set hours [expr $analysisTime/3600]
+    set minutes [expr ($analysisTime%3600)/60]
+    set seconds [expr ($analysisTime%3600)%60]
+
+    if {$hours==1} {
+        puts -nonewline "Analysis time : 1 hour"
+    } else {
+        puts -nonewline "Analysis time : $hours hours"
+    }
+
+    if {$minutes==0} {
+    } elseif {$minute==1} {
+        puts -nonewline ", 1 minute"
+    } else {
+        puts -nonewline ", $minutes minutes"
+    }
+
+    if {$seconds==0} {
+        puts ""
+    } elseif {$second==1} {
+        puts " and 1 second"
+    } else {
+        puts " and $seconds seconds"
+    }
+}
 *#
 *# Metadata
 *#

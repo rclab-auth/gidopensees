@@ -19,11 +19,11 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #
 # TCL macros
@@ -31,8 +31,8 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.5.5"
-	variable InterfaceName [_ "GiD+OpenSees Interface v2.5.5"]
+	variable VersionNumber "v2.6.0"
+	variable InterfaceName [_ "GiD+OpenSees Interface v2.6.0"]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesPath
 	variable GiDPath
@@ -97,7 +97,7 @@ proc OpenSees::InitGIDProject { dir } {
 proc OpenSees::ChangeData {} {
 
 	global GidPriv
-	variable InterfaceName;
+	variable InterfaceName
 	set GidPriv(ProgName) $InterfaceName
 
 	GidChangeDataLabel "Conditions" ""
@@ -131,7 +131,7 @@ proc OpenSees::ChangeData {} {
 
 proc OpenSees::GetProblemTypePath {} {
 
-	variable OpenSeesProblemTypePath;
+	variable OpenSeesProblemTypePath
 	return $OpenSeesProblemTypePath
 }
 
@@ -143,8 +143,8 @@ proc OpenSees::SetProjectNameAndPath {} {
 	set ProblemType [lindex $lines 0]
 	set ProjectName [lindex $lines 1]
 
-	variable GiDProjectDir;
-	variable GiDProjectName;
+	variable GiDProjectDir
+	variable GiDProjectName
 
 	# GiD_Info Project returns a list with project information { ProblemType ModelName .. .. .. }
 
@@ -188,7 +188,7 @@ proc OpenSees::GetProjectName {} {
 
 proc OpenSees::SetOpenSeesPath {} {
 
-	variable OpenSeesPath;
+	variable OpenSeesPath
 	variable OpenSeesProblemTypePath
 
 	global GidProcWin
@@ -205,6 +205,7 @@ proc OpenSees::SetOpenSeesPath {} {
 		regsub -all {\\} $OpenSeesPath {/} OpenSeesPath
 
 	} else {
+
 		if { ![info exists GidProcWin(w)] || \
 			![winfo exists $GidProcWin(w).listbox#1] } {
 			set wbase .gid
@@ -213,20 +214,21 @@ proc OpenSees::SetOpenSeesPath {} {
 			set wbase $GidProcWin(w)
 			set w $GidProcWin(w).listbox#1
 		}
-		tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees path was not found" ] error 0 [_ "Close"]
+
+		tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "OpenSees.path file was not found. Please re-install interface." ] error 0 [_ "Close"]
 	}
 }
 
 proc OpenSees::GetOpenSeesPath {} {
 
-	variable OpenSeesPath;
+	variable OpenSeesPath
 	return $OpenSeesPath
 }
 
 # Get OpenSees version
 
 proc OpenSees::GetVersion {} {
-	variable VersionNumber;
+	variable VersionNumber
 	return $VersionNumber
 }
 
@@ -243,68 +245,68 @@ proc OpenSees::Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
 	proc Opt1_1 { } {
 
 		GidOpenMaterials Standard_Uniaxial_Materials
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_2 { } {
 
 		GidOpenMaterials Uniaxial_Concrete_Materials
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_3 { } {
 
 		GidOpenMaterials Uniaxial_Steel_Materials
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_4 {} {
 
 		GidOpenMaterials "Multidimensional_(nD)_Materials"
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_5 { } {
 
 		GidOpenMaterials "Section_Force-Deformation"
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_6 { } {
 
 		GidOpenMaterials "Combined_Materials"
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_7 { } {
 
 		GidOpenMaterials "Records"
-		HideInforBar
+		HideInfoBar
 
 	}
-	
+
 	proc Opt1_8 { } {
 
 		GidOpenConditions Restraints
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_9 { } {
 
 		GidOpenConditions Constraints
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_10 { } {
 
 		GidOpenConditions Mass/Damping
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt1_11 { } {
 
 		GidOpenConditions Loads
-		HideInforBar
+		HideInfoBar
 	}
 
 	set ToolbarBitmaps1(0) " \
@@ -380,55 +382,55 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 	proc Opt2_1 { } {
 
 		GidOpenConditions ZeroLength_Elements
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_2 { } {
 
 		GidOpenMaterials Truss_Elements
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_3 { } {
 
 		GidOpenMaterials "Beam-Column_Elements"
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_4 { } {
 
 		GidOpenMaterials Surface_Elements
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_5 { } {
 
 		GidOpenMaterials Solid_Elements
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_6 { } {
 
 		GidOpenProblemData "General_Data"
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_7 { } {
 
 		GidOpenProblemData "Output_Options"
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_8 { } {
 
 		GiD_Process Mescape Data IDataWindow
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_9 { } {
 
 		GiD_Process Mescape Meshing generate
-		HideInforBar
+		HideInfoBar
 	}
 
 	proc Opt2_10 { } {
@@ -462,7 +464,7 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
 	variable ElemDrawStatus 0
 
-	proc Opt2_12 { } { # Switch draw elements
+	proc Opt2_12 { } {; # Switch draw elements
 
 		variable ElemDrawStatus
 		variable NormalsDrawStatus
@@ -487,7 +489,7 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 
 	variable ConditionsDrawStatus 0
 
-	proc Opt2_13 { } { # Switch draw conditions
+	proc Opt2_13 { } {; # Switch draw conditions
 
 		variable ElemDrawStatus
 		variable NormalsDrawStatus
@@ -529,6 +531,8 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		img/Toolbar/$GiDtheme/btn_Mesh.png \
 		img/Toolbar/$GiDtheme/btn_Calc.png \
 		img/Toolbar/$GiDtheme/btn_Separator.png \
+		img/Toolbar/$GiDtheme/btn_tcl.png \
+		img/Toolbar/$GiDtheme/btn_Separator.png \
 		img/Toolbar/$GiDtheme/btn_LocalAxes.png \
 		img/Toolbar/$GiDtheme/btn_ViewElem.png \
 		img/Toolbar/$GiDtheme/btn_ViewCond.png \
@@ -547,10 +551,12 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		[list -np- OpenSees::Opt2_9] \
 		[list -np- OpenSees::Opt2_10] \
 		"" \
+		[list -np- btn_Open_tcl] \
+		"" \
 		[list -np- OpenSees::Opt2_11] \
 		[list -np- OpenSees::Opt2_12] \
 		[list -np- OpenSees::Opt2_13] \
-		[list -np- OpenSees::Opt2_14]
+		[list -np- OpenSees::Opt2_14] \
 	]
 
 	set ToolbarHelp2(0) { \
@@ -565,6 +571,8 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		"Set Interval Data" \
 		"Generate Mesh" \
 		"Create .tcl, run analysis and postprocess" \
+		"" \
+		"Open .tcl file" \
 		"" \
 		"Show/Hide Line Local Axes" \
 		"Show/Hide Elements" \
@@ -788,15 +796,20 @@ proc LoadGIDProject { filespd } {
 
 		if { $cmp != 0 } {
 
+			if { [winfo exist .splash]} {
+				destroy .splash
+				update
+			}
+
 			InitWindow $InfoWin [= "Version mismatch"] ErrorInfo "" "" 1
-			if { ![winfo exists $InfoWin] } return ;
+			if { ![winfo exists $InfoWin] } return
 			ttk::frame $InfoWin.top
 			ttk::label $InfoWin.top.title_text -text [= ""]
 			ttk::frame $InfoWin.information -relief raised
 			ttk::label $InfoWin.information.errormessage -text [= "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first."]
 			ttk::frame $InfoWin.bottom
 			ttk::button $InfoWin.bottom.continue -text [= "Transform"] -command "OpenSees::TransformAndClose"
-			ttk::button $InfoWin.bottom.readlog -text [= "Ignore"] -command "destroy $InfoWin"
+			ttk::button $InfoWin.bottom.readlog -text [= "Keep old version"] -command "destroy $InfoWin"
 			grid $InfoWin.top.title_text -sticky ew
 			grid $InfoWin.top -sticky new
 			grid $InfoWin.information.errormessage -sticky w -padx 10 -pady 10
@@ -843,7 +856,7 @@ proc SaveGIDProject { filespd } {
 
 	OpenSees::SetProjectNameAndPath; # Change old project dir to the new one
 
-	if { $OldGiDProjectDir != $NewGiDProjectDir} { # If project names are different
+	if { $OldGiDProjectDir != $NewGiDProjectDir} {; # If project names are different
 
 		set fexists [file exists "$OldGiDProjectDir/Records"]
 		if {$fexists} {
@@ -887,7 +900,7 @@ proc BeforeInitGIDPostProcess {} {
 
 proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 
-	# if version earlier than v2.5.0, change some conditions of compatibillity
+	# if version earlier than v2.5.0, change some conditions of compatibility
 	# Body Constraint -> Equal Constraint
 
 	set cond_points [GiD_Info conditions ovpnt]
@@ -1012,13 +1025,13 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 				lappend Idnew [lindex $data 3]
 	}
 
-			GiD_UnAssignData condition $old_cond_name points "all"
+			#GiD_UnAssignData condition $old_cond_name points "all"
 
 			foreach point $points IDold $Idold IDnew $Idnew {
 
 				if { $IDold == "-" } {
 
-						break;
+						break
 
 				} else {
 
@@ -1053,14 +1066,14 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 				lappend Planes [lindex $data 5]
 			}
 
-			GiD_UnAssignData condition $old_cond_name points "all"
+			#GiD_UnAssignData condition $old_cond_name points "all"
 
 			foreach point $points IDold $Idold IDnew $Idnew plane $Planes {
 
 				# - means new user v2.5.0 and later
 				if {$IDold == "-"} {
 
-						break;
+						break
 
 				} else {
 
@@ -1095,14 +1108,14 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 				lappend Planes [lindex $data 5]
 			}
 
-			GiD_UnAssignData condition $old_cond_name lines "all"
+			#GiD_UnAssignData condition $old_cond_name lines "all"
 
 			foreach line $lines IDold $Idold IDnew $Idnew plane $Planes {
 
 				# - means new user v2.5.0 and later
 				if {$IDold == "-"} {
 
-					break;
+					break
 
 				} else {
 
@@ -1348,6 +1361,27 @@ proc UpdateInfoBar { } {
 	.ibar.c create text  80 12 -text $dim				-font "calibri 12" -fill $ibarTextColor -anchor center
 	.ibar.c create text 170 12 -text $act				-font "calibri 12" -fill $ibarTextColor -anchor center
 
+	set GiDProjectDir [OpenSees::GetProjectPath]
+	set GiDProjectName [OpenSees::GetProjectName]
+
+	if {[file exists "$GiDProjectDir/$GiDProjectName.post.res"]} {
+
+		.ibar.c create text 252 12 -text "Ready to postprocess" -font "calibri 12" -fill $ibarTextColor -anchor w
+
+	} elseif {[file exists "$GiDProjectDir/OpenSees/$GiDProjectName.log"]} {
+
+		.ibar.c create text 252 12 -text "Solved" -font "calibri 12" -fill $ibarTextColor -anchor w
+
+	} elseif {[file exists "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"]} {
+
+		.ibar.c create text 252 12 -text "Created" -font "calibri 12" -fill $ibarTextColor -anchor w
+
+	} else {
+
+		.ibar.c create text 252 12 -text "Not created" -font "calibri 12" -fill $ibarTextColor -anchor w
+
+	}
+
 	set off 10
 	.ibar.c create text [expr $w-$off] 12 -text "Lab of R/C and Masonry Structures, AUTh" -font "calibri 10" -fill $ibarLineColor -anchor e
 
@@ -1358,7 +1392,7 @@ proc UpdateInfoBar { } {
 
 	bind .gid <Configure>	{RefreshInfoBar}
 	bind .gid <Activate>	{RefreshInfoBar}
-	bind .gid <Deactivate>	{HideInforBar}
+	bind .gid <Deactivate>	{HideInfoBar}
 	bind .gid <Map>			{RefreshInfoBar}
 
 	focus .gid.central.s
@@ -1381,7 +1415,7 @@ proc RefreshInfoBar { } {
 	}
 }
 
-proc HideInforBar { } {
+proc HideInfoBar { } {
 
 	lower .ibar
 	update

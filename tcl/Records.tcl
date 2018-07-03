@@ -11,14 +11,14 @@ namespace eval Records {
 
 proc Records::SetValues {rfilename rformat rtype rdt rsclFactor rLinesSkip rtCol rvCol } {
 
-	variable filename;
-	variable form;
-	variable type;
-	variable dt;
-	variable sclFactor;
-	variable linesSkip;
-	variable timeCol;
-	variable valCol;
+	variable filename
+	variable form
+	variable type
+	variable dt
+	variable sclFactor
+	variable linesSkip
+	variable timeCol
+	variable valCol
 
 	OpenSees::SetProjectNameAndPath
 
@@ -77,8 +77,8 @@ proc Records::SetValues {rfilename rformat rtype rdt rsclFactor rLinesSkip rtCol
 
 proc Records::GetFilename {} {
 
-	variable filename;
-	return $filename;
+	variable filename
+	return $filename
 
 }
 
@@ -87,7 +87,7 @@ proc Records::SetFilename {rfilename} {
 	OpenSees::SetProjectNameAndPath
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
-	variable filename;
+	variable filename
 
 	set filename "$GiDProjectDir/Records/$rfilename"
 
@@ -96,56 +96,56 @@ proc Records::SetFilename {rfilename} {
 
 proc Records::GetFormat {} {
 
-	variable form;
-	return $form;
+	variable form
+	return $form
 }
 
 proc Records::GetType {} {
 
-	variable type;
-	return $type;
+	variable type
+	return $type
 }
 
 proc Records::GetDt {} {
 
-	variable dt;
-	return $dt;
+	variable dt
+	return $dt
 }
 
 proc Records::GetSclFactor {} {
 
-	variable sclFactor;
-	return $sclFactor;
+	variable sclFactor
+	return $sclFactor
 }
 
 proc Records::GetLinesSkip {} {
 
-	variable linesSkip;
-	return $linesSkip;
+	variable linesSkip
+	return $linesSkip
 }
 
 proc Records::GetTimeCol {} {
 
-	variable timeCol;
-	return $timeCol;
+	variable timeCol
+	return $timeCol
 }
 
 proc Records::GetValCol {} {
 
-	variable valCol;
-	return $valCol;
+	variable valCol
+	return $valCol
 }
 
 proc Records::Display {event args} {
 
-	variable filename;
-	variable form;
-	variable type;
-	variable dt;
-	variable sclFactor;
-	variable linesSkip;
-	variable timeCol;
-	variable valCol;
+	variable filename
+	variable form
+	variable type
+	variable dt
+	variable sclFactor
+	variable linesSkip
+	variable timeCol
+	variable valCol
 
 	switch $event {
 
@@ -277,7 +277,7 @@ proc Records::FileButton { event args } {
 			#set entry $PARENT.e$ROW
 			set entry ""
 			foreach item [grid slaves $PARENT -row [expr $ROW-1]] {
-				if { [winfo class $item] == "Entry"  || [winfo class $item] == "TEntry" } {
+				if { [winfo class $item] == "Entry" || [winfo class $item] == "TEntry" } {
 					#assumed that it is the only entry of this row
 					set entry $item
 					break
@@ -290,10 +290,9 @@ proc Records::FileButton { event args } {
 				set value [lindex $values $index_field-1]
 				set tkwidgedprivfilenamebutton($QUESTION,filename) $value
 			}
-			set w [ttk::frame $PARENT.cfilenamebutton$QUESTION] ;#use a name depending on $QUESTION to allow more than one row changed
+			set w [ttk::frame $PARENT.cfilenamebutton$QUESTION]; # use a name depending on $QUESTION to allow more than one row changed
 			ttk::entry $w.e1 -textvariable tkwidgedprivfilenamebutton($QUESTION,filename)
-			ttk::button $w.b1 -image [gid_themes::GetImage "folder.png"] \
-				-command [list Records::GetFilenameCmd tkwidgedprivfilenamebutton($QUESTION,filename) $w.e1 1]
+			ttk::button $w.b1 -image [gid_themes::GetImage "folder.png"] -command [list Records::GetFilenameCmd tkwidgedprivfilenamebutton($QUESTION,filename) $w.e1 1]
 			set tkwidgedprivfilenamebutton($QUESTION,widget) $w
 			grid $w.e1 $w.b1 -sticky ew
 			grid columnconfigure $w {0} -weight 1
@@ -333,6 +332,7 @@ proc Records::FileButton { event args } {
 
 			array unset tkwidgedprivfilenamebutton
 			UpdateInfoBar
+
 		}
 	}
 
@@ -355,8 +355,15 @@ proc Records::GetFilenameCmd { varname entry {tail 0}} {
 
 		if { $ProjectName == "UNNAMED" } {
 
-			#tk_dialogRAM $wbase.tmpwin [_ "Warning"] [_ "Before using a Record file, you need to save the project" ] warning 0 [_ "OK"]
-			set answer [tk_messageBox -message "Before saving a Record file, you need to save the Project" -type ok -icon warning]
+			if { ![info exists GidProcWin(ww)] || ![winfo exists $GidProcWin(ww).listbox#1] } {
+				set wbase .gid
+				set ww ""
+			} else {
+				set wbase $GidProcWin(ww)
+				set ww $GidProcWin(ww).listbox#1
+			}
+
+			tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "Before selecting a record file, you need to save the project first." ] error 0 [_ "Close"]
 			set current_value ""
 
 		} else {

@@ -13,7 +13,7 @@ proc Fiber::CalcReinfBarArea { event args } {
 		SYNC {
 
 				set pi 3.14159265358979323846
-				set GDN  [lindex $args 0]
+				set GDN [lindex $args 0]
 				set STRUCT [lindex $args 1]
 				set QUESTION [lindex $args 2]
 
@@ -169,7 +169,7 @@ proc Fiber::CalcTorsionalStiffness { event args } {
 
 		SYNC {
 				set pi 3.14159265358979323846
-				set GDN  [lindex $args 0]
+				set GDN [lindex $args 0]
 				set STRUCT [lindex $args 1]
 				set QUESTION [lindex $args 2]
 
@@ -447,7 +447,7 @@ proc Fiber::SuggestFibers { event args } {
 
 		SYNC {
 
-				set GDN  [lindex $args 0]
+				set GDN [lindex $args 0]
 				set STRUCT [lindex $args 1]
 				set QUESTION [lindex $args 2]
 				set ndm [OpenSees::ReturnProjectDimensions]
@@ -471,7 +471,7 @@ proc Fiber::SuggestFibers { event args } {
 
 												"3" {
 
-														if { $height >= $width  } {
+														if { $height >= $width } {
 																set Fibers_z [roundUp [expr 15*$height/$width] ]
 																set Fibers_y 15
 
@@ -486,7 +486,7 @@ proc Fiber::SuggestFibers { event args } {
 												}
 												"2" {
 
-														if { $height >= $width  } {
+														if { $height >= $width } {
 																set Fibers_y [roundUp [expr 15*$height/$width] ]
 																set Fibers_z 15
 
@@ -1089,9 +1089,9 @@ set ::FiberCustomVisited 0
 
 proc Fiber::Script { event args } {
 
-	variable script;
-	variable scriptParent;
-	variable scriptRegions;
+	variable script
+	variable scriptParent
+	variable scriptRegions
 
 	switch $event {
 
@@ -1190,7 +1190,7 @@ proc Fiber::Script { event args } {
 }
 
 proc Fiber::SetScript { Material Region text } {
-	variable script;
+	variable script
 
 	set script($Material,$Region) $text
 	return ""
@@ -1198,7 +1198,7 @@ proc Fiber::SetScript { Material Region text } {
 
 proc Fiber::SaveScriptFile { Material Region } {
 
-	variable script;
+	variable script
 
 	set data [GiD_Info Project]
 	set ProjectName [lindex $data 1]

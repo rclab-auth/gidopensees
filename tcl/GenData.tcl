@@ -5,8 +5,8 @@ namespace eval GenData {
 
 proc GenData::Description { event args } {
 
-	variable Description_text;
-	variable Description_Parent;
+	variable Description_text
+	variable Description_Parent
 	OpenSees::SetProjectNameAndPath
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
@@ -22,6 +22,7 @@ proc GenData::Description { event args } {
 
 				set filename [file join $GiDProjectDir "$GiDProjectName.txt"]
 				set fexist [file exist $filename]
+				set Description_text ""
 
 				if { $fexist == 1 } {
 					set fp [open $filename r]
@@ -38,7 +39,7 @@ proc GenData::Description { event args } {
 			set QUESTION [lindex $args 4]
 			grid [text $PARENT.description -width 70 -height 13 -font {Calibri -14} ] -column 1 -row [expr $ROW+1]
 			$PARENT.description delete 1.0 end
-			$PARENT.description insert 1.0 "$Description_text"
+			$PARENT.description insert 1.0 [string trim $Description_text]
 			return ""
 		}
 
@@ -48,8 +49,19 @@ proc GenData::Description { event args } {
 			set STRUCT [lindex $args 1]
 			set QUESTION [lindex $args 2]
 			set Description_text [$Description_Parent.description get 1.0 end]
-			set ok [GenData::SaveDescriptionFile]
 
+			if { [string trim $Description_text] != "" } {
+				set ok [GenData::SaveDescriptionFile]
+
+			} else {
+
+				set filename [file join $GiDProjectDir "$GiDProjectName.txt"]
+				set fexist [file exist $filename]
+
+				if { $fexist == 1 } {
+					file delete -force $filename
+				}
+			}
 		}
 
 		DEPEND {
@@ -58,8 +70,9 @@ proc GenData::Description { event args } {
 		}
 
 		CLOSE {
+
 			UpdateInfoBar
-			return ""
+
 		}
 	}
 
@@ -73,7 +86,7 @@ proc GenData::SaveDescriptionFile { } {
 	OpenSees::SetProjectNameAndPath
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
-	variable Description_text;
+	variable Description_text
 
 	set Description_text [string trim $Description_text]
 

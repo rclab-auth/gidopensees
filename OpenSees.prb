@@ -43,14 +43,12 @@ VALUE:
 QUESTION: Model_dimensions#CB#(2,3)
 VALUE: 2
 STATE: DISABLED
+HELP: If a 3D model is detected, this value will automatically switch to 3.
 DEPENDENCIES: (2,SET,Vertical_axis,Y)
 TKWIDGET: TK_EditModelDim
-QUESTION: ___#CB#(_)
-VALUE: If a 3D model is detected, this value will automatically switch to 3.
 QUESTION: Vertical_axis#CB#(Y,Z)
 VALUE: Y
-QUESTION: ____#CB#(_)
-VALUE: Default vertical axis is global Y. For 3D models, selecting global Z is recommended.
+HELP: Default vertical axis is global Y. For 3D models, selecting global Z is recommended.
 TITLE: Eigenvalue_Analysis
 QUESTION: _____#CB#(_)
 VALUE:
@@ -104,7 +102,7 @@ BOOK: Output_Options
 TITLE: General
 QUESTION: ________#CB#(_)
 VALUE:
-QUESTION: Use_binary_format#CB#(1,0)
+QUESTION: Use_HDF5_binary_output_format#CB#(1,0)
 VALUE: 0
 QUESTION: _________#CB#(_)
 VALUE:
@@ -170,7 +168,6 @@ QUESTION: Enabled#CB#(1,0)
 VALUE: 1
 QUESTION: Description
 VALUE:
-#TKWIDGET: GidUtils::TkwidgetEntryConfigure {-width 50}
 QUESTION: System_of_equations#CB#(BandGeneral,BandSPD,ProfileSPD,SparseGEN,UmfPack,FullGeneral,SparseSYM)
 VALUE: BandGeneral
 TKWIDGET: TK_EditInterval
@@ -272,13 +269,13 @@ DEPENDENCIES: (2,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURREN
 DEPENDENCIES: (3,HIDE,Ground_motion_direction,#CURRENT#,HIDE,Record_file,#CURRENT#,RESTORE,First_record_file,#CURRENT#,RESTORE,Second_record_file,#CURRENT#,RESTORE,Third_record_file,#CURRENT#,RESTORE,First_ground_motion_direction,#CURRENT#,RESTORE,Second_ground_motion_direction,#CURRENT#,RESTORE,Third_ground_motion_direction,#CURRENT#)
 TKWIDGET: IntvData::MotionDirections
 QUESTION: First_record_file#MAT#(Records)
-VALUE: Ground_motion_record
+VALUE: Ground_Motion_Record
 QUESTION: Second_record_file#MAT#(Records)
-VALUE: Ground_motion_record
+VALUE: Ground_Motion_Record
 QUESTION: Third_record_file#MAT#(Records)
-VALUE: Ground_motion_record
+VALUE: Ground_Motion_Record
 QUESTION: Record_file#MAT#(Records)
-VALUE: Ground_motion_record
+VALUE: Ground_Motion_Record
 QUESTION: Ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
 VALUE: Ux
 QUESTION: First_ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
@@ -289,11 +286,11 @@ QUESTION: Third_ground_motion_direction#CB#(Ux,Uy,Uz,Rx,Ry,Rz)
 VALUE: Uy
 QUESTION: Loading_path#CB#(Monotonic,Cyclic)
 VALUE: Monotonic
-DEPENDENCIES: (Cyclic,RESTORE,Displacement_peaks-cycles,#CURRENT#,RESTORE,Displacement_peaks,#CURRENT#)
-DEPENDENCIES: (Monotonic,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Displacement_peaks,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Adjust_number_of_steps_according_to_displacement_ratio,#CURRENT#,RESTORE,Displacement_peaks-cycles,#CURRENT#,RESTORE,Displacement_peaks,#CURRENT#)
+DEPENDENCIES: (Monotonic,HIDE,Adjust_number_of_steps_according_to_displacement_ratio,#CURRENT#,HIDE,Displacement_peaks-cycles,#CURRENT#,HIDE,Displacement_peaks,#CURRENT#)
 TKWIDGET: IntvData::LoadingPath
 QUESTION: Displacement_peaks-cycles(Displacement_ratio,Number_of_cycles)
-VALUE: #N# 2 1 5
+VALUE: #N# 2 1.0 5
 QUESTION: Convergence_criterion#CB#(Norm_Unbalance,Norm_Displacement_Increment,Energy_Increment,Relative_Norm_Unbalance,Relative_Norm_Displacement_Increment,Total_Relative_Norm_Displacement_Increment,Relative_Energy_Increment,Fixed_Number_of_Iterations)
 VALUE: Relative_Energy_Increment
 DEPENDENCIES: (Norm_Unbalance,RESTORE,Tolerance,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
@@ -310,6 +307,9 @@ HELP: Tolerance criteria for checking convergence
 QUESTION: Max_iterations_per_step
 VALUE: 50
 HELP: Maximum number of iterations per step
+QUESTION: Adjust_number_of_steps_according_to_displacement_ratio#CB#(0,1)
+VALUE: 0
+HELP: Multiply number of steps by displacement ratio in each cycle to maintain a constant load step magnitude
 QUESTION: Tolerance_relaxation#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (1,RESTORE,Tolerance_relaxation_after_failed_substepping_of,#CURRENT#,RESTORE,Relaxation_factor,#CURRENT#)
@@ -317,6 +317,7 @@ DEPENDENCIES: (0,HIDE,Tolerance_relaxation_after_failed_substepping_of,#CURRENT#
 TKWIDGET: IntvData::ToleranceRelaxation
 QUESTION: Tolerance_relaxation_after_failed_substepping_of#CB#(/2,/4,/8,/16)
 VALUE: /8
+HELP: If solution diverges after selected substepping divisor, repeat with tolerance multiplied by relaxation factor
 QUESTION: Relaxation_factor
 VALUE: 10
 QUESTION: Activate_dead_load#CB#(1,0)
@@ -338,8 +339,8 @@ HELP: Reset to the original state
 QUESTION: Remove_load_pattern_at_the_end_of_the_interval_analysis#CB#(0,1)
 VALUE: 0
 QUESTION: Logging_level#CB#(Low,Medium,High)
-VALUE: Low
-HELP: Low : print nothing\nMedium : print information on norms and number of iterations at end of successful test\nHigh : print information on norms each time test is invoked
+VALUE: Medium
+HELP: Low : print nothing\nMedium : print information for each step\nHigh : print information for each step and iteration
 TKWIDGET: TK_AnalWikiInfo
 TITLE: Sine_Excitation_Parameters
 QUESTION: Duration#UNITS#

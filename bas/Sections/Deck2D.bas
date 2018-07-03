@@ -18,7 +18,7 @@ proc DeckFiberSection2D { secID GJ conc1ID conc2ID steel1ID steel2ID steel3ID st
         set nfz1 16
     }
 
-    set height [expr $thick1+$thick2+$hv]; # total external height of the man section; not including top slab and sidewalk
+    set height [expr $thick1+$thick2+$hv]; # total external height of the man section, not including top slab and sidewalk
 
     # Concrete Areas
     set Area1 [expr $thick1**$width1]; # Area of the middle slab

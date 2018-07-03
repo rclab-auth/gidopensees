@@ -16,7 +16,7 @@ proc TK_ActiveIntervalinLoads { event args } {
 			set b [Button $PARENT.changeintv -text [= " Change Interval "] -helptext [= "Change Interval"] -command $cmd -state normal]
 			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
 
-			return  ""
+			return ""
 		}
 
 		SYNC {
@@ -42,7 +42,7 @@ proc TK_EditInterval { event args } {
 		CLOSE {
 
 			UpdateInfoBar
-			
+
 			return ""
 		}
 	}
@@ -153,11 +153,11 @@ proc TK_ElementWikiInfo { event args } {
 
 			}
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " Element Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " Element Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
 
-			return  ""
+			return ""
 		}
 	}
 
@@ -269,13 +269,16 @@ proc TK_MaterialWikiInfo { event args } {
 				"MinMax" {
 						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/MinMax_Material"
 				}
+				"BondSP01" {
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Bond_SP01_-_-_Strain_Penetration_Model_for_Fully_Anchored_Steel_Reinforcing_Bars"
+				}
 			}
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " Material info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " Material info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
 
-			return  ""
+			return ""
 		}
 	}
 
@@ -323,11 +326,11 @@ proc TK_SectionWikiInfo { event args } {
 					}
 			}
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " Section info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " Section info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
 
-			return  ""
+			return ""
 		}
 	}
 
@@ -344,8 +347,8 @@ proc TK_ZeroLengthWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ZeroLength_Element"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " Element Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " Element Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
 		}
 	}
@@ -363,8 +366,8 @@ proc TK_MassWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Mass_Command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
 		}
 	}
@@ -372,7 +375,7 @@ proc TK_MassWikiInfo { event args } {
 	return ""
 }
 
-proc TK_RigidDiaphragmWikiInfo  { event args } {
+proc TK_RigidDiaphragmWikiInfo { event args } {
 
 	switch $event {
 
@@ -382,8 +385,8 @@ proc TK_RigidDiaphragmWikiInfo  { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/RigidDiaphragm_command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
 		}
 	}
@@ -401,8 +404,8 @@ proc TK_RigidLinkWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "http://opensees.berkeley.edu/wiki/index.php/RigidLink_command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+1] -sticky nw -pady 5
 		}
 	}
@@ -420,8 +423,8 @@ proc TK_EqualDOFWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/EqualDOF_command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+3] -sticky nw -pady 5
 		}
 	}
@@ -439,8 +442,8 @@ proc TK_LineLoadsWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/EleLoad_Command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More Info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
 		}
 	}
@@ -458,8 +461,8 @@ proc TK_LoadsWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/NodalLoad_Command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
 		}
 	}
@@ -477,8 +480,8 @@ proc TK_DisplacementsWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Sp_Command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
 		}
 	}
@@ -496,8 +499,8 @@ proc TK_RestraintsWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fix_command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+2] -sticky nw -pady 5
 		}
 	}
@@ -515,8 +518,8 @@ proc TK_AnalWikiInfo { event args } {
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Analysis_Commands"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " Analysis info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " Analysis info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+2] -sticky nw -pady 5
 
 		}
@@ -530,13 +533,13 @@ proc TK_RegionWikiInfo { event args } {
 	switch $event {
 
 		INIT {
-		
+
 			set PARENT [lindex $args 0]
 			upvar [lindex $args 1] ROW
 			set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Region_Command"
 
-			image create photo img -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
-			set b [Button $PARENT.wikiinfo -image img -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
+			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
+			set b [Button $PARENT.wikiinfo -image wiki -text [= " More info "] -helptext [= "Visit OpenSees Wiki for more information"] -command $cmd -state normal -compound left]
 			grid $b -column 1 -row [expr $ROW+2] -sticky nw -pady 5
 		}
 	}
@@ -642,7 +645,7 @@ proc TK_PMY-ID { event args } {
 		}
 
 		SYNC {
-		
+
 			lassign $args GDN STRUCT QUESTION
 			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT "Material"]
 			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
@@ -654,6 +657,26 @@ proc TK_PMY-ID { event args } {
 			} else {
 					set ok [DWLocalSetValue $GDN $STRUCT $QUESTION 0]
 			}
+		}
+	}
+
+	return ""
+}
+
+proc TK_LocalAxesInfo { event args } {
+
+	switch $event {
+
+		INIT {
+
+			set PARENT [lindex $args 0]
+			upvar [lindex $args 1] ROW
+
+			set cmd {WarnWinText "LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction\n(View -> Normals -> Lines)\n\nIN A 2D PROBLEM :\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Modeling Options\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy" "Local axes info"}
+			image create photo axes -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/btn_Axes.png]
+			set b [Button $PARENT.axesinfo -image axes -text [= " Local axes info "] -helptext [= "Display local axes information"] -command $cmd -state normal -compound left]
+
+			grid $b -column 1 -row [expr $ROW] -sticky nw -pady 5
 		}
 	}
 

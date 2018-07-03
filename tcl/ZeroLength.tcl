@@ -82,6 +82,7 @@ proc ZeroLength::CheckFieldValues { event args } {
 	CLOSE {
 
 			UpdateInfoBar
+
 	}
 	}
 

@@ -223,10 +223,10 @@ QUESTION: Uniform_load_acting_in_local_y_direction#UNITS#
 VALUE: 0.0 kN/m
 QUESTION: Uniform_load_acting_in_local_z_direction#UNITS#
 VALUE: 0.0 kN/m
-QUESTION: _#CB#(Hover_mouse_for_local_axes_info)
-VALUE: Hover for local axes info
-STATE: DISABLED
-HELP: LOCAL AXES INFO\n\nThe local-x longitudinal axis is always specified by the positive element direction (View -> Normals -> Lines)\n\nIN A 2D PROBLEM :\n\nLocal-x axis coincides with the element positive direction\nLocal-z axis coincides with the global Z axis direction\nLocal-y axis is found by the right hand rule\n\nIN A 3D PROBLEM :\n\nVERTICAL axis is user-specified (Y or Z) in Modeling Options\n\nFor a horizontal element :\nLocal-x axis coincides with the element positive direction\nLocal-z coincides with the direction of the defined VERTICAL axis (global Y or Z)\nLocal-y axis is found by the right hand rule\n\nFor a vertical element :\nLocal-x axis coincides with the element positive direction\nLocal-z positive direction coincides with the global X axis negative direction\nLocal-y axis is found by the right hand rule\n\nFor an oblique element :\nVector Vecxz has the direction of the defined VERTICAL axis (global Y or Z)\nLocal-x axis direction (Vx) coincides with the element positive direction\nLocal-y axis direction (Vy) is found by the cross product Vy = Vecxz x Vx\nLocal-z axis direction (Vz) is found by the cross product Vz = Vx x Vy
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_LocalAxesInfo
 QUESTION: __#CB#(_)
 VALUE:
 STATE: HIDDEN
@@ -308,7 +308,6 @@ END CONDITION
 
 
 BOOK: Constraints
-
 
 
 CONDITION: Point_Equal_constraint_master_node
