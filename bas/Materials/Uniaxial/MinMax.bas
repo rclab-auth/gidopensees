@@ -2,7 +2,7 @@
 
 *format "%d%d%g%g"
 *if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
-*set var SelUniaxMatID=tcl(FindMaterialNumber *MatProp(Material_for_defining_stress-strain_behaviour)
+*set var SelUniaxMatID=tcl(FindMaterialNumber *MatProp(Material_for_defining_stress-strain_behaviour))
 *set var MaterialExists=tcl(CheckUsedMaterials *SelUniaxMatID )
 *if(MaterialExists==-1)
 *set var dummy=tcl(AddUsedMaterials *SelUniaxMatID)
