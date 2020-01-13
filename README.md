@@ -21,6 +21,7 @@
 ### KNOWN ISSUES
 
 ---
+- GiD+OpenSees Interface **requires the full tcl/tk framework to run properly**. If you are using the latest version of OpenSees, please install **ActiveTcl 8.6** first, delete any tcl/tk files in the OpenSees folder and keep **only the OpenSees executable**.
 - In order to view the generated .tcl file ('Create and view .tcl only' menu option), first associate the .tcl extension with your favorite text editor (e.g. Notepad, Notepad++ etc.).
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
    - Intersection joints that belong to two lines with different constraints should be handled separately.
