@@ -138,15 +138,6 @@ proc Records::GetValCol {} {
 
 proc Records::Display {event args} {
 
-	variable filename
-	variable form
-	variable type
-	variable dt
-	variable sclFactor
-	variable linesSkip
-	variable timeCol
-	variable valCol
-
 	switch $event {
 
 		INIT {
@@ -190,7 +181,8 @@ proc Records::Display {event args} {
 
 					} else {
 
-						error "File not found\nTry selecting again from filebutton"
+						set ans [tk_messageBox -type ok \
+						-icon warning -title [_ "Warning"] -message [_ "File not found.\nTry selecting again from file button"]]
 					}
 				}
 
@@ -248,9 +240,14 @@ proc Records::OpenFile { event args } {
 
 					set fexists [file exist [Records::GetFilename]]
 					if {$fexists} {
+
 						exec {*}[auto_execok start] "" "[Records::GetFilename]" &
+
 					} else {
-						error "File not found\nTry selecting again from filebutton"
+
+						set ans [tk_messageBox -type ok \
+						-icon warning -title [_ "Warning"] -message [_ "File not found.\nTry selecting again from file button"]]
+
 					}
 				}
 
@@ -285,10 +282,12 @@ proc Records::FileButton { event args } {
 			}
 			#trick to fill in the values pressing transfer from an applied condition
 			if { [lindex [info level 2] 0] == "DWUpdateConds" } {
+
 				set values [lrange [lindex [info level 2] 2] 3 end]
 				set index_field [LabelField $GDN $STRUCT $QUESTION]
 				set value [lindex $values $index_field-1]
 				set tkwidgedprivfilenamebutton($QUESTION,filename) $value
+
 			}
 			set w [ttk::frame $PARENT.cfilenamebutton$QUESTION]; # use a name depending on $QUESTION to allow more than one row changed
 			ttk::entry $w.e1 -textvariable tkwidgedprivfilenamebutton($QUESTION,filename)
@@ -297,8 +296,11 @@ proc Records::FileButton { event args } {
 			grid $w.e1 $w.b1 -sticky ew
 			grid columnconfigure $w {0} -weight 1
 			grid $w -row [expr $ROW-1] -column 1 -sticky ew
+
 			if { $entry != "" } {
+
 				grid remove $entry
+
 			} else {
 				#assumed that entry is hidden and then hide the usurpating frame
 				#grid remove $w
@@ -308,24 +310,34 @@ proc Records::FileButton { event args } {
 		SYNC {
 
 			lassign $args GDN STRUCT QUESTION
-			if { [info exists tkwidgedprivfilenamebutton($QUESTION,filename)] } {
+
+			if { [info exists tkwidgedprivfilenamebutton($QUESTION,filename)] && $tkwidgedprivfilenamebutton($QUESTION,filename) != ""} {
+
 				DWLocalSetValue $GDN $STRUCT $QUESTION $tkwidgedprivfilenamebutton($QUESTION,filename)
+
 			}
 		}
 
 		DEPEND {
 
 			lassign $args GDN STRUCT QUESTION ACTION VALUE
+
 			if { [info exists tkwidgedprivfilenamebutton($QUESTION,widget)] && \
 				[winfo exists $tkwidgedprivfilenamebutton($QUESTION,widget)] } {
+
 				if { $ACTION == "HIDE" } {
+
 					grid remove $tkwidgedprivfilenamebutton($QUESTION,widget)
+
 				} else {
+
 					#RESTORE
 					grid $tkwidgedprivfilenamebutton($QUESTION,widget)
+
 				}
 			} else {
-				}
+
+			}
 		}
 
 		CLOSE {
@@ -353,38 +365,37 @@ proc Records::GetFilenameCmd { varname entry {tail 0}} {
 
 	if {$current_value != ""} {
 
-		if { $ProjectName == "UNNAMED" } {
+		set fexists [file exists $current_value]
 
-			if { ![info exists GidProcWin(ww)] || ![winfo exists $GidProcWin(ww).listbox#1] } {
-				set wbase .gid
-				set ww ""
+		if {$fexists} {
+
+			if { $ProjectName == "UNNAMED" } {
+
+				set ans [tk_messageBox -type ok -icon warning \
+				-title [_ "Warning"] -message [_ "Before selecting a record file, you need to save the project first."]]
+				set current_value ""
+
 			} else {
-				set wbase $GidProcWin(ww)
-				set ww $GidProcWin(ww).listbox#1
+
+				OpenSees::SetProjectNameAndPath
+				set GiDProjectDir [OpenSees::GetProjectPath]
+				file mkdir $GiDProjectDir/Records
+				file copy -force -- $current_value $GiDProjectDir/Records
+
+				if { $tail } {
+					set current_value [file tail $current_value]
+				}
+
+				if { $current_value != "" && $entry != "" && [winfo exists $entry] } {
+
+					$entry delete 0 end
+					$entry insert end $current_value
+
+					#set variable after change entry, else if variable is the own entry variable then delete 0 end will empty both
+					set ::$varname $current_value
+					return $current_value
+				}
 			}
-
-			tk_dialogRAM $wbase.tmpwin [_ "Error"] [_ "Before selecting a record file, you need to save the project first." ] error 0 [_ "Close"]
-			set current_value ""
-
-		} else {
-
-			OpenSees::SetProjectNameAndPath
-			set GiDProjectDir [OpenSees::GetProjectPath]
-			file mkdir $GiDProjectDir/Records
-			file copy -force -- $current_value $GiDProjectDir/Records
 		}
 	}
-
-	if { $tail } {
-		set current_value [file tail $current_value]
-	}
-
-	if { $current_value != "" && $entry != "" && [winfo exists $entry] } {
-		$entry delete 0 end
-		$entry insert end $current_value
-	}
-
-	#set variable after change entry, else if variable is the own entry variable then delete 0 end will empty both
-	set ::$varname $current_value
-	return $current_value
 }

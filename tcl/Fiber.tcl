@@ -1106,19 +1106,17 @@ proc Fiber::Script { event args } {
 				set GDN [lindex $args 2]
 				set STRUCT [lindex $args 3]
 				set QUESTION [lindex $args 4]
-				#WarnWinText "Row: $ROW"
-				#WarnWinText "QUESTION: $QUESTION"
-				#WarnWinText "GDN : $GDN"
-				#WarnWinText "Struct : $STRUCT"
+				set childrenwidgets [winfo children $PARENT]
+
 				set MaterialName [lindex [split $STRUCT {,}] 1]
-				set MaterialTag [FindMaterialNumber $MaterialName]
+				#set MaterialTag [FindMaterialNumber $MaterialName]
 				set RegionNumber [expr $ROW/3-1]
 				set scriptParent($MaterialName) $PARENT
 
 				OpenSees::SetProjectNameAndPath
 				set GiDProjectDir [OpenSees::GetProjectPath]
 
-				if { $ProjectName != "UNNAMED" } {
+					if { $ProjectName != "UNNAMED" } {
 
 						set filename [Fiber::GetScriptName $MaterialName $RegionNumber]
 						set filepath [file join $GiDProjectDir Scripts $filename]
@@ -1128,33 +1126,79 @@ proc Fiber::Script { event args } {
 
 							set fp [open $filepath r]
 							set text [read $fp]
-							set ok [Fiber::SetScript $MaterialName $RegionNumber $text]
-						close $fp
+							set ok [Fiber::SetScript $MaterialName $RegionNumber $text]; # initializing
+
+							close $fp
 
 						} else {
 
-							set text ""
+							set x 6
+
+							switch $ROW {
+								6 { set x 6}
+								9 { set x 8}
+								12 { set x 10}
+								15 { set x 12}
+								18 { set x 14}
+								21 { set x 16}
+								24 { set x 18}
+								27 { set x 20}
+								30 { set x 22}
+								33 { set x 24}
+							}
+
+							set eexists [winfo exists $PARENT.e$x]
+
+							if {$eexists} {
+								set text [$PARENT.e$x get]; # if exists
+							} else {
+								set text ""
+							}
+
 							set ok [Fiber::SetScript $MaterialName $RegionNumber $text]; # initializing
 
 						}
 
-				} else {
+					} else {
 
-					#WarnWinText "[info exists script]"
-					#WarnWinText "[info exists script($MaterialTag,$RegionNumber]"
-					#WarnWinText "[info exists Fiber::script]"
-					#WarnWinText "[info exists Fiber::script($MaterialTag,$RegionNumber]"
+						#WarnWinText "[info exists script]"
+						#WarnWinText "[info exists script($MaterialTag,$RegionNumber]"
+						#WarnWinText "[info exists Fiber::script]"
+						#WarnWinText "[info exists Fiber::script($MaterialTag,$RegionNumber]"
 
-					if {![info exists Fiber::script($MaterialName,$RegionNumber)]} {
+						set x 6
 
-						set ok [Fiber::SetScript $MaterialName $RegionNumber ""]
+						switch $ROW {
+							6 { set x 6}
+							9 { set x 8}
+							12 { set x 10}
+							15 { set x 12}
+							18 { set x 14}
+							21 { set x 16}
+							24 { set x 18}
+							27 { set x 20}
+							30 { set x 22}
+							33 { set x 24}
+						}
 
+						set eexists [winfo exists $PARENT.e$x]
+
+						if {$eexists} {
+							set text [$PARENT.e$x get]; # if exists
+						} else {
+							set text ""
+						}
+
+						if {![info exists Fiber::script($MaterialName,$RegionNumber)]} {
+
+							set ok [Fiber::SetScript $MaterialName $RegionNumber $text]
+
+						}
 					}
-				}
 
-				grid [text $PARENT.fiberscript$MaterialName$RegionNumber -width 100 -height 8 -font {Calibri -12} ] -column 1 -row [expr $ROW]
-				$PARENT.fiberscript$MaterialName$RegionNumber delete 1.0 end
-				$PARENT.fiberscript$MaterialName$RegionNumber insert 1.0 "$script($MaterialName,$RegionNumber)"
+					grid [text $PARENT.fiberscript$MaterialName$RegionNumber -width 100 -height 8 -font {Calibri -12} ] -column 1 -row [expr $ROW]
+					$PARENT.fiberscript$MaterialName$RegionNumber delete 1.0 end
+					$PARENT.fiberscript$MaterialName$RegionNumber insert 1.0 "$script($MaterialName,$RegionNumber)"
 		}
 
 		SYNC {
@@ -1164,7 +1208,7 @@ proc Fiber::Script { event args } {
 				set QUESTION [lindex $args 2]
 
 				set MaterialName [lindex [split $STRUCT {,}] 1]
-				set MaterialTag [FindMaterialNumber $MaterialName]
+				#set MaterialTag [FindMaterialNumber $MaterialName]
 
 				foreach RegionNumber $scriptRegions {
 
@@ -1177,16 +1221,7 @@ proc Fiber::Script { event args } {
 				}
 		}
 
-		CLOSE {
-
-			global FiberCustomVisited
-			set FiberCustomVisited 0
-
-		}
-
-		}
-
-	return ""
+	}
 }
 
 proc Fiber::SetScript { Material Region text } {
@@ -1262,7 +1297,7 @@ proc Fiber::FiberCustomFileExists { MaterialName RegionNum } {
 proc Fiber::GetScriptName { MaterialName RegionNum } {
 
 	set filename [string map {" " "_"} $MaterialName]
-	append filename "_" "$RegionNum" ".tcl"
+	append filename "_" "$RegionNum" ".tcl"; # materialName_i.tcl
 
 	return $filename
 }

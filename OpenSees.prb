@@ -1,16 +1,20 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2018
+# Copyright (C) 2016-2020
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
 #
-# Development team
-# T. Kartalis-Kaounis, Civil Engineer AUTh
-# V. Protopapadakis, Civil Engineer AUTh
-# T. Papadopoulos, Civil Engineer AUTh
+# Development Team
 #
-# Project coordinator
-# V.K. Papanikolaou, Assistant Professor AUTh
+# T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
+# V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
+#
+# Former Contributors
+#
+# F. Derveni, Dipl. Eng. AUTh
+# V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
+# T. Papadopoulos, Dipl. Eng. AUTh, MSc
+# T. Zachariadis, Dipl. Eng. AUTh, MSc
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,16 +33,14 @@
 #
 PROBLEM DATA
 
-
 BOOK: General_Data
-
 
 TITLE: Project_Info
 QUESTION: _#CB#(_)
 VALUE:
 TKWIDGET: GenData::Description
 TITLE: Modeling_Options
-QUESTION: __#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
 QUESTION: Model_dimensions#CB#(2,3)
 VALUE: 2
@@ -50,7 +52,7 @@ QUESTION: Vertical_axis#CB#(Y,Z)
 VALUE: Y
 HELP: Default vertical axis is global Y. For 3D models, selecting global Z is recommended.
 TITLE: Eigenvalue_Analysis
-QUESTION: _____#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
 QUESTION: Activate_eigenvalue_analysis#CB#(0,1)
 VALUE: 0
@@ -60,7 +62,7 @@ VALUE: 3#WIDTH#(10)
 QUESTION: Solver#CB#(genBandArpack,fullGenLapack,symmBandLapack)
 VALUE: fullGenLapack
 TITLE: Rayleigh_Damping
-QUESTION: ______#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
 TKWIDGET: TK_RayleighLabel
 QUESTION: Activate_global_Rayleigh_damping#CB#(0,1)
@@ -90,26 +92,44 @@ VALUE: 0.0
 QUESTION: betaKcomm
 VALUE: 0.0
 TITLE: EqualDOF
-QUESTION: _______#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
 QUESTION: Activate_automatic_equalDOF_between_nodes_of_different_domains_with_identical_coordinates#CB#(1,0)
 VALUE: 0
 
-
-BOOK: Output_Options
-
+BOOK: Options
 
 TITLE: General
-QUESTION: ________#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
 QUESTION: Use_HDF5_binary_output_format#CB#(1,0)
 VALUE: 0
-QUESTION: _________#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
 QUESTION: Output_step_frequency
 VALUE: 1#WIDTH#(5)
-TITLE: Nodes
-QUESTION: __________#CB#(_)
+TITLE: Import
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Geometry#CB#(1,0)
+STATE: DISABLED
+VALUE: 1
+QUESTION: Restraints#CB#(1,0)
+VALUE: 1
+QUESTION: Constraints#CB#(1,0)
+VALUE: 1
+QUESTION: Loads#CB#(1,0)
+VALUE: 1
+QUESTION: Materials#CB#(1,0)
+VALUE: 0
+QUESTION: Sections#CB#(1,0)
+VALUE: 0
+QUESTION: Elements#CB#(1,0)
+VALUE: 0
+QUESTION: Interval_settings#CB#(1,0)
+VALUE: 0
+TITLE: Output
+QUESTION: _#CB#(_)
 VALUE:
 QUESTION: Nodal_displacements#CB#(1,0)
 STATE: DISABLED
@@ -126,44 +146,52 @@ QUESTION: Nodal_velocities#CB#(1,0)
 VALUE: 1
 QUESTION: Nodal_rotational_velocities#CB#(1,0)
 VALUE: 0
-TITLE: Beam_Column_Elements
-QUESTION: ___________#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
+QUESTION: _#CB#(_)
+VALUE: Beam Column Elements
 QUESTION: Local_forces#CB#(1,0)
 VALUE: 1
 QUESTION: Basic_deformation#CB#(1,0)
 VALUE: 1
 QUESTION: Plastic_deformation#CB#(1,0)
 VALUE: 1
-TITLE: Truss_Elements
-QUESTION: ____________#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
+QUESTION: _#CB#(_)
+VALUE: Truss Elements
 QUESTION: Axial_force#CB#(1,0)
 VALUE: 1
 QUESTION: Axial_deformation#CB#(1,0)
 VALUE: 1
-TITLE: Surface_Elements
-QUESTION: _____________#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
+QUESTION: _#CB#(_)
+VALUE: Surface Elements
 QUESTION: Stresses#CB#(1,0)
 VALUE: 1
 QUESTION: Strains#CB#(1,0)
 VALUE: 1
 QUESTION: Forces#CB#(1,0)
 VALUE: 1
-TITLE: Solid_Elements
-QUESTION: ______________#CB#(_)
+QUESTION: _#CB#(_)
 VALUE:
+QUESTION: _#CB#(_)
+VALUE: Solid Elements
 QUESTION: _Stresses#CB#(1,0)
 VALUE: 1
 QUESTION: _Strains#CB#(1,0)
 VALUE: 1
 QUESTION: _Forces#CB#(1,0)
 VALUE: 1
+
 END PROBLEM DATA
 
 INTERVAL DATA
+
 TITLE: Analysis_Options
+QUESTION: _#CB#(_)
+VALUE:
 QUESTION: Enabled#CB#(1,0)
 VALUE: 1
 QUESTION: Description
@@ -185,15 +213,17 @@ QUESTION: Penalty_am_factor
 VALUE: 1.0e14
 QUESTION: Solution_algorithm#CB#(Linear,Full_Newton-Raphson,Modified_Newton-Raphson,Newton-Raphson_with_line_search,Broyden,BFGS,KrylovNewton)
 VALUE: Linear
-DEPENDENCIES: (Linear,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Convergence_criterion,#CURRENT#,HIDE,Tolerance,#CURRENT#,HIDE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,HIDE,Tolerance_relaxation,#CURRENT#)
-DEPENDENCIES: (Full_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
-DEPENDENCIES: (Modified_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
-DEPENDENCIES: (Newton-Raphson_with_line_search,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,RESTORE,Line_search_type,#CURRENT#,RESTORE,Search_tolerance,#CURRENT#,RESTORE,Max_iterations_for_search,#CURRENT#,RESTORE,Min_eta_value,#CURRENT#,RESTORE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
-DEPENDENCIES: (Broyden,HIDE,Use_initial_stiffness_iterations,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,RESTORE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
-DEPENDENCIES: (BFGS,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
-DEPENDENCIES: (KrylovNewton,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
+DEPENDENCIES: (Linear,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Max_iterations_until_tangent_is_reformed,#CURRENT#,HIDE,Convergence_criterion,#CURRENT#,HIDE,Tolerance,#CURRENT#,HIDE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,HIDE,Tolerance_relaxation,#CURRENT#)
+DEPENDENCIES: (Full_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Max_iterations_until_tangent_is_reformed,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
+DEPENDENCIES: (Modified_Newton-Raphson,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Max_iterations_until_tangent_is_reformed,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
+DEPENDENCIES: (Newton-Raphson_with_line_search,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Max_iterations_until_tangent_is_reformed,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,RESTORE,Line_search_type,#CURRENT#,RESTORE,Search_tolerance,#CURRENT#,RESTORE,Max_iterations_for_search,#CURRENT#,RESTORE,Min_eta_value,#CURRENT#,RESTORE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
+DEPENDENCIES: (Broyden,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Max_iterations_until_tangent_is_reformed,#CURRENT#,RESTORE,Convergence_criterion,#CURRENT#,RESTORE,Tolerance,#CURRENT#,RESTORE,Max_Iterations_per_Step,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,RESTORE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
+DEPENDENCIES: (BFGS,HIDE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Max_iterations_until_tangent_is_reformed,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
+DEPENDENCIES: (KrylovNewton,RESTORE,Max_iterations_until_tangent_is_reformed,#CURRENT#,RESTORE,Use_initial_stiffness_iterations,#CURRENT#,HIDE,Line_search_type,#CURRENT#,HIDE,Search_tolerance,#CURRENT#,HIDE,Max_iterations_for_search,#CURRENT#,HIDE,Min_eta_value,#CURRENT#,HIDE,Max_eta_value,#CURRENT#,HIDE,Iterations_for_new_tangent,#CURRENT#,RESTORE,Tolerance_relaxation,#CURRENT#)
 QUESTION: Use_initial_stiffness_iterations#CB#(1,0)
 VALUE: 0
+QUESTION: Max_iterations_until_tangent_is_reformed
+VALUE: 3
 QUESTION: Line_search_type#CB#(Interpolated,RegulaFalsi,Bisection,Secant)
 VALUE: Interpolated
 QUESTION: Search_tolerance
@@ -343,6 +373,8 @@ VALUE: Medium
 HELP: Low : print nothing\nMedium : print information for each step\nHigh : print information for each step and iteration
 TKWIDGET: TK_AnalWikiInfo
 TITLE: Sine_Excitation_Parameters
+QUESTION: _#CB#(_)
+VALUE:
 QUESTION: Duration#UNITS#
 VALUE: 10sec
 QUESTION: Acceleration_Amplitude#UNITS#
@@ -354,4 +386,5 @@ VALUE: 0.0m/sec
 QUESTION: Shift
 VALUE: 0.0#WIDTH#(10)
 HELP: Shift in radians
+
 END INTERVAL DATA

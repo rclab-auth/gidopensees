@@ -2,7 +2,7 @@
 *if(cntQuad!=0 || cntQuadUP!=0 || cntTri31!=0)
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Quad")==0 || strcmp(MatProp(Element_type:),"QuadUP")==0 || strcmp(MatProp(Element_type:),"Tri31")==0)
-*set var PMYID=MatProp(PMY_ID,int)
+*set var PMYID=tcl(getDomainMatID *MatProp(PMY_ID,int) *DomainNum)
 *if(PMYID!=0)
 *loop materials *NotUsed
 *set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)

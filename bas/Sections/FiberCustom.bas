@@ -1,6 +1,6 @@
 *set var FiberCustomTag=SectionID
 *if(MatProp(Activate_torsional_stiffness,int)==1 && MatProp(Torsional_stiffness_GJ,real)!=0)
-section Fiber *FiberCustomTag -GJ *MatProp(Torsional_stiffness_GJ,real)
+section Fiber *FiberCustomTag -GJ *MatProp(Torsional_stiffness_GJ,real) {
 *else
 section Fiber *FiberCustomTag {
 *endif

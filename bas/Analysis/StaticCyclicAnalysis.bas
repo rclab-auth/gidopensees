@@ -25,11 +25,7 @@ lappend iNSteps $Nsteps
 *endif
 *endfor
 
-*if(IntvData(Use_initial_stiffness_iterations,int)==1)
-variable strIni /Ini
-*else
-variable strIni {}
-*endif
+set strIni {}
 *if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
 variable testTypeStatic NormUnbalance
 *elseif(strcmp(IntvData(Convergence_criterion),"Norm_Displacement_Increment")==0)
@@ -51,8 +47,14 @@ variable TolStatic *IntvData(Tolerance,real)
 variable maxNumIterStatic *IntvData(Max_Iterations_per_Step,int)
 *if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
 variable algorithmTypeStatic Newton
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+set strIni "/Ini"
+*endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
 variable algorithmTypeStatic ModifiedNewton
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+set strIni "/Ini"
+*endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
 variable algorithmTypeStatic NewtonLineSearch
 *elseif(strcmp(IntvData(Solution_algorithm),"Broyden")==0)
@@ -61,6 +63,9 @@ variable algorithmTypeStatic Broyden
 variable algorithmTypeStatic BFGS
 *elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
 variable algorithmTypeStatic KrylovNewton
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+set strIni "/Ini"
+*endif
 *endif
 
 foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
@@ -99,7 +104,7 @@ foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
 *if(PrintTime==1)
             puts -nonewline "(*IntvNum) $algorithmTypeStatic$strIni LF $t "
 *endif
-            set AnalOk [analyze 1]; # first analyze command
+            set AnalOk [analyze 1];
             set D0 $D1; # move to next step
             set tempexpr1 [expr abs($D0-$Dmax)]
             set tempexpr2 [expr abs($D0+$Dmax)]
@@ -109,6 +114,8 @@ foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
             }
             if {$AnalOk != 0 } {
                 break
+            } else {
+                set committedSteps [expr $committedSteps+1]
             }
         }
         if {$AnalOk != 0} {; # if analysis fails, alternative algorithms and substepping is applied
@@ -225,34 +232,6 @@ foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
                         set AnalOk 1
                         set firstFail 0
                     }
-*if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-                    if {$AnalOk != 0} {
-                        puts "\nTrying NR/initial\n"
-                        test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                        algorithm Newton -initial
-                        set t [getTime]
-*if(PrintTime==1)
-                        puts -nonewline "(*IntvNum) Newton/Ini LF $t "
-*endif
-                        set AnalOk [analyze 1]
-                        test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                        algorithm $algorithmTypeStatic
-                    }
-*endif
-*if(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0)
-                    if {$AnalOk != 0} {
-                        puts "\nTrying mNR/initial\n"
-                        test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                        algorithm ModifiedNewton -initial
-                        set t [getTime]
-*if(PrintTime==1)
-                        puts -nonewline "(*IntvNum) ModifiedNewton/Ini LF $t "
-*endif
-                        set AnalOk [analyze 1]
-                        test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                        algorithm $algorithmTypeStatic
-                    }
-*endif
                     if {$AnalOk == 0} {
                         set committedSteps [expr $committedSteps+1]
                     }
@@ -285,34 +264,6 @@ foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
                         puts -nonewline "(*IntvNum) $algorithmTypeStatic$strIni LF $t "
 *endif
                         set AnalOk [analyze 1]; # zero for convergence
-*if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying NR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm Newton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) Newton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
-*if(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying mNR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm ModifiedNewton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) ModifiedNewton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
                         if {$AnalOk == 0} {
                             set committedSteps [expr $committedSteps+1]
                         } else {
@@ -369,34 +320,6 @@ foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
                         puts -nonewline "(*IntvNum) $algorithmTypeStatic$strIni LF $t "
 *endif
                         set AnalOk [analyze 1]; # zero for convergence
-*if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying NR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm Newton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) Newton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
-*if(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying mNR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm ModifiedNewton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) ModifiedNewton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
                         if {$AnalOk == 0} {
                             set committedSteps [expr $committedSteps+1]
                         } else {
@@ -453,34 +376,6 @@ foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
                         puts -nonewline "(*IntvNum) $algorithmTypeStatic$strIni LF $t "
 *endif
                         set AnalOk [analyze 1]; # zero for convergence
-*if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying NR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm Newton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) Newton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
-*if(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying mNR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm ModifiedNewton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) ModifiedNewton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
                         if {$AnalOk == 0} {
                             set committedSteps [expr $committedSteps+1]
                         } else {
@@ -537,34 +432,6 @@ foreach Dmax $iDmax Ncycles $iNcycles NumSteps $iNSteps {
                         puts -nonewline "(*IntvNum) $algorithmTypeStatic$strIni LF $t "
 *endif
                         set AnalOk [analyze 1]; # zero for convergence
-*if((strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0 ) || strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0 || strcmp(IntvData(Solution_algorithm),"BFGS")==0 || strcmp(IntvData(Solution_algorithm),"Broyden")==0 || strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying NR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm Newton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) Newton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
-*if(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0 && IntvData(Use_initial_stiffness_iterations,int)==0)
-                        if {$AnalOk != 0} {
-                            puts "\nTrying mNR/initial\n"
-                            test NormDispIncr $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm ModifiedNewton -initial
-                            set t [getTime]
-*if(PrintTime==1)
-                            puts -nonewline "(*IntvNum) ModifiedNewton/Ini LF $t "
-*endif
-                            set AnalOk [analyze 1]
-                            test $testTypeStatic $TolStatic $maxNumIterStatic *LoggingFlag
-                            algorithm $algorithmTypeStatic
-                        }
-*endif
                         if {$AnalOk == 0} {
                             set committedSteps [expr $committedSteps+1]
                         } else {

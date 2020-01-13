@@ -200,6 +200,9 @@ begin
 
     SetLength(arr,n);
 
+    for i := 0 to n-1 do
+        arr[i] := '0';  // just in case some results are missing, not to be empty
+
     if s[Length(s)] <> ' ' then  // tags have already a space in the end !
         s := s+' ';
 
@@ -216,17 +219,6 @@ begin
         begin
             h := Copy(s,p,i-p);
 
-            // fast clean very small numbers
-
-            for j := 10 to 20 do
-                if (Copy(h,Length(h)-4,4) = 'e-01') or (Copy(h,Length(h)-3,3) = 'E-1') or
-                   (Copy(h,Length(h)-4,4) = 'e-02') or (Copy(h,Length(h)-3,3) = 'E-2') or
-                   (Copy(h,Length(h)-4,4) = 'e-03') or (Copy(h,Length(h)-3,3) = 'E-3')then
-                begin
-                    h := '0';
-                    Break;
-                end;
-
             arr[cnt] := h;
 
             if cnt = n-1 then  // to prevent more values found in string
@@ -242,6 +234,12 @@ end;
 
 function Inv(s : string) : string;
 begin
+    if s = '' then
+    begin
+        Result := '0';
+        Exit;
+    end;
+
     if s[1] = '-' then
         Result := Copy(s,2,Length(s)-1)
     else

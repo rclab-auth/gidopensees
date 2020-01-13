@@ -458,7 +458,7 @@ layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_area,r
 *set var SlabArea=operation(ts*(width-tw))
 *set var WebArea=operation(height*tw)
 *set var Area=operation((height-ts)*tw+ts*width)
-*set var Zcm=operation((WebArea*(height-ts)/2+SlabArea*(height-ts/2))/Area)
+*set var Zcm=operation((WebArea*(height/2.0)+SlabArea*(height-ts/2.0))/Area)
 *set var zhalf=operation(height/2.0)
 *set var yhalf=operation(width/2.0)
 *set var cover=MatProp(Cover_depth_for_bars,real)
@@ -1107,7 +1107,7 @@ layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_area,r
 *set var SlabArea=operation(ts*(width-tw))
 *set var WebArea=operation(height*tw)
 *set var Area=operation((height-ts)*tw+ts*width)
-*set var Ycm=operation((WebArea*(height-ts)/2+SlabArea*(height-ts/2))/Area)
+*set var Ycm=operation((WebArea*(height/2.0)+SlabArea*(height-ts/2.0))/Area)
 *set var cover=MatProp(Cover_depth_for_bars,real)
 *if(width<=tw || height<=ts || cover>tw)
 *MessageBox Error: Invalid geometric values in Fiber Tee Beam Section.

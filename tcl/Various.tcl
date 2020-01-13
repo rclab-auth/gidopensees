@@ -150,7 +150,6 @@ proc TK_ElementWikiInfo { event args } {
 				"dispBeamColumnInt" {
 						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Flexure-Shear_Interaction_Displacement-Based_Beam-Column_Element"
 				}
-
 			}
 
 			image create photo wiki -format PNG -file [file join [OpenSees::GetProblemTypePath] img/Menu/mnu_Wiki.png]
@@ -236,6 +235,9 @@ proc TK_MaterialWikiInfo { event args } {
 				"PressureDependMultiYield" {
 						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/PressureDependMultiYield_Material"
 				}
+				"PressureDependMultiYield02" {
+						set cmd "VisitWeb https://opensees.berkeley.edu/wiki/index.php/PressureDependMultiYield02_Material"
+				}
 				"Series" {
 						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Series_Material"
 				}
@@ -271,6 +273,9 @@ proc TK_MaterialWikiInfo { event args } {
 				}
 				"BondSP01" {
 						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Bond_SP01_-_-_Strain_Penetration_Model_for_Fully_Anchored_Steel_Reinforcing_Bars"
+				}
+				"Contact" {
+						set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/ContactMaterial3D"
 				}
 			}
 
@@ -612,15 +617,22 @@ proc TK_DWSet { GDN STRUCT QUESTION VALUE {STATE ""}} {
 proc Bas_round { x y } {
 
 	set ans [expr int($x/$y)]
-	return $ans
 
+	return $ans
 }
 
 proc Bas_mod { x y } {
 
 	set ans [expr fmod ($x,$y)]
 
-return $ans
+	return $ans
+}
+
+proc Bas_Int { x } {
+
+	set result [expr int($x)]
+
+	return $result
 }
 
 proc TK_PMY-ID { event args } {

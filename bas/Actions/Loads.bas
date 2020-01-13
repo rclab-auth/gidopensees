@@ -14,6 +14,8 @@
 *add cond Line_Forces *nodes *CanRepeat
 *add cond Surface_Forces *nodes *CanRepeat
 *add cond Point_Displacements *nodes *CanRepeat
+*add cond Line_Displacements *nodes *CanRepeat
+*add cond Surface_Displacements *nodes *CanRepeat
 *loop nodes *OnlyInCond
 *set var PrintPlainPattern=1
 *break
@@ -86,6 +88,8 @@ pattern Plain *PatternTag *IntvData(Loading_type) {
 *end elems
 *endif
 *set cond Point_Displacements *nodes
+*add cond Line_Displacements *nodes
+*add cond Surface_Displacements *nodes
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==6)

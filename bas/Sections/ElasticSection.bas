@@ -52,8 +52,8 @@
 *set var Avymod=1.0
 *set var Avzmod=1.0
 *endif
-*format "%6d%6g%6g%6g%6g%6g%6g%6g"
-section Elastic *ElasticSectionTag *E *A *Iz *G *J *Avymod *Avzmod
+*format "%6d%6g%6g%6g%6g%6g%6g%6g%6g"
+section Elastic *ElasticSectionTag *E *A *Iz *Iy *G *J *Avymod *Avzmod
 *else
 *if(strcmp(MatProp(Cross_section),"Rectangular")==0)
 *set var height=MatProp(Height_h,real)

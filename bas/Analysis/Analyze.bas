@@ -196,7 +196,11 @@ algorithm Broyden *IntvData(Iterations_for_new_tangent,int)
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
 algorithm BFGS
 *elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-algorithm KrylovNewton
+algorithm KrylovNewton *\
+*if(IntvData(Use_initial_stiffness_iterations,int)==1)
+-iterate initial -increment initial *\
+*endif
+-maxDim *IntvData(Max_iterations_until_tangent_is_reformed,int)
 *# end if algorithm
 *else
 *endif

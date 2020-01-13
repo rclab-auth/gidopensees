@@ -44,6 +44,8 @@
 *include ..\..\Materials\nD\PIMY.bas
 *elseif(strcmp(MatProp(Material:),"PressureDependMultiYield")==0)
 *include ..\..\Materials\nD\PDMY.bas
+*elseif(strcmp(MatProp(Material:),"PressureDependMultiYield02")==0)
+*include ..\..\Materials\nD\PDMY2.bas
 *elseif(strcmp(MatProp(Material:),"J2Plasticity")==0)
 *include ..\..\Materials\nD\J2Plasticity.bas
 *elseif(strcmp(MatProp(Material:),"Damage2p")==0)
