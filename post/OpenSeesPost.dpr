@@ -189,9 +189,8 @@ end;
 
 procedure StrToArray (s : string; var arr : ArrayStr; n : integer; DeleteFirst : boolean);
 var
-    i,j,
-    p,cnt : integer;
-    h     : string;
+    i,p,cnt : integer;
+    h       : string;
 
 begin
     SetLength(arr,0);
@@ -473,8 +472,299 @@ begin
     LOG.Free;
 end;
 
+// procedures for writing results
+
+procedure WriteResults(IsMatrix,Principal : boolean; Caption,Filename,ElemName,ResultName,C1,C2,C3,C4,C5,C6,UnitName : string; ValuesPerGP : integer; OneFilePerGP : boolean; P1,P2,P3,P4,P5,P6 : integer);
+
+var
+    i,j,k,cnt : integer;
+    fExists   : boolean;
+    OutNames  : array[0..3] of string;
+    OutFiles  : array[0..3] of textfile;
+    lines     : array[0..3] of string;
+    Strs      : array[0..3] of ArrayStr;
+    Tags      : ArrayStr;
+    f,index   : integer;
+    xx,yy,xy,
+    TheMax,
+    TheMin,
+    TheAngle  : double;
+
+begin
+    if OneFilePerGP then
+    begin
+        fExists := true;
+
+        for i := 0 to 3 do
+        begin
+            OutNames[i] := ModelPath+'\OpenSees\'+Filename+'_GP'+IntToStr(i+1)+'.out';
+            fExists := fExists and FileExists(OutNames[i]);
+        end;
+    end
+    else
+    begin
+        OutNames[0] := ModelPath+'\OpenSees\'+Filename+'.out';
+        fExists := FileExists(OutNames[0]);
+    end;
+
+    if fExists then
+    begin
+        write(Caption);
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# '+ElemName)+1],3,10));  // number of elements
+
+        StrToArray(TCL[TCL.IndexOf('# '+ElemName)+2],Tags,n,true);  // read all tags
+
+        AssignFile(OutFiles[0],OutNames[0]);
+        Reset(OutFiles[0]);
+
+        if OneFilePerGP then
+            for i := 1 to 3 do
+            begin
+                AssignFile(OutFiles[i],OutNames[i]);
+                Reset(OutFiles[i]);
+            end;
+
+        cnt := 0;
+
+        repeat
+
+            Readln(OutFiles[0],lines[0]);
+
+            if OneFilePerGP then
+                for i := 1 to 3 do
+                    Readln(OutFiles[i],lines[i]);
+
+            if (cnt = 0) or EOF(OutFiles[0]) or (cnt mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+
+                if (not IsMatrix) or Principal then
+                begin
+                    MSH.Writeline('Result "Elements//'+ElemName+'//'+ResultName+'" "'+Str_IntNames[cnt]+'" '+Str_Steps[cnt]+' Vector OnGaussPoints "'+ElemName+'_GP"');
+                    MSH.Writeline('ComponentNames "'+C1+'" "'+C2+'" "'+C3+'"');
+                end
+                else
+                begin
+                    MSH.Writeline('Result "Elements//'+ElemName+'//'+ResultName+'" "'+Str_IntNames[cnt]+'" '+Str_Steps[cnt]+' Matrix OnGaussPoints "'+ElemName+'_GP"');
+                    MSH.Writeline('ComponentNames "'+C1+'" "'+C2+'" "'+C3+'" "'+C4+'" "'+C5+'" "'+C6+'"');
+                end;
+
+                MSH.Writeline('Unit "'+UnitName+'"');
+                MSH.Writeline('Values');
+
+                if OneFilePerGP then
+                begin
+                    for i := 0 to 3 do
+                        StrToArray(lines[i],Strs[i],ValuesPerGP*n,true); // read all values from current step (ValuesPerGP values)
+                end
+                else
+                    StrToArray(lines[0],Strs[0],4*ValuesPerGP*n,true);   // read all values from current step (ValuesPerGP values per gauss point)
+
+
+                for j := 0 to n-1 do  // elements
+                begin
+                    s := Tags[j] + StringOfChar(' ',INDENT-Length(Tags[j]));
+
+                    for k := 0 to 3 do
+                    begin
+                         if OneFilePerGP then
+                         begin
+                             f := k;                        // different file
+                             index := ValuesPerGP*j;        // line start index
+                         end
+                         else
+                         begin
+                             f := 0;                        // same file
+                             index := ValuesPerGP*(4*j+k);  // line start index
+                         end;
+
+                         if Principal then
+                         begin
+
+                             xx := StrToFloat(Strs[f] [index+P1]);
+                             yy := StrToFloat(Strs[f] [index+P2]);
+                             xy := StrToFloat(Strs[f] [index+P3]);
+
+                             if abs(xx) < 1e-9 then xx := 0;
+                             if abs(yy) < 1e-9 then yy := 0;
+                             if abs(xy) < 1e-9 then xy := 0;
+
+                             TheMax := (xx+yy)/2 + Sqrt( ((xx-yy)/2) * ((xx-yy)/2) + xy*xy );
+                             TheMin := (xx+yy)/2 - Sqrt( ((xx-yy)/2) * ((xx-yy)/2) + xy*xy );
+                             TheAngle := 180 / PI * ArcTan2(2*xy,(xx-yy)) / 2;
+
+                             s := s + FloatToStrF(TheMax,ffExponent,6,2)+'  '+FloatToStrF(TheMin,ffExponent,6,2)+' '+FloatToStrF(TheAngle,ffNumber,7,4);
+                         end
+                         else
+                         begin
+
+                             if P1 <> -1 then
+                                 s := s + Strs[f] [index+P1] + ' '
+                             else
+                                 s := s + '0 ';
+
+                             if P2 <> -1 then
+                                 s := s + Strs[f] [index+P2] + ' '
+                             else
+                                 s := s + '0 ';
+
+                             if P3 <> -1 then
+                                 s := s + Strs[f] [index+P3]
+                             else
+                                 s := s + '0';
+
+                             if IsMatrix then
+                             begin
+                                 s := s + ' ';
+
+                                 if P4 <> -1 then
+                                     s := s + Strs[f] [index+P4] + ' '
+                                 else
+                                     s := s + '0 ';
+
+                                 if P5 <> -1 then
+                                     s := s + Strs[f] [index+P5] + ' '
+                                 else
+                                     s := s + '0 ';
+
+                                 if P6 <> -1 then
+                                     s := s + Strs[f] [index+P6]
+                                 else
+                                     s := s + '0';
+                             end;
+                         end;
+
+                         MSH.Writeline(s);
+
+                         s := StringOfChar(' ',INDENT);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(cnt+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(OutFiles[0]) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(cnt);
+
+        until EOF(OutFiles[0]);
+
+        writeln;
+
+        CloseFile(OutFiles[0]);
+
+        if OneFilePerGP then
+            for i := 1 to 3 do
+                CloseFile(OutFiles[i]);
+    end;
+end;
+
+procedure WriteCracks(Caption,Filename,ElemName,ResultName : string);
+
+var
+    i,j,k,cnt : integer;
+    fExists   : boolean;
+    OutNames  : array[0..3] of string;
+    OutFiles  : array[0..3] of textfile;
+    lines     : array[0..3] of string;
+    Strs      : array[0..3] of ArrayStr;
+    Tags      : ArrayStr;
+
+begin
+    fExists := true;
+
+    for i := 0 to 3 do
+    begin
+        OutNames[i] := ModelPath+'\OpenSees\'+Filename+'_GP'+IntToStr(i+1)+'.out';
+        fExists := fExists and FileExists(OutNames[i]);
+    end;
+
+    if fExists then
+    begin
+        write(Caption);
+
+        n := StrToInt(Copy(TCL[TCL.IndexOf('# '+ElemName)+1],3,10));  // number of elements
+
+        StrToArray(TCL[TCL.IndexOf('# '+ElemName)+2],Tags,n,true);  // read all tags
+
+        for i := 0 to 3 do
+        begin
+            AssignFile(OutFiles[i],OutNames[i]);
+            Reset(OutFiles[i]);
+        end;
+
+        cnt := 0;
+
+        repeat
+
+            for i := 0 to 3 do
+                Readln(OutFiles[i],lines[i]);
+
+            if (cnt = 0) or EOF(OutFiles[0]) or (cnt mod Step = 0) then
+            begin
+
+                MSH.Writeline('');
+
+                MSH.Writeline('ResultGroup "'+Str_IntNames[cnt]+'" '+Str_Steps[cnt]+' OnGaussPoints "'+ElemName+'_GP"');
+                MSH.Writeline('ResultDescription "Elements//'+ElemName+'//'+ResultName+'//Flag" Scalar');
+                MSH.Writeline('ResultRangesTable "Cracks"');
+                MSH.Writeline('Unit "-"');
+                MSH.Writeline('ResultDescription "Elements//'+ElemName+'//'+ResultName+'//Angle" Scalar');
+                MSH.Writeline('Unit "deg"');
+
+                MSH.Writeline('Values');
+
+                for i := 0 to 3 do
+                    StrToArray(lines[i],Strs[i],3*n,true); // read all values from current step (ValuesPerGP values)
+
+                for j := 0 to n-1 do  // elements
+                begin
+                    s := Tags[j] + StringOfChar(' ',INDENT-Length(Tags[j]));
+
+                    for k := 0 to 3 do
+                    begin
+                         s := s + IntToStr ( StrToInt(Strs[k] [3*j]) + 2*StrToInt(Strs[k] [3*j+1]) ) +' '+ Strs[k] [3*j+2];
+
+                         MSH.Writeline(s);
+
+                         s := StringOfChar(' ',INDENT);
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                s := '('+IntToStr(cnt+1)+')';
+                TextColor(Yellow);
+                write(s);
+                TextColor(White);
+
+                if not EOF(OutFiles[0]) then
+                    for j := 1 to Length(s) do
+                        write(#8);
+            end;
+
+            Inc(cnt);
+
+        until EOF(OutFiles[0]);
+
+        writeln;
+
+        for i := 0 to 3 do
+            CloseFile(OutFiles[i]);
+    end;
+end;
+
 //
-// main program
+// M A I N   P R O G R A M
 //
 
 begin
@@ -802,6 +1092,13 @@ begin
         MSH.Writeline('end GaussPoints');
     end;
 
+    MSH.Writeline('');
+    MSH.Writeline('ResultRangesTable "Cracks"');
+    MSH.Writeline('1 - 1: "Crack in dir. 1"');
+    MSH.Writeline('2 - 2: "Crack in dir. 2"');
+    MSH.Writeline('3 - 3: "Cracks in both dirs."');
+    MSH.Writeline('End ResultRangesTable');
+
     // buffer interval types and steps
 
     OutFile := ModelPath+'\OpenSees\Node_displacements.out';
@@ -870,15 +1167,15 @@ begin
         begin
             Tag[0] := Trim(Copy(TCL[i],4,6));
 
-            Vx[1] := StrToFloat(Copy(TCL[i],47,8));
-            Vx[2] := StrToFloat(Copy(TCL[i],56,8));
-            Vx[3] := StrToFloat(Copy(TCL[i],65,8));
-            Vy[1] := StrToFloat(Copy(TCL[i],80,8));
-            Vy[2] := StrToFloat(Copy(TCL[i],89,8));
-            Vy[3] := StrToFloat(Copy(TCL[i],98,8));
-            Vz[1] := StrToFloat(Copy(TCL[i],113,8));
-            Vz[2] := StrToFloat(Copy(TCL[i],122,8));
-            Vz[3] := StrToFloat(Copy(TCL[i],131,8));
+            Vx[1] := StrToFloat(Copy(TCL[i],47,7));
+            Vx[2] := StrToFloat(Copy(TCL[i],55,7));
+            Vx[3] := StrToFloat(Copy(TCL[i],63,7));
+            Vy[1] := StrToFloat(Copy(TCL[i],77,7));
+            Vy[2] := StrToFloat(Copy(TCL[i],85,7));
+            Vy[3] := StrToFloat(Copy(TCL[i],93,7));
+            Vz[1] := StrToFloat(Copy(TCL[i],107,7));
+            Vz[2] := StrToFloat(Copy(TCL[i],115,7));
+            Vz[3] := StrToFloat(Copy(TCL[i],123,7));
 
             // calculation of euler angles (http://geom3d.com/data/documents/Calculation=20of=20Euler=20angles.pdf)
 
@@ -934,8 +1231,6 @@ begin
         until EOF(RES);
 
         CloseFile(RES);
-
-        Sleep(200);
 
         FreeAndNil(LOC);
     end;
@@ -999,7 +1294,6 @@ begin
 
             MSH.Writeline('End Values');
 
-            Sleep(200);
         end;
 
         FreeAndNil(PER);
@@ -1075,7 +1369,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
@@ -1152,7 +1445,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // rotations
@@ -1228,7 +1520,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // force reactions
@@ -1237,7 +1528,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading force reactions ');
+        write('Reading nodal reactions ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1299,7 +1590,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // moment reactions
@@ -1308,7 +1598,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading moment reactions ');
+        write('Reading nodal moments ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1375,7 +1665,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // accelerations
@@ -1384,7 +1673,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading accelerations ');
+        write('Reading nodal accelerations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1446,7 +1735,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // rotational accelerations
@@ -1455,7 +1743,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading rotational accelerations ');
+        write('Reading nodal rotational accelerations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1517,7 +1805,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // velocities
@@ -1526,7 +1813,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading velocities ');
+        write('Reading nodal velocities ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1588,7 +1875,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // rotational velocities
@@ -1597,7 +1883,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading rotational velocities ');
+        write('Reading nodal rotational velocities ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
 
@@ -1659,1163 +1945,13 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
     //
-    // E L E M E N T S
+    // F R A M E   E L E M E N T S
     //
     //
-
-    //
-    // stdBrick
-    //
-
-    // forces
-
-    OutFile := ModelPath+'\OpenSees\stdBrick_force.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading brick forces ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# stdBrick')+1],3,10));  // number of bricks
-
-        StrToArray(TCL[TCL.IndexOf('# stdBrick')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//stdBrick//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "stdbrick_Node"');
-                MSH.Writeline('ComponentNames "Fx" "Fy" "Fz"');
-                MSH.Writeline('Unit "kN"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,8*3*n,true);  // read all values from current step (3 values per node)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 7 do  // 8 nodes
-                    begin
-                        s := s + Str[3*(8*j+k)] + ' ' + Str[3*(8*j+k)+1] + ' ' + Str[3*(8*j+k)+2];  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    // stresses
-
-    OutFile := ModelPath+'\OpenSees\stdBrick_stress.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading brick stresses ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# stdBrick')+1],3,10));  // number of bricks
-
-        StrToArray(TCL[TCL.IndexOf('# stdBrick')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//stdBrick//Stresses" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "stdbrick_GP"');
-                MSH.Writeline('ComponentNames "s11" "s22" "s33" "s12" "s23" "s13"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,8*6*n,true);  // read all values from current step (6 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 7 do  // 8 gauss points
-                    begin
-                        s := s + Str[6*(8*j+k)] + ' ' + Str[6*(8*j+k)+1] + ' ' + Str[6*(8*j+k)+2] + ' ' + Str[6*(8*j+k)+3] + ' ' + Str[6*(8*j+k)+4] + ' ' + Str[6*(8*j+k)+5];  // positions 0,1,2,3,4,5
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    // strains
-
-    OutFile := ModelPath+'\OpenSees\stdBrick_strain.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading brick strains ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# stdBrick')+1],3,10));  // number of bricks
-
-        StrToArray(TCL[TCL.IndexOf('# stdBrick')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//stdBrick//Strains" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "stdbrick_GP"');
-                MSH.Writeline('ComponentNames "e11" "e22" "e33" "e12" "e23" "e13"');
-                MSH.Writeline('Unit "m-1"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,8*6*n,true);  // read all values from current step (6 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 7 do  // 8 gauss points
-                    begin
-                        s := s + Str[6*(8*j+k)] + ' ' + Str[6*(8*j+k)+1] + ' ' + Str[6*(8*j+k)+2] + ' ' + Str[6*(8*j+k)+3] + ' ' + Str[6*(8*j+k)+4] + ' ' + Str[6*(8*j+k)+5];  // positions 0,1,2,3,4,5
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    //
-    // shellMITC4
-    //
-
-    OutFile := ModelPath+'\OpenSees\ShellMITC4_force.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading shell forces/moments ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# ShellMITC4')+1],3,10));  // number of shells
-
-        StrToArray(TCL[TCL.IndexOf('# ShellMITC4')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-
-        // forces
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_Node"');
-                MSH.Writeline('ComponentNames "Fx" "Fy" "Fz"');
-                MSH.Writeline('Unit "kN"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*6*n,true);  // read all values from current step (6 values per node)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 nodes
-                    begin
-                        s := s + Str[6*(4*j+k)] + ' ' + Str[6*(4*j+k)+1] + ' ' + Str[6*(4*j+k)+2];  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                for j := 1 to Length(s) do
-                    write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        // moments
-
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Moments" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_Node"');
-                MSH.Writeline('ComponentNames "Mx" "My" "Mz"');
-                MSH.Writeline('Unit "kNm"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*6*n,true);  // read all values from current step (6 values per node)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 nodes
-                    begin
-                        s := s + Str[6*(4*j+k)+3] + ' ' + Str[6*(4*j+k)+4] + ' ' + Str[6*(4*j+k)+5];  // positions 3,4,5
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    OutFile := ModelPath+'\OpenSees\ShellMITC4_stress.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading shell stresses ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# ShellMITC4')+1],3,10));  // number of shells
-
-        StrToArray(TCL[TCL.IndexOf('# ShellMITC4')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-
-        // membrane stresses
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Membrane" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellMITC4_GP"');
-                MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[8*(4*j+k)] + ' ' + Str[8*(4*j+k)+1] + ' 0 ' + Str[8*(4*j+k)+2] + ' 0 0';  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                for j := 1 to Length(s) do
-                    write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        // bending stress
-
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Bending" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellMITC4_GP"');
-                MSH.Writeline('ComponentNames "m11" "m22" "m33 (zero)" "m12" "m23 (zero)" "m13 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[8*(4*j+k)+3] + ' ' + Str[8*(4*j+k)+4] + ' 0 ' + Str[8*(4*j+k)+5] + ' 0 0';  // positions 3,4,5
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                for j := 1 to Length(s) do
-                    write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        // shear stresses
-
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellMITC4//Stresses-Shear" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellMITC4_GP"');
-                MSH.Writeline('ComponentNames "q1" "q2" "q3 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[8*(4*j+k)+6] + ' ' + Str[8*(4*j+k)+7] + ' 0';  // positions 6,7
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    //
-    // shellDKGQ
-    //
-
-    OutFile := ModelPath+'\OpenSees\ShellDKGQ_force.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading shellDKGQ forces/moments ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# ShellDKGQ')+1],3,10));  // number of shells
-
-        StrToArray(TCL[TCL.IndexOf('# ShellDKGQ')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-
-        // forces
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
-                MSH.Writeline('ComponentNames "Fx" "Fy" "Fz"');
-                MSH.Writeline('Unit "kN"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*6*n,true);  // read all values from current step (6 values per node)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 nodes
-                    begin
-                        s := s + Str[6*(4*j+k)] + ' ' + Str[6*(4*j+k)+1] + ' ' + Str[6*(4*j+k)+2];  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                for j := 1 to Length(s) do
-                    write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        // moments
-
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Moments" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_Node"');
-                MSH.Writeline('ComponentNames "Mx" "My" "Mz"');
-                MSH.Writeline('Unit "kNm"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*6*n,true);  // read all values from current step (6 values per node)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 nodes
-                    begin
-                        s := s + Str[6*(4*j+k)+3] + ' ' + Str[6*(4*j+k)+4] + ' ' + Str[6*(4*j+k)+5];  // positions 3,4,5
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    OutFile := ModelPath+'\OpenSees\ShellDKGQ_stress.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading shellDKGQ stresses ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# ShellDKGQ')+1],3,10));  // number of shells
-
-        StrToArray(TCL[TCL.IndexOf('# ShellDKGQ')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-
-        // membrane stresses
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Membrane" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
-                MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[8*(4*j+k)] + ' ' + Str[8*(4*j+k)+1] + ' 0 ' + Str[8*(4*j+k)+2] + ' 0 0';  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                for j := 1 to Length(s) do
-                    write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        // bending stress
-
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Bending" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "ShellDKGQ_GP"');
-                MSH.Writeline('ComponentNames "m11" "m22" "m33 (zero)" "m12" "m23 (zero)" "m13 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[8*(4*j+k)+3] + ' ' + Str[8*(4*j+k)+4] + ' 0 ' + Str[8*(4*j+k)+5] + ' 0 0';  // positions 3,4,5
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                for j := 1 to Length(s) do
-                    write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        // shear stresses
-
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//ShellDKGQ//Stresses-Shear" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "ShellDKGQ_GP"');
-                MSH.Writeline('ComponentNames "q1" "q2" "q3 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*8*n,true);  // read all values from current step (8 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[8*(4*j+k)+6] + ' ' + Str[8*(4*j+k)+7] + ' 0';  // positions 6,7
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    //
-    // Quad
-    //
-
-    // forces
-
-    OutFile := ModelPath+'\OpenSees\Quad_force.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading quad forces ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# Quad')+1],3,10));  // number of quads
-
-        StrToArray(TCL[TCL.IndexOf('# Quad')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Quad//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "Quad_Node"');
-                MSH.Writeline('ComponentNames "Fx" "Fy" "Fz (zero)"');
-                MSH.Writeline('Unit "kN"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*2*n,true);  // read all values from current step (2 values per node)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 nodes
-                    begin
-                        s := s + Str[2*(4*j+k)] + ' ' + Str[2*(4*j+k)+1] + ' 0';  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    // stresses
-
-    OutFile := ModelPath+'\OpenSees\Quad_stress.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading quad stresses ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# Quad')+1],3,10));  // number of quads
-
-        StrToArray(TCL[TCL.IndexOf('# Quad')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Quad//Stresses" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Quad_GP"');
-                MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*3*n,true);  // read all values from current step (3 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[3*(4*j+k)] + ' ' + Str[3*(4*j+k)+1] + ' 0 ' + Str[3*(4*j+k)+2] + ' 0 0';  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    // strains
-
-    OutFile := ModelPath+'\OpenSees\Quad_strain.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading quad strains ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# Quad')+1],3,10));  // number of quads
-
-        StrToArray(TCL[TCL.IndexOf('# Quad')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Quad//Strains" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Quad_GP"');
-                MSH.Writeline('ComponentNames "e11" "e22" "e33 (zero)" "e12" "e23 (zero)" "e13 (zero)"');
-                MSH.Writeline('Unit "m-1"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,4*3*n,true);  // read all values from current step (3 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 3 do  // 4 gauss points
-                    begin
-                        s := s + Str[3*(4*j+k)] + ' ' + Str[3*(4*j+k)+1] + ' 0 ' + Str[3*(4*j+k)+2] + ' 0 0';  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    //
-    // Triangular
-    //
-
-    // forces
-
-    OutFile := ModelPath+'\OpenSees\Tri31_force.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading triangular forces ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# Tri31')+1],3,10));  // number of quads
-
-        StrToArray(TCL[TCL.IndexOf('# Tri31')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Triangular//Forces" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnGaussPoints "Tri31_Node"');
-                MSH.Writeline('ComponentNames "Fx" "Fy" "Fz (zero)"');
-                MSH.Writeline('Unit "kN"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,3*2*n,true);  // read all values from current step (2 values per node)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j]));
-
-                    for k := 0 to 2 do  // 3 nodes
-                    begin
-                        s := s + Str[2*(3*j+k)] + ' ' + Str[2*(3*j+k)+1] + ' 0';  // positions 0,1,2
-
-                        MSH.Writeline(s);
-
-                        s := StringOfChar(' ',INDENT);
-                    end;
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
-
-    // stresses
-
-    OutFile := ModelPath+'\OpenSees\Tri31_stress.out';
-
-    if FileExists(OutFile) then
-    begin
-        write('Reading triangular stresses ');
-
-        n := StrToInt(Copy(TCL[TCL.IndexOf('# Tri31')+1],3,10));  // number of quads
-
-        StrToArray(TCL[TCL.IndexOf('# Tri31')+2],Tag,n,true);  // read all tags
-
-        AssignFile(RES,OutFile);
-        Reset(RES);
-
-        i := 0;
-
-        repeat
-
-            Readln(RES,line);
-
-            if (i = 0) or EOF(RES) or (i mod Step = 0) then
-            begin
-
-                MSH.Writeline('');
-                MSH.Writeline('Result "Elements//Triangular//Stresses" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Matrix OnGaussPoints "Tri31_GP"');
-                MSH.Writeline('ComponentNames "s11" "s22" "s33 (zero)" "s12" "s23 (zero)" "s13 (zero)"');
-                MSH.Writeline('Unit "kPa"');
-                MSH.Writeline('Values');
-
-                StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
-
-                for j := 0 to n-1 do
-                begin
-                    s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[3*j] + ' ' + Str[3*j+1] + ' 0 ' + Str[3*j+2] + ' 0 0';  // positions 0,1,2
-
-                    MSH.Writeline(s);
-                end;
-
-                MSH.Writeline('End Values');
-
-                s := '('+IntToStr(i+1)+')';
-                TextColor(Yellow);
-                write(s);
-                TextColor(White);
-
-                if not EOF(RES) then
-                    for j := 1 to Length(s) do
-                        write(#8);
-            end;
-
-            Inc(i);
-
-        until EOF(RES);
-
-        CloseFile(RES);
-
-        writeln;
-
-        Sleep(200);
-    end;
 
     //
     // Truss
@@ -2881,8 +2017,8 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
+
     OutFile := ModelPath+'\OpenSees\Truss_deformations.out';
 
     if FileExists(OutFile) then
@@ -2943,7 +2079,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
@@ -3010,7 +2145,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     OutFile := ModelPath+'\OpenSees\CorotTruss_deformations.out';
@@ -3073,7 +2207,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
@@ -3114,7 +2247,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3133,7 +2266,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
                 end;
 
                 MSH.Writeline('Values');
@@ -3144,7 +2277,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[3*(2*j)]) + ' ' + Str[3*(2*j)+1] + ' '+ Str[3*(2*j)+2];
 
-                        MSH.Writeline(s); // end2              N                      V                            M
+                        MSH.Writeline(s); // end2        N                      V                            M
 
                         s := StringOfChar(' ',INDENT) +  Str[3*(2*j+1)] + ' ' + Inv(Str[3*(2*j+1)+1]) + ' '+ Inv(Str[3*(2*j+1)+2]);
 
@@ -3155,7 +2288,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
-                        MSH.Writeline(s); // end2              N                      Vy                            Vz                            T                             My                           Mz
+                        MSH.Writeline(s); // end2        N                      Vy                            Vz                            T                             My                           Mz
 
                         s := StringOfChar(' ',INDENT) +  Str[6*(2*j+1)] + ' ' + Inv(Str[6*(2*j+1)+1]) + ' ' + Inv(Str[6*(2*j+1)+2]) + ' ' + Inv(Str[6*(2*j+1)+3]) + ' ' + Inv(Str[6*(2*j+1)+4]) + ' '+ Inv(Str[6*(2*j+1)+5]);
 
@@ -3183,7 +2316,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
@@ -3224,7 +2356,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3243,7 +2375,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
                 end;
 
                 MSH.Writeline('Values');
@@ -3254,7 +2386,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[3*(2*j)]) + ' ' + Str[3*(2*j)+1] + ' '+ Str[3*(2*j)+2];
 
-                        MSH.Writeline(s); // end2              N                      V                            M
+                        MSH.Writeline(s); // end2        N                      V                            M
 
                         s := StringOfChar(' ',INDENT) +  Str[3*(2*j+1)] + ' ' + Inv(Str[3*(2*j+1)+1]) + ' '+ Inv(Str[3*(2*j+1)+2]);
 
@@ -3265,7 +2397,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
-                        MSH.Writeline(s); // end2              N                      Vy                            Vz                            T                             My                           Mz
+                        MSH.Writeline(s); // end2        N                      Vy                            Vz                            T                             My                           Mz
 
                         s := StringOfChar(' ',INDENT) +  Str[6*(2*j+1)] + ' ' + Inv(Str[6*(2*j+1)+1]) + ' ' + Inv(Str[6*(2*j+1)+2]) + ' ' + Inv(Str[6*(2*j+1)+3]) + ' ' + Inv(Str[6*(2*j+1)+4]) + ' '+ Inv(Str[6*(2*j+1)+5]);
 
@@ -3293,7 +2425,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
@@ -3336,7 +2467,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3355,7 +2486,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
                 end;
 
                 MSH.Writeline('Values');
@@ -3366,7 +2497,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[3*(2*j)]) + ' ' + Str[3*(2*j)+1] + ' '+ Str[3*(2*j)+2];
 
-                        MSH.Writeline(s); // end2              N                      V                            M
+                        MSH.Writeline(s); // end2        N                      V                            M
 
                         s := StringOfChar(' ',INDENT) +  Str[3*(2*j+1)] + ' ' + Inv(Str[3*(2*j+1)+1]) + ' '+ Inv(Str[3*(2*j+1)+2]);
 
@@ -3377,7 +2508,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
-                        MSH.Writeline(s); // end2                                    Vy                            Vz                            T                             My                           Mz
+                        MSH.Writeline(s); // end2        Í                      Vy                            Vz                            T                             My                           Mz
 
                         s := StringOfChar(' ',INDENT) +  Str[6*(2*j+1)] + ' ' + Inv(Str[6*(2*j+1)+1]) + ' ' + Inv(Str[6*(2*j+1)+2]) + ' ' + Inv(Str[6*(2*j+1)+3]) + ' ' + Inv(Str[6*(2*j+1)+4]) + ' '+ Inv(Str[6*(2*j+1)+5]);
 
@@ -3405,7 +2536,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // total deformation
@@ -3414,7 +2544,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading force beam-column total deformation ');
+        write('Reading force beam-column total deformations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# ForceBeamColumn')+1],3,10));  // number of elastic beam-column elements
 
@@ -3442,7 +2572,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3468,7 +2598,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[3*j] + ' ' + Str[3*j+1];
 
-                        MSH.Writeline(s); // end2             Axial            Rotation
+                        MSH.Writeline(s); // end2       Axial            Rotation
 
                         s := StringOfChar(' ',INDENT) + Str[3*j] + ' ' + Inv(Str[3*j+2]);
 
@@ -3479,7 +2609,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[6*j] + ' ' + Inv(Str[6*j+1]) + ' ' + Inv(Str[6*j+3]) + ' ' + Str[6*j+5];
 
-                        MSH.Writeline(s); // end2              Axial            Rotation z         Rotation y         Torsional
+                        MSH.Writeline(s); // end2        Axial            Rotation z         Rotation y         Torsional
 
                         s := StringOfChar(' ',INDENT) +  Str[6*j] + ' ' + Str[6*j+2] + ' ' + Str[6*j+4] + ' ' + Str[6*j+5];
 
@@ -3507,7 +2637,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // plastic deformation
@@ -3516,7 +2645,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading force beam-column plastic deformation ');
+        write('Reading force beam-column plastic deformations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# ForceBeamColumn')+1],3,10));  // number of elastic beam-column elements
 
@@ -3544,7 +2673,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3570,7 +2699,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[3*j] + ' ' + Str[3*j+1];
 
-                        MSH.Writeline(s); // end 2            Axial            Rotation
+                        MSH.Writeline(s); // end 2      Axial            Rotation
 
                         s := StringOfChar(' ',INDENT) + Str[3*j] + ' ' + Inv(Str[3*j+2]);
 
@@ -3581,7 +2710,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[6*j] + ' ' + Inv(Str[6*j+1]) + ' ' + Inv(Str[6*j+3]) + ' ' + Str[6*j+5];
 
-                        MSH.Writeline(s); // end2              Axial            Rotation z         Rotation y         Torsional
+                        MSH.Writeline(s); // end2        Axial            Rotation z         Rotation y         Torsional
 
                         s := StringOfChar(' ',INDENT) +  Str[6*j] + ' ' + Str[6*j+2] + ' ' + Str[6*j+4] + ' ' + Str[6*j+5];
 
@@ -3609,7 +2738,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
@@ -3652,7 +2780,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3671,7 +2799,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per node)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
                 end;
 
                 MSH.Writeline('Values');
@@ -3682,7 +2810,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[3*(2*j)]) + ' ' + Str[3*(2*j)+1] + ' '+ Str[3*(2*j)+2];
 
-                        MSH.Writeline(s); // end2              N                      V                            M
+                        MSH.Writeline(s); // end2        N                      V                            M
 
                         s := StringOfChar(' ',INDENT) +  Str[3*(2*j+1)] + ' ' + Inv(Str[3*(2*j+1)+1]) + ' '+ Inv(Str[3*(2*j+1)+2]);
 
@@ -3693,7 +2821,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Inv(Str[6*(2*j)]) + ' ' + Str[6*(2*j)+1] + ' ' + Str[6*(2*j)+2] + ' ' + Str[6*(2*j)+3] + ' ' + Str[6*(2*j)+4] + ' '+ Str[6*(2*j)+5];
 
-                        MSH.Writeline(s); // end2                                    Vy                            Vz                            T                             My                           Mz
+                        MSH.Writeline(s); // end2        Í                      Vy                            Vz                            T                             My                           Mz
 
                         s := StringOfChar(' ',INDENT) +  Str[6*(2*j+1)] + ' ' + Inv(Str[6*(2*j+1)+1]) + ' ' + Inv(Str[6*(2*j+1)+2]) + ' ' + Inv(Str[6*(2*j+1)+3]) + ' ' + Inv(Str[6*(2*j+1)+4]) + ' '+ Inv(Str[6*(2*j+1)+5]);
 
@@ -3721,7 +2849,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // total deformation
@@ -3730,7 +2857,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading displacement beam-column total deformation ');
+        write('Reading displacement beam-column total deformations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# DispBeamColumn')+1],3,10));  // number of elastic beam-column elements
 
@@ -3758,7 +2885,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3773,7 +2900,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Torsional" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
+                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per gauss point)
                 end;
 
                 MSH.Writeline('Values');
@@ -3784,7 +2911,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[3*j] + ' ' + Str[3*j+1];
 
-                        MSH.Writeline(s); // end2             Axial            Rotation
+                        MSH.Writeline(s); // end2       Axial            Rotation
 
                         s := StringOfChar(' ',INDENT) + Str[3*j] + ' ' + Inv(Str[3*j+2]);
 
@@ -3795,7 +2922,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[6*j] + ' ' + Inv(Str[6*j+1]) + ' ' + Inv(Str[6*j+3]) + ' ' + Str[6*j+5];
 
-                        MSH.Writeline(s); // end2              Axial            Rotation z         Rotation y         Torsional
+                        MSH.Writeline(s); // end2        Axial            Rotation z         Rotation y         Torsional
 
                         s := StringOfChar(' ',INDENT) +  Str[6*j] + ' ' + Str[6*j+2] + ' ' + Str[6*j+4] + ' ' + Str[6*j+5];
 
@@ -3823,7 +2950,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     // plastic deformation
@@ -3832,7 +2958,7 @@ begin
 
     if FileExists(OutFile) then
     begin
-        write('Reading displacement beam-column plastic deformation ');
+        write('Reading displacement beam-column plastic deformations ');
 
         n := StrToInt(Copy(TCL[TCL.IndexOf('# DispBeamColumn')+1],3,10));  // number of elastic beam-column elements
 
@@ -3860,7 +2986,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 if ndm = 3 then
@@ -3875,7 +3001,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Torsional" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
+                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per gauss point)
                 end;
 
                 MSH.Writeline('Values');
@@ -3886,7 +3012,7 @@ begin
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[3*j] + ' ' + Str[3*j+1];
 
-                        MSH.Writeline(s); // end 2            Axial            Rotation
+                        MSH.Writeline(s); // end 2      Axial            Rotation
 
                         s := StringOfChar(' ',INDENT) + Str[3*j] + ' ' + Inv(Str[3*j+2]);
 
@@ -3894,11 +3020,11 @@ begin
                     end;
 
                     if ndm = 3
-                     then // end1                                     Axial            Rotation z              Rotation y              Torsional
+                     then // end1                                               Axial            Rotation z              Rotation y              Torsional
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[6*j] + ' ' + Inv(Str[6*j+1]) + ' ' + Inv(Str[6*j+3]) + ' ' + Str[6*j+5];
 
-                        MSH.Writeline(s); // end2              Axial            Rotation z         Rotation y         Torsional
+                        MSH.Writeline(s); // end2        Axial            Rotation z         Rotation y         Torsional
 
                         s := StringOfChar(' ',INDENT) +  Str[6*j] + ' ' + Str[6*j+2] + ' ' + Str[6*j+4] + ' ' + Str[6*j+5];
 
@@ -3926,7 +3052,6 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
     //
@@ -3969,18 +3094,18 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Flexure_Shear_Interaction_Displacement_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per node)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
                 end;
 
                 MSH.Writeline('Values');
 
                 for j := 0 to n-1 do
                 begin
-                    if ndm = 2 then // end1                                     N                         V                     M
+                    if ndm = 2 then // end1                                     N                    V                     M
                     begin
                         s := Tag[j] + StringOfChar(' ',INDENT-Length(Tag[j])) + Str[3*(2*j)] + ' ' + Str[3*(2*j)+1] + ' '+ Str[3*(2*j)+2];
 
-                        MSH.Writeline(s); // end2              N                      V                            M
+                        MSH.Writeline(s); // end2        N                      V                       M
 
                         s := StringOfChar(' ',INDENT) +  Str[3*(2*j+1)] + ' ' + Str[3*(2*j+1)+1] + ' '+ Inv(Str[3*(2*j+1)+2]);
 
@@ -4008,12 +3133,292 @@ begin
 
         writeln;
 
-        Sleep(200);
     end;
 
-	//
-	//
-	//
+    //
+    //
+    // S O L I D   E L E M E N T S
+    //
+    //
+
+    //
+    // stdBrick
+    //
+
+    WriteResults(false,
+                 false,'Reading stdBrick forces ',
+                       'stdBrick_force','stdBrick','Forces',
+                       'Fx','Fy','Fz','','','','kN',3,false,0,1,2,-1,-1,-1);
+
+    WriteResults(true,
+                 false,'Reading stdBrick stresses ',
+                       'stdBrick_strain','stdBrick','Stresses',
+                       's11','s22','s33','s12','s23','s13','kPa',6,false,0,1,2,3,4,5);
+
+    WriteResults(true,
+                 false,'Reading stdBrick strains ',
+                       'stdBrick_strain','stdBrick','Strains',
+                       'e11','e22','e33','e12','e23','e13','-',6,false,0,1,2,3,4,5);
+
+
+    //
+    //
+    // P L A N E   E L E M E N T S
+    //
+    //
+
+    //
+    // Tri31
+    //
+
+    WriteResults(false,
+                 false,'Reading Tri31 forces ',
+                       'Tri31_force','Tri31','Forces',
+                       'Fx','Fy','N/A','','','','kN',2,false,0,1,-1,-1,-1,-1);
+
+    WriteResults(true,
+                 false,'Reading Tri31 stresses ',
+                       'Tri31_strain','Tri31','Stresses',
+                       's11','s22','s12','','','','kPa',3,false,0,1,2,-1,-1,-1);
+
+    WriteResults(true,
+                 false,'Reading Tri31 strains ',
+                       'Tri31_strain','Tri31','Strains',
+                       'e11','e22','e12','','','','-',3,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading Tri31 principal stresses ',
+                       'Tri31_strain','Tri31','Stresses-Principal',
+                       's1','s2','angle','','','','kPa',3,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading Tri31 principal strains ',
+                       'Tri31_strain','Tri31','Strains-Principal',
+                       'e1','e2','angle','','','','-',3,false,0,1,2,-1,-1,-1);
+
+    //
+    // Quad
+    //
+
+    WriteResults(false,
+                 false,'Reading Quad forces ',
+                       'Quad_force','Quad','Forces',
+                       'Fx','Fy','N/A','','','','kN',2,false,0,1,-1,-1,-1,-1);
+
+    WriteResults(true,
+                 false, 'Reading Quad stresses ',
+                       'Quad_strain','Quad','Stresses',
+                       's11','s22','s12','','','','kPa',3,false,0,1,2,-1,-1,-1);
+
+    WriteResults(true,
+                 false,'Reading Quad strains ',
+                       'Quad_strain','Quad','Strains',
+                       'e11','e22','e12','','','','-',3,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading Quad principal stresses ',
+                       'Quad_strain','Quad','Stresses-Principal',
+                       's1','s2','angle','','','','kPa',3,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading Quad principal strains ',
+                       'Quad_strain','Quad','Strains-Principal',
+                       'e1','e2','angle','','','','-',3,false,0,1,2,-1,-1,-1);
+
+    //
+    // shellMITC4
+    //
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 forces ',
+                       'ShellMITC4_force','ShellMITC4','Forces',
+                       'Fx','Fy','N/A','','','','kN',6,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 moments ',
+                       'ShellMITC4_force','ShellMITC4','Moments',
+                       'Mx','My','N/A','','','','kNm',6,false,3,4,5,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 stresses (membrane) ',
+                       'ShellMITC4_stress','ShellMITC4','Stresses-Membrane',
+                       's11','s22','s12','','','','kPa',8,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 stresses (bending) ',
+                       'ShellMITC4_stress','ShellMITC4','Stresses-Bending',
+                       'm11','m22','m12','','','','kPa',8,false,3,4,5,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 stresses (shear) ',
+                       'ShellMITC4_stress','ShellMITC4','Stresses-Shear',
+                       't1','t2','N/A','','','','kPa',8,false,6,7,-1,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 strains (membrane) ',
+                       'ShellMITC4_strain','ShellMITC4','Strains-Membrane',
+                       'e11','e22','e12','','','','-',8,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 strains (bending) ',
+                       'ShellMITC4_strain','ShellMITC4','Strains-Bending',
+                       'k11','k22','k12','','','','-',8,false,3,4,5,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellMITC4 strains (shear) ',
+                       'ShellMITC4_strain','ShellMITC4','Strains-Shear',
+                       'g1','g2','N/A','','','','-',8,false,6,7,-1,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading ShellMITC4 principal stresses (membrane) ',
+                       'ShellMITC4_stress','ShellMITC4','Stresses-Membrane-Principal',
+                       's1','s2','angle','','','','kPa',8,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading ShellMITC4 principal strains (membrane) ',
+                       'ShellMITC4_strain','ShellMITC4','Strains-Membrane-Principal',
+                       'e1','e2','angle','','','','-',8,false,0,1,2,-1,-1,-1);
+
+
+    //
+    // shellDKGQ
+    //
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ forces ',
+                       'ShellDKGQ_force','ShellDKGQ','Forces',
+                       'Fx','Fy','N/A','','','','kN',6,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ moments ',
+                       'ShellDKGQ_force','ShellDKGQ','Moments',
+                       'Mx','My','N/A','','','','kNm',6,false,3,4,5,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ stresses (membrane) ',
+                       'ShellDKGQ_stress','ShellDKGQ','Stresses-Membrane',
+                       's11','s22','s12','','','','kPa',8,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ stresses (bending) ',
+                       'ShellDKGQ_stress','ShellDKGQ','Stresses-Bending',
+                       'm11','m22','m12','','','','kPa',8,false,3,4,5,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ stresses (shear) ',
+                       'ShellDKGQ_stress','ShellDKGQ','Stresses-Shear',
+                       't1','t2','N/A','','','','kPa',8,false,6,7,-1,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ strains (membrane) ',
+                       'ShellDKGQ_strain','ShellDKGQ','Strains-Membrane',
+                       'e11','e22','e12','','','','-',8,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ strains (bending) ',
+                       'ShellDKGQ_strain','ShellDKGQ','Strains-Bending',
+                       'k11','k22','k12','','','','-',8,false,3,4,5,-1,-1,-1);
+
+    WriteResults(false,
+                 false,'Reading ShellDKGQ strains (shear) ',
+                       'ShellDKGQ_strain','ShellDKGQ','Strains-Shear',
+                       'g1','g2','N/A','','','','-',8,false,6,7,-1,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading ShellDKGQ principal stresses (membrane) ',
+                       'ShellDKGQ_stress','ShellDKGQ','Stresses-Membrane-Principal',
+                       's1','s2','angle','','','','kPa',8,false,0,1,2,-1,-1,-1);
+
+    WriteResults(false,
+                  true,'Reading ShellDKGQ principal strains (membrane) ',
+                       'ShellDKGQ_strain','ShellDKGQ','Strains-Membrane-Principal',
+                       'e1','e2','angle','','','','-',8,false,0,1,2,-1,-1,-1);
+
+    //
+    // shellMITC4 per layer
+    //
+
+    for i := 1 to 20 do  // dirty way but 20 layers are enough
+    begin
+
+        WriteResults(false,
+                     false,'Reading ShellMITC4 stresses (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellMITC4_stress_Layer'+IntToStr(i),'ShellMITC4','Stresses-Membrane (L'+IntToStr(i)+')',
+                           's11','s22','s12','','','','kPa',5,true,0,1,2,-1,-1,-1);
+
+        WriteResults(false,
+                     false,'Reading ShellMITC4 stresses (shear) for layer '+IntToStr(i)+' ',
+                           'ShellMITC4_stress_Layer'+IntToStr(i),'ShellMITC4','Stresses-Shear (L'+IntToStr(i)+')',
+                           't1','t2','N/A','','','','kPa',5,true,3,4,-1,-1,-1,-1);
+
+        WriteResults(false,
+                     false,'Reading ShellMITC4 strains (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellMITC4_strain_Layer'+IntToStr(i),'ShellMITC4','Strains-Membrane (L'+IntToStr(i)+')',
+                           'e11','e22','e12','','','','-',5,true,0,1,2,-1,-1,-1);
+
+        WriteResults(false,
+                     false,'Reading ShellMITC4 strains (shear) for layer '+IntToStr(i)+' ',
+                           'ShellMITC4_strain_Layer'+IntToStr(i),'ShellMITC4','Strains-Shear (L'+IntToStr(i)+')',
+                           'g1','g2','N/A','','','','-',5,true,3,4,-1,-1,-1,-1);
+
+        WriteResults(false,
+                      true,'Reading ShellMITC4 principal stresses (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellMITC4_stress_Layer'+IntToStr(i),'ShellMITC4','Stresses-Membrane-Principal (L'+IntToStr(i)+')',
+                           's1','s2','angle','','','','kPa',5,true,0,1,2,-1,-1,-1);
+
+        WriteResults(false,
+                      true,'Reading ShellMITC4 principal strains (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellMITC4_strain_Layer'+IntToStr(i),'ShellMITC4','Strains-Membrane-Principal (L'+IntToStr(i)+')',
+                           'e1','e2','angle','','','','-',5,true,0,1,2,-1,-1,-1);
+
+        WriteCracks(       'Reading ShellMITC4 cracks for layer '+IntToStr(i)+' ',
+                           'ShellMITC4_crack_Layer'+IntToStr(i),'ShellMITC4','Cracks (L'+IntToStr(i)+')');
+    end;
+
+    //
+    // shellDKGQ per layer
+    //
+
+    for i := 1 to 20 do  // dirty way but 20 layers are enough
+    begin
+
+        WriteResults(false,
+                     false,'Reading ShellDKGQ stresses (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellDKGQ_stress_Layer'+IntToStr(i),'ShellDKGQ','Stresses-Membrane (L'+IntToStr(i)+')',
+                           's11','s22','s12','','','','kPa',5,true,0,1,2,-1,-1,-1);
+
+        WriteResults(false,
+                     false,'Reading ShellDKGQ stresses (shear) for layer '+IntToStr(i)+' ',
+                           'ShellDKGQ_stress_Layer'+IntToStr(i),'ShellDKGQ','Stresses-Shear (L'+IntToStr(i)+')',
+                           't1','t2','N/A','','','','kPa',5,true,3,4,-1,-1,-1,-1);
+
+        WriteResults(false,
+                     false,'Reading ShellDKGQ strains (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellDKGQ_strain_Layer'+IntToStr(i),'ShellDKGQ','Strains-Membrane (L'+IntToStr(i)+')',
+                           'e11','e22','e12','','','','-',5,true,0,1,2,-1,-1,-1);
+
+        WriteResults(false,
+                     false,'Reading ShellDKGQ strains (shear) for layer '+IntToStr(i)+' ',
+                           'ShellDKGQ_strain_Layer'+IntToStr(i),'ShellDKGQ','Strains-Shear (L'+IntToStr(i)+')',
+                           'g1','g2','N/A','','','','-',5,true,3,4,-1,-1,-1,-1);
+
+        WriteResults(false,
+                      true,'Reading ShellDKGQ principal stresses (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellDKGQ_stress_Layer'+IntToStr(i),'ShellDKGQ','Stresses-Membrane-Principal (L'+IntToStr(i)+')',
+                           's1','s2','angle','','','','kPa',5,true,0,1,2,-1,-1,-1);
+
+        WriteResults(false,
+                      true,'Reading ShellDKGQ principal strains (membrane) for layer '+IntToStr(i)+' ',
+                           'ShellDKGQ_strain_Layer'+IntToStr(i),'ShellDKGQ','Strains-Membrane-Principal (L'+IntToStr(i)+')',
+                           'e1','e2','angle','','','','-',5,true,0,1,2,-1,-1,-1);
+
+        WriteCracks(       'Reading ShellDKGQ cracks for layer '+IntToStr(i)+' ',
+                           'ShellDKGQ_crack_Layer'+IntToStr(i),'ShellDKGQ','Cracks (L'+IntToStr(i)+')');
+    end;
+
+//
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//
 
     FreeAndNil(TCL);
 
@@ -4048,5 +3453,8 @@ begin
     TextColor(LightCyan);
     writeln('Conversion completed');
 
-    Sleep(2000);
+    writeln;
+    TextColor(Yellow);
+    writeln('Press any key to close ...');
+    readln;
 end.

@@ -9,7 +9,7 @@
 - T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
 - V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
 
-**Former contributors**
+**Project contributors**
 
 - F. Derveni, Dipl. Eng. AUTh
 - V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
@@ -31,6 +31,20 @@
 ---
 
 ### VERSION HISTORY
+
+---
+
+**Version 2.8.0 (xx/xx/2020)**
+
+- Added : **User Material** for user material scripts (Data Menu -> Materials/Elements Definition)
+- Added : **User Recorder** for user recorder scripts (Options)
+- Added : **Layer Recorders** for individual LayeredShell layers (Options)
+- Added : **Cracking output** in LayeredShell layers (needs recompilation of latest OpenSees source)
+- Improved : results postprocessor rewritten, supports results on individual LayeredShell layers
+- Improved : .tcl import feature
+- Improved : LayeredShell element definition
+- Improved : option to enable 6DOFs for truss elements
+- Various minor improvements
 
 ---
 

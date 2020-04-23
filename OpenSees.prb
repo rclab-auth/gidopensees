@@ -9,7 +9,7 @@
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
 # V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
 #
-# Former Contributors
+# Project Contributors
 #
 # F. Derveni, Dipl. Eng. AUTh
 # V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
@@ -35,7 +35,7 @@ PROBLEM DATA
 
 BOOK: General_Data
 
-TITLE: Project_Info
+TITLE: Project information
 QUESTION: _#CB#(_)
 VALUE:
 TKWIDGET: GenData::Description
@@ -51,6 +51,11 @@ TKWIDGET: TK_EditModelDim
 QUESTION: Vertical_axis#CB#(Y,Z)
 VALUE: Y
 HELP: Default vertical axis is global Y. For 3D models, selecting global Z is recommended.
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Enable_6_DOFs_for_truss_elements#CB#(0,1)
+VALUE: 0
+HELP: For 3D models, enable this option to use trusses with 6 DOF elements (e.g. shells).
 TITLE: Eigenvalue_Analysis
 QUESTION: _#CB#(_)
 VALUE:
@@ -107,7 +112,7 @@ VALUE: 0
 QUESTION: _#CB#(_)
 VALUE:
 QUESTION: Output_step_frequency
-VALUE: 1#WIDTH#(5)
+VALUE: 1#WIDTH#(10)
 TITLE: Import
 QUESTION: _#CB#(_)
 VALUE:
@@ -149,7 +154,19 @@ VALUE: 0
 QUESTION: _#CB#(_)
 VALUE:
 QUESTION: _#CB#(_)
+VALUE: Truss Elements
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Axial_force#CB#(1,0)
+VALUE: 1
+QUESTION: Axial_deformation#CB#(1,0)
+VALUE: 1
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: _#CB#(_)
 VALUE: Beam Column Elements
+QUESTION: _#CB#(_)
+VALUE:
 QUESTION: Local_forces#CB#(1,0)
 VALUE: 1
 QUESTION: Basic_deformation#CB#(1,0)
@@ -159,32 +176,91 @@ VALUE: 1
 QUESTION: _#CB#(_)
 VALUE:
 QUESTION: _#CB#(_)
-VALUE: Truss Elements
-QUESTION: Axial_force#CB#(1,0)
-VALUE: 1
-QUESTION: Axial_deformation#CB#(1,0)
-VALUE: 1
+VALUE: Surface Elements
 QUESTION: _#CB#(_)
 VALUE:
-QUESTION: _#CB#(_)
-VALUE: Surface Elements
+QUESTION: Forces#CB#(1,0)
+VALUE: 0
 QUESTION: Stresses#CB#(1,0)
 VALUE: 1
 QUESTION: Strains#CB#(1,0)
-VALUE: 1
-QUESTION: Forces#CB#(1,0)
 VALUE: 1
 QUESTION: _#CB#(_)
 VALUE:
 QUESTION: _#CB#(_)
 VALUE: Solid Elements
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: _Forces#CB#(1,0)
+VALUE: 0
 QUESTION: _Stresses#CB#(1,0)
 VALUE: 1
 QUESTION: _Strains#CB#(1,0)
 VALUE: 1
-QUESTION: _Forces#CB#(1,0)
-VALUE: 1
-
+TITLE: Layer Output
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: _#CB#(_)
+VALUE: Output in selected layers for ShellMITC4 and ShellDKGQ elements with LayeredShell sections
+QUESTION: _#CB#(_)
+VALUE: Select output and specify layer numbers for up to three layers (A,B,C)
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Stresses_in_layer_A#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Stress_layer_A,#CURRENT#) (1,RESTORE,Stress_layer_A,#CURRENT#)
+QUESTION: Stress_layer_A
+VALUE: 1#WIDTH#(10)
+QUESTION: Stresses_in_layer_B#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Stress_layer_B,#CURRENT#) (1,RESTORE,Stress_layer_B,#CURRENT#)
+QUESTION: Stress_layer_B
+VALUE: 1#WIDTH#(10)
+QUESTION: Stresses_in_layer_C#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Stress_layer_C,#CURRENT#) (1,RESTORE,Stress_layer_C,#CURRENT#)
+QUESTION: Stress_layer_C
+VALUE: 1#WIDTH#(10)
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Strains_in_layer_A#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Strain_layer_A,#CURRENT#) (1,RESTORE,Strain_layer_A,#CURRENT#)
+QUESTION: Strain_layer_A
+VALUE: 1#WIDTH#(10)
+QUESTION: Strains_in_layer_B#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Strain_layer_B,#CURRENT#) (1,RESTORE,Strain_layer_B,#CURRENT#)
+QUESTION: Strain_layer_B
+VALUE: 1#WIDTH#(10)
+QUESTION: Strains_in_layer_C#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Strain_layer_C,#CURRENT#) (1,RESTORE,Strain_layer_C,#CURRENT#)
+QUESTION: Strain_layer_C
+VALUE: 1#WIDTH#(10)
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Cracking_in_layer_A#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Cracking_layer_A,#CURRENT#) (1,RESTORE,Cracking_layer_A,#CURRENT#)
+QUESTION: Cracking_layer_A
+VALUE: 1#WIDTH#(10)
+QUESTION: Cracking_in_layer_B#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Cracking_layer_B,#CURRENT#) (1,RESTORE,Cracking_layer_B,#CURRENT#)
+QUESTION: Cracking_layer_B
+VALUE: 1#WIDTH#(10)
+QUESTION: Cracking_in_layer_C#CB#(1,0)
+VALUE: 0
+DEPENDENCIES: (0,HIDE,Cracking_layer_C,#CURRENT#) (1,RESTORE,Cracking_layer_C,#CURRENT#)
+QUESTION: Cracking_layer_C
+VALUE: 1#WIDTH#(10)
+TITLE: Custom Recorders
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Recorder:#CB#(_)
+VALUE: UserRecorder
+TKWIDGET: UserRecorder::Script
 END PROBLEM DATA
 
 INTERVAL DATA
@@ -353,7 +429,7 @@ VALUE: 10
 QUESTION: Activate_dead_load#CB#(1,0)
 VALUE: 0
 QUESTION: Keep_this_loading_active_until_the_end_of_analysis#CB#(1,0)
-VALUE: 0
+VALUE: 1
 HELP: Maintains the load constant for the remainder of the the analysis and resets the current time to zero
 DEPENDENCIES: (1,HIDE,Reset_at_the_end_of_the_interval_analysis,0) (0,RESTORE,Reset_at_the_end_of_the_interval_analysis,#CURRENT#)
 QUESTION: Set_time_at_the_end_of_the_interval_analysis#CB#(1,0)
@@ -362,7 +438,7 @@ DEPENDENCIES: (1,RESTORE,Time_to_be_set,#CURRENT#)
 DEPENDENCIES: (0,HIDE,Time_to_be_set,#CURRENT#)
 QUESTION: Time_to_be_set#UNITS#
 VALUE: 0.0sec
-HELP: Pseudotime domain to be set
+HELP: Pseudo-time domain to be set
 QUESTION: Reset_at_the_end_of_the_interval_analysis#CB#(1,0)
 VALUE: 0
 HELP: Reset to the original state

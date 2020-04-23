@@ -87,11 +87,11 @@ proc SecAggregator::CheckFieldValues { event args } {
 
 						if { [lsearch $CompatibleMaterials $matType]==-1 } {
 
-							WarnWinText "Uncompatible Material ($matType) selected for $thisSectionType Section"
+							WarnWinText "Non-compatible Material ($matType) selected for $thisSectionType Section"
 						}
 					} else {
 
-						WarnWinText "Uncompatible material selected for $thisSectionType Section"
+						WarnWinText "Non-compatible material selected for $thisSectionType Section"
 					}
 				}
 			}

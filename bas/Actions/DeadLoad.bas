@@ -107,10 +107,10 @@
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
 *if(y2>y1)
 *format "%6d%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
+    eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
 *else
 *format "%6d%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *DeadLoad
+    eleLoad -ele *ElemsNum -type -beamUniform        0        0 *DeadLoad
 *endif
 *# not vertical elems
 *else
@@ -127,10 +127,10 @@
 *endif
 *if(y2>=y1)
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *else
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *endif
 *endif
 *# 2D analysis
@@ -139,10 +139,10 @@
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
 *if(y2>y1)
 *format "%6d%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad)
+    eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad)
 *else
 *format "%6d%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0 *DeadLoad
+    eleLoad -ele *ElemsNum -type -beamUniform        0 *DeadLoad
 *endif
 *# not vertical elems
 *else
@@ -160,18 +160,18 @@
 *if(y2>=y1)
 *if(x2>x1)
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *else
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*ctheta) *operation(-DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *endif
 *else
 *if(x2<x1)
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*ctheta) *operation(DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform *operation(DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *else
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *endif
 *endif
 *endif
@@ -182,10 +182,10 @@
 *if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,2)==NodesCoord(2,2))
 *if(z2>z1)
 *format "%6d%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
+    eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
 *else
 *format "%6d%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0        0 *DeadLoad
+    eleLoad -ele *ElemsNum -type -beamUniform        0        0 *DeadLoad
 *endif
 *# not vertical elems
 *else
@@ -202,10 +202,10 @@
 *endif
 *if(z2>=z1)
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(-DeadLoad*stheta)
 *else
 *format "%6d%8g%8g"
-  eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
+    eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad*ctheta) *operation(DeadLoad*stheta)
 *endif
 *endif
 *endif
@@ -285,9 +285,11 @@
 *elseif(strcmp(MatProp(Section:),"ElasticMembranePlate")==0)
 *set var thickness=MatProp(Section_depth_h,real)
 *elseif(strcmp(MatProp(Section:),"LayeredShell")==0)
-*set var thickness=MatProp(Thickness,real)
+*set var thickness=MatProp(Wall_width,real)
+*elseif(strcmp(MatProp(Section:),"UserMaterial")==0)
+*set var thickness=MatProp(Width,real)
 *else
-*MessageBox Error: Invalid Section selected for ShellDKGQ element
+*MessageBox Error: Invalid Section selected for Shell/ShellDKGQ element
 *endif
 *break
 *endif
@@ -333,23 +335,23 @@
 *endif
 *if(ndime==3)
 *if(strcmp(GenData(Vertical_axis),"Y")==0)
-*format "%6d%8g"
-  load *ElemsConec(1) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
-*format "%6d%8g"
-  load *ElemsConec(2) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
-*format "%6d%8g"
-  load *ElemsConec(3) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
-*format "%6d%8g"
+*format "%6d%8.4g"
+    load *ElemsConec(1) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
+*format "%6d%8.4g"
+    load *ElemsConec(2) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
+*format "%6d%8.4g"
+    load *ElemsConec(3) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
+*format "%6d%8.4g"
   load *ElemsConec(4) 0.0 *operation(-DeadLoad) 0.0 0.0 0.0 0.0
 *else
-*format "%6d%8g"
-  load *ElemsConec(1) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
-*format "%6d%8g"
-  load *ElemsConec(2) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
-*format "%6d%8g"
-  load *ElemsConec(3) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
-*format "%6d%8g"
-  load *ElemsConec(4) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
+*format "%6d%8.4g"
+    load *ElemsConec(1) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
+*format "%6d%8.4g"
+    load *ElemsConec(2) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
+*format "%6d%8.4g"
+    load *ElemsConec(3) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
+*format "%6d%8.4g"
+    load *ElemsConec(4) 0.0 0.0 *operation(-DeadLoad) 0.0 0.0 0.0
 *endif
 *endif
 *endif

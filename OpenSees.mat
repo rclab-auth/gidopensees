@@ -9,7 +9,7 @@
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
 # V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
 #
-# Former Contributors
+# Project Contributors
 #
 # F. Derveni, Dipl. Eng. AUTh
 # V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
@@ -73,7 +73,7 @@ MATERIAL: Elastic_Perfectly_Plastic
 COMMENT: \n\tUpdate material window to assign selected Class/Type.\n\tSelect 'Custom' to enter user values.\n\tSelect Force-Deformation/Moment-Rotation formulation\n\tin order to use this material for zeroLength elements.\n
 QUESTION: Material:#CB#(ElasticPerfectlyPlastic)
 VALUE: ElasticPerfectlyPlastic
-HELP: elastic perfectly-plastic uniaxial material object.
+HELP: elastic perfectly-plastic uniaxial material object
 IMAGE: img/Materials/ElasticPP.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Formulation#CB#(Stress-Strain,Force-Deformation,Moment-Rotation)
@@ -127,7 +127,7 @@ MATERIAL: Elastic_Perfectly_Plastic_with_Gap
 COMMENT: \n\tUpdate material window to assign selected Class/Type.\n\tSelect 'Custom' to enter user values.\n\tSelect Force-Deformation/Moment-Rotation formulation\n\tin order to use this material for zeroLength elements.\n
 QUESTION: Material:#CB#(ElasticPerfectlyPlasticwithGap)
 VALUE: ElasticPerfectlyPlasticwithGap
-HELP: elastic perfectly-plastic gap uniaxial material object.
+HELP: elastic perfectly-plastic gap uniaxial material object
 IMAGE: img/Materials/ElasticPPGap.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Formulation#CB#(Stress-Strain,Force-Deformation,Moment-Rotation)
@@ -313,7 +313,7 @@ MATERIAL: Steel01
 COMMENT: \n\tUpdate material window to assign selected Grade.\n\tSelect 'Custom' to enter user values.\n\tSelect Force-Deformation/Moment-Rotation formulation\n\tin order to use this material for zeroLength elements.\n
 QUESTION: Material:#CB#(Steel01)
 VALUE: Steel01
-HELP: uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
+HELP: Uniaxial bilinear steel material object with kinematic hardening and optional isotropic hardening described by a non-linear evolution equation.
 IMAGE: img/Materials/Steel01.png
 TKWIDGET: TK_UpdateInfoBar
 QUESTION: Formulation#CB#(Stress-Strain,Force-Deformation,Moment-Rotation)
@@ -961,6 +961,20 @@ VALUE: 1.0e16 rad
 TKWIDGET: TK_MaterialWikiInfo
 END MATERIAL
 
+BOOK: User_Materials
+
+MATERIAL: User_Material
+COMMENT: \n
+QUESTION: Material:#CB#(UserMaterial)
+VALUE: UserMaterial
+QUESTION: Section:#CB#(UserMaterial)
+VALUE: UserMaterial
+QUESTION: Width#UNITS#
+VALUE: 0.1m
+HELP: Used to calculate self weight
+TKWIDGET: UserMaterial::Script
+END MATERIAL
+
 
 BOOK: Multidimensional_(nD)_Materials
 
@@ -1086,7 +1100,7 @@ QUESTION: Shear_strain_at_which_maximum_stress_is_reached
 VALUE: 0.1#WIDTH#(10)
 QUESTION: Friction_angle
 VALUE: 0.0#WIDTH#(10)
-HELP: Enter angle in degrees.
+HELP: Enter angle in degrees
 QUESTION: Reference_mean_effective_confining_pressure_pr#UNITS#
 VALUE: 100kPa
 QUESTION: Positive_constant_d
@@ -1127,14 +1141,14 @@ QUESTION: Shear_strain_at_which_maximum_stress_is_reached
 VALUE: 0.1#WIDTH#(10)
 QUESTION: Friction_angle
 VALUE: 29#WIDTH#(10)
-HELP: Enter angle in degrees.
+HELP: Enter angle in degrees
 QUESTION: Reference_mean_effective_confining_pressure_pr#UNITS#
 VALUE: 80kPa
 QUESTION: Positive_constant_d
 VALUE: 0.5#WIDTH#(10)
 QUESTION: Phase_transformation_angle
 VALUE: 29#WIDTH#(10)
-HELP: Enter angle in degrees.
+HELP: Enter angle in degrees
 QUESTION: Contraction_rate_constant
 VALUE: 0.21#WIDTH#(10)
 HELP: A non-negative constant defining the rate of shear-induced volume decrease (contraction) or pore pressure buildup. A larger value corresponds to faster contraction rate.
@@ -1197,21 +1211,21 @@ QUESTION: Shear_strain_at_which_maximum_stress_is_reached
 VALUE: 0.1#WIDTH#(10)
 QUESTION: Friction_angle
 VALUE: 29#WIDTH#(10)
-HELP: Enter angle in degrees.
+HELP: Enter angle in degrees
 QUESTION: Reference_mean_effective_confining_pressure_pr#UNITS#
 VALUE: 80kPa
 QUESTION: Positive_constant_d
 VALUE: 0.5#WIDTH#(10)
 QUESTION: Phase_transformation_angle
 VALUE: 29#WIDTH#(10)
-HELP: Enter angle in degrees.
+HELP: Enter angle in degrees
 QUESTION: Contraction_constant_1
 VALUE: 0.87#WIDTH#(10)
 QUESTION: Contraction_constant_2
 VALUE: 5#WIDTH#(10)
 QUESTION: Contraction_constant_3
 VALUE: 0.18#WIDTH#(10)
-HELP: A non-negative constant reflecting Kσ effect.
+HELP: A non-negative constant reflecting Ks effect
 QUESTION: Dilation_rate_constant_1
 VALUE: 0.0#WIDTH#(10)
 QUESTION: Dilation_rate_constant_2
@@ -1730,7 +1744,7 @@ TKWIDGET: TK_SectionWikiInfo
 TITLE: Material
 QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
 VALUE: Elastic_Isotropic
-HELP: All nD materials are listed here.
+HELP: All nD materials are listed here
 TITLE: Thickness
 QUESTION: Plate_thickness_h#UNITS#
 VALUE: 0.25m
@@ -1753,63 +1767,91 @@ TKWIDGET: TK_SectionWikiInfo
 END MATERIAL
 
 MATERIAL: LayeredShell
-COMMENT: \n\tEnter the properties of the rectangular section to be modelled with Shell elements\n\tusing a layered/composite integrated section for each in-plane integration point.\n\tMaterial properties and thicknesses are assigned by 10 layers according to the\n\tsize of the wall and the reinforcement distribution.\n
+COMMENT: \n\tEnter the rectangular section properties to be modeled with shell elements\n\tusing a layered/composite formulation for each integration point.\n\n\tExample : 2 bars of 16 mm diameter with 100 mm spacing is 2[encoding convertfrom cp1252 \xD8]16/100.\n
 TITLE: General
 QUESTION: Section:#CB#(LayeredShell)
 VALUE: LayeredShell
 TKWIDGET: TK_SectionWikiInfo
 TITLE: Section_properties
-QUESTION: Height#UNITS#
-VALUE: 3 m
-QUESTION: Thickness#UNITS#
-VALUE: 0.2 m
-QUESTION: Width#UNITS#
-VALUE: 0.5 m
-QUESTION: Cover_depth_for_bars#UNITS#
+QUESTION: Wall_width#UNITS#
+VALUE: 0.25 m
+QUESTION: Reinforcement_cover#UNITS#
 VALUE: 5 cm
 QUESTION: Longitudinal_bars
-VALUE: 8#WIDTH#(10)
-QUESTION: Transverse_reinforcement_space#UNITS#
-VALUE: 100 mm
-QUESTION: Longitudinal_bar_size#UNITS#
+VALUE: 2
+QUESTION: Longitudinal_bar_diameter#UNITS#
 VALUE: 16 mm
-QUESTION: Transverse_bar_size#UNITS#
+QUESTION: Longitudinal_reinforcement_spacing#UNITS#
+VALUE: 100 mm
+QUESTION: Transverse_bars
+VALUE: 2
+QUESTION: Transverse_bar_diameter#UNITS#
 VALUE: 8 mm
-QUESTION: Calculate_bar_areas_(update_to_apply)#CB#(0,1)
+QUESTION: Transverse_reinforcement_spacing#UNITS#
+VALUE: 100 mm
+QUESTION: Calculate_reinforcement_ratios_(update_to_apply)#CB#(0,1)
 VALUE: 1
 TKWIDGET: LayeredShell::CalcBarAreas
-QUESTION: Longitudinal_bar_area#UNITS#
-VALUE: 2.011e-004 m^2
-QUESTION: Transverse_bar_area#UNITS#
-VALUE: 5.027e-005 m^2
-TITLE: Materials
-QUESTION: Concrete_compressive_strength#UNITS#
+QUESTION: Longitudinal_reinforcement_ratio
+VALUE: 1.608e-02
+QUESTION: Transverse_reinforcement_ratio
+VALUE: 4.021e-03
+QUESTION: Cover_layers
+VALUE: 1
+QUESTION: Core_layers
+VALUE: 4
+TITLE: Cover_concrete
+QUESTION: Cover_fc#UNITS#
 VALUE: 20 MPa
 HELP: positive value
-TKWIDGET: LayeredShell::CheckFieldValues
-QUESTION: Concrete_tensile_strength#UNITS#
+QUESTION: Cover_ft#UNITS#
 VALUE: 2.2 MPa
 HELP: positive value
-QUESTION: Concrete_crushing_strength#UNITS#
+QUESTION: Cover_fu#UNITS#
 VALUE: -17.0 MPa
 HELP: negative value
-QUESTION: Concrete_strain_at_maximum_strength
+QUESTION: Cover_ec
 VALUE: -2.0e-3
 HELP: negative value
-QUESTION: Concrete_strain_at_crushing_strength
+QUESTION: Cover_ecu
 VALUE: -3.5e-3
 HELP: negative value
-QUESTION: Ultimate_tensile_strain
+QUESTION: Cover_etu
 VALUE: 1.0e-3
 HELP: positive value
-QUESTION: Shear_retention_factor
-VALUE: 0.08
-QUESTION: Shear_modulus_of_out_plane#UNITS#
+QUESTION: Cover_shear_ret._factor
+VALUE: 0.1
+QUESTION: Cover_G#UNITS#
 VALUE: 12.5 GPa
-QUESTION: Longitudinal_bar_material#MAT#(Uniaxial_Steel_Materials)
+TITLE: Core_concrete
+QUESTION: Core_fc#UNITS#
+VALUE: 20 MPa
+HELP: positive value
+QUESTION: Core_ft#UNITS#
+VALUE: 2.2 MPa
+HELP: positive value
+QUESTION: Core_fu#UNITS#
+VALUE: -17.0 MPa
+HELP: negative value
+QUESTION: Core_ec
+VALUE: -2.0e-3
+HELP: negative value
+QUESTION: Core_ecu
+VALUE: -3.5e-3
+HELP: negative value
+QUESTION: Core_etu
+VALUE: 1.0e-3
+HELP: positive value
+QUESTION: Core_shear_ret._factor
+VALUE: 0.1
+QUESTION: Core_G#UNITS#
+VALUE: 12.5 GPa
+TITLE: Reinforcement
+QUESTION: Longitudinal_steel_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel02
-QUESTION: Transverse_bar_material#MAT#(Uniaxial_Steel_Materials)
+QUESTION: Transverse_steel_material#MAT#(Uniaxial_Steel_Materials)
 VALUE: Steel02
+TKWIDGET: LayeredShell::CheckFieldValues
 END MATERIAL
 
 
@@ -1863,7 +1905,7 @@ QUESTION: Compatible_materials:#CB#(Elastic_Isotropic)
 VALUE: Elastic Isotropic
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
+QUESTION: Material#MAT#(Multidimensional_(nD)_Materials,User_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: EBC::CheckMaterial
 TITLE: Section_properties
@@ -1932,7 +1974,7 @@ QUESTION: Compatible_materials:#CB#(Elastic_Isotropic)
 VALUE: Elastic Isotropic
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
+QUESTION: Material#MAT#(Multidimensional_(nD)_Materials,User_Materials)
 VALUE: Elastic_Isotropic
 TKWIDGET: EBC::CheckMaterial
 TITLE: Section_properties
@@ -2013,11 +2055,11 @@ VALUE: 3#WIDTH#(4)
 HELP: number of Gauss-Lobatto integration points along the element
 STATE: DISABLED
 QUESTION: The_number_of_integration#CB#(_)
-VALUE: points per element is currently fixed to three points per element.
+VALUE: Points per element is currently fixed to three points per element.
 QUESTION: To_increase_analysis_accuracy,#CB#(_)
 VALUE: a finer mesh is recommended for modeling structural members instead of one element per member
 TITLE: Section
-QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
+QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials,User_Materials)
 VALUE: Fiber
 TKWIDGET: FBC::CheckSection
 TITLE: Element_Geometry
@@ -2055,11 +2097,11 @@ VALUE: 3#WIDTH#(4)
 HELP: number of integration points along the element
 STATE: DISABLED
 QUESTION: The_number_of_integration#CB#(_)
-VALUE: points per element is currently fixed to three points per element.
+VALUE: Points per element is currently fixed to three points per element.
 QUESTION: To_increase_analysis_accuracy,#CB#(_)
 VALUE: a finer mesh is recommended for modeling structural members instead of one element per member
 TITLE: Section
-QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials)
+QUESTION: Section#MAT#(Section_Force-Deformation,Combined_Materials,User_Materials)
 VALUE: Fiber
 TKWIDGET: DBC::CheckSection
 TITLE: Element_Geometry
@@ -2087,7 +2129,7 @@ VALUE: 3
 HELP: number of integration points along the element
 STATE: DISABLED
 QUESTION: The_number_of_integration#CB#(_)
-VALUE: points per element is currently fixed to three points per element.
+VALUE: Points per element is currently fixed to three points per element.
 QUESTION: To_increase_analysis_accuracy,#CB#(_)
 VALUE: a finer mesh is recommended for modeling structural members instead of one element per member
 TITLE: Section
@@ -2121,7 +2163,7 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Standard/Steel/Concrete Uniaxial Materials/Series/Parallel/InitStrain/InitStress
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials)
+QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use its parameters.
 TKWIDGET: Truss::CheckFieldValues
@@ -2176,7 +2218,7 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: Standard/Steel/Concrete Uniaxial Materials/Series/Parallel/InitStrain/InitStress
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials)
+QUESTION: Material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Uniaxial_Concrete_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 HELP: Choose one existing material to use its parameters.
 TKWIDGET: Truss::CheckFieldValues
@@ -2240,7 +2282,7 @@ VALUE: 0
 HELP: equalDOF commands are automatically printed for element nodes which share the same vertical (Y) location
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
+QUESTION: Material#MAT#(Multidimensional_(nD)_Materials,User_Materials)
 VALUE: Elastic_Isotropic
 QUESTION: Plane_behavior#CB#(PlaneStrain,PlaneStress)
 VALUE: PlaneStrain
@@ -2276,7 +2318,7 @@ QUESTION: Compatible_materials:#CB#(PlateFiber/ElasticMembranePlate)
 VALUE: PlateFiber/ElasticMembranePlate
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Section
-QUESTION: Type#MAT#(Section_Force-Deformation)
+QUESTION: Type#MAT#(Section_Force-Deformation,User_Materials)
 VALUE: Elastic_Membrane_Plate
 TKWIDGET: Shell::CheckFieldValues
 TITLE: Weight
@@ -2295,7 +2337,7 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: PlateFiber/ElasticMembranePlate
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Section
-QUESTION: Type#MAT#(Section_Force-Deformation)
+QUESTION: Type#MAT#(Section_Force-Deformation,User_Materials)
 VALUE: Elastic_Membrane_Plate
 TKWIDGET: Shell::CheckFieldValues
 TITLE: Weight
@@ -2315,7 +2357,7 @@ QUESTION: Compatible_materials:#CB#(_)
 VALUE: nD Materials
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
+QUESTION: Material#MAT#(Multidimensional_(nD)_Materials,User_Materials)
 VALUE: Elastic_Isotropic
 QUESTION: Plane_behavior#CB#(PlaneStrain,PlaneStress)
 VALUE: PlaneStrain
@@ -2355,7 +2397,7 @@ VALUE: 0
 HELP: equalDOF commands are automatically printed for element nodes which share the same vertical (Y) location
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
+QUESTION: Material#MAT#(Multidimensional_(nD)_Materials,User_Materials)
 VALUE: PressureIndependMultiYield
 QUESTION: PMY_ID
 VALUE:
@@ -2405,7 +2447,7 @@ QUESTION: Compatible_materials:#CB#(nD_Materials)
 VALUE: nD Materials
 TKWIDGET: TK_ElementWikiInfo
 TITLE: Material
-QUESTION: Material#MAT#(Multidimensional_(nD)_Materials)
+QUESTION: Material#MAT#(Multidimensional_(nD)_Materials,User_Materials)
 VALUE: Elastic_Isotropic
 TITLE: Body_Forces
 QUESTION: Applied_on_the_global_axes#CB#(_)

@@ -24,10 +24,10 @@
 
 # ElasticBeamColumn
 # *cntEBC
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -36,10 +36,10 @@
 
 # ElasticTimoshenkoBeamColumn
 # *cntETB
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -48,10 +48,10 @@
 
 # ForceBeamColumn
 # *cntFBC
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"forceBeamColumn")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -60,10 +60,10 @@
 
 # DispBeamColumn
 # *cntDBC
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumn")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -72,10 +72,10 @@
 
 # DispBeamColumnInt
 # *cntDBCI
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"dispBeamColumnInt")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -84,10 +84,10 @@
 
 # Truss
 # *cntTruss
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -96,10 +96,10 @@
 
 # CorotTruss
 # *cntCorotTruss
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -108,10 +108,10 @@
 
 # Quad
 # *cntQuad
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Quad")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -120,10 +120,10 @@
 
 # QuadUP
 # *cntQuadUP
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"QuadUP")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -132,10 +132,10 @@
 
 # ShellMITC4
 # *cntShell
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -144,10 +144,10 @@
 
 # ShellDKGQ
 # *cntShellDKGQ
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"ShellDKGQ")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -156,10 +156,10 @@
 
 # Tri31
 # *cntTri31
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Tri31")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
@@ -168,23 +168,23 @@
 
 # stdBrick
 # *cntStdBrick
-# *\
+#*\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"stdBrick")==0)
-*ElemsNum *\
+ *ElemsNum*\
 *endif
 *end elems
 
 *endif
 *if(frames!=0)
 
-# ----------------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
 # F R A M E   L O C A L   A X E S   O R I E N T A T I O N
 #
-# ----------------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
-#      ID                           Type                          Local-x                          Local-y                          Local-z          Literal
+#      ID                           Type                       Local-x                       Local-y                       Local-z          Literal      Material / Section
 #
 *loop elems
 *set var exist=0
@@ -280,11 +280,10 @@
 *set var Vz2=operation(Vz2/L)
 *set var Vz3=operation(Vz3/L)
 *# write axis in vector form
-*format "     {%+7.5f %+7.5f %+7.5f}     {%+7.5f %+7.5f %+7.5f}     {%+7.5f %+7.5f %+7.5f}"
+*format "     {%+7.4f %+7.4f %+7.4f}     {%+7.4f %+7.4f %+7.4f}     {%+7.4f %+7.4f %+7.4f}"
 *Vx1*Vx2*Vx3*Vy1*Vy2*Vy3*Vz1*Vz2*Vz3     {*\
 *# write literal axes
 *for(i=1;i<=3;i=i+1)
-*set var check=0
 *if(i==1)
 *set var V1=Vx1
 *set var V2=Vx2
@@ -298,14 +297,32 @@
 *set var V2=Vz2
 *set var V3=Vz3
 *endif
-*if((V1<1e-6) && (V1>-1e-6))
+*if(fabs(V1)<1e-5)
 *set var V1=0
 *endif
-*if((V2<1e-6) && (V2>-1e-6))
+*if(fabs(V2)<1e-5)
 *set var V2=0
 *endif
-*if((V3<1e-6) && (V3>-1e-6))
+*if(fabs(V3)<1e-5)
 *set var V3=0
+*endif
+*if(fabs(V1-1)<1e-5)
+*set var V1=1
+*endif
+*if(fabs(V2-1)<1e-5)
+*set var V2=1
+*endif
+*if(fabs(V3-1)<1e-5)
+*set var V3=1
+*endif
+*if(fabs(V1+1)<1e-5)
+*set var V1=-1
+*endif
+*if(fabs(V2+1)<1e-5)
+*set var V2=-1
+*endif
+*if(fabs(V3+1)<1e-5)
+*set var V3=-1
 *endif
 *if((V1==1) && (V2==0) && (V3==0))
  +X*\
@@ -323,7 +340,12 @@
   O*\
 *endif
 *endfor
- }
+ };   #*\
+*if((strcmp(ElemsMatProp(Element_type:),"ElasticBeamColumn")==0) || (strcmp(ElemsMatProp(Element_type:),"ElasticTimoshenkoBeamColumn")==0))
+ *ElemsMatProp(Material)
+*else
+ *ElemsMatProp(Section)
+*endif
 *endif
 *end elems
 *endif 

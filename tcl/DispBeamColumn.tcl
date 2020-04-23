@@ -16,14 +16,14 @@ proc DBC::CheckSection { event args } {
 			set SecType [GiD_AccessValue get materials $ChosenSection "Section:"]
 			#SecType is the value of the question: Section: of the chosen Section from the combo box!
 
-			if { $SecType != "Fiber" && $SecType != "SectionAggregator" && $SecType != "ElasticSection" && $SecType != "FiberCustom"} {
-				WarnWinText "Uncompatible Section $ChosenSection ($SecType section) selected for Displacement-Based beam-column elements."
+			if { $SecType != "Fiber" && $SecType != "SectionAggregator" && $SecType != "ElasticSection" && $SecType != "FiberCustom" && $SecType != "UserMaterial" } {
+				WarnWinText "Non-compatible Section $ChosenSection ($SecType section) selected for Displacement-Based beam-column elements."
 				WarnWinText "It has been changed to Fiber section."
 				# Change the value of the field "Section:" to Fiber
 				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
 			}
 			} else {
-				WarnWinText "Uncompatible Section selected for Displacement-Based Beam Column Element"
+				WarnWinText "Non-compatible Section selected for Displacement-Based Beam Column Element"
 				WarnWinText "It has been changed to Fiber Section"
 				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
 			}

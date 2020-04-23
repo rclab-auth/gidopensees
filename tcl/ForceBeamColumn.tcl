@@ -18,15 +18,15 @@ proc FBC::CheckSection { event args } {
 			if {![catch {GiD_AccessValue get materials $ChosenSection "Section:"}]} {
 			set SecType [GiD_AccessValue get materials $ChosenSection "Section:"]
 
-			if { $SecType != "Fiber" && $SecType != "SectionAggregator" && $SecType != "ElasticSection" && $SecType != "FiberCustom"} {
-				WarnWinText "Uncompatible Section $ChosenSection ($SecType section) selected for Force-Based beam-column elements."
+			if { $SecType != "Fiber" && $SecType != "SectionAggregator" && $SecType != "ElasticSection" && $SecType != "FiberCustom" && $SecType != "UserMaterial" } {
+				WarnWinText "Non-compatible Section $ChosenSection ($SecType section) selected for Force-Based beam-column elements."
 				WarnWinText "It has been changed to Fiber section."
 				# Change the value of the field "Section:" to Fiber
 				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
 			}
 
 			} else {
-				WarnWinText "Uncompatible Section selected for Force-based Beam Column Element"
+				WarnWinText "Non-compatible Section selected for Force-based Beam Column Element"
 				WarnWinText "It has been changed to Fiber Section"
 				DWLocalSetValue $GDN $STRUCT $QUESTION "Fiber"
 			}

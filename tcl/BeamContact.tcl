@@ -24,7 +24,7 @@ proc BeamContact::CheckFieldValues { event args } {
 
 					if { $matType != "Contact" } {
 
-						WarnWinText "Uncompatible Material ($matType) selected for BeamContact Element"
+						WarnWinText "Non-compatible Material ($matType) selected for BeamContact Element"
 
 					}
 				}

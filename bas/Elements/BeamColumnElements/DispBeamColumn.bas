@@ -32,32 +32,25 @@
 *# Corotational geomTransf tags
 *set var TransfTag5=5
 *set var TransfTag6=6
-*#------------------------------------------------
-*#-----------Geometric Transformation-------------
-*#------------------------------------------------
 # Geometric Transformation
 
-*#-------------------- Z AXIS AS VERTICAL AXIS-------------------------
+*# Z AXIS AS VERTICAL AXIS
 *if(strcmp(GenData(Vertical_axis),"Z")==0)
-*# Vertical elements
-geomTransf Linear *TransfTag1 -1 0 0
-geomTransf PDelta *TransfTag3 -1 0 0
-geomTransf Corotational *TransfTag5 -1 0 0
-*# Not vertical elements
-geomTransf Linear *TransfTag2  0 0 1
-geomTransf PDelta *TransfTag4  0 0 1
-geomTransf Corotational *TransfTag6 0 0 1
+geomTransf Linear       *TransfTag1 -1 0 0; # vertical
+geomTransf Linear       *TransfTag2  0 0 1; # non-vertical
+geomTransf PDelta       *TransfTag3 -1 0 0; # vertical
+geomTransf PDelta       *TransfTag4  0 0 1; # non-vertical
+geomTransf Corotational *TransfTag5 -1 0 0; # vertical
+geomTransf Corotational *TransfTag6  0 0 1; # non-vertical
 
-*#-------------------- Y AXIS AS VERTICAL AXIS-------------------------
+*# Y AXIS AS VERTICAL AXIS
 *elseif(strcmp(GenData(Vertical_axis),"Y")==0)
-*# Vertical elements
-geomTransf Linear *TransfTag1 -1 0 0
-geomTransf PDelta *TransfTag3 -1 0 0
-geomTransf Corotational *TransfTag5 -1 0 0
-*# Not vertical elements
-geomTransf Linear *TransfTag2  0 1 0
-geomTransf PDelta *TransfTag4  0 1 0
-geomTransf Corotational *TransfTag6 0 1 0
+geomTransf Linear       *TransfTag1 -1 0 0; # vertical
+geomTransf Linear       *TransfTag2  0 1 0; # non-vertical
+geomTransf PDelta       *TransfTag3 -1 0 0; # vertical
+geomTransf PDelta       *TransfTag4  0 1 0; # non-vertical
+geomTransf Corotational *TransfTag5 -1 0 0; # vertical
+geomTransf Corotational *TransfTag6  0 1 0; # non-vertical
 
 *endif
 *set var GeomTransfPrinted=1
@@ -232,6 +225,9 @@ geomTransf Corotational *TransfTag3
 *include ..\..\Sections\ElasticSection.bas
 *elseif(strcmp(MatProp(Section:),"FiberCustom")==0)
 *include ..\..\Sections\FiberCustom.bas
+*elseif(strcmp(MatProp(Material:),"UserMaterial")==0)
+set MatTag *SectionID; # *tcl(UserMaterial::GetMaterialName *MatProp(0))
+*include ..\..\Materials\User\UserMaterial.bas
 *endif
 *break
 *endif

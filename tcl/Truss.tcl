@@ -33,6 +33,7 @@ proc Truss::CheckFieldValues { event args } {
 		ConcreteCM \
 		BondSP01 \
 		MinMax \
+		UserMaterial \
 		"
 
 		set ThisElemType [DWLocalGetValue $GDN $STRUCT Element_type:]
@@ -44,12 +45,12 @@ proc Truss::CheckFieldValues { event args } {
 
 			if { [lsearch $CompatibleMaterials $matType]==-1 } {
 
-				WarnWinText "Uncompatible Material ($matType) selected for $ThisElemType Element"
+				WarnWinText "Non-compatible Material ($matType) selected for $ThisElemType Element"
 
 			}
 		} else {
 
-			WarnWinText "Uncompatible Material selected for $ThisElemType Element"
+			WarnWinText "Non-compatible Material selected for $ThisElemType Element"
 		}
 		}
 	}

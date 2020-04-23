@@ -197,7 +197,7 @@ proc DeckFiberSection3D { secID GJ conc1ID conc2ID steel1ID steel2ID steel3ID st
 
     } else {
 
-    section Fiber $secID {
+    section Fiber $secID -GJ 1e10 {
 
         ###################
         # CONCRETE FIBERS #

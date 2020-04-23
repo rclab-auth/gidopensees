@@ -12,11 +12,11 @@
 *if(cntcurrCorotTruss!=0)
 
 # --------------------------------------------------------------------------------------------------------------
-# C O R O T A T I O N A L   T R U S S   E L E M E N T S
+# C O R O T A T I O N A L   T R U S S   E L E M E N T S  (*currentDOF DOF)
 # --------------------------------------------------------------------------------------------------------------
 
 *set var VarCount=1
-*if((ndime==2 && currentDOF==2) || (ndime==3 && currentDOF==3))
+*if((ndime==2 && currentDOF==2) || (ndime==3 && currentDOF==3) || (ndime==3 && currentDOF==6))
 *loop elems *OnlyInGroup
 *if(strcmp(ElemsMatProp(Element_type:),"CorotationalTruss")==0)
 *if(VarCount==1)
@@ -77,6 +77,9 @@
 *include ..\..\Materials\Uniaxial\BondSP01.bas
 *elseif(strcmp(MatProp(Material:),"MinMax")==0)
 *include ..\..\Materials\Uniaxial\MinMax.bas
+*elseif(strcmp(MatProp(Material:),"UserMaterial")==0)
+set MatTag *MaterialID; # *tcl(UserMaterial::GetMaterialName *MatProp(0))
+*include ..\..\Materials\User\UserMaterial.bas
 *else
 *MessageBox Error: Invalid uniaxial material selected for truss element
 *endif
@@ -122,7 +125,7 @@ element corotTruss *ElemsNum *elemsConec *\
 *format "%12g"
 *A *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum)   -rho *\
 *format "%8g%d%d"
-*MassPerLength -cMass *ElemsMatProp(Consider_consistent_mass_matrix,int) -doRayleigh *ElemsMatProp(Include_Rayleigh_damping,int)
+*MassPerLength -cMass *ElemsMatProp(Consider_consistent_mass_matrix,int) -doRayleigh *ElemsMatProp(Include_Rayleigh_damping,int) ; # *ElemsMatProp(Material)
 *endif
 *end elems
 *endif

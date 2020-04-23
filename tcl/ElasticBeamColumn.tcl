@@ -18,7 +18,7 @@ proc EBC::CheckMaterial { event args } {
 			set ChosenMaterial [DWLocalGetValue $GDN $STRUCT $QUESTION]
 			set MatType [GiD_AccessValue get materials $ChosenMaterial "Material:"]
 
-			if { $MatType != "ElasticIsotropic"} {
+			if { $MatType != "ElasticIsotropic" && $MatType != "UserMaterial" } {
 				WarnWinText "Material $ChosenMaterial ($MatType material) can not be used for beam-column elements."
 				WarnWinText "Use an elastic isotropic material instead."
 

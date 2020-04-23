@@ -112,7 +112,8 @@ proc AssignElemNumToDOFlist { num ndf } {
 
 		lappend DOF6Elems $num
 
-		# 30 indicates 3 dofs but the 3rd is considered for the pressure
+	# 30 indicates 3 dofs but the 3rd is considered for the pressure
+
 	} elseif { $ndf == 30 } {
 
 		lappend DOF3PElems $num
@@ -308,7 +309,13 @@ proc ReturnElemDOF { elemtype ndm } {
 
 			} elseif { $ndm == 3 } {
 
-				return 3
+				set want6DOF [GiD_AccessValue get GenData Enable_6_DOFs_for_truss_elements]
+
+				if { $want6DOF == 1 } {
+					return 6
+				} else {
+					return 3
+				}
 
 			}
 		}
@@ -319,7 +326,13 @@ proc ReturnElemDOF { elemtype ndm } {
 
 			} elseif { $ndm == 3 } {
 
-				return 3
+				set want6DOF [GiD_AccessValue get GenData Enable_6_DOFs_for_truss_elements]
+
+				if { $want6DOF == 1 } {
+					return 6
+				} else {
+					return 3
+				}
 
 			}
 		}

@@ -39,17 +39,17 @@ proc FiberInt::CheckFieldValues { event args } {
 			set BarMatType [GiD_AccessValue get materials $ChosenBarMaterial "Material:"]
 
 			if { [lsearch $CompatibleConcreteMaterials $CoreMatType]==-1 } {
-				WarnWinText "Uncompatible Core material ($CoreMatType) selected for FiberInt Section"
+				WarnWinText "Non-compatible Core material ($CoreMatType) selected for FiberInt Section"
 				DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete04_(Popovics_concrete)"
 			}
 
 			if { [lsearch $CompatibleConcreteMaterials $CoverMatType]==-1 } {
-				WarnWinText "Uncompatible Cover material ($CoverMatType) selected for FiberInt Section"
+				WarnWinText "Non-compatible Cover material ($CoverMatType) selected for FiberInt Section"
 				DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete04_(Popovics_concrete)"
 			}
 
 			if { [lsearch $CompatibleSteelMaterials $BarMatType]==-1 } {
-				WarnWinText "Uncompatible steel material ($BarMatType) selected for FiberInt Section"
+				WarnWinText "Non-compatible steel material ($BarMatType) selected for FiberInt Section"
 				DWLocalSetValue $GDN $STRUCT "Reinforcing_Bar_material" "Steel01"
 			}
 

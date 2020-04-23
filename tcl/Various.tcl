@@ -69,6 +69,7 @@ global SelectedVerticalAxis
 proc TK_EditModelDim { event args } {
 
 	global SelectedVerticalAxis
+	global VerticalAxisChanged
 	set PARENT [lindex $args 0]
 	upvar [lindex $args 1] ROW
 	set GDN [lindex $args 2]
@@ -84,9 +85,14 @@ proc TK_EditModelDim { event args } {
 			set dummy [DWLocalSetValue $GDN $STRUCT $QUESTION $dim]
 
 			if {$dim == 2} {
-					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Y"]
+				set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Y"]
 			} else {
+				if {$VerticalAxisChanged == 0} {
+					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Z"]
+					set VerticalAxisChanged 1
+				} else {
 					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis $SelectedVerticalAxis]
+				}
 			}
 
 			return ""
@@ -324,7 +330,7 @@ proc TK_SectionWikiInfo { event args } {
 							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Section_Aggregator"
 					}
 					"LayeredShell" {
-							set cmd "VisitWeb http://www.luxinzheng.net/publication6/Shell_wall_element_OpenSees_FEAD_2015.htm"
+							set cmd "VisitWeb http://www.luxinzheng.net/download/OpenSEES/En_THUShell_OpenSEES.htm"
 					}
 					"FiberCustom" {
 							set cmd "VisitWeb http://opensees.berkeley.edu/wiki/index.php/Fiber_Section"

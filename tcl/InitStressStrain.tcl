@@ -34,11 +34,11 @@ proc InitStressStrain::CheckFieldValues { event args } {
 
 				if { [lsearch $CompatibleMaterials $matType]==-1 } {
 
-					WarnWinText "Uncompatible Material ($matType) selected for $thisMatType Material"
+					WarnWinText "Non-compatible Material ($matType) selected for $thisMatType Material"
 				}
 			} else {
 
-				WarnWinText "Uncompatible material selected for $thisMatType Material"
+				WarnWinText "Non-compatible material selected for $thisMatType Material"
 			}
 		}
 	}

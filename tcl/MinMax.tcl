@@ -45,7 +45,7 @@ proc MinMax::CheckFieldValues { event args } {
 
 	if { [lsearch $CompatibleMaterials $mattype]==-1 } {
 
-		WarnWinText "Uncompatible Material ($mattype) selected for MinMax Material"
+		WarnWinText "Non-compatible Material ($mattype) selected for MinMax Material"
 
 	}
 	}

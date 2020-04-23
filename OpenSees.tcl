@@ -9,7 +9,7 @@
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
 # V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
 #
-# Former Contributors
+# Project Contributors
 #
 # F. Derveni, Dipl. Eng. AUTh
 # V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
@@ -35,7 +35,7 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.7.0"
+	variable VersionNumber "v2.7.5"
 	variable InterfaceName [_ " GiD+OpenSees Interface $VersionNumber "]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesPath
@@ -60,6 +60,8 @@ proc OpenSees::InitGIDProject { dir } {
 
 	SetImagesAndColors
 
+	global VerticalAxisChanged
+	set VerticalAxisChanged 0
 	global splashdir
 	set splashdir 0
 	global keepsplash
@@ -124,6 +126,7 @@ proc OpenSees::ChangeData {} {
 	GiD_DataBehaviour materials Multidimensional_(nD)_Materials hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Section_Force-Deformation" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Combined_Materials" hide {assign draw unassign impexp}
+	GiD_DataBehaviour materials "User_Materials" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Records" hide {assign draw unassign impexp}
 	GiD_DataBehaviour materials "Beam-Column_Elements" geomlist {lines}
 	GiD_DataBehaviour materials "Truss_Elements" geomlist {lines}
@@ -746,11 +749,53 @@ proc GetAppDataDir {} {
 
 proc InitGIDProject { dir } {
 
-	foreach filename { BeamContact.tcl FindMaterialNumber.tcl ZeroLength.tcl UsedMaterials.tcl RigidDiaphragm.tcl equalDOF.tcl RigidLink.tcl Utilities.tcl Fibers.tcl MultipleDOF.tcl Regions.tcl UniformExcitation.tcl Nodes.tcl} {
+	foreach filename {	BeamContact.tcl \
+						FindMaterialNumber.tcl \
+						ZeroLength.tcl \
+						UsedMaterials.tcl \
+						RigidDiaphragm.tcl \
+						equalDOF.tcl \
+						RigidLink.tcl \
+						Utilities.tcl \
+						Fibers.tcl \
+						MultipleDOF.tcl \
+						Regions.tcl \
+						UniformExcitation.tcl \
+						Nodes.tcl} {
+
 		source [file join $dir bas tcl $filename]
 	}
 
-	foreach filename { Geometry_func.tcl BeamContact.tcl EqualDOF.tcl Various.tcl MinMax.tcl Records.tcl GenData.tcl Damage2p.tcl ElasticSection.tcl LayeredShell.tcl InitStressStrain.tcl ElasticBeamColumn.tcl Fiber.tcl FiberInt.tcl ForceBeamColumn.tcl DispBeamColumn.tcl DispInteractionBeamColumn.tcl PIMY.tcl PDMY.tcl IntvData.tcl nDmaterials.tcl Quad.tcl Shell.tcl Truss.tcl UniaxialConcrete.tcl UniaxialSteel.tcl OtherUniaxial.tcl ZeroLength.tcl SeriesParallel.tcl SecAggregator.tcl} {
+	foreach filename {	Geometry_func.tcl \
+						BeamContact.tcl \
+						EqualDOF.tcl \
+						Various.tcl \
+						MinMax.tcl \
+						Records.tcl \
+						GenData.tcl \
+						Damage2p.tcl \
+						ElasticSection.tcl \
+						LayeredShell.tcl \
+						InitStressStrain.tcl \
+						ElasticBeamColumn.tcl \
+						Fiber.tcl FiberInt.tcl \
+						ForceBeamColumn.tcl \
+						DispBeamColumn.tcl \
+						DispInteractionBeamColumn.tcl \
+						PIMY.tcl PDMY.tcl \
+						IntvData.tcl \
+						nDmaterials.tcl \
+						Quad.tcl Shell.tcl \
+						Truss.tcl \
+						UniaxialConcrete.tcl \
+						UniaxialSteel.tcl \
+						OtherUniaxial.tcl \
+						ZeroLength.tcl \
+						SeriesParallel.tcl \
+						SecAggregator.tcl \
+						UserMaterial.tcl \
+						Recorder.tcl} {
+
 		source [file join $dir tcl $filename]
 	}
 

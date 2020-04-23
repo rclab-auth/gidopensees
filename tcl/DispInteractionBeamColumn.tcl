@@ -15,14 +15,14 @@ proc DIBC::CheckSection { event args } {
 			if {![catch {GiD_AccessValue get materials $ChosenSection "Section:"}]} {
 			set SecType [GiD_AccessValue get materials $ChosenSection "Section:"]
 
-			if { $SecType != "FiberInt" } {
-				WarnWinText "Uncompatible Section $ChosenSection ($SecType section) selected for F-S Interaction Displacement-Based beam-column elements."
+			if { $SecType != "FiberInt" && $SecType != "UserMaterial" } {
+				WarnWinText "Non-compatible Section $ChosenSection ($SecType section) selected for F-S Interaction Displacement-Based beam-column elements."
 				WarnWinText "It has been changed to FiberInt section."
 
 				DWLocalSetValue $GDN $STRUCT $QUESTION "FiberInt"
 			}
 			} else {
-				WarnWinText "Uncompatible Section selected for F-S Interaction Displacement-Based Beam Column Element"
+				WarnWinText "Non-compatible Section selected for F-S Interaction Displacement-Based Beam Column Element"
 				WarnWinText "It has been changed to FiberInt Section"
 				DWLocalSetValue $GDN $STRUCT $QUESTION "FiberInt"
 			}

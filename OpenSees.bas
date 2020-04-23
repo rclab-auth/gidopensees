@@ -17,7 +17,7 @@
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
 # V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
 #
-# Former Contributors
+# Project Contributors
 #
 # F. Derveni, Dipl. Eng. AUTh
 # V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
@@ -48,13 +48,14 @@
 # Mass   : *Units(MASS)
 
 # --------------------------------------------------------------------------------------------------------------
-# E L E M E N T S  U S E D
+# M A T E R I A L S / S E C T I O N S ( E L E M E N T S )
 # --------------------------------------------------------------------------------------------------------------
 
 *loop materials
 *set var ElementCounter=0
 # *MatProp(0) *\
 *loop elems
+*# *ElemsNum
 *if(strcmp(MatProp(0),ElemsMatProp(0))==0)
 *set var ElementCounter=operation(ElementCounter+1)
 *endif
@@ -165,7 +166,7 @@
 *set var PlaneStressUserMaterialTag=200
 *set var PlateFromPlaneStressMaterialTag=300
 *set var PlateRebarLongTag=400
-*set var PlateRebarTransvTag=500
+*set var PlateRebarTransTag=500
 *# Clear the lists of nodeTags for each Group (each domain)
 *set var dummy=tcl(ClearGroupNodes )
 *# Clear the list of Quad/QuadUP Nodes, used for automatic equalDOF commands (if chosen)
@@ -174,8 +175,16 @@
 *#
 *set var DomainNum=0
 *loop groups
-*if(strcmp(GroupName,"2DOF")==0 || strcmp(GroupName,"3DOF")==0 || strcmp(GroupName,"6DOF")==0 || strcmp(GroupName,"3PDOF")==0)
-*set var DomainNum=operation(DomainNum+1)
+*if(strcmp(GroupName,"2DOF")==0)
+*set var DomainNum=2
+*elseif(strcmp(GroupName,"3DOF")==0)
+*set var DomainNum=3
+*elseif(strcmp(GroupName,"6DOF")==0)
+*set var DomainNum=6
+*elseif(strcmp(GroupName,"3PDOF")==0)
+*set var DomainNum=30
+*endif
+*if(DomainNum != 0)
 *#
 *# Specify the current ndf
 *#
@@ -187,7 +196,7 @@
 
 # --------------------------------------------------------------------------------------------------------------
 #
-# M O D E L  D O M A I N  *DomainNum  (*GroupName)
+# M O D E L  D O M A I N  *GroupName  (*DomainNum)
 #
 # --------------------------------------------------------------------------------------------------------------
 

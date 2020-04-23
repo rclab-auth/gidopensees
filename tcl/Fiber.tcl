@@ -736,14 +736,14 @@ proc Fiber::CheckFieldValues { event args } {
 
 							if { [lsearch $CompatibleConcreteMaterials $CoreMatType]==-1 } {
 
-								WarnWinText "Uncompatible Core material ($CoreMatType) selected for Fiber Section"
+								WarnWinText "Non-compatible Core material ($CoreMatType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete04_(Popovics_concrete)"
 
 							}
 
 						} else {
 
-							WarnWinText "Uncompatible Core material selected for Fiber Section"
+							WarnWinText "Non-compatible Core material selected for Fiber Section"
 							DWLocalSetValue $GDN $STRUCT "Core_material" "Concrete04_(Popovics_concrete)"
 
 						}
@@ -754,14 +754,14 @@ proc Fiber::CheckFieldValues { event args } {
 
 							if { [lsearch $CompatibleConcreteMaterials $CoverMatType]==-1 } {
 
-								WarnWinText "Uncompatible Cover material ($CoverMatType) selected for Fiber Section"
+								WarnWinText "Non-compatible Cover material ($CoverMatType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete04_(Popovics_concrete)"
 
 							}
 
 						} else {
 
-							WarnWinText "Uncompatible Cover material selected for Fiber Section"
+							WarnWinText "Non-compatible Cover material selected for Fiber Section"
 							DWLocalSetValue $GDN $STRUCT "Cover_material" "Concrete04_(Popovics_concrete)"
 
 						}
@@ -772,12 +772,12 @@ proc Fiber::CheckFieldValues { event args } {
 
 							if { [lsearch $CompatibleSteelMaterials $BarMatType]==-1 } {
 
-								WarnWinText "Uncompatible Reinforcing bar material ($BarMatType) selected for Fiber Section"
+								WarnWinText "Non-compatible Reinforcing bar material ($BarMatType) selected for Fiber Section"
 
 							}
 						} else {
 
-							WarnWinText "Uncompatible Reinforcing bar material selected for Fiber Section"
+							WarnWinText "Non-compatible Reinforcing bar material selected for Fiber Section"
 
 						}
 
@@ -793,14 +793,14 @@ proc Fiber::CheckFieldValues { event args } {
 
 							if { [lsearch $CompatibleConcreteMaterials $MainConcreteType]==-1 } {
 
-								WarnWinText "Uncompatible concrete material ($MainConcreteType) selected for Fiber Section"
+								WarnWinText "Non-compatible concrete material ($MainConcreteType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Main_section_material" "Concrete04_(Popovics_concrete)"
 
 							}
 
 						} else {
 
-							WarnWinText "Uncompatible concrete material selected for Fiber Section"
+							WarnWinText "Non-compatible concrete material selected for Fiber Section"
 							DWLocalSetValue $GDN $STRUCT "Main_section_material" "Concrete04_(Popovics_concrete)"
 
 						}
@@ -811,14 +811,14 @@ proc Fiber::CheckFieldValues { event args } {
 
 							if { [lsearch $CompatibleSteelMaterials $TopBarMatType]==-1 } {
 
-								WarnWinText "Uncompatible steel material ($TopBarMatType) selected for Fiber Section"
+								WarnWinText "Non-compatible steel material ($TopBarMatType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Top_slab_reinforcing_bar_material" "Steel01"
 
 							}
 
 						} else {
 
-							WarnWinText "Uncompatible steel material selected for Fiber Section"
+							WarnWinText "Non-compatible steel material selected for Fiber Section"
 							DWLocalSetValue $GDN $STRUCT "Top_slab_reinforcing_bar_material" "Steel01"
 
 						}
@@ -829,14 +829,14 @@ proc Fiber::CheckFieldValues { event args } {
 
 							if { [lsearch $CompatibleSteelMaterials $BotBarMatType]==-1 } {
 
-								WarnWinText "Uncompatible steel material ($BotBarMatType) selected for Fiber Section"
+								WarnWinText "Non-compatible steel material ($BotBarMatType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Bottom_slab_reinforcing_bar_material" "Steel01"
 
 							}
 
 						} else {
 
-							WarnWinText "Uncompatible steel material selected for Fiber Section"
+							WarnWinText "Non-compatible steel material selected for Fiber Section"
 							DWLocalSetValue $GDN $STRUCT "Bottom_slab_reinforcing_bar_material" "Steel01"
 
 						}
@@ -855,21 +855,21 @@ proc Fiber::CheckFieldValues { event args } {
 
 								if { [lsearch $CompatibleConcreteMaterials $AddConcreteType]==-1 } {
 
-								WarnWinText "Uncompatible concrete material ($AddConcreteType) selected for Fiber Section"
+								WarnWinText "Non-compatible concrete material ($AddConcreteType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Additional_part_material" "Concrete04_(Popovics_concrete)"
 
 								}
 
 								if { [lsearch $CompatibleSteelMaterials $AddSlabBarType]==-1 } {
 
-								WarnWinText "Uncompatible steel material ($AddSlabBarType) selected for Fiber Section"
+								WarnWinText "Non-compatible steel material ($AddSlabBarType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Top_slab_reinforcing_bar_material" "Steel01"
 
 								}
 
 								if { [lsearch $CompatibleSteelMaterials $BeamBarType]==-1 } {
 
-								WarnWinText "Uncompatible steel material ($BeamBarType) selected for Fiber Section"
+								WarnWinText "Non-compatible steel material ($BeamBarType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Beam_reinforcing_bar_material" "Steel01"
 
 						}
@@ -1132,20 +1132,7 @@ proc Fiber::Script { event args } {
 
 						} else {
 
-							set x 6
-
-							switch $ROW {
-								6 { set x 6}
-								9 { set x 8}
-								12 { set x 10}
-								15 { set x 12}
-								18 { set x 14}
-								21 { set x 16}
-								24 { set x 18}
-								27 { set x 20}
-								30 { set x 22}
-								33 { set x 24}
-							}
+							set x [expr $ROW-$RegionNumber+1]
 
 							set eexists [winfo exists $PARENT.e$x]
 
@@ -1166,20 +1153,7 @@ proc Fiber::Script { event args } {
 						#WarnWinText "[info exists Fiber::script]"
 						#WarnWinText "[info exists Fiber::script($MaterialTag,$RegionNumber]"
 
-						set x 6
-
-						switch $ROW {
-							6 { set x 6}
-							9 { set x 8}
-							12 { set x 10}
-							15 { set x 12}
-							18 { set x 14}
-							21 { set x 16}
-							24 { set x 18}
-							27 { set x 20}
-							30 { set x 22}
-							33 { set x 24}
-						}
+						set x [expr $ROW-$RegionNumber+1]
 
 						set eexists [winfo exists $PARENT.e$x]
 
@@ -1214,9 +1188,12 @@ proc Fiber::Script { event args } {
 
 						if {$FiberCustomVisited} {
 
-							set ok [Fiber::SetScript $MaterialName $RegionNumber ["$scriptParent($MaterialName).fiberscript$MaterialName$RegionNumber" get 1.0 end] ]
-							set ok [Fiber::SaveScriptFile $MaterialName $RegionNumber]
+							set w_exists [winfo exists $scriptParent($MaterialName).fiberscript$MaterialName$RegionNumber]
 
+							if { $w_exists } {
+								set ok [Fiber::SetScript $MaterialName $RegionNumber ["$scriptParent($MaterialName).fiberscript$MaterialName$RegionNumber" get 1.0 end] ]
+								set ok [Fiber::SaveScriptFile $MaterialName $RegionNumber]
+							}
 						}
 				}
 		}
@@ -1255,7 +1232,7 @@ proc Fiber::SaveScriptFile { Material Region } {
 
 		if {!$folderexists} {
 
-			file mkdir [file join $GiDProjectDir Scripts]
+			file mkdir $folderpath
 		}
 
 		if {$script($Material,$Region) != ""} {
@@ -1266,12 +1243,20 @@ proc Fiber::SaveScriptFile { Material Region } {
 			close $fp
 
 		} else {
-		# empty textbox
+
+			# empty textbox
+
 			if {$fexists} {
 
 				file delete -force $filepath
-
 			}
+		}
+
+		# delete folder
+
+		set file_list [glob -nocomplain "$folderpath/*"]
+		if {[llength $file_list] == 0} {
+			file delete -force $folderpath
 		}
 	}
 
@@ -1291,6 +1276,7 @@ proc Fiber::FiberCustomFileExists { MaterialName RegionNum } {
 	if {$fexists} {
 		return 1
 	}
+
 	return 0
 }
 

@@ -2,7 +2,7 @@
 *if(MatProp(Activate_torsional_stiffness,int)==1 && MatProp(Torsional_stiffness_GJ,real)!=0)
 section Fiber *FiberCustomTag -GJ *MatProp(Torsional_stiffness_GJ,real) {
 *else
-section Fiber *FiberCustomTag {
+section Fiber *FiberCustomTag -GJ 1e10 {
 *endif
 *set var FileExists=tcl(Fiber::FiberCustomFileExists *MatProp(0) 1)
 *if(FileExists==1)

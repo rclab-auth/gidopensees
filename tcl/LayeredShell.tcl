@@ -19,23 +19,23 @@ proc LayeredShell::CheckFieldValues { event args } {
 			Hysteretic \
 			"
 
-			set ChosenLongBarMaterial [DWLocalGetValue $GDN $STRUCT "Longitudinal_bar_material"]
-			set ChosenTransvBarMaterial [DWLocalGetValue $GDN $STRUCT "Transverse_bar_material"]
+			set ChosenLongBarMaterial [DWLocalGetValue $GDN $STRUCT "Longitudinal_steel_material"]
+			set ChosenTransBarMaterial [DWLocalGetValue $GDN $STRUCT "Transverse_steel_material"]
 
 			set ChosenLongBarMaterialType [GiD_AccessValue get materials $ChosenLongBarMaterial "Material:"]
-			set ChosenTransvBarMaterialType [GiD_AccessValue get materials $ChosenTransvBarMaterial "Material:"]
+			set ChosenTransBarMaterialType [GiD_AccessValue get materials $ChosenTransBarMaterial "Material:"]
 
 			if { [lsearch $CompatibleSteelMaterials $ChosenLongBarMaterialType]==-1 } {
-					WarnWinText "Uncompatible steel material ($ChosenLongBarMaterialType) selected for LayeredShell Section"
-					DWLocalSetValue $GDN $STRUCT "Longitudinal_bar_material" "Steel02"
+					WarnWinText "Non-compatible steel material ($ChosenLongBarMaterialType) selected for LayeredShell Section"
+					DWLocalSetValue $GDN $STRUCT "Longitudinal_steel_material" "Steel02"
 			}
 
-			if { [lsearch $CompatibleSteelMaterials $ChosenTransvBarMaterialType]==-1 } {
-					WarnWinText "Uncompatible steel material ($ChosenTransvBarMaterialType) selected for LayeredShell Section"
-					DWLocalSetValue $GDN $STRUCT "Transverse_bar_material" "Steel02"
+			if { [lsearch $CompatibleSteelMaterials $ChosenTransBarMaterialType]==-1 } {
+					WarnWinText "Non-compatible steel material ($ChosenTransBarMaterialType) selected for LayeredShell Section"
+					DWLocalSetValue $GDN $STRUCT "Transverse_steel_material" "Steel02"
 			}
 
-			set fcunit [DWLocalGetValue $GDN $STRUCT "Concrete_compressive_strength"]
+			set fcunit [DWLocalGetValue $GDN $STRUCT "Cover_fc"]
 
 			set temp [GidConvertValueUnit $fcunit]
 			set temp [ParserNumberUnit $temp fc stressUnit]
@@ -43,8 +43,20 @@ proc LayeredShell::CheckFieldValues { event args } {
 			if {$fc < 0 } {
 				set fc [expr (-1)*$fc]
 				set fcunit $fc$stressUnit
-				set ok [DWLocalSetValue $GDN $STRUCT Concrete_compressive_strength $fcunit]
-				WarnWinText "For LayeredShell Section Concrete compressive strength is entered as positive value"
+				set ok [DWLocalSetValue $GDN $STRUCT Cover_fc $fcunit]
+				WarnWinText "For LayeredShell section, concrete compressive strength is positive"
+			}
+
+			set fcunit [DWLocalGetValue $GDN $STRUCT "Core_fc"]
+
+			set temp [GidConvertValueUnit $fcunit]
+			set temp [ParserNumberUnit $temp fc stressUnit]
+
+			if {$fc < 0 } {
+				set fc [expr (-1)*$fc]
+				set fcunit $fc$stressUnit
+				set ok [DWLocalSetValue $GDN $STRUCT Core_fc $fcunit]
+				WarnWinText "For LayeredShell section, concrete compressive strength is positive"
 			}
 		}
 	}
@@ -65,22 +77,39 @@ proc LayeredShell::CalcBarAreas {event args } {
 
 			if {$checked} {
 
-				set LongSizeUnit [DWLocalGetValue $GDN $STRUCT Longitudinal_bar_size]
-				set TransvSizeUnit [DWLocalGetValue $GDN $STRUCT Transverse_bar_size]
+				set WUnit [DWLocalGetValue $GDN $STRUCT Wall_width]
+				set nLong [DWLocalGetValue $GDN $STRUCT Longitudinal_bars]
+				set nTrans [DWLocalGetValue $GDN $STRUCT Transverse_bars]
+				set LongSizeUnit [DWLocalGetValue $GDN $STRUCT Longitudinal_bar_diameter]
+				set TransSizeUnit [DWLocalGetValue $GDN $STRUCT Transverse_bar_diameter]
+				set LongSpaceUnit [DWLocalGetValue $GDN $STRUCT Longitudinal_reinforcement_spacing]
+				set TransSpaceUnit [DWLocalGetValue $GDN $STRUCT Transverse_reinforcement_spacing]
+
+				set temp [GidConvertValueUnit $WUnit]
+				set temp [ParserNumberUnit $temp W lengthunit]
+				set temp [GidConvertValueUnit $LongSpaceUnit]
+				set temp [ParserNumberUnit $temp LongSpace lengthunit]
+				set temp [GidConvertValueUnit $TransSpaceUnit]
+				set temp [ParserNumberUnit $temp TransSpace lengthunit]
 				set temp [GidConvertValueUnit $LongSizeUnit]
 				set temp [ParserNumberUnit $temp LongSize barunit]
+				set temp [GidConvertValueUnit $TransSizeUnit]
+				set temp [ParserNumberUnit $temp TransSize barunit]
 
-				set temp [GidConvertValueUnit $TransvSizeUnit]
-				set temp [ParserNumberUnit $temp TransvSize barunit]
+				if {$LongSpace != 0} {
+					set LongRatio [format "%1.3e" [expr $nLong*$pi*$LongSize*$LongSize/4.0/$LongSpace/$W]]
+				} else {
+					set LongRatio 0
+				}
+				
+				if {$TransSpace != 0} {
+					set TransRatio [format "%1.3e" [expr $nTrans*$pi*$TransSize*$TransSize/4.0/$TransSpace/$W]]
+				} else {
+					set TransRatio 0
+				}
 
-				set LongArea [format "%1.3e" [expr $pi*($LongSize*$LongSize)/4.0]]
-				set LongArea $LongArea$barunit^2
-
-				set TransvArea [format "%1.3e" [expr $pi*($TransvSize*$TransvSize)/4.0]]
-				set TransvArea $TransvArea$barunit^2
-
-				set ok [DWLocalSetValue $GDN $STRUCT Longitudinal_bar_area $LongArea]
-				set ok [DWLocalSetValue $GDN $STRUCT Transverse_bar_area $TransvArea]
+				set ok [DWLocalSetValue $GDN $STRUCT Longitudinal_reinforcement_ratio $LongRatio]
+				set ok [DWLocalSetValue $GDN $STRUCT Transverse_reinforcement_ratio $TransRatio]
 			}
 		}
 	}

@@ -9,7 +9,7 @@
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
 # V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
 #
-# Former Contributors
+# Project Contributors
 #
 # F. Derveni, Dipl. Eng. AUTh
 # V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
@@ -753,36 +753,36 @@ TKWIDGET: ZeroLength::CheckFieldValues
 QUESTION: Activate_Ux#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,SET,Ux_material,#CURRENT#) (1,RESTORE,Ux_material,#CURRENT#)
-QUESTION: Ux_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Ux_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 QUESTION: Activate_Uy#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uy_material,#CURRENT#) (1,RESTORE,Uy_material,#CURRENT#)
-QUESTION: Uy_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Uy_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Uz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uz_material,#CURRENT#) (1,RESTORE,Uz_material,#CURRENT#)
-QUESTION: Uz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Uz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rx#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rx_material,#CURRENT#) (1,RESTORE,Rx_material,#CURRENT#)
-QUESTION: Rx_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Rx_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Ry#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Ry_material,#CURRENT#) (1,RESTORE,Ry_material,#CURRENT#)
-QUESTION: Ry_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Ry_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rz_material,#CURRENT#) (1,RESTORE,Rz_material,#CURRENT#)
-QUESTION: Rz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Rz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 TKWIDGET: TK_ZeroLengthWikiInfo
@@ -811,7 +811,7 @@ TKWIDGET: BeamContact::CheckFieldValues
 #VALUE: 2
 #DEPENDENCIES: (2,RESTORE,Width,#CURRENT#,HIDE,Radius,#CURRENT#)
 #DEPENDENCIES: (3,RESTORE,Radius,#CURRENT#,HIDE,Width,#CURRENT#)
-QUESTION: Contact_material#MAT#(Multidimensional_(nD)_Materials)
+QUESTION: Contact_material#MAT#(Multidimensional_(nD)_Materials,User_Materials)
 VALUE: Contact
 QUESTION: Width/Radius#UNITS#
 VALUE: 0.25m
@@ -906,36 +906,36 @@ TKWIDGET: ZeroLength::CheckFieldValues
 QUESTION: Activate_Ux#CB#(0,1)
 VALUE: 1
 DEPENDENCIES: (0,SET,Ux_material,#CURRENT#) (1,RESTORE,Ux_material,#CURRENT#)
-QUESTION: Ux_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Ux_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 QUESTION: Activate_Uy#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uy_material,#CURRENT#) (1,RESTORE,Uy_material,#CURRENT#)
-QUESTION: Uy_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Uy_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Uz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Uz_material,#CURRENT#) (1,RESTORE,Uz_material,#CURRENT#)
-QUESTION: Uz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Uz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rx#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rx_material,#CURRENT#) (1,RESTORE,Rx_material,#CURRENT#)
-QUESTION: Rx_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Rx_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Ry#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Ry_material,#CURRENT#) (1,RESTORE,Ry_material,#CURRENT#)
-QUESTION: Ry_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Ry_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 QUESTION: Activate_Rz#CB#(0,1)
 VALUE: 0
 DEPENDENCIES: (0,SET,Rz_material,#CURRENT#) (1,RESTORE,Rz_material,#CURRENT#)
-QUESTION: Rz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials)
+QUESTION: Rz_material#MAT#(Standard_Uniaxial_Materials,Uniaxial_Steel_Materials,Combined_Materials,User_Materials)
 VALUE: Elastic
 STATE: DISABLED
 TKWIDGET: TK_ZeroLengthWikiInfo

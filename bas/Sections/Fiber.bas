@@ -284,6 +284,8 @@ section Fiber *FiberTag *\
 *if(MatProp(Torsional_stiffness_GJ,real)!=0 && MatProp(Activate_torsional_stiffness,int)==1)
 *format "%g"
 -GJ *MatProp(Torsional_stiffness_GJ,real) *\
+*else
+-GJ 1e10 *\
 *endif
  {
 *set var zdivision=MatProp(Fibers_in_local_z_direction,int)

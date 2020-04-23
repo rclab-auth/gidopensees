@@ -47,6 +47,9 @@
 *include ..\..\Materials\nD\J2Plasticity.bas
 *elseif(strcmp(MatProp(Material:),"Damage2p")==0)
 *include ..\..\Materials\nD\Damage2p.bas
+*elseif(strcmp(MatProp(Material:),"UserMaterial")==0)
+set MatTag *MaterialID; # *tcl(UserMaterial::GetMaterialName *MatProp(0))
+*include ..\..\Materials\User\UserMaterial.bas
 *endif
 *break
 *endif
@@ -62,10 +65,10 @@
 element tri31 *ElemsNum *ElemsConec *thickness  *\
 *if(strcmp(ElemsMatProp(Plane_behavior),"PlaneStrain")==0)
 *format "%8g%8g%8g%8g"
-PlaneStrain   *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
+PlaneStrain   *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction) ; # *ElemsMatProp(Material)
 *elseif(strcmp(ElemsMatProp(Plane_behavior),"PlaneStress")==0)
 *format "%8g%8g%8g%8g"
-PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction)
+PlaneStress   *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(Surface_pressure) *ElemsMatProp(Mass_density) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction) ; # *ElemsMatProp(Material)
 *endif
 *set var VarCount=VarCount+1
 *endif

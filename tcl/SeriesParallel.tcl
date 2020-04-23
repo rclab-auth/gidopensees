@@ -58,7 +58,7 @@ proc SeriesParallel::CheckFieldValues { event args } {
 
 				if { [lsearch $CompatibleMaterials $matType]==-1 } {
 
-					WarnWinText "Uncompatible Material ($matType) selected for $thisMatType Material"
+					WarnWinText "Non-compatible Material ($matType) selected for $thisMatType Material"
 
 				}
 			}

@@ -1,22 +1,11 @@
-*set var LayeredShellTag=SectionID
-*set var PlaneStressUserMaterialTag=PlaneStressUserMaterialTag+1
-*set var PlateFromPlaneStressMaterialTag=PlateFromPlaneStressMaterialTag+1
-*set var PlateRebarLongTag=PlateRebarLongTag+1
-*set var PlateRebarTransvTag=PlateRebarTransvTag+1
-*# define PlaneStressUserMaterial for concrete
-*format "%6d%6g%6g"
-nDMaterial PlaneStressUserMaterial *PlaneStressUserMaterialTag 40 7 *MatProp(Concrete_compressive_strength,real) *MatProp(Concrete_tensile_strength,real) *\
-*format "%6g%6g"
-*MatProp(Concrete_crushing_strength,real) *MatProp(Concrete_strain_at_maximum_strength,real) *\
-*format "%6g%6g"
-*MatProp(Concrete_strain_at_crushing_strength,real) *MatProp(Ultimate_tensile_strain,real) *\
-*format "%6g%6g"
-*MatProp(Shear_retention_factor,real)
-*# define PlateFromPlaneStress material
-*format "%6d%6d%6g"
-nDMaterial PlateFromPlaneStress *PlateFromPlaneStressMaterialTag *PlaneStressUserMaterialTag *MatProp(Shear_modulus_of_out_plane,real)
+# section LayeredShell $sectionTag $nLayers $matTag1 $thickness_1 ... $matTagn $thickness_n
+# *tcl(UserMaterial::GetMaterialName *MatProp(0))
+
+*#
 *# define PlateRebar for longitudinal reinforcement
-*set var SelectedLongRBMaterial=tcl(FindMaterialNumber *MatProp(Longitudinal_bar_material) *DomainNum)
+*#
+*set var PlateRebarLongTag=PlateRebarLongTag+1
+*set var SelectedLongRBMaterial=tcl(FindMaterialNumber *MatProp(Longitudinal_steel_material) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedLongRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
@@ -40,10 +29,13 @@ nDMaterial PlateFromPlaneStress *PlateFromPlaneStressMaterialTag *PlaneStressUse
 *endif
 *end materials
 *endif
-# PlateRebar for longitudinal reinforcement
-*format "%6d%6d%6d"
-nDMaterial PlateRebar *PlateRebarLongTag *SelectedLongRBMaterial 90
-*set var SelectedTransverseRBMaterial=tcl(FindMaterialNumber *MatProp(Transverse_bar_material) *DomainNum)
+*format "%6d%4d%4d"
+nDMaterial PlateRebar *PlateRebarLongTag *SelectedLongRBMaterial  90
+*#
+*# define PlateRebar for transverse reinforcement
+*#
+*set var PlateRebarTransTag=PlateRebarTransTag+1
+*set var SelectedTransverseRBMaterial=tcl(FindMaterialNumber *MatProp(Transverse_steel_material) *DomainNum)
 *set var MaterialExists=tcl(CheckUsedMaterials *SelectedTransverseRBMaterial )
 *if(MaterialExists==-1)
 *loop materials *NotUsed
@@ -67,40 +59,85 @@ nDMaterial PlateRebar *PlateRebarLongTag *SelectedLongRBMaterial 90
 *endif
 *end materials
 *endif
-# PlateRebar for transverse reinforcement
-*format "%6d%6d%6d"
-nDMaterial PlateRebar *PlateRebarTransvTag *SelectedTransverseRBMaterial 0
-*set var height=MatProp(Height,real)
-*set var totalThick=MatProp(Thickness,real)
-*set var width=MatProp(Width,real)
-*set var totalArea=operation(width*totalThick)
-*set var cover=MatProp(Cover_depth_for_bars,real)
-*set var nlongbars=MatProp(Longitudinal_bars,int)
-*set var longbarArea=MatProp(Longitudinal_bar_area,real)
-*set var transbarArea=MatProp(Transverse_bar_area,real)
-*set var nlayersCover=2
-*set var nlayersTransv=2
+*format "%6d%4d%4d"
+nDMaterial PlateRebar *PlateRebarTransTag *SelectedTransverseRBMaterial  0
+*#
+*# define PlaneStressUserMaterial for cover concrete
+*#
+*set var PlaneStressUserMaterialTag=PlaneStressUserMaterialTag+1
+*format "%6d%8g%8g"
+nDMaterial PlaneStressUserMaterial *PlaneStressUserMaterialTag    40  7 *MatProp(Cover_fc,real) *MatProp(Cover_ft,real) *\
+*format "%8g%8g"
+*MatProp(Cover_fu,real) *MatProp(Cover_ec,real) *\
+*format "%8g%8g"
+*MatProp(Cover_ecu,real) *MatProp(Cover_etu,real) *\
+*format "%6g"
+*MatProp(Cover_shear_ret._factor,real)
+*#
+*# define PlateFromPlaneStress material for cover concrete
+*#
+*set var PlateFromPlaneStressMaterialTag=PlateFromPlaneStressMaterialTag+1
+*format "%6d%6d%10g"
+nDMaterial PlateFromPlaneStress    *PlateFromPlaneStressMaterialTag *PlaneStressUserMaterialTag *MatProp(Cover_G,real)
+*#
+*# define PlaneStressUserMaterial for core concrete
+*#
+*set var PlaneStressUserMaterialTag=PlaneStressUserMaterialTag+1
+*format "%6d%8g%8g"
+nDMaterial PlaneStressUserMaterial *PlaneStressUserMaterialTag    40  7 *MatProp(Core_fc,real) *MatProp(Core_ft,real) *\
+*format "%8g%8g"
+*MatProp(Core_fu,real) *MatProp(Core_ec,real) *\
+*format "%8g%8g"
+*MatProp(Core_ecu,real) *MatProp(Core_etu,real) *\
+*format "%6g"
+*MatProp(Core_shear_ret._factor,real)
+*#
+*# define PlateFromPlaneStress material for core concrete
+*#
+*set var PlateFromPlaneStressMaterialTag=PlateFromPlaneStressMaterialTag+1
+*format "%6d%6d%10g"
+nDMaterial PlateFromPlaneStress    *PlateFromPlaneStressMaterialTag *PlaneStressUserMaterialTag *MatProp(Core_G,real)
+*#
+*#
+*#
+*set var nlayersCover=MatProp(Cover_layers,int)
 *set var nlayersLong=2
-*set var nlayersCore=4
-*set var nlayers=10
-*set var coverArea=operation(2*cover*width)
-*set var coverThick=operation(coverArea/(Width*nlayersCover))
-*set var TotalLongBarArea=operation(longbarArea*nlongbars)
-*set var LongBarThick=operation(TotalLongBarArea/(nlayersLong*width))
-*set var TransSpace=MatProp(Transverse_reinforcement_space,int)
-*set var temp1=tcl(Bas_round *height *TransSpace)
-*set var temp=operation(temp1+1)
-*set var TotalTransBarArea=operation(temp*transbarArea*2)
-*set var TotalTransBarArea=operation(TotalTransBarArea/2.0)
-*set var TransBarThick=operation(TotalTransBarArea/height)
-*set var coreArea=operation((totalArea-coverArea-TotalLongBarArea))
-*set var coreThick=operation(coreArea/(width*nlayersCore))
-# section LayeredShell $sectionTag $nLayers $matTag1 $thickness1...$matTagn $thicknessn
-*format "%6d%6d%6d%6g"
-section LayeredShell *LayeredShellTag *nlayers *PlateFromPlaneStressMaterialTag *coverThick *\
-*format "%6d%6g%6d%6g"
-*PlateRebarTransvTag *TransBarThick *PlateRebarLongTag *LongBarThick *\
-*format "%6d%6g%6d%6g%6d%6g%6d%6g"
-*PlateFromPlaneStressMaterialTag *coreThick *PlateFromPlaneStressMaterialTag *coreThick *PlateFromPlaneStressMaterialTag *coreThick *PlateFromPlaneStressMaterialTag *coreThick *\
-*format "%6d%6g%6d%6g%6d%6g"
-*PlateRebarLongTag *LongBarThick *PlateRebarTransvTag *TransBarThick *PlateFromPlaneStressMaterialTag *coverThick
+*set var nlayersTrans=2
+*set var nlayersCore=MatProp(Core_layers,int)
+*set var nlayers=operation(2*nlayersCover+nlayersLong+nlayersTrans+nlayersCore)
+*#
+*set var width=MatProp(Wall_width,real)
+*set var cover=MatProp(Reinforcement_cover,real)
+*set var LongRatio=MatProp(Longitudinal_reinforcement_ratio,real)
+*set var LongThick=operation(LongRatio*width/2)
+*set var TransRatio=MatProp(Transverse_reinforcement_ratio,real)
+*set var TransThick=operation(TransRatio*width/2)
+*set var CoverThick=operation(cover/nlayersCover)
+*set var CoreThick=operation((width-2*(LongThick+TransThick+CoverThick))/nlayersCore)
+*#
+*#
+*#
+*set var LayeredShellTag=SectionID
+*format "%d%d"
+section LayeredShell *LayeredShellTag *nlayers *\
+*set var PlateFromPlaneStressMaterialTag=PlateFromPlaneStressMaterialTag-1
+*for(i=1;i<=nlayersCover;i=i+1)
+*format "%d%g"
+*PlateFromPlaneStressMaterialTag *coverThick *\
+*endfor
+*format "%d%g%d%g"
+*PlateRebarTransTag *TransThick *PlateRebarLongTag *LongThick *\
+*set var PlateFromPlaneStressMaterialTag=PlateFromPlaneStressMaterialTag+1
+*for(i=1;i<=nlayersCore;i=i+1)
+*format "%d%g"
+*PlateFromPlaneStressMaterialTag *coreThick *\
+*endfor
+*format "%d%g%d%g"
+*PlateRebarLongTag *LongThick *PlateRebarTransTag *TransThick *\
+*set var PlateFromPlaneStressMaterialTag=PlateFromPlaneStressMaterialTag-1
+*for(i=1;i<=nlayersCover;i=i+1)
+*format "%d%g"
+*PlateFromPlaneStressMaterialTag *coverThick
+
+*endfor
+*set var PlateFromPlaneStressMaterialTag=PlateFromPlaneStressMaterialTag+1

@@ -12,24 +12,25 @@ proc Shell::CheckFieldValues { event args } {
 			set thisElemType [DWLocalGetValue $GDN $STRUCT Element_type:]
 			set ChosenSection [DWLocalGetValue $GDN $STRUCT $QUESTION]
 
-			set CompatibeSections " \
+			set CompatibleSections " \
 			PlateFiber \
 			ElasticMembranePlate \
 			LayeredShell \
+			UserMaterial \
 			"
 
 			if {![catch {GiD_AccessValue get materials $ChosenSection "Section:"}]} {
 
 				set secType [GiD_AccessValue get materials $ChosenSection "Section:"]
 
-				if { [lsearch $CompatibeSections $secType]==-1 } {
+				if { [lsearch $CompatibleSections $secType]==-1 } {
 
-				WarnWinText "Uncompatible Section ($secType) selected for $thisElemType Element"
+				WarnWinText "Non-compatible Section ($secType) selected for $thisElemType Element"
 
 				}
 			} else {
 
-				WarnWinText "Uncompatible Material selected for $thisElemType Element"
+				WarnWinText "Non-compatible Material selected for $thisElemType Element"
 			}
 		}
 	}
