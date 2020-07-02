@@ -34,7 +34,7 @@
 
 ---
 
-**Version 2.8.0 (xx/xx/2020)**
+**Version 2.8.0 (03/07/2020)**
 
 - Added : **User Material** for user material scripts (Data Menu -> Materials/Elements Definition)
 - Added : **User Recorder** for user recorder scripts (Options)

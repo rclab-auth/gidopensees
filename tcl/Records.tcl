@@ -176,7 +176,6 @@ proc Records::Display {event args} {
 						set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
 
 						cd "$OpenSeesProblemTypePath/exe"
-
 						exec {*}[auto_execok start] "RecordViewer.exe" "[Records::GetFilename]" "[Records::GetFormat]" "[Records::GetType]" [Records::GetSclFactor] [Records::GetLinesSkip] [Records::GetDt] [Records::GetTimeCol] [Records::GetValCol] &
 
 					} else {
