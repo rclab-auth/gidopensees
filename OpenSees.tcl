@@ -852,14 +852,7 @@ proc LoadGIDProject { filespd } {
 				update
 			}
 
-			if { [info exists ::OpenSees_AskToTransform] && !$::OpenSees_AskToTransform } {
-
-				set response 0
-
-			} else {
-
-				set response [tk_dialog $InfoWin "Version mismatch" "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first." info 0 "  Transform  " "  Keep old version  " ]
-			}
+			set response [tk_dialog $InfoWin "Version mismatch" "Current problemtype version ($VersionNumber) is different than saved model version ($spd_data). Please transform your model first." info 0 "  Transform  " "  Keep old version  " ]
 
 			if { $response == 0 } {
 
