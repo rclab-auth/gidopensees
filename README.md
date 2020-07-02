@@ -39,12 +39,12 @@
 - Added : **User Material** for user material scripts (Data Menu -> Materials/Elements Definition)
 - Added : **User Recorder** for user recorder scripts (Options)
 - Added : **Layer Recorders** for individual LayeredShell layers (Options)
-- Added : **Cracking output** in LayeredShell layers (needs recompilation of latest OpenSees source)
+- Added : **Cracking output** in LayeredShell layers (available in OpenSees source after 30/6/2020)
 - Improved : results postprocessor rewritten, supports results on individual LayeredShell layers
 - Improved : .tcl import feature
 - Improved : LayeredShell element definition
 - Improved : option to enable 6DOFs for truss elements
-- Various minor improvements
+- Various fixes and improvements
 
 ---
 
