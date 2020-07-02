@@ -2,8 +2,7 @@
 # Analysis procedures
 
 proc ExecutePost {} {
-
-	# executes OpenSeesPost.exe from exe folder installed within OpenSees.gid inside GiD installation folder
+# executes OpenSeesPost.exe from exe folder installed within OpenSees.gid inside GiD installation folder
 
 	set param1 [OpenSees::GetProblemTypePath]
 	regsub -all {\\} $param1 {/} param1
@@ -17,9 +16,8 @@ proc ExecutePost {} {
 	set OutputStep [GiD_AccessValue get GenData Output_step_frequency]
 	set OutputStep [lindex [split $OutputStep #] 0]
 
-	set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
-
-	cd "$OpenSeesProblemTypePath/exe"
+	set exe_folder [file join [OpenSees::GetProblemTypePath] "exe" ]
+	cd "$exe_folder"
 
 	# Run OpenSeesPost
 
@@ -254,7 +252,7 @@ proc Run_existing_tcl { doPost } {
 
 		# run analysis
 
-		eval exec [auto_execok start] \"\" [list [file attributes $OpenSeesPath -shortname]] \"$tcl_file\"
+		exec {*}[auto_execok start] $OpenSeesPath $tcl_file
 
 		if {[file exists "$GiDProjectName.log"] } {
 
@@ -695,7 +693,6 @@ proc Opt7_dialog { } {
 # Various menu options
 
 proc executeImportExe { tcl_file project_dir units_system } {
-
 	# arguments : file, project dir, units system, flags..
 	# flags to include : Geometry, Restraints, Constraints, Loads, Materials, Sections, Elements
 
@@ -734,9 +731,11 @@ proc Import_tcl_dialog { } {
 	set tcl [tk_getOpenFile -filetypes $types]
 	regsub -all {/} $tcl {\\} tcl
 
+	set exe_folder [file join "$OpenSeesProblemTypePath" "exe"]
+
 	if {$tcl ne ""} {
 
-		cd "$OpenSeesProblemTypePath/exe"
+		cd $exe_folder
 
 		set units_system [GiD_Units get system]
 
@@ -770,7 +769,7 @@ proc mnu_open_tcl { } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
-
+	set OpenSeesPath [OpenSees::GetOpenSeesPath]
 	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
 
 	if {[file exists $tcl_file]} {
@@ -790,7 +789,7 @@ proc mnu_open_log { } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
-
+	set OpenSeesPath [OpenSees::GetOpenSeesPath]
 	set log_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.log"]
 
 	if {[file exists $log_file]} {
@@ -810,7 +809,7 @@ proc mnu_open_analysis_folder { } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
-
+	set OpenSeesPath [OpenSees::GetOpenSeesPath]
 	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
 
 	if {[file exists $tcl_file]} {
@@ -839,13 +838,14 @@ proc AboutOpenSeesProbType { } {
 proc CheckForUpdate {} {
 
 	set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
+	set exe_folder [file join "$OpenSeesProblemTypePath" "exe"]
+	set update_exe "CheckForUpdate.exe"
 
-	cd "$OpenSeesProblemTypePath/exe"
+	cd $exe_folder
 
-	if { [file exists "CheckForUpdate.exe"] } {
+	if { [file exists $update_exe] } {
 
-		exec {*}[auto_execok start] "CheckForUpdate.exe" &
-
+		exec {*}[auto_execok start] $update_exe &
 	} else {
 
 		tk_dialog .gid.errorMsg "Error" "The update executable was not found." error  "  Ok  "
@@ -856,7 +856,6 @@ proc openPdfFile { pdf_file } {
 	if { [file exists $pdf_file] } {
 
 		exec {*}[auto_execok start] $pdf_file &
-
 	} else {
 
 		tk_dialog .gid.errorMsg "Error" "The .pdf file was not found." error  "  Ok  "

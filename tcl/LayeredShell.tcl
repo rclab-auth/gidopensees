@@ -101,7 +101,7 @@ proc LayeredShell::CalcBarAreas {event args } {
 				} else {
 					set LongRatio 0
 				}
-
+				
 				if {$TransSpace != 0} {
 					set TransRatio [format "%1.3e" [expr $nTrans*$pi*$TransSize*$TransSize/4.0/$TransSpace/$W]]
 				} else {

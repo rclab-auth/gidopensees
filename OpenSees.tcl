@@ -52,6 +52,8 @@ proc OpenSees::InitGIDProject { dir } {
 	variable OpenSeesPath; # OpenSees.exe path
 
 	set OpenSeesProblemTypePath $dir
+	set exe_folder [file join "$OpenSeesProblemTypePath" "exe"]
+	set update_exe "CheckForUpdate.exe"
 
 	OpenSees::SetOpenSeesPath
 	OpenSees::SetProjectNameAndPath
@@ -93,10 +95,11 @@ proc OpenSees::InitGIDProject { dir } {
 
 	OpenSees::ChangeData
 
-	UpdateInfoBar
+	after 1000 "{UpdateInfoBar}"
 
-	cd "$OpenSeesProblemTypePath/exe"
-	after idle exec {*}[auto_execok start] "CheckForUpdate.exe" "/q" &
+	cd $exe_folder
+
+	after 2000 exec {*}[auto_execok start] $update_exe "/q" &
 }
 
 proc OpenSees::ChangeData {} {
@@ -1300,7 +1303,7 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 
 proc EndGIDPostProcess {} {
 
-	UpdateInfoBar
+	after 2000 "{UpdateInfoBar}"
 }
 
 proc EndToolbar1 {} {
@@ -1465,11 +1468,6 @@ proc UpdateInfoBar { } {
 }
 
 proc UpdateInfoBar_Do { } {
-
-	if { [GiD_Info postprocess arewein] == "YES"} {
-
-		return
-	}
 
 	# remove bindings
 
