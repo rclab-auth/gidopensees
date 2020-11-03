@@ -474,7 +474,7 @@ end;
 
 // procedures for writing results
 
-procedure WriteResults(IsMatrix,Principal : boolean; Caption,Filename,ElemName,ResultName,C1,C2,C3,C4,C5,C6,UnitName : string; ValuesPerGP : integer; OneFilePerGP : boolean; P1,P2,P3,P4,P5,P6 : integer);
+procedure WriteResults(IsMatrix,Principal : boolean; Caption,Filename,ElemName,ResultName,C1,C2,C3,C4,C5,C6,UnitName : string; GPs, ValuesPerGP : integer; OneFilePerGP : boolean; P1,P2,P3,P4,P5,P6 : integer);
 
 var
     i,j,k,cnt : integer;
@@ -560,14 +560,14 @@ begin
                         StrToArray(lines[i],Strs[i],ValuesPerGP*n,true); // read all values from current step (ValuesPerGP values)
                 end
                 else
-                    StrToArray(lines[0],Strs[0],4*ValuesPerGP*n,true);   // read all values from current step (ValuesPerGP values per gauss point)
+                    StrToArray(lines[0],Strs[0],GPs*ValuesPerGP*n,true);   // read all values from current step (ValuesPerGP values per gauss point)
 
 
                 for j := 0 to n-1 do  // elements
                 begin
                     s := Tags[j] + StringOfChar(' ',INDENT-Length(Tags[j]));
 
-                    for k := 0 to 3 do
+                    for k := 0 to GPs-1 do
                     begin
                          if OneFilePerGP then
                          begin
@@ -577,7 +577,7 @@ begin
                          else
                          begin
                              f := 0;                        // same file
-                             index := ValuesPerGP*(4*j+k);  // line start index
+                             index := ValuesPerGP*(GPs*j+k);  // line start index
                          end;
 
                          if Principal then
@@ -947,7 +947,7 @@ begin
        FileExists(ModelPath+'\OpenSees\stdBrick_strain.out') then
     begin
         MSH.Writeline('');
-        MSH.Writeline('GaussPoints "stdbrick_GP" ElemType Hexahedra');
+        MSH.Writeline('GaussPoints "stdBrick_GP" ElemType Hexahedra');
         MSH.Writeline('Number Of Gauss Points: 8');
         MSH.Writeline('Natural Coordinates: Given');
         MSH.Writeline('-0.577350269189626 -0.577350269189626 -0.577350269189626');
@@ -961,7 +961,7 @@ begin
         MSH.Writeline('end GaussPoints');
 
         MSH.Writeline('');
-        MSH.Writeline('GaussPoints "stdbrick_Node" ElemType Hexahedra');
+        MSH.Writeline('GaussPoints "stdBrick_Node" ElemType Hexahedra');
         MSH.Writeline('Number Of Gauss Points: 8');
         MSH.Writeline('Natural Coordinates: Given');
         MSH.Writeline('-1 -1 -1');
@@ -3148,17 +3148,17 @@ begin
     WriteResults(false,
                  false,'Reading stdBrick forces ',
                        'stdBrick_force','stdBrick','Forces',
-                       'Fx','Fy','Fz','','','','kN',3,false,0,1,2,-1,-1,-1);
+                       'Fx','Fy','Fz','','','','kN',8,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(true,
                  false,'Reading stdBrick stresses ',
-                       'stdBrick_strain','stdBrick','Stresses',
-                       's11','s22','s33','s12','s23','s13','kPa',6,false,0,1,2,3,4,5);
+                       'stdBrick_stress','stdBrick','Stresses',
+                       's11','s22','s33','s12','s23','s13','kPa',8,6,false,0,1,2,3,4,5);
 
     WriteResults(true,
                  false,'Reading stdBrick strains ',
                        'stdBrick_strain','stdBrick','Strains',
-                       'e11','e22','e33','e12','e23','e13','-',6,false,0,1,2,3,4,5);
+                       'e11','e22','e33','e12','e23','e13','-',8,6,false,0,1,2,3,4,5);
 
 
     //
@@ -3174,27 +3174,27 @@ begin
     WriteResults(false,
                  false,'Reading Tri31 forces ',
                        'Tri31_force','Tri31','Forces',
-                       'Fx','Fy','N/A','','','','kN',2,false,0,1,-1,-1,-1,-1);
+                       'Fx','Fy','N/A','','','','kN',4,2,false,0,1,-1,-1,-1,-1);
 
     WriteResults(true,
                  false,'Reading Tri31 stresses ',
-                       'Tri31_strain','Tri31','Stresses',
-                       's11','s22','s12','','','','kPa',3,false,0,1,2,-1,-1,-1);
+                       'Tri31_stress','Tri31','Stresses',
+                       's11','s22','s12','','','','kPa',4,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(true,
                  false,'Reading Tri31 strains ',
                        'Tri31_strain','Tri31','Strains',
-                       'e11','e22','e12','','','','-',3,false,0,1,2,-1,-1,-1);
+                       'e11','e22','e12','','','','-',4,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading Tri31 principal stresses ',
-                       'Tri31_strain','Tri31','Stresses-Principal',
-                       's1','s2','angle','','','','kPa',3,false,0,1,2,-1,-1,-1);
+                       'Tri31_stress','Tri31','Stresses-Principal',
+                       's1','s2','angle','','','','kPa',4,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading Tri31 principal strains ',
                        'Tri31_strain','Tri31','Strains-Principal',
-                       'e1','e2','angle','','','','-',3,false,0,1,2,-1,-1,-1);
+                       'e1','e2','angle','','','','-',4,3,false,0,1,2,-1,-1,-1);
 
     //
     // Quad
@@ -3203,27 +3203,27 @@ begin
     WriteResults(false,
                  false,'Reading Quad forces ',
                        'Quad_force','Quad','Forces',
-                       'Fx','Fy','N/A','','','','kN',2,false,0,1,-1,-1,-1,-1);
+                       'Fx','Fy','N/A','','','','kN',4,2,false,0,1,-1,-1,-1,-1);
 
     WriteResults(true,
                  false, 'Reading Quad stresses ',
-                       'Quad_strain','Quad','Stresses',
-                       's11','s22','s12','','','','kPa',3,false,0,1,2,-1,-1,-1);
+                       'Quad_stress','Quad','Stresses',
+                       's11','s22','s12','','','','kPa',4,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(true,
                  false,'Reading Quad strains ',
                        'Quad_strain','Quad','Strains',
-                       'e11','e22','e12','','','','-',3,false,0,1,2,-1,-1,-1);
+                       'e11','e22','e12','','','','-',4,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading Quad principal stresses ',
-                       'Quad_strain','Quad','Stresses-Principal',
-                       's1','s2','angle','','','','kPa',3,false,0,1,2,-1,-1,-1);
+                       'Quad_stress','Quad','Stresses-Principal',
+                       's1','s2','angle','','','','kPa',4,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading Quad principal strains ',
                        'Quad_strain','Quad','Strains-Principal',
-                       'e1','e2','angle','','','','-',3,false,0,1,2,-1,-1,-1);
+                       'e1','e2','angle','','','','-',4,3,false,0,1,2,-1,-1,-1);
 
     //
     // shellMITC4
@@ -3232,52 +3232,52 @@ begin
     WriteResults(false,
                  false,'Reading ShellMITC4 forces ',
                        'ShellMITC4_force','ShellMITC4','Forces',
-                       'Fx','Fy','N/A','','','','kN',6,false,0,1,2,-1,-1,-1);
+                       'Fx','Fy','N/A','','','','kN',4,6,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellMITC4 moments ',
                        'ShellMITC4_force','ShellMITC4','Moments',
-                       'Mx','My','N/A','','','','kNm',6,false,3,4,5,-1,-1,-1);
+                       'Mx','My','N/A','','','','kNm',4,6,false,3,4,5,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellMITC4 stresses (membrane) ',
                        'ShellMITC4_stress','ShellMITC4','Stresses-Membrane',
-                       's11','s22','s12','','','','kPa',8,false,0,1,2,-1,-1,-1);
+                       's11','s22','s12','','','','kPa',4,8,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellMITC4 stresses (bending) ',
                        'ShellMITC4_stress','ShellMITC4','Stresses-Bending',
-                       'm11','m22','m12','','','','kPa',8,false,3,4,5,-1,-1,-1);
+                       'm11','m22','m12','','','','kPa',4,8,false,3,4,5,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellMITC4 stresses (shear) ',
                        'ShellMITC4_stress','ShellMITC4','Stresses-Shear',
-                       't1','t2','N/A','','','','kPa',8,false,6,7,-1,-1,-1,-1);
+                       't1','t2','N/A','','','','kPa',4,8,false,6,7,-1,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellMITC4 strains (membrane) ',
                        'ShellMITC4_strain','ShellMITC4','Strains-Membrane',
-                       'e11','e22','e12','','','','-',8,false,0,1,2,-1,-1,-1);
+                       'e11','e22','e12','','','','-',4,8,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellMITC4 strains (bending) ',
                        'ShellMITC4_strain','ShellMITC4','Strains-Bending',
-                       'k11','k22','k12','','','','-',8,false,3,4,5,-1,-1,-1);
+                       'k11','k22','k12','','','','-',4,8,false,3,4,5,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellMITC4 strains (shear) ',
                        'ShellMITC4_strain','ShellMITC4','Strains-Shear',
-                       'g1','g2','N/A','','','','-',8,false,6,7,-1,-1,-1,-1);
+                       'g1','g2','N/A','','','','-',4,8,false,6,7,-1,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading ShellMITC4 principal stresses (membrane) ',
                        'ShellMITC4_stress','ShellMITC4','Stresses-Membrane-Principal',
-                       's1','s2','angle','','','','kPa',8,false,0,1,2,-1,-1,-1);
+                       's1','s2','angle','','','','kPa',4,8,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading ShellMITC4 principal strains (membrane) ',
                        'ShellMITC4_strain','ShellMITC4','Strains-Membrane-Principal',
-                       'e1','e2','angle','','','','-',8,false,0,1,2,-1,-1,-1);
+                       'e1','e2','angle','','','','-',4,8,false,0,1,2,-1,-1,-1);
 
 
     //
@@ -3287,52 +3287,52 @@ begin
     WriteResults(false,
                  false,'Reading ShellDKGQ forces ',
                        'ShellDKGQ_force','ShellDKGQ','Forces',
-                       'Fx','Fy','N/A','','','','kN',6,false,0,1,2,-1,-1,-1);
+                       'Fx','Fy','N/A','','','','kN',4,6,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellDKGQ moments ',
                        'ShellDKGQ_force','ShellDKGQ','Moments',
-                       'Mx','My','N/A','','','','kNm',6,false,3,4,5,-1,-1,-1);
+                       'Mx','My','N/A','','','','kNm',4,6,false,3,4,5,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellDKGQ stresses (membrane) ',
                        'ShellDKGQ_stress','ShellDKGQ','Stresses-Membrane',
-                       's11','s22','s12','','','','kPa',8,false,0,1,2,-1,-1,-1);
+                       's11','s22','s12','','','','kPa',4,8,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellDKGQ stresses (bending) ',
                        'ShellDKGQ_stress','ShellDKGQ','Stresses-Bending',
-                       'm11','m22','m12','','','','kPa',8,false,3,4,5,-1,-1,-1);
+                       'm11','m22','m12','','','','kPa',4,8,false,3,4,5,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellDKGQ stresses (shear) ',
                        'ShellDKGQ_stress','ShellDKGQ','Stresses-Shear',
-                       't1','t2','N/A','','','','kPa',8,false,6,7,-1,-1,-1,-1);
+                       't1','t2','N/A','','','','kPa',4,8,false,6,7,-1,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellDKGQ strains (membrane) ',
                        'ShellDKGQ_strain','ShellDKGQ','Strains-Membrane',
-                       'e11','e22','e12','','','','-',8,false,0,1,2,-1,-1,-1);
+                       'e11','e22','e12','','','','-',4,8,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellDKGQ strains (bending) ',
                        'ShellDKGQ_strain','ShellDKGQ','Strains-Bending',
-                       'k11','k22','k12','','','','-',8,false,3,4,5,-1,-1,-1);
+                       'k11','k22','k12','','','','-',4,8,false,3,4,5,-1,-1,-1);
 
     WriteResults(false,
                  false,'Reading ShellDKGQ strains (shear) ',
                        'ShellDKGQ_strain','ShellDKGQ','Strains-Shear',
-                       'g1','g2','N/A','','','','-',8,false,6,7,-1,-1,-1,-1);
+                       'g1','g2','N/A','','','','-',4,8,false,6,7,-1,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading ShellDKGQ principal stresses (membrane) ',
                        'ShellDKGQ_stress','ShellDKGQ','Stresses-Membrane-Principal',
-                       's1','s2','angle','','','','kPa',8,false,0,1,2,-1,-1,-1);
+                       's1','s2','angle','','','','kPa',4,8,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading ShellDKGQ principal strains (membrane) ',
                        'ShellDKGQ_strain','ShellDKGQ','Strains-Membrane-Principal',
-                       'e1','e2','angle','','','','-',8,false,0,1,2,-1,-1,-1);
+                       'e1','e2','angle','','','','-',4,8,false,0,1,2,-1,-1,-1);
 
     //
     // shellMITC4 per layer
@@ -3344,32 +3344,32 @@ begin
         WriteResults(false,
                      false,'Reading ShellMITC4 stresses (membrane) for layer '+IntToStr(i)+' ',
                            'ShellMITC4_stress_Layer'+IntToStr(i),'ShellMITC4','Stresses-Membrane (L'+IntToStr(i)+')',
-                           's11','s22','s12','','','','kPa',5,true,0,1,2,-1,-1,-1);
+                           's11','s22','s12','','','','kPa',4,5,true,0,1,2,-1,-1,-1);
 
         WriteResults(false,
                      false,'Reading ShellMITC4 stresses (shear) for layer '+IntToStr(i)+' ',
                            'ShellMITC4_stress_Layer'+IntToStr(i),'ShellMITC4','Stresses-Shear (L'+IntToStr(i)+')',
-                           't1','t2','N/A','','','','kPa',5,true,3,4,-1,-1,-1,-1);
+                           't1','t2','N/A','','','','kPa',4,5,true,3,4,-1,-1,-1,-1);
 
         WriteResults(false,
                      false,'Reading ShellMITC4 strains (membrane) for layer '+IntToStr(i)+' ',
                            'ShellMITC4_strain_Layer'+IntToStr(i),'ShellMITC4','Strains-Membrane (L'+IntToStr(i)+')',
-                           'e11','e22','e12','','','','-',5,true,0,1,2,-1,-1,-1);
+                           'e11','e22','e12','','','','-',4,5,true,0,1,2,-1,-1,-1);
 
         WriteResults(false,
                      false,'Reading ShellMITC4 strains (shear) for layer '+IntToStr(i)+' ',
                            'ShellMITC4_strain_Layer'+IntToStr(i),'ShellMITC4','Strains-Shear (L'+IntToStr(i)+')',
-                           'g1','g2','N/A','','','','-',5,true,3,4,-1,-1,-1,-1);
+                           'g1','g2','N/A','','','','-',4,5,true,3,4,-1,-1,-1,-1);
 
         WriteResults(false,
                       true,'Reading ShellMITC4 principal stresses (membrane) for layer '+IntToStr(i)+' ',
                            'ShellMITC4_stress_Layer'+IntToStr(i),'ShellMITC4','Stresses-Membrane-Principal (L'+IntToStr(i)+')',
-                           's1','s2','angle','','','','kPa',5,true,0,1,2,-1,-1,-1);
+                           's1','s2','angle','','','','kPa',4,5,true,0,1,2,-1,-1,-1);
 
         WriteResults(false,
                       true,'Reading ShellMITC4 principal strains (membrane) for layer '+IntToStr(i)+' ',
                            'ShellMITC4_strain_Layer'+IntToStr(i),'ShellMITC4','Strains-Membrane-Principal (L'+IntToStr(i)+')',
-                           'e1','e2','angle','','','','-',5,true,0,1,2,-1,-1,-1);
+                           'e1','e2','angle','','','','-',4,5,true,0,1,2,-1,-1,-1);
 
         WriteCracks(       'Reading ShellMITC4 cracks for layer '+IntToStr(i)+' ',
                            'ShellMITC4_crack_Layer'+IntToStr(i),'ShellMITC4','Cracks (L'+IntToStr(i)+')');
@@ -3385,32 +3385,32 @@ begin
         WriteResults(false,
                      false,'Reading ShellDKGQ stresses (membrane) for layer '+IntToStr(i)+' ',
                            'ShellDKGQ_stress_Layer'+IntToStr(i),'ShellDKGQ','Stresses-Membrane (L'+IntToStr(i)+')',
-                           's11','s22','s12','','','','kPa',5,true,0,1,2,-1,-1,-1);
+                           's11','s22','s12','','','','kPa',4,5,true,0,1,2,-1,-1,-1);
 
         WriteResults(false,
                      false,'Reading ShellDKGQ stresses (shear) for layer '+IntToStr(i)+' ',
                            'ShellDKGQ_stress_Layer'+IntToStr(i),'ShellDKGQ','Stresses-Shear (L'+IntToStr(i)+')',
-                           't1','t2','N/A','','','','kPa',5,true,3,4,-1,-1,-1,-1);
+                           't1','t2','N/A','','','','kPa',4,5,true,3,4,-1,-1,-1,-1);
 
         WriteResults(false,
                      false,'Reading ShellDKGQ strains (membrane) for layer '+IntToStr(i)+' ',
                            'ShellDKGQ_strain_Layer'+IntToStr(i),'ShellDKGQ','Strains-Membrane (L'+IntToStr(i)+')',
-                           'e11','e22','e12','','','','-',5,true,0,1,2,-1,-1,-1);
+                           'e11','e22','e12','','','','-',4,5,true,0,1,2,-1,-1,-1);
 
         WriteResults(false,
                      false,'Reading ShellDKGQ strains (shear) for layer '+IntToStr(i)+' ',
                            'ShellDKGQ_strain_Layer'+IntToStr(i),'ShellDKGQ','Strains-Shear (L'+IntToStr(i)+')',
-                           'g1','g2','N/A','','','','-',5,true,3,4,-1,-1,-1,-1);
+                           'g1','g2','N/A','','','','-',4,5,true,3,4,-1,-1,-1,-1);
 
         WriteResults(false,
                       true,'Reading ShellDKGQ principal stresses (membrane) for layer '+IntToStr(i)+' ',
                            'ShellDKGQ_stress_Layer'+IntToStr(i),'ShellDKGQ','Stresses-Membrane-Principal (L'+IntToStr(i)+')',
-                           's1','s2','angle','','','','kPa',5,true,0,1,2,-1,-1,-1);
+                           's1','s2','angle','','','','kPa',4,5,true,0,1,2,-1,-1,-1);
 
         WriteResults(false,
                       true,'Reading ShellDKGQ principal strains (membrane) for layer '+IntToStr(i)+' ',
                            'ShellDKGQ_strain_Layer'+IntToStr(i),'ShellDKGQ','Strains-Membrane-Principal (L'+IntToStr(i)+')',
-                           'e1','e2','angle','','','','-',5,true,0,1,2,-1,-1,-1);
+                           'e1','e2','angle','','','','-',4,5,true,0,1,2,-1,-1,-1);
 
         WriteCracks(       'Reading ShellDKGQ cracks for layer '+IntToStr(i)+' ',
                            'ShellDKGQ_crack_Layer'+IntToStr(i),'ShellDKGQ','Cracks (L'+IntToStr(i)+')');
