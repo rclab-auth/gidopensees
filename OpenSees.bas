@@ -7,7 +7,7 @@
 #                           |_|                                                                                
 #
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2020
+# Copyright (C) 2016-2021
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh

@@ -1,5 +1,5 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2020
+# Copyright (C) 2016-2021
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -2469,6 +2469,16 @@ COMMENT: \n\tApply function creates extra points/nodes in Layer: AutoZL at the r
 QUESTION: Element_type:#CB#(AutoZL)
 VALUE: AutoZL
 STATE: HIDDEN
+QUESTION: Source:#CB#(Layer,All,Visible)
+VALUE: Layer
+DEPENDENCIES: (Layer, RESTORE, Layer_name, #CURRENT# )
+DEPENDENCIES: (All, HIDE, Layer_name, #CURRENT# )
+DEPENDENCIES: (Visible, HIDE, Layer_name, #CURRENT# )
+HELP: Layer: Points or Nodes from specific layer regardless the visibility\nAll: all points or nodes regardless the visibility\nVisible: Only visible points or nodes
+QUESTION: Layer_name:
+VALUE: Layer0
+HELP: Layer with name "AutoZL" will be ignored.
+TKWIDGET: GidUtils::TkwidgetGetLayername
 QUESTION: X-Criteria#CB#(Any,Fixed,GT,GET,LT,LET,Between)
 VALUE:
 HELP: GT: Greater than\nGET: Greater/Equal than\nLT: Less than\nLET: Less/Equal than\nBetween: inside (min,max) space including boundaries
@@ -2577,6 +2587,16 @@ MATERIAL: Auto_equal_constraint
 COMMENT: \n\t
 QUESTION: Determine_master_node#CB#(Existed,Extra)
 VALUE: Existed
+QUESTION: Source:#CB#(Layer,All,Visible)
+VALUE: Layer
+DEPENDENCIES: (Layer, RESTORE, Layer_name, #CURRENT# )
+DEPENDENCIES: (All, HIDE, Layer_name, #CURRENT# )
+DEPENDENCIES: (Visible, HIDE, Layer_name, #CURRENT# )
+HELP: Layer: Points or Nodes from specific layer regardless the visibility\nAll: all points or nodes regardless the visibility\nVisible: Only visible points or nodes
+QUESTION: Layer_name:
+VALUE: Layer0
+HELP: Layer with name "AutoZL" will be ignored.
+TKWIDGET: GidUtils::TkwidgetGetLayername
 QUESTION: X-Criteria#CB#(Any,Fixed,GT,GET,LT,LET,Between)
 VALUE:
 HELP: GT: Greater than\nGET: Greater/Equal than\nLT: Less than\nLET: Less/Equal than\nBetween: inside (min,max) space including boundaries

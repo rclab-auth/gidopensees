@@ -1,5 +1,5 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2020
+# Copyright (C) 2016-2021
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -35,7 +35,7 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.8.0"
+	variable VersionNumber "v2.8.5"
 	variable InterfaceName [_ " GiD+OpenSees Interface $VersionNumber "]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesPath
@@ -68,24 +68,6 @@ proc OpenSees::InitGIDProject { dir } {
 	set splashdir $dir
 
 	OpenSees_Menu $dir
-
-	set ipos [lsearch $MenuNames [_ "Help"]]
-
-	if { $ipos != -1 } {
-		set MenuEntries($ipos) [linsert $MenuEntries($ipos) 0 "Help on OpenSees"]
-		set MenuCommands($ipos) [linsert $MenuCommands($ipos) 0 [list -np- HelpOnOpenSees $dir]]
-		set MenuAcceler($ipos) [linsert $MenuAcceler($ipos) 0 ""]
-
-		CreateTopMenus
-	}
-
-	set ipos [lsearch $MenuNamesP Help]
-
-	if { $ipos != -1 } {
-		set MenuEntriesP($ipos) [linsert $MenuEntriesP($ipos) 0 "Help on OpenSees"]
-		set MenuCommandsP($ipos) [linsert $MenuCommandsP($ipos) 0 [list -np- HelpOnOpenSees $dir]]
-		set MenuAccelerP($ipos) [linsert $MenuAccelerP($ipos) 0 ""]
-	}
 
 	OpenSees::Toolbar1
 	OpenSees::Toolbar2
@@ -1285,7 +1267,7 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 
 			foreach point $points IDold $Idold opt $options {
 
-				set values [list $IDold [lindex $opt 0] [lindex $opt 1] [lindex $opt 2] [lindex $opt 3] [lindex $opt 4] [lindex $opt 5] [lindex $opt 6] [lindex $opt 7] [lindex $opt 8] [lindex $opt 9] [lindex $opt 10] [lindex $opt 11] ]
+				set values [list $IDold [lindex $opt 0] [lindex $opt 1] [lindex $opt 2] [lindex $opt 3] [lindex $opt 4] [lindex $opt 5] [lindex $opt 6] [lindex $opt 7] [lindex $opt 8] [lindex $opt 9] [lindex $opt 10] [lindex $opt 11] { } ]
 				GiD_AssignData condition $new_cond_name points $values $point
 			}
 		}

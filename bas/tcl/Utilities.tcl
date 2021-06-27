@@ -995,7 +995,9 @@ proc OpenSees_Menu { dir } {
 		GiDMenu::InsertOption "GiD+OpenSees" [list $tab] $position PRE $command "" $full_path_icon
 		incr position
 	}
-
+	
+	GiDMenu::InsertOption "Help" [list [= "Help on %s" OpenSees]...] 0 PREPOST [list HelpOnOpenSees $dir] "" "" insert
+	
 	GiDMenu::UpdateMenus
 }
 
