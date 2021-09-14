@@ -1767,7 +1767,7 @@ TKWIDGET: TK_SectionWikiInfo
 END MATERIAL
 
 MATERIAL: LayeredShell
-COMMENT: \n\tEnter the rectangular section properties to be modeled with shell elements\n\tusing a layered/composite formulation for each integration point.\n\n\tExample : 2 bars of 16 mm diameter with 100 mm spacing is 2[encoding convertfrom cp1252 \xD8]16/100.\n
+COMMENT: \n\tEnter the rectangular section properties to be modeled with shell elements\n\tusing a layered/composite formulation for each integration point.\n\n\tExample : 2 bars of 16 mm diameter with 100 mm spacing is 2\xD816/100.\n
 TITLE: General
 QUESTION: Section:#CB#(LayeredShell)
 VALUE: LayeredShell
