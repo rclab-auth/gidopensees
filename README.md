@@ -34,7 +34,7 @@
 
 ---
 
-**Version 2.9.0 (10/03/2022)**
+**Version 2.9.0 (07/03/2022)**
 
 - **Material Tester** (developed by G. Ntinolazos, Dipl. Eng. AUTh)
 - **All-in-one** installation (with latest OpenSees 3.3.0)
