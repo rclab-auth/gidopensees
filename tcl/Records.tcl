@@ -357,8 +357,8 @@ proc Records::GetFilenameCmd { varname entry {tail 0}} {
 	set aa [GiD_Info Project]
 	set ProjectName [lindex $aa 1]
 
-	set types [list [list [_ "All files"] ".*"]]
-	set defaultextension ""
+	set types [list [list [_ "Record files"] ".txt"] [list [_ "Record files"] ".dat"]]
+	set defaultextension ".txt"
 	set title [_ "Select file"]
 	set current_value [Browser-ramR file read .gid $title [set ::$varname] $types $defaultextension 0]
 

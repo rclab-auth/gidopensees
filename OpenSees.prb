@@ -1,5 +1,5 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2021
+# Copyright (C) 2016-2022
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -11,9 +11,10 @@
 #
 # Project Contributors
 #
-# F. Derveni, Dipl. Eng. AUTh
-# V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
+# F. Derveni, Dipl. Eng. AUTh, PhD
+# G. Ntinolazos, Dipl. Eng. AUTh
 # T. Papadopoulos, Dipl. Eng. AUTh, MSc
+# V. Protopapadakis, Dipl. Eng. AUTh, MSc
 # T. Zachariadis, Dipl. Eng. AUTh, MSc
 #
 # This program is free software: you can redistribute it and/or modify

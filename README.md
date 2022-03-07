@@ -1,6 +1,6 @@
 # GiD + OpenSees Interface
 
-*(c) 2016-2021*
+*(c) 2016-2022*
 
 *Lab of R/C and Masonry Structures, School of Civil Engineering, Aristotle University of Thessaloniki, Greece*
 
@@ -11,9 +11,10 @@
 
 **Project contributors**
 
-- F. Derveni, Dipl. Eng. AUTh
-- V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
+- F. Derveni, Dipl. Eng. AUTh, PhD
+- G. Ntinolazos, Dipl. Eng. AUTh
 - T. Papadopoulos, Dipl. Eng. AUTh, MSc
+- V. Protopapadakis, Dipl. Eng. AUTh, MSc
 - T. Zachariadis, Dipl. Eng. AUTh, MSc
 
 ---
@@ -21,7 +22,6 @@
 ### KNOWN ISSUES
 
 ---
-- The GiD+OpenSees Interface **requires the full tcl/tk framework to run properly**. Please install the latest version of **ActiveTcl** first and then copy **OpenSees.exe** in a separate folder (e.g. C:\OpenSees), that should be prompted during the interface installation.
 - In order to view the generated .tcl file ('Create and view .tcl only' menu option), first associate the .tcl extension with your favorite text editor (e.g. Notepad, Notepad++ etc.).
 - OpenSees does not combine constraints (multiple 'fix' commands on the same node). As a result:
    - Intersection joints that belong to two lines with different constraints should be handled separately.
@@ -34,9 +34,17 @@
 
 ---
 
+**Version 2.9.0 (10/03/2022)**
+
+- **Material driver** (developed by G. Ntinolazos, Dipl. Eng. AUTh)
+- All-in-one installation (with latest OpenSees 3.3.0)
+- Various fixes and improvements
+
+---
+
 **Version 2.8.5 (27/06/2021)**
 
-- Added : 'Source' option in autoEDOF and autoZL 
+- Added : 'Source' option in autoEDOF and autoZL
 - Improved : .tcl import feature
 - Various fixes and improvements
 

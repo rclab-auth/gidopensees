@@ -1,5 +1,5 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2021
+# Copyright (C) 2016-2022
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -11,9 +11,10 @@
 #
 # Project Contributors
 #
-# F. Derveni, Dipl. Eng. AUTh
-# V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
+# F. Derveni, Dipl. Eng. AUTh, PhD
+# G. Ntinolazos, Dipl. Eng. AUTh
 # T. Papadopoulos, Dipl. Eng. AUTh, MSc
+# V. Protopapadakis, Dipl. Eng. AUTh, MSc
 # T. Zachariadis, Dipl. Eng. AUTh, MSc
 #
 # This program is free software: you can redistribute it and/or modify
@@ -67,6 +68,19 @@ VALUE: 4000 kN/m
 QUESTION: Moment_per_rotation_unit#UNITS#
 VALUE: 10000 kNm
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: Elastic_Perfectly_Plastic
@@ -121,6 +135,19 @@ VALUE: 0.0m
 QUESTION: Initial_rotation_eps0#UNITS#
 VALUE: 0.0 rad
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 9 -0.005 0.005 1 -0.004 0.004 1 -0.003 0.003 1
 END MATERIAL
 
 MATERIAL: Elastic_Perfectly_Plastic_with_Gap
@@ -168,6 +195,19 @@ VALUE: 0.0m
 QUESTION: Rotation_gap#UNITS#
 VALUE: 0.0 rad
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: Viscous
@@ -180,6 +220,19 @@ VALUE: 0.0 kNsec/m
 QUESTION: Power_factor_alpha
 VALUE: 1#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: Viscous_Damper
@@ -199,6 +252,19 @@ DEPENDENCIES: (0,HIDE,Gap_length,#CURRENT#) (1,RESTORE,Gap_length,#CURRENT#)
 QUESTION: Gap_length#UNITS#
 VALUE: 0.05 m
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: Hyperbolic_Gap
@@ -216,6 +282,19 @@ VALUE: -326 kN
 QUESTION: Initial_gap#UNITS#
 VALUE: -2.54 cm
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: PySimple1
@@ -237,6 +316,19 @@ QUESTION: Viscous_damping_coefficient#UNITS#
 VALUE: 0.0 kNsec/m
 HELP: Nonzero values are used to represent radiation damping effects
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: TzSimple1
@@ -254,6 +346,19 @@ QUESTION: Viscous_damping_coefficient#UNITS#
 VALUE: 0.0 kNsec/m
 HELP: Nonzero values are used to represent radiation damping effects
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: QzSimple1
@@ -275,6 +380,19 @@ QUESTION: Viscous_damping_coefficient#UNITS#
 VALUE: 0.0 kNsec/m
 HELP: Nonzero values are used to represent radiation damping effects
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: BondSP01
@@ -303,6 +421,19 @@ VALUE: 0.4
 QUESTION: Pinching_factor_for_the_cyclic_slip_vs_bar_response
 VALUE: 0.5
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 
@@ -350,6 +481,19 @@ VALUE: 0#WIDTH#(10)
 QUESTION: Isotropic_hardening_parameter_a4
 VALUE: 1#WIDTH#(10)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 9 -0.015 0.015 1 -0.01 0.01 1 -0.005 0.005 1
 END MATERIAL
 
 MATERIAL: Steel02
@@ -406,6 +550,19 @@ VALUE: 0.0 kN
 QUESTION: Initial_moment#UNITS#
 VALUE: 0.0 kNm
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 9 -0.015 0.015 1 -0.01 0.01 1 -0.005 0.005 1
 END MATERIAL
 
 MATERIAL: Reinforcing_steel
@@ -430,6 +587,19 @@ VALUE: 5e-3#WIDTH#(15)
 QUESTION: Strain_at_peak_stress_esu
 VALUE: 7.5e-2#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: Hysteretic
@@ -525,6 +695,19 @@ VALUE: 0.2#WIDTH#(15)
 QUESTION: Beta_power
 VALUE: 0.0#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 9 -0.015 0.015 1 -0.01 0.01 1 -0.005 0.005 1
 END MATERIAL
 
 MATERIAL: Ramberg-Osgood steel
@@ -545,6 +728,19 @@ VALUE: 0.002#WIDTH#(10)
 QUESTION: Parameter_n_to_control_transition_from_elastic_to_plastic_branches
 VALUE: 5#WIDTH#(10)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 
@@ -587,6 +783,19 @@ VALUE: -17.0 MPa
 QUESTION: Strain_at_crushing_strength_epscU
 VALUE: -3.5e-3#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 12 -0.0005 0 1 -0.001 0 1 -0.0015 0 1 -0.002 0 1
 END MATERIAL
 
 MATERIAL: Concrete02_(Linear_tension_softening)
@@ -630,6 +839,19 @@ VALUE: 2.2 MPa
 QUESTION: Tension_softening_stiffness_Ets#UNITS#
 VALUE: 2 GPa
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 12 -0.0005 0.00005 1 -0.001 0.00005 1 -0.0015 0.00005 1 -0.002 0.00005 1
 END MATERIAL
 
 MATERIAL: Concrete04_(Popovics_concrete)
@@ -671,6 +893,19 @@ VALUE: 2.2 MPa
 QUESTION: Ultimate_tensile_strain
 VALUE: 1e-3#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: Concrete06
@@ -718,6 +953,19 @@ VALUE: 1#WIDTH#(15)
 QUESTION: Parameter_a2_for_tensile_plastic_strain_definition
 VALUE: 7.700e-004#WIDTH#(15)
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 MATERIAL: ConcreteCM
@@ -771,6 +1019,19 @@ QUESTION: Gap_parameter
 VALUE: 1
 STATE: HIDDEN
 TKWIDGET: TK_MaterialWikiInfo
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+TKWIDGET: TK_MaterialTester
+QUESTION: _#CB#(_)
+VALUE:
+STATE: HIDDEN
+QUESTION: Analysis_type#CB#(Monotonic,Cyclic)
+VALUE: Monotonic
+DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
+DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
+QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
+VALUE: #N# 3 -0.005 0.005 5
 END MATERIAL
 
 

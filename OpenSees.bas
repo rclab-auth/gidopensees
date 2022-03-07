@@ -7,7 +7,7 @@
 #                           |_|                                                                                
 #
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2021
+# Copyright (C) 2016-2022
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -19,9 +19,10 @@
 #
 # Project Contributors
 #
-# F. Derveni, Dipl. Eng. AUTh
-# V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
+# F. Derveni, Dipl. Eng. AUTh, PhD
+# G. Ntinolazos, Dipl. Eng. AUTh
 # T. Papadopoulos, Dipl. Eng. AUTh, MSc
+# V. Protopapadakis, Dipl. Eng. AUTh, MSc
 # T. Zachariadis, Dipl. Eng. AUTh, MSc
 #
 # This program is free software: you can redistribute it and/or modify
@@ -322,14 +323,12 @@ model BasicBuilder -ndm *ndime -ndf *currentDOF
 
 *tcl(LogFile)
 
-puts ""
 puts " __   __       __          __                   _       "
 puts "/ _ .|  \\ _|_ /  \\ _  _ _ (_  _ _ _  | _ |_ _ _(_ _  _ _"
 puts "\\__)||__/  |  \\__/|_)(-| )__)(-(-_)  || )|_(-| | (_|(_(-"
 puts "                  |                                     "
-puts "                                                  *tcl(OpenSees::GetVersion)"
-puts "Analysis summary"
-puts ""
+puts "                             *tcl(OpenSees::GetVersion) with OpenSees v[version]\n"
+puts "Analysis summary\n"
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
@@ -366,11 +365,9 @@ puts "Interval *IntvNum : *IntvData(Analysis_type) - *\
 *endif
 *endif
 *end intervals
-puts ""
-puts "----------------"
-puts ""
+puts "\n----------------\n"
 set time_start [clock seconds]
-puts "Starting analysis at [clock format $time_start -format %H:%M:%S]\n"
+puts "Starting analysis...\n"
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
@@ -382,7 +379,7 @@ puts "Starting analysis at [clock format $time_start -format %H:%M:%S]\n"
 #
 # --------------------------------------------------------------------------------------------------------------
 
-puts "Running interval *IntvNum\n"
+puts "Running interval *IntvNum"
 *include bas\Actions\Loads.bas
 *include bas\Analysis\UpdateMaterialStage.bas
 *include bas\Analysis\UpdateParameters.bas
@@ -422,7 +419,7 @@ set second 0.0
 set time_end [clock seconds]
 set analysisTime [expr $time_end-$time_start]
 
-puts "Analysis finished at [clock format $time_end -format %H:%M:%S]\n"
+puts "Analysis finished.\n"
 
 if {$analysisTime<60} {
     if {$analysisTime==0} {

@@ -184,10 +184,10 @@ proc ZeroLength::AutoCreate { event args } {
 			INIT {
 				lassign $args PARENT current_row_variable GDN STRUCT QUESTION
 				upvar $current_row_variable ROW
-				
+
 				variable source_mode [DWLocalGetValue $GDN $STRUCT "Source:"]
 				variable source_layer [DWLocalGetValue $GDN $STRUCT "Layer_name:"]
-				
+
 				variable auto_x_crit [DWLocalGetValue $GDN $STRUCT "X-Criteria"]
 				variable auto_y_crit [DWLocalGetValue $GDN $STRUCT "Y-Criteria"]
 				variable auto_z_crit [DWLocalGetValue $GDN $STRUCT "Z-Criteria"]
@@ -235,10 +235,10 @@ proc ZeroLength::AutoCreate { event args } {
 				set GDN [lindex $args 0]
 				set STRUCT [lindex $args 1]
 				set QUESTION [lindex $args 2]
-				
+
 				variable source_mode [DWLocalGetValue $GDN $STRUCT "Source:"]
 				variable source_layer [DWLocalGetValue $GDN $STRUCT "Layer_name:"]
-				
+
 				variable auto_x_crit [DWLocalGetValue $GDN $STRUCT "X-Criteria"]
 				variable auto_y_crit [DWLocalGetValue $GDN $STRUCT "Y-Criteria"]
 				variable auto_z_crit [DWLocalGetValue $GDN $STRUCT "Z-Criteria"]
@@ -299,7 +299,7 @@ proc ZeroLength::createLayer {} {
 }
 
 proc ZeroLength::AutoCreateCmd { pop } {
-	
+
 	variable source_mode
 	variable source_layer
 	variable auto_x_crit
@@ -473,7 +473,7 @@ proc ZeroLength::AutoCreateCmd { pop } {
 	set maxNodeNum [GiD_Info Mesh MaxNumNodes]
 	set idcounter 0; # in case of append autozl option, this counter will help for continuous id point/node creation
 	foreach nodeID $nodeslist {
-		
+
 		set curr_layer [lindex [GiD_Mesh get node $nodeID] 0]
 		# do not make extra nodes because of already existed extra nodes!
 		if { $curr_layer == "AutoZL" } { continue; }
@@ -485,7 +485,7 @@ proc ZeroLength::AutoCreateCmd { pop } {
 				continue;
 			}
 		}
-		
+
 		# get the coordinates of each node
 		set check [lsearch $autoNodeList $nodeID]
 		if { $check != -1 } {

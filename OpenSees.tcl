@@ -1,5 +1,5 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2021
+# Copyright (C) 2016-2022
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -11,9 +11,10 @@
 #
 # Project Contributors
 #
-# F. Derveni, Dipl. Eng. AUTh
-# V.K. Protopapadakis, Dipl. Eng. AUTh, MSc
+# F. Derveni, Dipl. Eng. AUTh, PhD
+# G. Ntinolazos, Dipl. Eng. AUTh
 # T. Papadopoulos, Dipl. Eng. AUTh, MSc
+# V. Protopapadakis, Dipl. Eng. AUTh, MSc
 # T. Zachariadis, Dipl. Eng. AUTh, MSc
 #
 # This program is free software: you can redistribute it and/or modify
@@ -35,10 +36,10 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.8.5"
+	variable VersionNumber "v2.9.0"
 	variable InterfaceName [_ " GiD+OpenSees Interface $VersionNumber "]
 	variable OpenSeesProblemTypePath
-	variable OpenSeesPath
+	variable OpenSeesEXE
 	variable GiDPath
 	variable GiDProjectName
 	variable GiDProjectDir
@@ -49,11 +50,11 @@ proc OpenSees::InitGIDProject { dir } {
 	global MenuNames MenuEntries MenuCommands MenuAcceler
 	global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
 	variable OpenSeesProblemTypePath; # OpenSees problem type directory
-	variable OpenSeesPath; # OpenSees.exe path
+	variable OpenSeesEXE; # OpenSees executable with path
 
 	set OpenSeesProblemTypePath $dir
 
-	OpenSees::SetOpenSeesPath
+	OpenSees::SetOpenSeesEXE
 	OpenSees::SetProjectNameAndPath
 
 	SetImagesAndColors
@@ -175,37 +176,18 @@ proc OpenSees::GetProjectName {} {
 
 # Set/Get OpenSees path
 
-proc OpenSees::SetOpenSeesPath {} {
+proc OpenSees::SetOpenSeesEXE {} {
 
-	variable OpenSeesPath
+	variable OpenSeesEXE
 	variable OpenSeesProblemTypePath
 
-	global InfoWin
-
-	set file "$OpenSeesProblemTypePath/OpenSees.path"
-	set fexists [file exist $file]
-
-	if { $fexists == 1 } {
-
-		set fp [open $file r]
-		set file_data [read $fp]
-		close $fp
-		set data [split $file_data \n]
-		set OpenSeesPath [lindex $data 0]
-		regsub -all {\\} $OpenSeesPath {/} OpenSeesPath
-
-	} else {
-
-		set response [tk_dialog $InfoWin "Error" "OpenSees.path file was not found. Please re-install GiD+OpenSees interface." error 0 "  Ok  " ]
-		destroy $InfoWin
-
-	}
+	set OpenSeesEXE "$OpenSeesProblemTypePath/exe/bin/OpenSees.exe"
 }
 
-proc OpenSees::GetOpenSeesPath {} {
+proc OpenSees::GetOpenSeesEXE {} {
 
-	variable OpenSeesPath
-	return $OpenSeesPath
+	variable OpenSeesEXE
+	return $OpenSeesEXE
 }
 
 # Get OpenSees version
@@ -769,6 +751,7 @@ proc InitGIDProject { dir } {
 						UniaxialConcrete.tcl \
 						UniaxialSteel.tcl \
 						OtherUniaxial.tcl \
+						Tester.tcl \
 						ZeroLength.tcl \
 						SeriesParallel.tcl \
 						SecAggregator.tcl \

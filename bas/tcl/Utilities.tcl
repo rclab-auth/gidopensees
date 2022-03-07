@@ -240,7 +240,7 @@ proc Run_existing_tcl { doPost } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
-	set OpenSeesPath [OpenSees::GetOpenSeesPath]
+	set OpenSeesEXE [OpenSees::GetOpenSeesEXE]
 	global GidProcWin
 
 	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl" ]
@@ -254,7 +254,7 @@ proc Run_existing_tcl { doPost } {
 
 		# run analysis
 
-		eval exec [auto_execok start] \"\" [list [file attributes $OpenSeesPath -shortname]] \"$tcl_file\"
+		eval exec [auto_execok start] \"\" [list [file attributes $OpenSeesEXE -shortname]] \"$tcl_file\"
 
 		if {[file exists "$GiDProjectName.log"] } {
 
@@ -995,9 +995,9 @@ proc OpenSees_Menu { dir } {
 		GiDMenu::InsertOption "GiD+OpenSees" [list $tab] $position PRE $command "" $full_path_icon
 		incr position
 	}
-	
+
 	GiDMenu::InsertOption "Help" [list [= "Help on %s" OpenSees]...] 0 PREPOST [list HelpOnOpenSees $dir] "" "" insert
-	
+
 	GiDMenu::UpdateMenus
 }
 

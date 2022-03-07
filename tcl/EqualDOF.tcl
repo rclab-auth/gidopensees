@@ -70,10 +70,10 @@ proc EqualDOF::AutoCreate { event args } {
 		INIT {
 			lassign $args PARENT current_row_variable GDN STRUCT QUESTION
 			upvar $current_row_variable ROW
-			
+
 			variable source_mode [DWLocalGetValue $GDN $STRUCT "Source:"]
 			variable source_layer [DWLocalGetValue $GDN $STRUCT "Layer_name:"]
-			
+
 			variable auto_crit
 			array set auto_crit [list x [DWLocalGetValue $GDN $STRUCT "X-Criteria"] \
 			y [DWLocalGetValue $GDN $STRUCT "Y-Criteria"] \
@@ -125,7 +125,7 @@ proc EqualDOF::AutoCreate { event args } {
 
 			variable source_mode [DWLocalGetValue $GDN $STRUCT "Source:"]
 			variable source_layer [DWLocalGetValue $GDN $STRUCT "Layer_name:"]
-			
+
 			variable auto_crit
 			array set auto_crit [list x [DWLocalGetValue $GDN $STRUCT "X-Criteria"] \
 			y [DWLocalGetValue $GDN $STRUCT "Y-Criteria"] \
@@ -235,7 +235,7 @@ proc EqualDOF::AutoCreateCmd { pop } {
 				continue;
 			}
 		}
-		
+
 		set check [lsearch $autoPointList $pointID]
 		if { $check != -1 } {
 			continue;
@@ -358,7 +358,7 @@ proc EqualDOF::AutoCreateCmd { pop } {
 				continue;
 			}
 		}
-	
+
 		# get the coordinates of each node
 		set check [lsearch $autoNodeList $nodeID]
 		if { $check != -1 } {
