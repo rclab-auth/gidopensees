@@ -65,8 +65,8 @@ VALUE: 0
 DEPENDENCIES: (0,HIDE,Number_of_eigenvalues,#CURRENT#,HIDE,Solver,#CURRENT#) (1,RESTORE,Number_of_eigenvalues,#CURRENT#,RESTORE,Solver,#CURRENT#)
 QUESTION: Number_of_eigenvalues
 VALUE: 3#WIDTH#(10)
-QUESTION: Solver#CB#(genBandArpack,fullGenLapack,symmBandLapack)
-VALUE: fullGenLapack
+QUESTION: Solver#CB#(Default,genBandArpack,fullGenLapack,symmBandLapack)
+VALUE: Default
 TITLE: Rayleigh_Damping
 QUESTION: _#CB#(_)
 VALUE:

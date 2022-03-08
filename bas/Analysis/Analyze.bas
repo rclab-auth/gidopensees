@@ -19,7 +19,9 @@ for { set k 1 } { $k <= $numModes } { incr k } {
 }
 
 set lambda [eigen *\
-*if(strcmp(GenData(Solver),"genBandArpack")==0)
+*if(strcmp(GenData(Solver),"Default")==0)
+$numModes]
+*elseif(strcmp(GenData(Solver),"genBandArpack")==0)
 -genBandArpack $numModes]
 *elseif(strcmp(GenData(Solver),"fullGenLapack")==0)
 -fullGenLapack $numModes]
