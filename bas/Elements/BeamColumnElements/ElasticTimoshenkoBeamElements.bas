@@ -136,7 +136,7 @@ geomTransf Corotational *TransfTag6  0 1 0; # non-vertical
 *#----------------Z axis as Vertical Axis----------------
 *if(strcmp(GenData(Vertical_axis),"Z")==0)
 *# VERTICAL ELEMENTS //Z AXIS
-*if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,2)==NodesCoord(2,2))
+*if(fabs(NodesCoord(1,1)-NodesCoord(2,1)) < 1e-6 && fabs(NodesCoord(1,2)-NodesCoord(2,2)) < 1e-6)
 *if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
@@ -169,7 +169,7 @@ element ElasticTimoshenkoBeam *ElemsNum *elemsConec *\
 *#-----------------Y axis as Vertical Axis--------------
 *else
 *# Vertical elements // Y AXIS
-*if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
+*if(fabs(NodesCoord(1,1)-NodesCoord(2,1)) < 1e-6 && fabs(NodesCoord(1,3)-NodesCoord(2,3)) < 1e-6)
 *if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)

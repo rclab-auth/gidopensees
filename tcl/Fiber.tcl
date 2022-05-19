@@ -450,7 +450,6 @@ proc Fiber::SuggestFibers { event args } {
 				set GDN [lindex $args 0]
 				set STRUCT [lindex $args 1]
 				set QUESTION [lindex $args 2]
-				set ndm [OpenSees::ReturnProjectDimensions]
 				set check [DWLocalGetValue $GDN $STRUCT $QUESTION]
 				set Shape [DWLocalGetValue $GDN $STRUCT "Cross_section"]
 
@@ -466,43 +465,19 @@ proc Fiber::SuggestFibers { event args } {
 										set temp [ParserNumberUnit $temp height dummy]
 										set temp [GidConvertValueUnit $widthUnit]
 										set temp [ParserNumberUnit $temp width dummy]
+										set min_fibers_num 10;
 
-										switch $ndm {
+										if { $height >= $width } {
+											set Fibers_h [roundUp [expr $min_fibers_num*$height/$width] ]
+											set Fibers_b $min_fibers_num
 
-												"3" {
-
-														if { $height >= $width } {
-																set Fibers_z [roundUp [expr 15*$height/$width] ]
-																set Fibers_y 15
-
-														} elseif { $height<$width } {
-
-																set Fibers_y [roundUp [expr 15*$height/$width] ]
-																set Fibers_z 15
-
-														} else {
-																return ""
-														}
-												}
-												"2" {
-
-														if { $height >= $width } {
-																set Fibers_y [roundUp [expr 15*$height/$width] ]
-																set Fibers_z 15
-
-														} elseif { $height<$width } {
-
-																set Fibers_z [roundUp [expr 15*$height/$width] ]
-																set Fibers_y 15
-
-														} else {
-																return ""
-														}
-												}
+										} else {
+											set Fibers_b [roundUp [expr $min_fibers_num*$width/$height] ]
+											set Fibers_h $min_fibers_num
 										}
 
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction $Fibers_z]
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction $Fibers_y]
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_h_length $Fibers_h]
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_b_length $Fibers_b]
 								}
 
 								"Rectangular_Beam" {
@@ -513,36 +488,26 @@ proc Fiber::SuggestFibers { event args } {
 										set temp [ParserNumberUnit $temp height dummy]
 										set temp [GidConvertValueUnit $widthUnit]
 										set temp [ParserNumberUnit $temp width dummy]
+										set min_fibers_num 10;
 
-										set TopBars [DWLocalGetValue $GDN $STRUCT "Top_bars"]
-										set BottomBars [DWLocalGetValue $GDN $STRUCT "Bottom_bars"]
-
-										# Height may be greater than width for Beam
+										#set TopBars [DWLocalGetValue $GDN $STRUCT "Top_bars"]
+										#set BottomBars [DWLocalGetValue $GDN $STRUCT "Bottom_bars"]
 										if { $height >= $width } {
-												switch $ndm {
+											set Fibers_h [roundUp [expr $min_fibers_num*$height/$width] ]
+											set Fibers_b $min_fibers_num
 
-														"3" {
-
-																set Fibers_y [expr {4*max($TopBars,$BottomBars)}]
-																set Fibers_z [expr $Fibers_y*$height/$width]
-
-														}
-														"2" {
-
-																set Fibers_z [expr {4*max($TopBars,$BottomBars)}]
-																set Fibers_y [expr $Fibers_z*$height/$width]
-
-														}
-												}
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction [roundUp $Fibers_y]]
+										} else {
+											set Fibers_b [roundUp [expr $min_fibers_num*$width/$height] ]
+											set Fibers_h $min_fibers_num
 										}
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_b_length [roundUp $Fibers_b]]
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_h_length [roundUp $Fibers_h]]
 								}
 
 								"Circular_Column" {
 
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_circumferential_direction 15]
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_radial_direction 15]
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_circumferential_direction 20]
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_the_radial_direction 10]
 
 								}
 
@@ -550,31 +515,22 @@ proc Fiber::SuggestFibers { event args } {
 
 										set heightUnit [DWLocalGetValue $GDN $STRUCT "Height_h"]
 										set widthUnit [DWLocalGetValue $GDN $STRUCT "Width_bf"]
+										set webWidthUnit [DWLocalGetValue $GDN $STRUCT "Web_width_bw"]
 										set temp [GidConvertValueUnit $heightUnit]
 										set temp [ParserNumberUnit $temp height dummy]
 										set temp [GidConvertValueUnit $widthUnit]
 										set temp [ParserNumberUnit $temp width dummy]
+										set temp [GidConvertValueUnit $webWidthUnit]
+										set temp [ParserNumberUnit $temp web_width dummy]
+										set min_fibers_num 10; # corresponds to web width bw
+										set width_ratio [expr $width/$web_width]
+										set beam_aspect [expr $height/$web_width]
 
-										set TopBars [DWLocalGetValue $GDN $STRUCT "Top_beam_bars"]
-										set BottomBars [DWLocalGetValue $GDN $STRUCT "Bottom_beam_bars"]
-										set TopSlabBars [DWLocalGetValue $GDN $STRUCT "Slab_bars"]
+										set Fibers_bw $min_fibers_num
+										set Fibers_h [roundUp [expr $min_fibers_num*$beam_aspect]]
 
-												switch $ndm {
-
-														"3" {
-
-																set Fibers_y [expr {max(8*$TopBars,8*$BottomBars,10*$width,20)}]
-																set Fibers_z [expr {max($Fibers_y*$height/$width,10*$height,15)}]
-
-														}
-														"2" {
-
-																set Fibers_z [expr {max(8*$TopBars,8*$BottomBars,10*$width,20)}]
-																set Fibers_y [expr {max($Fibers_z*$height/$width,10*$height,15)}]
-														}
-												}
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_z_direction [roundUp $Fibers_z]]
-										set ok [DWLocalSetValue $GDN $STRUCT Fibers_in_local_y_direction [roundUp $Fibers_y]]
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_bw_length $Fibers_bw]
+										set ok [DWLocalSetValue $GDN $STRUCT Fibers_along_h_length $Fibers_h]
 								}
 
 								"Bridge_Deck" {
@@ -872,7 +828,7 @@ proc Fiber::CheckFieldValues { event args } {
 								WarnWinText "Non-compatible steel material ($BeamBarType) selected for Fiber Section"
 								DWLocalSetValue $GDN $STRUCT "Beam_reinforcing_bar_material" "Steel01"
 
-						}
+								}
 
 						}
 
@@ -880,14 +836,12 @@ proc Fiber::CheckFieldValues { event args } {
 
 				# Check if number of bars are integer and slab bars even
 				if {$CrossSection == "Rectangular_Column" } {
-						set BarsZface [DWLocalGetValue $GDN $STRUCT "Bars_along_z_axis_face"]
-						set BarsYface [DWLocalGetValue $GDN $STRUCT "Bars_along_y_axis_face"]
-						set IntBarsZface [expr int($BarsZface)]
-						set IntBarsYface [expr int($BarsYface)]
-						set remainderz [expr fmod($BarsZface,2)]
-						set remaindery [expr fmod($BarsYface,2)]
-						if {$BarsZface != $IntBarsZface || $BarsYface != $IntBarsYface} {
-								WarnWinText "Warning: Number of bars must be integer."
+						set BarsH [DWLocalGetValue $GDN $STRUCT "Bars_along_h_length"]
+						set BarsB [DWLocalGetValue $GDN $STRUCT "Bars_along_b_length"]
+						set IntBarsH [expr int($BarsH)]
+						set IntBarsB [expr int($BarsB)]
+						if {$BarsH != $IntBarsH || $BarsB != $IntBarsB} {
+							WarnWinText "Warning: Number of bars must be integer."
 						}
 
 				} elseif {$CrossSection == "Rectangular_Beam"} {
@@ -899,6 +853,18 @@ proc Fiber::CheckFieldValues { event args } {
 								WarnWinText "Warning: Number of bars must be integer."
 						}
 				} elseif {$CrossSection == "Tee_Beam"} {
+						set heightUnit [DWLocalGetValue $GDN $STRUCT "Height_h"]
+						set slabHeightUnit [DWLocalGetValue $GDN $STRUCT "Slab_thickness_hf"]
+						set widthUnit [DWLocalGetValue $GDN $STRUCT "Width_bf"]
+						set webWidthUnit [DWLocalGetValue $GDN $STRUCT "Web_width_bw"]
+						set temp [GidConvertValueUnit $heightUnit]
+						set temp [ParserNumberUnit $temp height dummy]
+						set temp [GidConvertValueUnit $slabHeightUnit]
+						set temp [ParserNumberUnit $temp slab_height_hf dummy]
+						set temp [GidConvertValueUnit $widthUnit]
+						set temp [ParserNumberUnit $temp width dummy]
+						set temp [GidConvertValueUnit $webWidthUnit]
+						set temp [ParserNumberUnit $temp web_width dummy]
 						set TopBeamBars [DWLocalGetValue $GDN $STRUCT "Top_Beam_bars"]
 						set BottomBeamBars [DWLocalGetValue $GDN $STRUCT "Bottom_beam_bars"]
 						set SlabBars [DWLocalGetValue $GDN $STRUCT "Slab_bars"]
@@ -906,6 +872,15 @@ proc Fiber::CheckFieldValues { event args } {
 						set IntBottomBeamBars [expr int($BottomBeamBars)]
 						set IntSlabBars [expr int($SlabBars)]
 						set remainder [expr fmod($SlabBars,2)]
+
+						if {$web_width > $width } {
+								WarnWinText "Warning: Width bf should be greater or equal to Web width bw"
+						}
+
+						if { $slab_height_hf >= $height } {
+								WarnWinText "Warning: Height h should be greater that slab thickness hf"
+						}
+
 						if {$TopBeamBars != $IntTopBeamBars || $BottomBeamBars != $IntBottomBeamBars || $SlabBars != $IntSlabBars} {
 								WarnWinText "Warning: Number of bars must be integer"
 						}

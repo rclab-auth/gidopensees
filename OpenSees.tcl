@@ -36,7 +36,7 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.9.0"
+	variable VersionNumber "v2.9.5"
 	variable InterfaceName [_ " GiD+OpenSees Interface $VersionNumber "]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesEXE
@@ -59,8 +59,8 @@ proc OpenSees::InitGIDProject { dir } {
 
 	SetImagesAndColors
 
-	global VerticalAxisChanged
-	set VerticalAxisChanged 0
+	global AskedUserForVerticalAxis
+	set AskedUserForVerticalAxis 0
 	global splashdir
 	set splashdir 0
 	global keepsplash
@@ -195,6 +195,49 @@ proc OpenSees::GetOpenSeesEXE {} {
 proc OpenSees::GetVersion {} {
 	variable VersionNumber
 	return $VersionNumber
+}
+
+# Compare OpenSees versions. Returns -1 if v1 < v2, 0 if v1 == v2 and 1 if v1 > v2
+
+proc OpenSees::CompareVersions { v1 v2 } {
+	if { $v1 == $v2 } {
+		return 0
+	}
+
+	if { $v1 != "Unknown" && $v2 != "Unknown" } {
+		return [string compare $v1 $v2]
+	} elseif { $v1 != "Unknown" } {
+		return 1
+	} elseif { $v2 != "Unknown" } {
+		return -1
+	}
+
+	WarnWinText "Error while comparing two versions."
+}
+
+
+# Get OpenSees currect vertical axis
+
+proc OpenSees::GetVerticalAxis {} {
+	return [GiD_AccessValue get gendata Vertical_axis]
+}
+
+# Set OpenSees currect vertical axis
+
+proc OpenSees::SetVerticalAxis { axis } {
+	GiD_AccessValue set gendata Vertical_axis $axis
+}
+
+# Get OpenSees current Model dimensions stored in problem data
+
+proc OpenSees::GetModelDimensions {} {
+	GiD_AccessValue get gendata Model_dimensions
+}
+
+# Set OpenSees Model dimensions in problem data
+
+proc OpenSees::SetModelDimensions { dim } {
+	GiD_AccessValue set gendata Model_dimensions $dim
 }
 
 proc OpenSees::Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
@@ -781,8 +824,9 @@ proc EndGIDProject {} {
 # check problemtype version mismatch
 
 proc LoadGIDProject { filespd } {
-
+	global LoadedVersionNumber
 	set VersionNumber [OpenSees::GetVersion]
+	set LoadedVersionNumber $VersionNumber
 	global InfoWin
 	variable GiDProjectDir
 
@@ -811,6 +855,7 @@ proc LoadGIDProject { filespd } {
 		set cmp [string compare "$spd_data" "$VersionNumber"]
 
 		if { $cmp != 0 } {
+			set LoadedVersionNumber $spd_data
 
 			if { [winfo exist .splash]} {
 				destroy .splash
@@ -840,10 +885,16 @@ proc LoadGIDProject { filespd } {
 }
 
 proc AfterLoadGIDProject { filespd } {
-
+	global AskedUserForVerticalAxis
+	global AcceptedVerticalAxis
+	set dimensions [OpenSees::ReturnProjectDimensions]
 	# Project name is set after complete load
-
 	OpenSees::SetProjectNameAndPath
+
+	if { $dimensions == 3 } {
+		set AskedUserForVerticalAxis 1
+		set AcceptedVerticalAxis [OpenSees::GetVerticalAxis]
+	}
 }
 
 proc SaveGIDProject { filespd } {
@@ -988,6 +1039,76 @@ proc TransformZeroLengthData::apply {} {
 	}
 }
 
+namespace eval TransformFiberData {
+	variable section_type "Fiber"
+}
+
+proc TransformFiberData::apply { sections_list } {
+	global LoadedVersionNumber
+	variable section_type
+
+	foreach section $sections_list {
+		set run_section_type [GiD_AccessValue get material $section Section:]
+		if { $run_section_type == $section_type } {
+			set dimensions [OpenSees::ReturnProjectDimensions]
+			set local_y_fibers [GiD_AccessValue get material $section Fibers_in_local_y_direction]
+			set local_z_fibers [GiD_AccessValue get material $section Fibers_in_local_z_direction]
+
+			if { $local_y_fibers != "deprecated" && $local_z_fibers != "deprecated" } {
+				set swapped_values 0
+				if { $dimensions == 2 } {
+					GiD_AccessValue set material $section Fibers_along_h_length $local_y_fibers
+					GiD_AccessValue set material $section Fibers_along_b_length $local_z_fibers
+					set swapped_values 1
+				} elseif { $dimensions == 3 } {
+					GiD_AccessValue set material $section Fibers_along_h_length $local_z_fibers
+					GiD_AccessValue set material $section Fibers_along_b_length $local_y_fibers
+					set swapped_values 1
+				}
+				if { $swapped_values } {
+					GiD_AccessValue set material $section Fibers_in_local_y_direction "deprecated"
+					GiD_AccessValue set material $section Fibers_in_local_z_direction "deprecated"
+
+					set cs [GiD_AccessValue get material $section Cross_section]
+					if { $cs == "Tee_Beam" } {
+						set widthUnit [DWLocalGetValue $GDN $STRUCT "Width_bf"]
+						set webWidthUnit [DWLocalGetValue $GDN $STRUCT "Web_width_bw"]
+						set temp [GidConvertValueUnit $widthUnit]
+						set temp [ParserNumberUnit $temp width dummy]
+						set temp [GidConvertValueUnit $webWidthUnit]
+						set temp [ParserNumberUnit $temp web_width dummy]
+						set width_ratio = [expr $web_width/$width]
+						set Fibers_b GiD_AccessValue get material $section Fibers_along_b_length
+						set Fibers_bw [roundUp [expr $width_ratio*$Fibes_b]
+
+						GiD_AccessValue set material $section Fibers_along_bw_length $Fibers_bw
+					}
+				}
+			}
+
+			set bars_y [GiD_AccessValue get material $section Bars_along_y_axis_face]
+			set bars_z [GiD_AccessValue get material $section Bars_along_z_axis_face]
+
+			if { $bars_y != "deprecated" && $bars_z != "deprecated" } {
+				set swapped_values 0
+				if { $dimensions == 2 } {
+					GiD_AccessValue set material $section Bars_along_h_length $bars_y
+					GiD_AccessValue set material $section Bars_along_b_length $bars_z
+					set swapped_values 1
+				} elseif { $dimensions == 3 } {
+					GiD_AccessValue set material $section Bars_along_h_length $bars_z
+					GiD_AccessValue set material $section Bars_along_b_length $bars_y
+					set swapped_values 1
+				}
+				if { $swapped_values } {
+					GiD_AccessValue set material $section Bars_along_y_axis_face "deprecated"
+					GiD_AccessValue set material $section Bars_along_z_axis_face "deprecated"
+				}
+			}
+		}
+	}
+}
+
 proc BeforeTransformProblemType { file oldproblemtype newproblemtype } {
 
 	set cond_points [GiD_Info conditions ovpnt]
@@ -998,6 +1119,15 @@ proc BeforeTransformProblemType { file oldproblemtype newproblemtype } {
 }
 
 proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
+	global AskedUserForVerticalAxis
+	global AcceptedVerticalAxis
+	global LoadedVersionNumber
+
+	set dimensions [OpenSees::ReturnProjectDimensions]
+	if { $dimensions == 3 } {
+		set AskedUserForVerticalAxis 1
+		set AcceptedVerticalAxis [OpenSees::GetVerticalAxis]
+	}
 
 	# if version earlier than v2.5.0, change some conditions of compatibility
 	# Body Constraint -> Equal Constraint
@@ -1130,7 +1260,7 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 
 				if { $IDold == "-" } {
 
-						break
+					break
 
 				} else {
 
@@ -1172,12 +1302,13 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 				# - means new user v2.5.0 and later
 				if {$IDold == "-"} {
 
-						break
+					break
 
 				} else {
 
-						set values [list $IDold $IDold $plane ""]
-						GiD_AssignData condition $new_cond_name points $values $point
+					set values [list $IDold $IDold $plane ""]
+					GiD_AssignData condition $new_cond_name points $values $point
+
 				}
 			}
 		}
@@ -1256,11 +1387,83 @@ proc AfterTransformProblemType { file oldproblemtype newproblemtype messages } {
 		}
 	}
 
+	set sections_list [GiD_Info materials(Section_Force-Deformation)]
+	TransformFiberData::apply $sections_list
+
 	# apply new conditions for zero length
 	TransformZeroLengthData::apply
 	TransformZeroLengthData::reset
 
+	set LoadedVersionNumber [OpenSees::GetVersion]
+
 	GiD_Process Mescape Meshing generate Yes 1 MeshingParametersFrom=Preferences
+}
+
+proc AskForVerticalAxisIn3D {} {
+	global AcceptedVerticalAxis
+	global AskedUserForVerticalAxis
+	set SelectedVerticalAxis [OpenSees::GetVerticalAxis]
+
+	if { $SelectedVerticalAxis != "Z" } {
+		set w .gid.vAxisAsk
+		set response [tk_dialog $w "Info" "Model has changed to 3D.\nVertical axis Z is recommended for 3D Models.\nDo you want to set Z as Vertical axis?" info 0 "  Yes  " " No "]
+		if { $response == 0 } {
+			OpenSees::SetVerticalAxis "Z"
+			set AcceptedVerticalAxis "Z"
+		} else {
+			set AcceptedVerticalAxis "Y"
+		}
+		set AskedUserForVerticalAxis 1
+	}
+}
+
+proc BeforeDeletePoint { num } {
+	set dim [OpenSees::GetModelDimensions]
+
+	if {$dim == 3 } {
+		set zcoord [lindex [GiD_Geometry get point $num] 3]
+		set zcoord [expr abs($zcoord)]
+		if { $zcoord > 10e-14 } {
+			set dim_after 2
+			foreach layername [GiD_Info layers] {
+				foreach i [GiD_Info layers -entities points $layername] {
+					if { $i != $num } {
+						set run_zcoord [lindex [GiD_Geometry get point $i] 3]
+						set run_zcoord [expr abs($run_zcoord)]
+						if { $run_zcoord > 10e-14 } {
+							set dim_after 3
+							break;
+						}
+					}
+				}
+				if { $dim_after == 3 } {
+					break
+				}
+			}
+			if { $dim_after == 2 } {
+				OpenSees::SetModelDimensions 2
+				OpenSees::SetVerticalAxis "Y"
+				UpdateInfoBar
+			}
+		}
+	}
+}
+
+proc AfterCreatePoint { num } {
+	global AskedUserForVerticalAxis
+	set curr_dim [OpenSees::GetModelDimensions]
+
+	set zcoord [lindex [GiD_Geometry get point $num] 3]
+	set zcoord [expr abs($zcoord)]
+	if { $zcoord > 10e-14 } {
+		if { $curr_dim != 3 } {
+			OpenSees::SetModelDimensions 3
+			if { $AskedUserForVerticalAxis == 0 } {
+				AskForVerticalAxisIn3D
+			}
+			UpdateInfoBar
+		}
+	}
 }
 
 proc EndGIDPostProcess {} {
@@ -1309,12 +1512,16 @@ proc OpenSees::ReturnProjectDimensions { } {
 	foreach layername [GiD_Info layers] {
 		foreach i [GiD_Info layers -entities points $layername] {
 			set zcoord [lindex [GiD_Geometry get point $i] 3]
-				if {$zcoord!=0} {
-					set ndm 3
-					break
-				}
+			set zcoord [expr abs($zcoord)]
+			if { $zcoord  > 10e-14 } {
+				set ndm 3
+				break
 			}
 		}
+		if {$ndm==3} {
+			break
+		}
+	}
 	return $ndm
 }
 

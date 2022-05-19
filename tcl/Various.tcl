@@ -64,12 +64,12 @@ proc TK_UpdateInfoBar { event args } {
 	return ""
 }
 
-global SelectedVerticalAxis
+global AcceptedVerticalAxis
 
 proc TK_EditModelDim { event args } {
 
-	global SelectedVerticalAxis
-	global VerticalAxisChanged
+	global AskedUserForVerticalAxis
+	global AcceptedVerticalAxis
 	set PARENT [lindex $args 0]
 	upvar [lindex $args 1] ROW
 	set GDN [lindex $args 2]
@@ -80,22 +80,54 @@ proc TK_EditModelDim { event args } {
 
 		INIT {
 
-			set SelectedVerticalAxis [GiD_AccessValue get GenData Vertical_axis]
+			set SelectedVerticalAxis [OpenSees::GetVerticalAxis]
 			set dim [OpenSees::ReturnProjectDimensions]
 			set dummy [DWLocalSetValue $GDN $STRUCT $QUESTION $dim]
+			set w .gid.vertAxis3DInfo
 
 			if {$dim == 2} {
-				set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Y"]
+				if { $SelectedVerticalAxis != "Y" } {
+					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Y"]
+					OpenSees::SetVerticalAxis "Y"
+					tk_dialog $w "Info" "Vertical Axis has been changed to Y because model is considered as 2D.\n Please press \"Accept\" update window changes." info 0 "  Ok  "
+				}
 			} else {
-				if {$VerticalAxisChanged == 0} {
-					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Z"]
-					set VerticalAxisChanged 1
+				if {$AskedUserForVerticalAxis == 0} {
+					if { $SelectedVerticalAxis == "Y" } {
+						set response [tk_dialog $w "Info" "Vertical axis Z is recommended for 3D Models.\nDo you want to set Z as Vertical axis?" info 0 "  Yes  " " No "]
+						if { $response == 0 } {
+							set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis "Z"]
+							OpenSees::SetVerticalAxis "Z"
+							tk_dialog $w "Info" "Please press \"Accept\" update window changes." info 0 "  Ok  "
+						}
+					}
+					set AskedUserForVerticalAxis 1
 				} else {
-					set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis $SelectedVerticalAxis]
+					if { $AcceptedVerticalAxis == "Y" || $AcceptedVerticalAxis == "Z" } {
+						if { $AcceptedVerticalAxis != $SelectedVerticalAxis } {
+							set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis $AcceptedVerticalAxis]
+							OpenSees::SetVerticalAxis $AcceptedVerticalAxis
+							set response [tk_dialog $w "Info" "Vertical axis has been reset to the last accepted while in 3D model($AcceptedVerticalAxis)." info 0 "  OK  " " Keep Y Axis "]
+							if { $response == 1 } {
+								set dummy [DWLocalSetValue $GDN $STRUCT Vertical_axis $SelectedVerticalAxis]
+								OpenSees::SetVerticalAxis $SelectedVerticalAxis
+								set SelectedVerticalAxis "Y"
+							}
+						}
+					}
 				}
 			}
 
 			return ""
+		}
+
+		SYNC {
+			set dim [OpenSees::ReturnProjectDimensions]
+			if { $dim == 3 } {
+				set SelectedVerticalAxis [OpenSees::GetVerticalAxis]
+				set AskedUserForVerticalAxis 1
+				set AcceptedVerticalAxis $SelectedVerticalAxis
+			}
 		}
 	}
 

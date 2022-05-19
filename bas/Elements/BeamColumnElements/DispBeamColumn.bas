@@ -100,7 +100,7 @@ geomTransf Corotational *TransfTag6  0 1 0; # non-vertical
 *#--------------Z as vertical axis-------------
 *if(strcmp(GenData(Vertical_axis),"Z")==0)
 *#Vertical elements
-*if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,2)==NodesCoord(2,2))
+*if(fabs(NodesCoord(1,1)-NodesCoord(2,1)) < 1e-6 && fabs(NodesCoord(1,2)-NodesCoord(2,2)) < 1e-6)
 *if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)
@@ -120,7 +120,7 @@ geomTransf Corotational *TransfTag6  0 1 0; # non-vertical
 *#--------------Y as vertical axis-------------
 *elseif(strcmp(GenData(Vertical_axis),"Y")==0)
 *#Vertical elements
-*if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
+*if(fabs(NodesCoord(1,1)-NodesCoord(2,1)) < 1e-6 && fabs(NodesCoord(1,3)-NodesCoord(2,3)) < 1e-6)
 *if(strcmp(ElemsMatProp(Geometric_transformation),"Linear")==0)
 *set var TransfTag=TransfTag1
 *elseif(strcmp(ElemsMatProp(Geometric_transformation),"P-Delta")==0)

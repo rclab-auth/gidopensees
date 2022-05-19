@@ -1086,7 +1086,7 @@ begin
     begin
         MSH.Writeline('');
         MSH.Writeline('GaussPoints "Line_Nodes" ElemType Line');
-        MSH.Writeline('Number Of Gauss Points: 2');
+        MSH.Writeline('Number Of Gauss Points: 2');  // two element ends
         MSH.Writeline('Nodes included');
         MSH.Writeline('Natural Coordinates: Internal');
         MSH.Writeline('end GaussPoints');
@@ -2247,7 +2247,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per element end)
                 end;
 
                 if ndm = 3 then
@@ -2266,7 +2266,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per element end)
                 end;
 
                 MSH.Writeline('Values');
@@ -2356,7 +2356,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per element end)
                 end;
 
                 if ndm = 3 then
@@ -2375,7 +2375,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Elastic_Timoshenko_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per element end)
                 end;
 
                 MSH.Writeline('Values');
@@ -2467,7 +2467,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per element end)
                 end;
 
                 if ndm = 3 then
@@ -2486,7 +2486,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per element end)
                 end;
 
                 MSH.Writeline('Values');
@@ -2572,7 +2572,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Total//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
 
                 if ndm = 3 then
@@ -2673,7 +2673,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Force_Beam-Column//Deformations_Plastic//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
 
                 if ndm = 3 then
@@ -2780,7 +2780,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per element end)
                 end;
 
                 if ndm = 3 then
@@ -2799,7 +2799,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Actions//Mz" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per gauss point)
+                    StrToArray(line,Str,2*6*n,true);  // read all values from current step (6 values per element end)
                 end;
 
                 MSH.Writeline('Values');
@@ -2885,7 +2885,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
 
                 if ndm = 3 then
@@ -2900,7 +2900,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Total//Torsional" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per gauss point)
+                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
                 end;
 
                 MSH.Writeline('Values');
@@ -2986,7 +2986,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Rotation" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,3*n,true);  // read all values from current step (3 values per element)
                 end;
 
                 if ndm = 3 then
@@ -3001,7 +3001,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Displacement_Beam-Column//Deformations_Plastic//Torsional" Scalar');
                     MSH.Writeline('Unit "rad"');
 
-                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per gauss point)
+                    StrToArray(line,Str,6*n,true);  // read all values from current step (6 values per element)
                 end;
 
                 MSH.Writeline('Values');
@@ -3094,7 +3094,7 @@ begin
                     MSH.Writeline('ResultDescription "Elements//Flexure_Shear_Interaction_Displacement_Beam-Column//Actions//M" Scalar');
                     MSH.Writeline('Unit "kNm"');
 
-                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per gauss point)
+                    StrToArray(line,Str,2*3*n,true);  // read all values from current step (3 values per element end)
                 end;
 
                 MSH.Writeline('Values');

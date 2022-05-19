@@ -34,6 +34,14 @@
 
 ---
 
+**Version 2.9.5 (19/05/2022)**
+
+- Improved : fiber mesh suggestions for fiber sections (thanks to C.Zaki for feedback)
+- Improved : prompt for vertical axis definition
+- Fixed : default -GJ for fiber sections
+
+---
+
 **Version 2.9.0 (07/03/2022)**
 
 - **Material Tester** (developed by G. Ntinolazos, Dipl. Eng. AUTh)

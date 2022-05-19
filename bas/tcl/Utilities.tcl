@@ -476,17 +476,23 @@ proc WantToRegenMeshMessage { } {
 
 	if { $response == 0 } {
 
-			GiD_Process Mescape Meshing generate
+		GiD_Process Mescape Meshing generate
 
-		}
+	}
 }
 
 # Analysis menu options
 
 proc Opt1_dialog { } {
+	global AskedUserForVerticalAxis
 
 	set w .gid.warn1
 	set mustRegenMesh [GiD_Info Project MustReMesh]; # 0 no, 1 yes
+	set dim [OpenSees::ReturnProjectDimensions]
+
+	if {$dim == 3 && $AskedUserForVerticalAxis == 0 } {
+		AskForVerticalAxisIn3D
+	}
 
 	if {$mustRegenMesh} {
 
@@ -520,9 +526,15 @@ proc Opt1_dialog { } {
 }
 
 proc Opt2_dialog { } {
+	global AskedUserForVerticalAxis
 
 	set w .gid.warn2
 	set mustRegenMesh [GiD_Info Project MustReMesh]; # 0 no, 1 yes
+	set dim [OpenSees::ReturnProjectDimensions]
+
+	if {$dim == 3 && $AskedUserForVerticalAxis == 0 } {
+		AskForVerticalAxisIn3D
+	}
 
 	if {$mustRegenMesh} {
 
@@ -569,9 +581,15 @@ proc Opt2_dialog { } {
 }
 
 proc Opt3_dialog { } {
+	global AskedUserForVerticalAxis
 
 	set w .gid.warn3
 	set mustRegenMesh [GiD_Info Project MustReMesh]; # 0 no, 1 yes
+	set dim [OpenSees::ReturnProjectDimensions]
+
+	if {$dim == 3 && $AskedUserForVerticalAxis == 0 } {
+		AskForVerticalAxisIn3D
+	}
 
 	if {$mustRegenMesh} {
 

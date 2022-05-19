@@ -1,4 +1,7 @@
 *set var FiberTag=SectionID
+*#
+*# --------------------------------------------- 3D ---------------------------------------------------
+*#
 *if(ndime==3)
 *if(strcmp(Matprop(Cross_section),"Bridge_Deck")!=0)
 *# if it is a Fiber Section, We need to check which uniaxial materials we need to define
@@ -288,8 +291,8 @@ section Fiber *FiberTag *\
 -GJ 1e10 *\
 *endif
  {
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
+*set var zdivision=MatProp(Fibers_along_h_length,int)
+*set var ydivision=MatProp(Fibers_along_b_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
 
@@ -305,15 +308,24 @@ patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation
 
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(yhalf-cover) *operation(-zhalf) *yhalf *zhalf
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(-zhalf+cover) *yhalf *operation(zhalf-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *zhalf
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(-zhalf+cover) *operation(-yhalf+cover) *operation(zhalf-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(-zhalf) *operation(yhalf-cover) *operation(-zhalf+cover)
+# Corner Cover fibers
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(-zhalf) *yhalf *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(zhalf-cover) *operation(-yhalf+cover) *zhalf
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf) *zhalf
 *# Reinforcing Bars Definition along local z axis
-*if(MatProp(Bars_along_z_axis_face,int)==2)
+*if(MatProp(Bars_along_h_length,int)==2)
 
 # Create the corner bars
 
@@ -322,7 +334,7 @@ patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFi
 layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf-cover) *operation(cover-zhalf)
 *format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
 layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(cover-yhalf) *operation(zhalf-cover) *operation(cover-yhalf) *operation(cover-zhalf)
-*elseif(MatProp(Bars_along_z_axis_face,int)==3)
+*elseif(MatProp(Bars_along_h_length,int)==3)
 
 # Create the corner bars
 
@@ -340,7 +352,7 @@ fiber *operation(yhalf-cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMateri
 *format "%10.6f%12.8f%3d"
 fiber *operation(-yhalf+cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
 *else
-*set var Howmanybars=MatProp(Bars_along_z_axis_face,int)
+*set var Howmanybars=MatProp(Bars_along_h_length,int)
 *set var zdist=operation((height-2*cover)/(Howmanybars-1))
 *set var zfirstcoord=operation(zhalf-cover-zdist)
 *set var zlastcoord=operation(cover-zhalf+zdist)
@@ -364,7 +376,7 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(cover-yhalf) *zfirstcoord *operation(cover-yhalf) *zlastcoord
 *endif
 *# Reinforcing bars along local y axis
-*if(MatProp(Bars_along_y_axis_face,int)==3)
+*if(MatProp(Bars_along_b_length,int)==3)
 
 # Create the middle Reinforcing Bars along local y axis
 
@@ -373,8 +385,8 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 fiber 0 *operation(zhalf-cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
 *format "%10.6f  %12.8f%3d"
 fiber 0 *operation(-zhalf+cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*elseif(MatProp(Bars_along_y_axis_face,int)>=4)
-*set var Howmanybars=MatProp(Bars_along_y_axis_face,int)
+*elseif(MatProp(Bars_along_b_length,int)>=4)
+*set var Howmanybars=MatProp(Bars_along_b_length,int)
 *set var ydist=operation((width-2*cover)/(Howmanybars-1))
 *set var yfirstcoord=operation(yhalf-cover-ydist)
 *set var ylastcoord=operation(cover-yhalf+ydist)
@@ -386,7 +398,7 @@ fiber 0 *operation(-zhalf+cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMater
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(zhalf-cover) *ylastcoord *operation(zhalf-cover)
 *format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(cover-zhalf) *ylastcoord *operation(cover-zhalf)
-*elseif(MatProp(Bars_along_y_axis_face,int)==1)
+*elseif(MatProp(Bars_along_b_length,int)==1)
 *MessageBox Error: Invalid number of longitudinal bars along local y face
 *endif
 }
@@ -403,10 +415,12 @@ section Fiber *FiberTag *\
 *if(MatProp(Torsional_stiffness_GJ,real)!=0 && MatProp(Activate_torsional_stiffness,int)==1)
 *format "%g"
 -GJ *MatProp(Torsional_stiffness_GJ,real) *\
+*else
+-GJ 1e10 *\
 *endif
  {
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
+*set var zdivision=MatProp(Fibers_along_h_length,int)
+*set var ydivision=MatProp(Fibers_along_b_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
 
@@ -421,13 +435,22 @@ patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation
 
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(yhalf-cover) *operation(-zhalf) *yhalf *zhalf
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(-zhalf+cover) *yhalf *operation(zhalf-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *zhalf
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(-zhalf+cover) *operation(-yhalf+cover) *operation(zhalf-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(-zhalf) *operation(yhalf-cover) *operation(-zhalf+cover)
+# Corner Cover fibers
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(-zhalf) *yhalf *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(zhalf-cover) *operation(-yhalf+cover) *zhalf
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(zhalf-cover) *yhalf *zhalf
 
 *if(MatProp(Top_bars,int)>=2)
 *set var HowmanyTopbars=MatProp(Top_bars,int)
@@ -473,28 +496,47 @@ section Fiber *FiberTag *\
 *if(MatProp(Torsional_stiffness_GJ,real)!=0 && MatProp(Activate_torsional_stiffness,int)==1)
 *format "%g"
 -GJ *MatProp(Torsional_stiffness_GJ,real) *\
+*else
+-GJ 1e10 *\
 *endif
  {
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
+*set var ydivisionBw=MatProp(Fibers_along_bw_length,int)
+*set var zdivision=MatProp(Fibers_along_h_length,int)
+*set var ydivision=tcl(NumofCoverFibers *width, *tw, *ydivisionBw)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
 *set var yslabFibers=tcl(NumofCoverFibers *operation((width-tw)/2) *width *ydivision)
-*set var zslabFibers=tcl(NumofCoverFibers *ts *height *zdivision)
+*set var zslabFibers=tcl(NumofCoverFibers *operation(ts-cover) *height *zdivision)
+*set var zslabFibers=operation(zslabFibers+zcoverFibers)
+
 # Create the core fibers
 
-*set var ycoreFibers=operation(-2*(yslabFibers+ycoverFibers)+ydivision)
+*set var ycoreFibers=operation(-2*(ycoverFibers)+ydivisionBw)
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
 *format "%3d%6g%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(max(ycoreFibers,5)) *operation(zdivision-2*zcoverFibers) *operation(cover-tw/2) *operation(cover-Zcm) *operation(tw/2-cover) *operation(height-Zcm-cover)
+patch rect *SelectedCoreMaterial *operation(max(ycoreFibers,5)) *operation(zslabFibers-zcoverFibers) *operation(cover-tw/2) *operation(height-Zcm-ts) *operation(tw/2-cover) *operation(height-Zcm-cover)
+*format "%3d%6g%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoreMaterial *operation(max(ycoreFibers,5)) *operation(zdivision-zcoverFibers-zslabFibers) *operation(cover-tw/2) *operation(cover-Zcm) *operation(tw/2-cover) *operation(height-Zcm-ts)
 
 # Create the Cover fibers
 
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(tw/2-cover) *operation(-Zcm) *operation(tw/2) *operation(height-Zcm)
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zslabFibers-zcoverFibers) *operation(-tw/2) *operation(height-Zcm-ts) *operation(-tw/2+cover) *operation(height-Zcm-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ycoverFibers *zdivision *operation(-tw/2) *operation(-Zcm) *operation(-tw/2+cover) *operation(height-Zcm)
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zslabFibers-zcoverFibers) *operation(tw/2-cover) *operation(height-Zcm-ts) *operation(tw/2) *operation(height-Zcm-cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-zcoverFibers-zslabFibers) *operation(tw/2-cover) *operation(cover-Zcm) *operation(tw/2) *operation(height-Zcm-ts)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-zcoverFibers-zslabFibers) *operation(-tw/2) *operation(cover-Zcm) *operation(-tw/2+cover) *operation(height-Zcm-ts)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(tw/2-cover) *operation(-Zcm) *operation(tw/2) *operation(-Zcm+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-tw/2) *operation(-Zcm) *operation(-tw/2+cover) *operation(-Zcm+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(tw/2-cover) *operation(height-Zcm-cover) *operation(tw/2) *operation(height-Zcm)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-tw/2) *operation(height-Zcm-cover) *operation(-tw/2+cover) *operation(height-Zcm)
 *format "%3d%6g%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *operation(max(ycoreFibers,5)) *zcoverFibers *operation(-tw/2+cover) *operation(height-Zcm-cover) *operation(tw/2-cover) *operation(height-Zcm)
 *format "%3d%6g%6d%10.6f%10.6f%10.6f%10.6f"
@@ -502,9 +544,13 @@ patch rect *SelectedCoverMaterial *operation(max(ycoreFibers,5)) *zcoverFibers *
 
 # Create the slab fibers
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *yslabFibers *zslabFibers *operation(-width/2) *operation(height-Zcm-ts) *operation(-tw/2) *operation(height-Zcm)
+patch rect *SelectedCoverMaterial *yslabFibers *zcoverFibers *operation(-width/2) *operation(height-Zcm-cover) *operation(-tw/2) *operation(height-Zcm)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *yslabFibers *zslabFibers *operation(tw/2) *operation(height-Zcm-ts) *operation(width/2) *operation(height-Zcm)
+patch rect *SelectedCoverMaterial *yslabFibers *zcoverFibers *operation(tw/2) *operation(height-Zcm-cover) *operation(width/2) *operation(height-Zcm)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *yslabFibers *operation(zslabFibers-zcoverFibers) *operation(-width/2) *operation(height-Zcm-ts) *operation(-tw/2) *operation(height-Zcm-cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *yslabFibers *operation(zslabFibers-zcoverFibers) *operation(tw/2) *operation(height-Zcm-ts) *operation(width/2) *operation(height-Zcm-cover)
 *if(MatProp(Top_beam_bars,int)>=2)
 *set var HowmanyTopWebBars=MatProp(Top_beam_bars,int)
 
@@ -562,6 +608,8 @@ section Fiber *FiberTag *\
 *if(MatProp(Torsional_stiffness_GJ,real)!=0 && MatProp(Activate_torsional_stiffness,int)==1)
 *format "%g"
 -GJ *MatProp(Torsional_stiffness_GJ,real) *\
+*else
+-GJ 1e10 *\
 *endif
  {
 
@@ -669,7 +717,9 @@ layer circ *SelectedRBMaterial *MatProp(Bars_along_arc,int) *MatProp(Bar_Area,re
 DeckFiberSection3D *FiberTag *GJ *conc1ID *conc2ID *steel1ID *steel2ID *steel3ID *steelbeamID *extTendonSteelID *intTendonSteelID *tendons *nsteeltop1 *nsteelbot1 *nsteeltop2 *nsteelbot2 *nsteeltop3 *nsteelbot3 *nbeamsteelfacey *nbeamsteelfacez *steelArea1 *steelArea2 *steelArea3 *beamSteelArea *intTendonArea *extTendonArea *wt *ts1 *wb *ts2 *ts3 *bsw *ts4 *b *h *cover *tw *nvoid *hv *dv *zcoordTopIntTendon *zcoordBotIntTendon *zcoordTopExtTendon *zcoordBotExtTendon *nfy1 *nfz1 *nfy2 *nfz2 *nfyextweb *nfzweb *nfyintweb *nfybeam *nfzbeam
 *# endif section is rectangular or circular
 *endif
+*#
 *# --------------------------------------------- 2D ---------------------------------------------------
+*#
 *elseif(ndime==2)
 *if(strcmp(Matprop(Cross_section),"Bridge_Deck")!=0)
 *set var SelectedCoreMaterial=tcl(FindMaterialNumber *MatProp(Core_material) *DomainNum)
@@ -953,10 +1003,12 @@ section Fiber *FiberTag *\
 *if(MatProp(Torsional_stiffness_GJ,real)!=0 && MatProp(Activate_torsional_stiffness,int)==1)
 *format "%g"
 -GJ *MatProp(Torsional_stiffness_GJ,real) *\
+*else
+-GJ 1e10 *\
 *endif
  {
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
+*set var ydivision=MatProp(Fibers_along_h_length,int)
+*set var zdivision=MatProp(Fibers_along_b_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *width *zdivision)
 *# --------------Core fibers-----------
@@ -970,15 +1022,25 @@ patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation
 # Create the Cover fibers
 
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(zhalf-cover) *operation(-yhalf) *zhalf
+patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *yhalf *operation(-zhalf) *operation(-yhalf) *operation(cover-zhalf)
+patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(-zhalf) *operation(yhalf-cover) *operation(-zhalf+cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(cover-zhalf) *operation(cover-yhalf) *operation(zhalf-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(cover-zhalf) *yhalf *operation(zhalf-cover)
+# Corner Cover fibers
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(zhalf-cover) *operation(-yhalf+cover) *operation(zhalf)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(-zhalf) *operation(yhalf) *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(zhalf-cover) *operation(yhalf) *operation(zhalf)
+
 *# Reinforcing Bars Definition along local y axis
-*if(MatProp(Bars_along_y_axis_face,int)==2)
+*if(MatProp(Bars_along_h_length,int)==2)
 
 # Create the corner bars
 
@@ -986,7 +1048,7 @@ patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFib
 layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(zhalf-cover) *operation(-yhalf+cover) *operation(zhalf-cover)
 *format "%3d %12.8f%10.6f%10.6f%10.6f%10.6f"
 layer straight *SelectedRBMaterial 2 *MatProp(Corner_Bar_Area,real) *operation(yhalf-cover) *operation(-zhalf+cover) *operation(-yhalf+cover) *operation(-zhalf+cover)
-*elseif(MatProp(Bars_along_y_axis_face,int)==3)
+*elseif(MatProp(Bars_along_h_length,int)==3)
 
 # Create the corner bars
 
@@ -1002,7 +1064,7 @@ fiber 0 *operation(zhalf-cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMateri
 *format "%10.6f%12.8f%3d"
 fiber 0 *operation(-zhalf+cover) *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
 *else
-*set var Howmanybars=MatProp(Bars_along_y_axis_face,int)
+*set var Howmanybars=MatProp(Bars_along_h_length,int)
 *set var ydist=operation((height-2*cover)/(Howmanybars-1))
 *set var yfirstcoord=operation(yhalf-cover-ydist)
 *set var ylastcoord=operation(cover-yhalf+ydist)
@@ -1024,7 +1086,7 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *yfirstcoord *operation(cover-zhalf) *ylastcoord *operation(cover-zhalf)
 *endif
 *# middle Reinforcing bars along local z axis
-*if(MatProp(Bars_along_z_axis_face,int)==3)
+*if(MatProp(Bars_along_b_length,int)==3)
 
 # Create the middle bars
 
@@ -1032,8 +1094,8 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 fiber *operation(yhalf-cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
 *format "%10.6f  %12.8f%3d"
 fiber *operation(-yhalf+cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMaterial
-*elseif(MatProp(Bars_along_z_axis_face,int)>=4)
-*set var Howmanybars=MatProp(Bars_along_z_axis_face,int)
+*elseif(MatProp(Bars_along_b_length,int)>=4)
+*set var Howmanybars=MatProp(Bars_along_b_length,int)
 *set var zdist=operation((width-2*cover)/(Howmanybars-1))
 *set var zfirstcoord=operation(zhalf-cover-zdist)
 *set var zlastcoord=operation(cover-zhalf+zdist)
@@ -1044,7 +1106,7 @@ fiber *operation(-yhalf+cover) 0 *MatProp(Middle_Bar_Area,real) *SelectedRBMater
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(yhalf-cover) *zfirstcoord *operation(yhalf-cover) *zlastcoord
 *format "%3d%3d%12.8f%10.6f%10.6f%10.6f%10.6f"
 layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar_Area,real) *operation(cover-yhalf) *zfirstcoord *operation(cover-yhalf) *zlastcoord
-*elseif(MatProp(Bars_along_z_axis_face,int)==1)
+*elseif(MatProp(Bars_along_b_length,int)==1)
 *MessageBox Error: Invalid number of longitudinal bars along local y face (1)
 *endif
 }
@@ -1056,8 +1118,8 @@ layer straight *SelectedRBMaterial *operation(Howmanybars-2) *MatProp(Middle_Bar
 *set var cover=MatProp(Cover_depth_for_bars,real)
 
 section Fiber *FiberTag {
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
+*set var ydivision=MatProp(Fibers_along_h_length,int)
+*set var zdivision=MatProp(Fibers_along_b_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *width *zdivision)
 *# --------------Core fibers-----------
@@ -1071,13 +1133,22 @@ patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation
 # Create the Cover fibers
 
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *operation(-yhalf) *operation(zhalf-cover) *yhalf *zhalf
+patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(zhalf-cover) *operation(yhalf-cover) *zhalf
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *operation(-yhalf) *operation(-zhalf) *yhalf *operation(cover-zhalf)
+patch rect *SelectedCoverMaterial *operation(ydivision-2*ycoverFibers) *zcoverFibers *operation(-yhalf+cover) *operation(-zhalf) *operation(yhalf-cover) *operation(cover-zhalf)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(-yhalf) *operation(cover-zhalf) *operation(cover-yhalf) *operation(zhalf-cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ycoverFibers *operation(zdivision-2*zcoverFibers) *operation(yhalf-cover) *operation(cover-zhalf) *yhalf *operation(zhalf-cover)
+# Corner Cover fibers
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(-zhalf) *operation(-yhalf+cover) *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-yhalf) *operation(zhalf-cover) *operation(-yhalf+cover) *zhalf
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(-zhalf) *yhalf *operation(-zhalf+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(yhalf-cover) *operation(zhalf-cover) *yhalf *zhalf
 
 *if(MatProp(Top_bars,int)>=2)
 *set var HowmanyTopbars=MatProp(Top_bars,int)
@@ -1115,26 +1186,43 @@ layer straight *SelectedRBMaterial *HowmanyBottombars *MatProp(Bottom_bar_area,r
 *MessageBox Error: Invalid geometric values in Fiber Tee Beam Section.
 *endif
 section Fiber *FiberTag {
-*set var zdivision=MatProp(Fibers_in_local_z_direction,int)
-*set var ydivision=MatProp(Fibers_in_local_y_direction,int)
+*set var zdivisionBw=MatProp(Fibers_along_bw_length,int)
+*set var zdivision=tcl(NumofCoverFibers *width, *tw, *zdivisionBw)
+*set var ydivision=MatProp(Fibers_along_h_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *width *zdivision)
 *set var zslabFibers=tcl(NumofCoverFibers *operation((width-tw)/2) *width *zdivision)
-*set var yslabFibers=tcl(NumofCoverFibers *ts *height *ydivision)
+*set var yslabFibers=tcl(NumofCoverFibers *operation(ts-cover) *height *ydivision)
+*set var yslabFibers=operation(yslabFibers+ycoverFibers)
+
 # Create the Core fibers
 
-*set var zcoreFibers=operation(-2*(zslabFibers+zcoverFibers)+zdivision)
+*set var zcoreFibers=operation(-2*(zcoverFibers)+zdivisionBw)
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
 *format "%3d%6d%6g%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoreMaterial *operation(ydivision-2*ycoverFibers) *operation(max(zcoreFibers,5)) *operation(cover-Ycm) *operation(cover-tw/2) *operation(height-Ycm-cover) *operation(tw/2-cover)
+patch rect *SelectedCoreMaterial *operation(yslabFibers-ycoverFibers) *operation(max(zcoreFibers,5)) *operation(height-Ycm-ts) *operation(cover-tw/2) *operation(height-Ycm-cover) *operation(tw/2-cover)
+*format "%3d%6d%6g%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoreMaterial *operation(ydivision-ycoverFibers-yslabFibers) *operation(max(zcoreFibers,5)) *operation(cover-Ycm) *operation(cover-tw/2) *operation(height-Ycm-ts) *operation(tw/2-cover)
 
 # Create the Cover fibers
 
 # patch rect $matTag $numSubdivY $numSubdivZ $yI $zI $yJ $zJ
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *operation(-Ycm) *operation(tw/2-cover) *operation(height-Ycm) *operation(tw/2)
+patch rect *SelectedCoverMaterial *operation(yslabFibers-ycoverFibers) *zcoverFibers *operation(height-Ycm-ts) *operation(-tw/2) *operation(height-Ycm-cover) *operation(-tw/2+cover)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *ydivision *zcoverFibers *operation(-Ycm) *operation(-tw/2) *operation(height-Ycm) *operation(-tw/2+cover)
+patch rect *SelectedCoverMaterial *operation(yslabFibers-ycoverFibers) *zcoverFibers *operation(height-Ycm-ts) *operation(tw/2-cover) *operation(height-Ycm-cover) *operation(tw/2)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(ydivision-ycoverFibers-yslabFibers) *zcoverFibers *operation(cover-Ycm) *operation(tw/2-cover) *operation(height-Ycm-ts) *operation(tw/2)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(ydivision-ycoverFibers-yslabFibers) *zcoverFibers *operation(cover-Ycm) *operation(-tw/2) *operation(height-Ycm-ts) *operation(-tw/2+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-Ycm) *operation(tw/2-cover) *operation(cover-Ycm) *operation(tw/2)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(-Ycm) *operation(-tw/2) *operation(cover-Ycm) *operation(-tw/2+cover)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(height-Ycm-cover) *operation(tw/2-cover) *operation(height-Ycm) *operation(tw/2)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *ycoverFibers *zcoverFibers *operation(height-Ycm-cover) *operation(-tw/2) *operation(height-Ycm) *operation(-tw/2+cover)
 *format "%3d%6d%6g%10.6f%10.6f%10.6f%10.6f"
 patch rect *SelectedCoverMaterial *ycoverFibers *operation(max(zcoreFibers,5)) *operation(height-Ycm-cover) *operation(-tw/2+cover) *operation(height-Ycm) *operation(tw/2-cover)
 *format "%3d%6d%6g%10.6f%10.6f%10.6f%10.6f"
@@ -1142,9 +1230,13 @@ patch rect *SelectedCoverMaterial *ycoverFibers *operation(max(zcoreFibers,5)) *
 
 # Create the slab fibers
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *yslabFibers *zslabFibers *operation(height-Ycm-ts) *operation(-width/2) *operation(height-Ycm) *operation(-tw/2)
+patch rect *SelectedCoverMaterial *ycoverFibers *zslabFibers *operation(height-Ycm-cover) *operation(-width/2) *operation(height-Ycm) *operation(-tw/2)
 *format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
-patch rect *SelectedCoverMaterial *yslabFibers *zslabFibers *operation(height-Ycm-ts) *operation(tw/2) *operation(height-Ycm) *operation(width/2)
+patch rect *SelectedCoverMaterial *ycoverFibers *zslabFibers *operation(height-Ycm-cover) *operation(tw/2) *operation(height-Ycm) *operation(width/2)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(yslabFibers-ycoverFibers) *zslabFibers *operation(height-Ycm-ts) *operation(-width/2) *operation(height-Ycm-cover) *operation(-tw/2)
+*format "%3d%6d%6d%10.6f%10.6f%10.6f%10.6f"
+patch rect *SelectedCoverMaterial *operation(yslabFibers-ycoverFibers) *zslabFibers *operation(height-Ycm-ts) *operation(tw/2) *operation(height-Ycm-cover) *operation(width/2)
 *if(MatProp(Top_beam_bars,int)>=2)
 *set var HowmanyTopWebBars=MatProp(Top_beam_bars,int)
 

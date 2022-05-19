@@ -100,11 +100,12 @@
 *set var x2=NodesCoord(2,1)
 *set var y2=NodesCoord(2,2)
 *set var z2=NodesCoord(2,3)
+*# Vertical axis = Y
 *if(strcmp(GenData(Vertical_axis),"Y")==0)
 *# 3D analysis
 *if(ndime==3)
 *# vertical elems
-*if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
+*if(fabs(NodesCoord(1,1)-NodesCoord(2,1)) < 1e-6 && fabs(NodesCoord(1,3)-NodesCoord(2,3)) < 1e-6)
 *if(y2>y1)
 *format "%6d%8g"
     eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
@@ -136,7 +137,7 @@
 *# 2D analysis
 *else
 *# vertical elems
-*if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,3)==NodesCoord(2,3))
+*if(fabs(NodesCoord(1,1)-NodesCoord(2,1)) < 1e-6 && fabs(NodesCoord(1,3)-NodesCoord(2,3)) < 1e-6)
 *if(y2>y1)
 *format "%6d%8g"
     eleLoad -ele *ElemsNum -type -beamUniform        0 *operation(-DeadLoad)
@@ -179,7 +180,7 @@
 *# Vertical axis = Z
 *else
 *# vertical elems
-*if(NodesCoord(1,1)==NodesCoord(2,1) && NodesCoord(1,2)==NodesCoord(2,2))
+*if(fabs(NodesCoord(1,1)-NodesCoord(2,1)) < 1e-6 && fabs(NodesCoord(1,2)-NodesCoord(2,2)) < 1e-6)
 *if(z2>z1)
 *format "%6d%8g"
     eleLoad -ele *ElemsNum -type -beamUniform        0        0 *operation(-DeadLoad)
