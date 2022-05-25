@@ -36,7 +36,7 @@
 
 **Version 2.9.5 (19/05/2022)**
 
-- Improved : fiber mesh suggestions for fiber sections (thanks to C.Zaki for feedback)
+- Improved : fiber mesh suggestions for fiber sections (thanks to C. Zaki for feedback)
 - Improved : prompt for vertical axis definition
 - Fixed : default -GJ for fiber sections
 
