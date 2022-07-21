@@ -29,21 +29,9 @@ $numModes]
 -symmBandLapack $numModes]
 *endif
 
-# Calculate periods
+# Modal report
 
-set T {}
-foreach lam $lambda {
-    lappend T [expr 6.283185/sqrt($lam)]
-}
-
-# Write periods file
-
-set period "Periods.out"
-set Periods [open $period "w"]
-foreach t $T {
-    puts $Periods "$t"
-}
-close $Periods
+modalProperties -file "ModalReport.out" -unorm
 
 *endif
 *if(IntvNum==1)
@@ -75,6 +63,7 @@ rayleigh *GenData(alphaM,real) *GenData(betaK,real) *GenData(betaKinit,real) *Ge
 *# STATIC ANALYSIS
 *#
 *if(strcmp(IntvData(Analysis_type),"Static")==0)
+wipeAnalysis
 system *IntvData(System_of_equations)
 numberer *IntvData(DOF_numberer)
 *if(strcmp(IntvData(Constraint_handler),"Penalty")==0)
@@ -349,6 +338,7 @@ analysis *IntvData(Analysis_type)
 *# Transient analysis
 *#
 *elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
+wipeAnalysis
 system *IntvData(System_of_equations)
 numberer *IntvData(DOF_numberer)
 *if(strcmp(IntvData(Constraint_handler),"Penalty")==0)
