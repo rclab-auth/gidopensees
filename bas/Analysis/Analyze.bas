@@ -33,6 +33,22 @@ $numModes]
 
 modalProperties -file "ModalReport.out" -unorm
 
+# Calculate periods
+
+set T {}
+foreach lam $lambda {
+    lappend T [expr 6.283185/sqrt($lam)]
+}
+
+# Write periods file
+
+set period "Periods.out"
+set Periods [open $period "w"]
+foreach t $T {
+    puts $Periods "$t"
+}
+close $Periods
+
 *endif
 *if(IntvNum==1)
 *if(GenData(Activate_Global_Rayleigh_damping,int)==1)
