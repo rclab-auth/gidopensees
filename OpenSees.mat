@@ -468,7 +468,7 @@ VALUE: 5000 kN/m
 QUESTION: Moment_per_rotation_unit#UNITS#
 VALUE: 10000 kNm
 QUESTION: Strain-hardening_ratio_b
-VALUE: 0.15#WIDTH#(10)
+VALUE: 0.02#WIDTH#(10)
 HELP: Ratio between post-yield tangent and initial elastic tangent.
 QUESTION: Isotropic_hardening_parameters:#CB#(_)
 VALUE:
@@ -523,7 +523,7 @@ VALUE: 5000 kN/m
 QUESTION: Moment_per_rotation_unit#UNITS#
 VALUE: 10000 kNm
 QUESTION: Strain-hardening_ratio_b
-VALUE: 0.15#WIDTH#(10)
+VALUE: 0.02#WIDTH#(10)
 HELP: Ratio between post-yield tangent and initial elastic tangent.
 QUESTION: Parameters_to_control_the_transition#CB#(_)
 VALUE: from elastic to plastic branches:
