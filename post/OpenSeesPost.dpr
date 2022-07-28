@@ -301,10 +301,11 @@ var
     ElemCrash : array of integer;
     ElemType  : array of string;
     Elem      : integer;
-    s         : string;
+    s,crit    : string;
     Intv,
     IntPrev,
     Sum       : integer;
+    TolMult   : integer;
 
 begin
     if not FileExists(LogFile) then
@@ -331,13 +332,14 @@ begin
     if Valid then
     begin
         STAT := TStringList.Create;
-        STAT.Add('Interval'#9'Interval step'#9'Total step'#9'Step multiplier'#9'LF/Time'#9'Iterations'#9'Algorithm'#9'Criterion'#9'Norm');
+        STAT.Add('Interval'#9'Interval step'#9'Total step'#9'Step multiplier'#9'LF/Time'#9'Iterations'#9'Algorithm'#9'Criterion'#9'Norm'#9'Limit');
 
         i := 0;
         cnt := 0;
         Mult := 1;
         IntPrev := 0;
         Sum := 0;
+        TolMult := 0;
 
         while i < LOG.Count do
         begin
@@ -351,6 +353,14 @@ begin
                 Mult := 1/8
             else if LOG.Strings[i] = 'Initial step is divided by 16' then
                 Mult := 1/16;
+
+            if Pos('Tolerance is multiplied by',LOG.Strings[i]) <> 0 then
+
+                TolMult := StrToInt( Trim( Copy(LOG.Strings[i],Pos('by',LOG.Strings[i])+2,10) ) );
+
+            if LOG.Strings[i] = 'Back to initial error tolerance' then
+
+                TolMult := 0;
 
             if (Copy(LOG.Strings[i],1,1) = '(') and (Pos('- iteration:',LOG.Strings[i]) <> 0) then
             begin
@@ -385,10 +395,63 @@ begin
                 if Pos('LF',LOG.Strings[i]) <> 0 then
                     s := s + Trim(Copy( LOG.Strings[i],Pos(') ',LOG.Strings[i])+2,Pos(' LF',LOG.Strings[i])-Pos(') ',LOG.Strings[i])-2 ))+#9;
 
-                s := s + Trim(Copy( LOG.Strings[i],Pos('CTest',LOG.Strings[i])+5,Pos('::',LOG.Strings[i])-Pos('CTest',LOG.Strings[i])-5 ))+#9;
+                crit := Trim(Copy( LOG.Strings[i],Pos('CTest',LOG.Strings[i])+5,Pos('::',LOG.Strings[i])-Pos('CTest',LOG.Strings[i])-5 ));
 
-                s := s + Trim(Copy( LOG.Strings[i],Pos('Norm:',LOG.Strings[i])+5,Pos(' (max',LOG.Strings[i])-Pos('Norm:',LOG.Strings[i])-5 ));
+                //
+                // crit
+                //
+                // NormUnbalance                Norm: <> (max: <>,
+                // NormDispIncr                 Norm: <> (max: <>,
+                // EnergyIncr                   EnergyIncr: <> (max: <>)
+                // RelativeNormUnbalance        |): <> (max: <>)
+                // RelativeNormDispIncr         |): <> (max: <>)
+                // RelativeTotalNormDispIncr    |): <> (max: <>)
+                // RelativeEnergyIncr           |): <> (max: <>)
+                // FixedNumIter                 EnergyIncr: <>
 
+                s := s + crit + #9;
+
+                if (crit = 'NormUnbalance') or (crit = 'NormDispIncr') then
+
+                begin
+
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('Norm:',LOG.Strings[i])+5,Pos(' (max',LOG.Strings[i])-Pos('Norm:',LOG.Strings[i])-5 ))+#9;
+
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('(max',LOG.Strings[i])+5,Pos(',',LOG.Strings[i])-Pos('(max',LOG.Strings[i])-5 ));
+
+                end
+
+                else if crit = 'EnergyIncr' then
+
+                begin
+
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('EnergyIncr: ',LOG.Strings[i])+11,Pos(' (max',LOG.Strings[i])-Pos('EnergyIncr: ',LOG.Strings[i])-11 ))+#9;
+
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('(max',LOG.Strings[i])+5,Length(LOG.Strings[i])-Pos('(max',LOG.Strings[i])-5 ));
+
+                end
+
+                else if crit = 'FixedNumIter' then
+
+                begin
+
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('EnergyIncr: ',LOG.Strings[i])+11,Pos(' (Norm',LOG.Strings[i])-Pos('EnergyIncr: ',LOG.Strings[i])-11 ));
+
+                end
+
+                else
+
+                begin
+
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('):',LOG.Strings[i])+2,Pos(' (max',LOG.Strings[i])-Pos('):',LOG.Strings[i])-2 ))+#9;
+
+                    s := s + Trim(Copy( LOG.Strings[i],Pos('(max',LOG.Strings[i])+5,Length(LOG.Strings[i])-Pos('(max',LOG.Strings[i])-5 ));
+
+                end;
+
+                if TolMult <> 0 then
+
+                    s := s + #9 + 'relaxed (x'+IntToStr(TolMult)+')';
                 STAT.Add(s);
             end;
 
