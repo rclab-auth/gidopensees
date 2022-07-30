@@ -78,6 +78,7 @@ var
 
     Base          : array of boolean;
     SRx,SRy,SRz   : double;
+    nodeID        : integer;
 
 // console color text
 
@@ -1597,20 +1598,16 @@ begin
 
     SetLength(Base,n);
 
-    cnt := 0;
-
     for i := 0 to TCL.Count - 1 do
 
         if Copy(TCL.Strings[i],1,4) = 'node' then
 
-        begin
-
             if Abs(StrToFloat(Copy(TCL.Strings[i],Length(TCL.Strings[i])-11,12))) < 1e-6 then
+            begin
+                nodeID := StrToInt(Copy(TCL.Strings[i],6,6));
 
-                Base[cnt] := true;
-
-            cnt := cnt + 1;
-        end;
+                Base[nodeID-1] := true;
+            end;
 
     // force reactions
 
@@ -1702,12 +1699,13 @@ begin
                 begin
 
                     if ndm = 3 then
-                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + FloatToStrF(SRx,ffFixed,7,3)+' '+FloatToStrF(SRy,ffFixed,7,3)+' '+FloatToStrF(SRz,ffFixed,7,3)
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + FloatToStrF(SRx,ffFixed,15,3)+' '+FloatToStrF(SRy,ffFixed,15,3)+' '+FloatToStrF(SRz,ffFixed,15,3)
                     else
-                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + FloatToStrF(SRx,ffFixed,7,3)+' '+FloatToStrF(SRy,ffFixed,7,3)+' 0';
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + FloatToStrF(SRx,ffFixed,15,3)+' '+FloatToStrF(SRy,ffFixed,15,3)+' 0';
 
                     MSH.Writeline(s);
                 end;
+
 
                 MSH.Writeline('End Values');
 
