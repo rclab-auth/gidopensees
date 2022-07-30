@@ -74,6 +74,11 @@ var
     StdErr        : THandle;
     CCI           : TConsoleCursorInfo;
 
+    // node base
+
+    Base          : array of boolean;
+    SRx,SRy,SRz   : double;
+
 // console color text
 
 procedure TextColor(Color: byte);
@@ -658,7 +663,7 @@ begin
                              TheMin := (xx+yy)/2 - Sqrt( ((xx-yy)/2) * ((xx-yy)/2) + xy*xy );
                              TheAngle := 180 / PI * ArcTan2(2*xy,(xx-yy)) / 2;
 
-                             s := s + FloatToStrF(TheMax,ffExponent,6,2)+'  '+FloatToStrF(TheMin,ffExponent,6,2)+' '+FloatToStrF(TheAngle,ffNumber,7,4);
+                             s := s + FloatToStrF(TheMax,ffExponent,6,2)+'  '+FloatToStrF(TheMin,ffExponent,6,2)+' '+FloatToStrF(TheAngle,ffFixed,7,4);
                          end
                          else
                          begin
@@ -1585,6 +1590,28 @@ begin
 
     end;
 
+
+    // find base nodes
+
+    n := StrToInt(Copy(TCL[TCL.IndexOf('# Number of nodes')+1],3,10));  // number of nodes
+
+    SetLength(Base,n);
+
+    cnt := 0;
+
+    for i := 0 to TCL.Count - 1 do
+
+        if Copy(TCL.Strings[i],1,4) = 'node' then
+
+        begin
+
+            if Abs(StrToFloat(Copy(TCL.Strings[i],Length(TCL.Strings[i])-11,12))) < 1e-6 then
+
+                Base[cnt] := true;
+
+            cnt := cnt + 1;
+        end;
+
     // force reactions
 
     OutFile := ModelPath+'\OpenSees\Node_forceReactions.out';
@@ -1622,6 +1649,10 @@ begin
 
                 StrToArray(line,Str,n*ndm,true);  // read all values from current step
 
+                SRx := 0;
+                SRy := 0;
+                SRz := 0;
+
                 for j := 0 to n-1 do
                 begin
 
@@ -1629,6 +1660,51 @@ begin
                         s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + Str[ndm*j]+' '+Str[ndm*j+1]+' '+Str[ndm*j+2]
                     else
                         s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + Str[ndm*j]+' '+Str[ndm*j+1]+' 0';
+
+                    MSH.Writeline(s);
+
+                    if Base[j] then  // belongs to base
+                    begin
+
+                        SRx := SRx +  StrToFloat(Str[ndm*j]);
+                        SRy := SRy +  StrToFloat(Str[ndm*j+1]);
+
+                        if ndm = 3 then
+
+                            SRz := SRz +  StrToFloat(Str[ndm*j+2]);
+
+                    end;
+                end;
+
+                MSH.Writeline('End Values');
+
+                // write base reactions
+
+                MSH.Writeline('');
+
+                if ndm = 3  then
+                begin
+                    MSH.Writeline('Result "Nodes//Base shear (z = 0)" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                    s := 'ComponentNames "SRx" "SRy" "SRz"';
+                end
+                else
+                begin
+                    MSH.Writeline('Result "Nodes//Base shear (y = 0)" "'+Str_IntNames[i]+'" '+Str_Steps[i]+' Vector OnNodes');
+                    s := 'ComponentNames "SRx" "SRy" "SRz (zero)"';
+                end;
+
+                MSH.Writeline(s);
+
+                MSH.Writeline('Unit "kN"');
+                MSH.Writeline('Values');
+
+                for j := 0 to n-1 do
+                begin
+
+                    if ndm = 3 then
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + FloatToStrF(SRx,ffFixed,7,3)+' '+FloatToStrF(SRy,ffFixed,7,3)+' '+FloatToStrF(SRz,ffFixed,7,3)
+                    else
+                        s := IntToStr(j+1) + StringOfChar(' ',INDENT-Length(IntToStr(j+1))) + FloatToStrF(SRx,ffFixed,7,3)+' '+FloatToStrF(SRy,ffFixed,7,3)+' 0';
 
                     MSH.Writeline(s);
                 end;
