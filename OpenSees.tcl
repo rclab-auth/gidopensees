@@ -36,7 +36,7 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.9.5"
+	variable VersionNumber "v2.9.6"
 	variable InterfaceName [_ " GiD+OpenSees Interface $VersionNumber "]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesEXE

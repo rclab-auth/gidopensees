@@ -34,6 +34,14 @@
 
 ---
 
+**Version 2.9.6 (30/07/2022)**
+
+- Added : Base shear (z = 0 for 3D or y = 0 for 2D) in analysis results
+- Added : Modal results in eigenvalue analysis
+- Various fixes and improvements
+
+---
+
 **Version 2.9.5 (19/05/2022)**
 
 - Improved : fiber mesh suggestions for fiber sections (thanks to C. Zaki for feedback)
