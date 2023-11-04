@@ -1117,9 +1117,7 @@ begin
         MSH.Writeline('end GaussPoints');
     end;
 
-    if FileExists(ModelPath+'\OpenSees\Tri31_force.out') or
-       FileExists(ModelPath+'\OpenSees\Tri31_stress.out') or
-       FileExists(ModelPath+'\OpenSees\Tri31_strain.out') then
+    if FileExists(ModelPath+'\OpenSees\Tri31_stress.out') then
     begin
         MSH.Writeline('');
         MSH.Writeline('GaussPoints "Tri31_GP" ElemType Triangle');
@@ -3282,15 +3280,24 @@ begin
     // stdBrick
     //
 
+    // 3 values per GP, 8 GPs per element
+    // 24 values per element
+
     WriteResults(false,
                  false,'Reading stdBrick forces ',
                        'stdBrick_force','stdBrick','Forces',
                        'Fx','Fy','Fz','','','','kN',8,3,false,0,1,2,-1,-1,-1);
 
+    // 6 values per GP, 8 GPs per element
+    // 48 values per element
+
     WriteResults(true,
                  false,'Reading stdBrick stresses ',
                        'stdBrick_stress','stdBrick','Stresses',
                        's11','s22','s33','s12','s23','s13','kPa',8,6,false,0,1,2,3,4,5);
+
+    // 6 valies per GP, 8 GPs per element
+    // 48 values per element
 
     WriteResults(true,
                  false,'Reading stdBrick strains ',
@@ -3308,30 +3315,18 @@ begin
     // Tri31
     //
 
-    WriteResults(false,
-                 false,'Reading Tri31 forces ',
-                       'Tri31_force','Tri31','Forces',
-                       'Fx','Fy','N/A','','','','kN',4,2,false,0,1,-1,-1,-1,-1);
+    // 3 values per GP, 1 GP per element
+    // 3 values per element
 
     WriteResults(true,
                  false,'Reading Tri31 stresses ',
                        'Tri31_stress','Tri31','Stresses',
-                       's11','s22','s12','','','','kPa',4,3,false,0,1,2,-1,-1,-1);
-
-    WriteResults(true,
-                 false,'Reading Tri31 strains ',
-                       'Tri31_strain','Tri31','Strains',
-                       'e11','e22','e12','','','','-',4,3,false,0,1,2,-1,-1,-1);
+                       's11','s22','s12','','','','kPa',1,3,false,0,1,2,-1,-1,-1);
 
     WriteResults(false,
                   true,'Reading Tri31 principal stresses ',
                        'Tri31_stress','Tri31','Stresses-Principal',
-                       's1','s2','angle','','','','kPa',4,3,false,0,1,2,-1,-1,-1);
-
-    WriteResults(false,
-                  true,'Reading Tri31 principal strains ',
-                       'Tri31_strain','Tri31','Strains-Principal',
-                       'e1','e2','angle','','','','-',4,3,false,0,1,2,-1,-1,-1);
+                       's1','s2','angle','','','','kPa',1,3,false,0,1,2,-1,-1,-1);
 
     //
     // Quad
