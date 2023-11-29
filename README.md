@@ -1,6 +1,6 @@
 # GiD + OpenSees Interface
 
-*(c) 2016-2022*
+*(c) 2016-2023*
 
 *Lab of R/C and Masonry Structures, School of Civil Engineering, Aristotle University of Thessaloniki, Greece*
 
@@ -31,7 +31,13 @@
 ---
 
 ### VERSION HISTORY
+---
 
+**Version 3.0.0-beta (30/11/2023)**
+
+- Added : Python-based OpenSees Models
+- Added : Material Properties Inputs as variables in Python-based Models.
+- Various fixes and improvements
 ---
 
 **Version 2.9.6 (30/07/2022)**

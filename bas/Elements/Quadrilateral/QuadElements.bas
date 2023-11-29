@@ -26,7 +26,7 @@
 *set var thickness=ElemsMatProp(Thickness,real)
 *if(VarCount==1)
 # nDMaterial Definition used by Quad Elements
-# (ïnly if they have not already been defined on this model domain)
+# (only if they have not already been defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Quad")==0)

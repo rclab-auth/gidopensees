@@ -39,6 +39,14 @@ BOOK: General_Data
 TITLE: Project information
 QUESTION: _#CB#(_)
 VALUE:
+QUESTION: Use_Python_script#CB#(0,1)
+VALUE: 0
+QUESTION: _#CB#(_)
+VALUE: Please reopen your model to apply changes.
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: _#CB#(_)
+VALUE: Additional notes
 TKWIDGET: GenData::Description
 TITLE: Modeling_Options
 QUESTION: _#CB#(_)

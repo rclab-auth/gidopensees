@@ -1,0 +1,2 @@
+*format "%d%g%g%g%g%g%g%g%g%g"
+ops.nDMaterial("ElasticOrthotropic", *MaterialID, *MatProp(Elastic_modulus_Ex,real), *MatProp(Elastic_modulus_Ey,real), *MatProp(Elastic_modulus_Ez,real), *MatProp(Poisson's_ratio_vxy,real), *MatProp(Poisson's_ratio_vyz,real), *MatProp(Poisson's_ratio_vzx,real), *MatProp(Shear_modulus_Gxy,real), *MatProp(Shear_modulus_Gyz,real), *MatProp(Shear_modulus_Gzx,real), *MatProp(Mass_density,real))

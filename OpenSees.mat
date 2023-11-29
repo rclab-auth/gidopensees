@@ -81,6 +81,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Elastic_Perfectly_Plastic
@@ -148,6 +152,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 9 -0.005 0.005 1 -0.004 0.004 1 -0.003 0.003 1
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Elastic_Perfectly_Plastic_with_Gap
@@ -208,6 +216,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Viscous
@@ -233,6 +245,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Viscous_Damper
@@ -265,6 +281,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Hyperbolic_Gap
@@ -494,6 +514,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 9 -0.015 0.015 1 -0.01 0.01 1 -0.005 0.005 1
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Steel02
@@ -563,6 +587,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 9 -0.015 0.015 1 -0.01 0.01 1 -0.005 0.005 1
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Reinforcing_steel
@@ -600,6 +628,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Hysteretic
@@ -741,6 +773,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 
@@ -796,6 +832,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 12 -0.0005 0 1 -0.001 0 1 -0.0015 0 1 -0.002 0 1
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Concrete02_(Linear_tension_softening)
@@ -852,6 +892,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 12 -0.0005 0.00005 1 -0.001 0.00005 1 -0.0015 0.00005 1 -0.002 0.00005 1
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Concrete04_(Popovics_concrete)
@@ -906,6 +950,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0
 END MATERIAL
 
 MATERIAL: Concrete06
@@ -966,6 +1014,10 @@ DEPENDENCIES: (Monotonic,HIDE,Cyclic_data,#CURRENT#)
 DEPENDENCIES: (Cyclic,RESTORE,Cyclic_data,#CURRENT#)
 QUESTION: Cyclic_data(Max_compressive_strain,Max_tensile_strain,Number_of_cycles)
 VALUE: #N# 3 -0.005 0.005 5
+QUESTION: _#CB#(_)
+VALUE:
+QUESTION: Set_as_variable#CB#(0,1)
+VALUE: 0s
 END MATERIAL
 
 MATERIAL: ConcreteCM

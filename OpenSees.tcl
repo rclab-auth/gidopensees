@@ -1,5 +1,5 @@
 # GiD + OpenSees Interface - An Integrated FEA Platform
-# Copyright (C) 2016-2022
+# Copyright (C) 2016-2023
 #
 # Lab of R/C and Masonry Structures
 # School of Civil Engineering, AUTh
@@ -47,8 +47,6 @@ namespace eval OpenSees {
 
 proc OpenSees::InitGIDProject { dir } {
 
-	global MenuNames MenuEntries MenuCommands MenuAcceler
-	global MenuNamesP MenuEntriesP MenuCommandsP MenuAccelerP
 	variable OpenSeesProblemTypePath; # OpenSees problem type directory
 	variable OpenSeesEXE; # OpenSees executable with path
 
@@ -68,7 +66,7 @@ proc OpenSees::InitGIDProject { dir } {
 	OpenSees::Splash $dir
 	set splashdir $dir
 
-	OpenSees_Menu $dir
+	OpenSees_Menu $dir 1
 
 	OpenSees::Toolbar1
 	OpenSees::Toolbar2
@@ -238,6 +236,12 @@ proc OpenSees::GetModelDimensions {} {
 
 proc OpenSees::SetModelDimensions { dim } {
 	GiD_AccessValue set gendata Model_dimensions $dim
+}
+
+# Get OpenSees current script type stored in problem data
+
+proc OpenSees::IsPython {} {
+	GiD_AccessValue get gendata Use_Python_script
 }
 
 proc OpenSees::Toolbar1 {{type "DEFAULT INSIDELEFT"}} {
