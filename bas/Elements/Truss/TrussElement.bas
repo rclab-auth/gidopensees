@@ -21,7 +21,7 @@
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *if(VarCount==1)
 # Uniaxial Materials definition used by Truss Elements
-# (ïnly if they have not been already defined on this model domain)
+# (only if they have not been already defined on this model domain)
 
 *loop materials
 *if(strcmp(MatProp(Element_type:),"Truss")==0)

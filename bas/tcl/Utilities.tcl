@@ -196,15 +196,32 @@ proc Create_tcl_file { } {
 	set info [GiD_Info Project]
 	set ProjectName [lindex $info 1]
 
-	if { $ProjectName == "UNNAMED" } {
+	if { [OpenSees::IsPython] == 0 } {
 
-		tk_dialog .gid.errorMsg "Error" "Please save project before creating the .tcl file." error 0 "  Ok  "
+		if { $ProjectName == "UNNAMED" } {
 
-	} else {
+			tk_dialog .gid.errorMsg "Error" "Please save project before creating the .tcl file." error 0 "  Ok  "
 
-		GiD_Process Mescape Files Save; # save project before creating .tcl file
-		file mkdir [file join [OpenSees::GetProjectPath] OpenSees]
-		GiD_Process Mescape Files WriteForBAS "[OpenSees::GetProblemTypePath]/../OpenSees.gid/OpenSees.bas" "[OpenSees::GetProjectPath]/OpenSees/[OpenSees::GetProjectName].tcl"
+		} else {
+
+			GiD_Process Mescape Files Save; # save project before creating .tcl file
+			file mkdir [file join [OpenSees::GetProjectPath] OpenSees]
+			GiD_Process Mescape Files WriteForBAS "[OpenSees::GetProblemTypePath]/../OpenSees.gid/OpenSees_TCL.bas" "[OpenSees::GetProjectPath]/OpenSees/[OpenSees::GetProjectName].tcl"
+		}
+	}
+
+	if { [OpenSees::IsPython] == 1 } {
+
+		if { $ProjectName == "UNNAMED" } {
+
+			tk_dialog .gid.errorMsg "Error" "Please save project before creating the .py file." error 0 "  Ok  "
+
+		} else {
+
+			GiD_Process Mescape Files Save; # save project before creating .py file
+			file mkdir [file join [OpenSees::GetProjectPath] OpenSees]
+			GiD_Process Mescape Files WriteForBAS "[OpenSees::GetProblemTypePath]/../OpenSees.gid/OpenSees_Py.bas" "[OpenSees::GetProjectPath]/OpenSees/[OpenSees::GetProjectName].py"
+		}
 	}
 
 	UpdateInfoBar
@@ -784,7 +801,7 @@ proc Import_tcl_dialog { } {
 	return ""
 }
 
-proc mnu_open_tcl { } {
+proc mnu_open_script { } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
@@ -903,11 +920,19 @@ proc OpenDesignSafePDF {} {
 
 # Create GiD+OpenSees menu
 
-proc OpenSees_Menu { dir } {
+proc OpenSees_Menu { dir new } {
 
 	# Delete the GiD calculate menu - Analysis process is executed through the corresponding button from the OpenSees toolbar
 
-	GiDMenu::Delete "Calculate" PRE
+	if {$new == 1} {
+
+		GiDMenu::Delete "Calculate" PRE
+	}
+
+	if {$new == 0} {
+
+		GiDMenu::Delete "GiD+OpenSees" PRE
+	}
 
 	# Create the Menu named GiD+OpenSees in PRE processing
 
@@ -915,34 +940,69 @@ proc OpenSees_Menu { dir } {
 
 	# Tab labels
 
-	set tabs [list \
-	[= "Import .tcl"] \
-	"---" \
-	[= "Create .tcl, run analysis and postprocess"] \
-	"---" \
-	[= "Create .tcl only"] \
-	[= "Create and view .tcl only"] \
-	[= "Run analysis only"] \
-	[= "Postprocess only"] \
-	[= "Run analysis and postprocess"] \
-	"---" \
-	[= "Reset analysis"] \
-	"---" \
-	[= "Open .tcl file"] \
-	[= "Open .log file"] \
-	[= "Open analysis folder"] \
-	"---" \
-	[= "GiD+OpenSees Site"] \
-	[= "OpenSees Site"] \
-	[= "OpenSees Wiki"] \
-	"---" \
-	[= "GiD+OpenSees User Manual"] \
-	[= "DesignSafe-CI User Manual"] \
-	[= "DesignSafe-CI Site"] \
-	"---" \
-	[= "Check for Update"] \
-	[= "Donate"] \
-	[= "About"] ]
+	if { [OpenSees::IsPython] == 0 } {
+
+		set tabs [list \
+		[= "Import .tcl"] \
+		"---" \
+		[= "Create .tcl, run analysis and postprocess"] \
+		"---" \
+		[= "Create .tcl only"] \
+		[= "Create and view .tcl only"] \
+		[= "Run analysis only"] \
+		[= "Postprocess only"] \
+		[= "Run analysis and postprocess"] \
+		"---" \
+		[= "Reset analysis"] \
+		"---" \
+		[= "Open .tcl file"] \
+		[= "Open .log file"] \
+		[= "Open analysis folder"] \
+		"---" \
+		[= "GiD+OpenSees Site"] \
+		[= "OpenSees Site"] \
+		[= "OpenSees Wiki"] \
+		"---" \
+		[= "GiD+OpenSees User Manual"] \
+		[= "DesignSafe-CI User Manual"] \
+		[= "DesignSafe-CI Site"] \
+		"---" \
+		[= "Check for Update"] \
+		[= "Donate"] \
+		[= "About"] ]
+	}
+
+	if { [OpenSees::IsPython] == 1 } {
+
+		set tabs [list \
+		[= "Import .tcl"] \
+		"---" \
+		[= "Create .py, run analysis and postprocess"] \
+		"---" \
+		[= "Create .py only"] \
+		[= "Create and view .py only"] \
+		[= "Run analysis only"] \
+		[= "Postprocess only"] \
+		[= "Run analysis and postprocess"] \
+		"---" \
+		[= "Reset analysis"] \
+		"---" \
+		[= "Open .tcl file"] \
+		[= "Open .log file"] \
+		[= "Open analysis folder"] \
+		"---" \
+		[= "GiD+OpenSees Site"] \
+		[= "OpenSees Site"] \
+		[= "OpenSees Wiki"] \
+		"---" \
+		[= "GiD+OpenSees User Manual"] \
+		[= "DesignSafe-CI User Manual"] \
+		[= "DesignSafe-CI Site"] \
+		"---" \
+		[= "Check for Update"] \
+		[= "Donate"] \
+		[= "About"] ]
+	}
 
 	# Selection commands
 
@@ -959,7 +1019,7 @@ proc OpenSees_Menu { dir } {
 	{} \
 	{Opt7_dialog} \
 	{} \
-	{mnu_open_tcl} \
+	{mnu_open_script} \
 	{mnu_open_log} \
 	{mnu_open_analysis_folder} \
 	{} \
@@ -977,34 +1037,69 @@ proc OpenSees_Menu { dir } {
 
 	# Tab icons
 
-	set icons { \
-	mnu_Import.png \
-	"" \
-	mnu_Analysis.png \
-	"" \
-	mnu_TCL.png \
-	mnu_TCL.png \
-	mnu_TCL_Analysis.png \
-	mnu_TCL_Analysis.png \
-	mnu_TCL_Analysis.png \
-	"" \
-	mnu_Reset.png \
-	"" \
-	mnu_Open.png \
-	mnu_Open.png \
-	mnu_Open.png \
-	"" \
-	mnu_Site.png \
-	mnu_Site.png \
-	mnu_Wiki.png \
-	"" \
-	mnu_PDF.png \
-	mnu_PDF.png \
-	mnu_DesignSafe.png \
-	"" \
-	mnu_Update.png \
-	mnu_Donate.png \
-	mnu_About.png }
+	if { [OpenSees::IsPython] == 0 } {
+
+		set icons { \
+		mnu_Import.png \
+		"" \
+		mnu_Analysis.png \
+		"" \
+		mnu_TCL.png \
+		mnu_TCL.png \
+		mnu_TCL_Analysis.png \
+		mnu_TCL_Analysis.png \
+		mnu_TCL_Analysis.png \
+		"" \
+		mnu_Reset.png \
+		"" \
+		mnu_Open.png \
+		mnu_Open.png \
+		mnu_Open.png \
+		"" \
+		mnu_Site.png \
+		mnu_Site.png \
+		mnu_Wiki.png \
+		"" \
+		mnu_PDF.png \
+		mnu_PDF.png \
+		mnu_DesignSafe.png \
+		"" \
+		mnu_Update.png \
+		mnu_Donate.png \
+		mnu_About.png }
+	}
+
+	if { [OpenSees::IsPython] == 1 } {
+
+		set icons { \
+		mnu_Import.png \
+		"" \
+		mnu_Analysis.png \
+		"" \
+		mnu_Py.png \
+		mnu_Py.png \
+		mnu_Py_Analysis.png \
+		mnu_Py_Analysis.png \
+		mnu_Py_Analysis.png \
+		"" \
+		mnu_Reset.png \
+		"" \
+		mnu_Open.png \
+		mnu_Open.png \
+		mnu_Open.png \
+		"" \
+		mnu_Site.png \
+		mnu_Site.png \
+		mnu_Wiki.png \
+		"" \
+		mnu_PDF.png \
+		mnu_PDF.png \
+		mnu_DesignSafe.png \
+		"" \
+		mnu_Update.png \
+		mnu_Donate.png \
+		mnu_About.png }
+	}
 
 	set position 0
 
