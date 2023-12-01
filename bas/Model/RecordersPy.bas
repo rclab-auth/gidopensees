@@ -45,7 +45,7 @@ ops.recorder('Node', '-file', 'Node_rotVelocities.out', '-time', '-nodeRange', 1
 ops.recorder('Node', '-file', 'Node_displacements.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'disp')
 *endif
 *if(GenData(Nodal_rotations,int)==1)
-ops.recorder('Node', '-file', 'Node_rotations.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 4, 5, 6, 'disp')
+ops.recorder('Node', '-file', 'Node_rotations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 4, 5, 6, 'disp')
 *endif
 *if(GenData(Nodal_reactions,int)==1)
 ops.recorder('Node', '-file', 'Node_forceReactions.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'reaction')
