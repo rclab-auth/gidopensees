@@ -7,7 +7,8 @@
 **Development team**
 
 - T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
-- V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
+- K. Mixios, Dipl. Eng. AUTh, MSc
+- V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Assoc. Prof. AUTh
 
 **Project contributors**
 
@@ -35,8 +36,8 @@
 
 **Version 3.0.0-beta (30/11/2023)**
 
-- Added : Python-based OpenSees Models
-- Added : Material Properties Inputs as variables in Python-based Models.
+- Added : **Python output** for OpenSees models
+- Added : Set material properties as variables in Python-based models
 - Various fixes and improvements
 ---
 
