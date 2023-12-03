@@ -7,7 +7,7 @@
 **Development team**
 
 - T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
-- K. Mixios, Dipl. Eng. AUTh, MSc
+- K. Mixios, Dipl. Eng. AUTh, MSc, PhD cand.
 - V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Assoc. Prof. AUTh
 
 **Project contributors**
