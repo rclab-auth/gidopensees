@@ -12,9 +12,9 @@ numModes = *GenData(Number_of_eigenvalues,int)
 
 for k in range(numModes):
 *if(ndime==2)
-    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, "eigen", k)
+    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, f"eigen {k}")
 *else
-    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, 3, "eigen", k)
+    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, 3, f"eigen {k}")
 *endif
 
 lambda_ = ops.eigen(*\
