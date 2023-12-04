@@ -30,7 +30,6 @@ numModes)
 
 # Modal report
 
-# modalProperties -file "ModalReport.out" -unorm
 ops.modalProperties('-file', 'ModalReport.out', '-unorm')
 # Calculate periods
 

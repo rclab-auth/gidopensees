@@ -141,7 +141,7 @@ ops.geomTransf('Corotational', *TransfTag6,  0, 1, 0) # non-vertical
 *set var SecTag=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *set var IntegrationTag=SecTag*100
 *format "%6d%d%d%7d%2d%6d%2d"
-ops.element('forceBeamColumn', *ElemsNum, *ElemsConec(1), *ElemsConec(2), *ElemsMatProp(Number_of_integration_points,int), *IntegrationTag, *TransfTag, *\
+ops.element('forceBeamColumn', *ElemsNum, *ElemsConec(1), *ElemsConec(2), *TransfTag, *IntegrationTag, *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e%g"
   '-iter', *ElemsMatProp(Maximum_Iterations,int), *ElemsMatProp(Tolerance,real), *\
@@ -262,7 +262,7 @@ set MatTag *SectionID; # *tcl(UserMaterial::GetMaterialName *MatProp(0))
 *set var SecTag=tcl(FindMaterialNumber *ElemsMatProp(Section) *DomainNum)
 *set var IntegrationTag=SecTag*100
 *format "%6d%d%d%7d%2d%6d%2d"
-ops.element('forceBeamColumn', *ElemsNum, *ElemsConec(1), *ElemsConec(2), *ElemsMatProp(Number_of_integration_points,int), *IntegrationTag, *TransfTag, *\
+ops.element('forceBeamColumn', *ElemsNum, *ElemsConec(1), *ElemsConec(2), *TransfTag, *IntegrationTag, *\
 *if(ElemsMatProp(Activate_iterative_scheme_for_satisfying_element_compatibility,int)==1)
 *format "%4d%10.2e"
   '-iter', *ElemsMatProp(Maximum_Iterations,int), *ElemsMatProp(Tolerance,real), *\

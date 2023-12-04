@@ -258,7 +258,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime()
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
+                print(f"(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
 *endif
                 AnalOk = ops.analyze(1) # zero for convergence
                 if AnalOk == 0:
@@ -298,7 +298,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime()
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
+                print(f"(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
 *endif
                 AnalOk = ops.analyze(1) # zero for convergence
                 if AnalOk == 0:
@@ -339,4 +339,4 @@ if AnalOk == 0:
     print(f"Committed steps : {committedSteps}")
 else:
     print("Analysis FAILED")
-    print("Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}")
