@@ -978,7 +978,7 @@ for lam in lambda_:
 period = "Periods.out"
 with open(period, "w") as file:
     for index, t in enumerate(T):
-        file.write(f"{index}  {t}")
+        file.write(f"{t}\n")
 file.close()
 
 # Analysis options
