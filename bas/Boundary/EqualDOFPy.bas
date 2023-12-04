@@ -311,58 +311,59 @@ ops.equalDOF(*ElemsConec(3), *ElemsConec(4), 1, 2)
 *if(SlaveNode!=MasterNode && SlaveNodeExists==-1)
 *set var dummy=tcl(AddECSlaveNode *SlaveNode)
 *format "%6d%6d%6d"
-ops.equalDOF(*MasterNode, *SlaveNode, *\
+ops.equalDOF(*MasterNode, *SlaveNode *\
 *# 2D
 *if(ndime==2)
 *if(Cond(2,int)==1)
-1, *\
+,1 *\
 *else
   *\
 *endif
 *if(Cond(3,int)==1)
-2, *\
+,2 *\
 *else
   *\
 *endif
 *if(Cond(7,int)==1)
-3, *\
+,3 *\
 *else
   *\
 *endif
-; # ID : *tcl(ECID *i)
+) # ID : *tcl(ECID *i)
+
 *# 3D
 *else
 *if(Cond(2,int)==1)
-1, *\
+,1 *\
 *else
   *\
 *endif
 *if(Cond(3,int)==1)
-2, *\
+,2 *\
 *else
   *\
 *endif
 *if(Cond(4,int)==1)
-3, *\
+,3 *\
 *else
   *\
 *endif
 *if(Cond(5,int)==1)
-4, *\
+,4 *\
 *else
-)*\
+ *\
 *endif
 *if(Cond(6,int)==1)
-5 *\
+,5 *\
 *else
-)*\
+ *\
 *endif
 *if(Cond(7,int)==1)
-6, *\
+,6 *\
 *else
-)*\
+ *\
 *endif
-# ID : *tcl(ECID *i)
+) # ID : *tcl(ECID *i)
 *endif
 *endif
 *endif
