@@ -115,113 +115,76 @@ set TmaxAnalysis *IntvData(Analysis_duration,real)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
 *if(procReadPeerFilePrinted==0)
 
-proc ReadPEERfile {inFilename recordValues dt} {
-
-    upvar $recordValues RecValues
-    # read gm input format
-
-    # Pass dt by reference
-    upvar $dt DT
-
-    # Open the input file and catch the error if it can't be read
-
-    if [catch {open $inFilename r} inFileID] {
-        puts stderr "Cannot open $inFilename for reading"
-    } else {
-
-    # Flag indicating dt is found and that ground motion
-    # values should be read -- ASSUMES dt is on last header line !
-
-    set flag 0
-
-    # Look at each line in the file
-    foreach line [split [read $inFileID] \n] {
-
-        if {[llength $line] == 0} {
-            # Blank line --> do nothing
-            continue
-        } elseif {$flag == 1} {
-            # Echo ground motion values to output file
-            foreach value [split $line] {
-                if {$value!=""} {
-                    lappend RecValues $value
-                }
-            }
-        } else {
-            # Search header lines for dt
-            foreach word [split $line] {
-                # Read in the time step
-                if {$flag == 1} {
-                set DT $word
-                break
-                }
-                # Find the desired token and set the flag
-                if {[string match $word "DT="] == 1} {set flag 1}
-            }
-        }
-    }
-
-    # Close the input file
-    close $inFileID
-    }
-}
+def ReadPEERfile(inFilename, scalefactor=None):
+    try:
+        if not scalefactor:
+            scalefactor = 1.0
+        with open(inFilename,'r') as f:
+            content = f.readlines()
+        counter = 0
+        desc, row4Val, acc_data = "","",[]
+        for x in content:
+            if counter == 1:
+                desc = x
+            elif counter == 3:
+                row4Val = x
+                if row4Val[0][0] == 'N':
+                    val = row4Val.split()
+                    npts = float(val[(val.index('NPTS='))+1].rstrip(','))
+                    dt = float(val[(val.index('DT='))+1])
+                else:
+                    val = row4Val.split()
+                    npts = float(val[0])
+                    dt = float(val[1])
+            elif counter > 3:
+                data = str(x).split()
+                for value in data:
+                    a = float(value) * scalefactor
+                    acc_data.append(a)
+                inp_acc = np.asarray(acc_data)
+                time = []
+                for i in range (0,len(acc_data)):
+                    t = i * dt
+                    time.append(t)
+            counter = counter + 1
+        return inp_acc, dt
 *set var procReadPeerFilePrinted=1
 
 *endif
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
 *if(procLoadRecValuesPrinted==0)
 
-proc LoadRecordValues {filename recordValues skiplines} {
-    set currentLine 0
-    upvar $recordValues RecValues
-    # clear list
-    set RecValues " "
-
-    if [catch {open $filename r} inFileID] {
-        puts stderr "Cannot open $filename for reading"
-    } else {
-        foreach line [split [read $inFileID] \n] {
-            set currentLine [expr $currentLine+1]
-            if {[llength $line] == 0 || $line == " " || $currentLine<= $skiplines} {
-                continue
-            } else {
-                lappend RecValues [split [string trim $line]]
-            }
-        }
-        close $inFileID
-    }
-}
+def LoadRecordValues(filename, skiplines):
+    recordValues = []
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+    file.close()
+    strValues = [line.split(' ')[0] for line in lines]
+    for i in range(skiplines, len(strValues)):
+        recordValues.append(float(strValues[i]))
+    return recordValues
 *set var procLoadRecValuesPrinted=1
 
 *endif
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
 *if(procLoadRecTimeandValuesPrinted==0)
 
-proc LoadRecordTimeandValues {filename recordValues recordTimes skiplines tcol vcol} {
-    set currentLine 0
-    upvar $recordValues RecValues
-    upvar $recordTimes RecTimes
-    # clear lists
-    set RecValues " "
-    set RecTimes " "
+def LoadRecordTimeandValues(filename, skiplines):
+    recordValues = []
+    recordTimes = []
 
-    if [catch {open $filename r} inFileID] {
-        puts stderr "Cannot open $filename for reading"
-    } else {
-        foreach line [split [read $inFileID] \n] {
-            set currentLine [expr $currentLine+1]
-            if {[llength $line] == 0 || $line == " " || $currentLine<= $skiplines} {
-            continue
-            } else {
-                set valueColumnIndex [expr $vcol-1]
-                set timeColumnIndex [expr $tcol-1]
-                lappend RecValues [lindex [join $line " "] $valueColumnIndex ]
-                lappend RecTimes [lindex [join $line " "] $timeColumnIndex ]
-            }
-        }
-        close $inFileID
-    }
-}
+    with open(filename, 'r') as file:
+        for _ in range(skiplines):
+            next(file)  # Skip the specified number of lines
+
+        for line in file:
+            columns = line.strip().split()
+            if len(columns) >= 2:  # Ensure at least 2 columns are present in the line
+                recordValues.append(columns[0])
+                recordTimes.append(columns[1])
+
+    return recordValues, recordTimes
+
 *set var procLoadRecTimeandValuesPrinted=1
 
 *endif

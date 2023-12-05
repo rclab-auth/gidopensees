@@ -366,7 +366,7 @@ print(f"{int(1+*operation(4*totalCyclicSteps))} steps")
 *endif
 *elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
 *format "%g%g%g"
-print(f"{int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))} steps x *IntvData(Analysis_time_step,real) s"
+print(f"{int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))} steps x *IntvData(Analysis_time_step,real) s")
 *endif
 *endif
 *end intervals

@@ -400,7 +400,6 @@ ops.algorithm("Newton", secant=False, initial=True, initialThenCurrent=False)
 ops.algorithm("Newton")
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
-algorithm ModifiedNewton*\
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
 ops.algorithm("ModifiedNewton", secant=False, initial=True)
 *else

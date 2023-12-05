@@ -33,7 +33,7 @@ ops.recorder('Node', '-file', 'Node_accelerations.out', '-time', '-nodeRange', 1
 ops.recorder('Node', '-file', 'Node_rotAccelerations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 3, 'accel')
 *endif
 *if(GenData(Nodal_velocities,int)==1)
-ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 1, 2, 'vel')
+ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 'vel')
 *endif
 *if(GenData(Nodal_rotational_velocities,int)==1)
 ops.recorder('Node', '-file', 'Node_rotVelocities.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 3, 'vel')
