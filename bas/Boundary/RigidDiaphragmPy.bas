@@ -76,7 +76,7 @@ ops.rigidDiaphragm(*perpendicularAxis, *RDMasterNodeTag *\
 *if(nodeDOF==currentDOF)
 *set var IsThisRDID=tcl(IsThisRDID *Cond(2) *i)
 *if(IsThisRDID==1 && NodesNum!=RDMasterNodeTag)
-*,NodesNum *\
+,*NodesNum *\
 *endif
 *endif
 *end nodes
