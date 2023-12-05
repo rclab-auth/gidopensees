@@ -15,8 +15,7 @@ class FileComparison(unittest.TestCase):
         for common_file in d.common_files:
             py_file = f"{python_outputs}/{common_file}"
             tcl_file = f"{tcl_outputs}/{common_file}"
-            print(filecmp.cmp(py_file, tcl_file))
-            print(common_file)
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
         self.assertTrue(filecmp.cmp(py_file, tcl_file))
 
     def test_Plane_Frame_Static_and_Modal_Analysis(self):
@@ -29,8 +28,7 @@ class FileComparison(unittest.TestCase):
         for common_file in d.common_files:
             py_file = f"{python_outputs}/{common_file}"
             tcl_file = f"{tcl_outputs}/{common_file}"
-            print(filecmp.cmp(py_file, tcl_file))
-            print(common_file)
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
         self.assertTrue(filecmp.cmp(py_file, tcl_file))
 
     def test_Plane_Frame_Pushover_Analysis(self):
@@ -43,8 +41,7 @@ class FileComparison(unittest.TestCase):
         for common_file in d.common_files:
             py_file = f"{python_outputs}/{common_file}"
             tcl_file = f"{tcl_outputs}/{common_file}"
-            print(filecmp.cmp(py_file, tcl_file))
-            print(common_file)
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
         self.assertTrue(filecmp.cmp(py_file, tcl_file))
 
     def test_Plane_Frame_on_Elastic_Soil_Pushover_Analysis(self):
@@ -60,6 +57,31 @@ class FileComparison(unittest.TestCase):
             print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
         self.assertTrue(filecmp.cmp(py_file, tcl_file))
 
+    def test_Masonry_Arch(self):
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        python_outputs = os.path.join(current_directory, "datasets", "Masonry Arch",
+                                      "Python outputs")
+        tcl_outputs = os.path.join(current_directory, "datasets", "Masonry Arch",
+                                   "Tcl outputs")
+        d = filecmp.dircmp(python_outputs, tcl_outputs)
+        for common_file in d.common_files:
+            py_file = f"{python_outputs}/{common_file}"
+            tcl_file = f"{tcl_outputs}/{common_file}"
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
+        self.assertTrue(filecmp.cmp(py_file, tcl_file))
+
+    def test_Masonry_Arch_on_Soil(self):
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        python_outputs = os.path.join(current_directory, "datasets", "Masonry Arch on Soil",
+                                      "Python outputs")
+        tcl_outputs = os.path.join(current_directory, "datasets", "Masonry Arch on Soil",
+                                   "Tcl outputs")
+        d = filecmp.dircmp(python_outputs, tcl_outputs)
+        for common_file in d.common_files:
+            py_file = f"{python_outputs}/{common_file}"
+            tcl_file = f"{tcl_outputs}/{common_file}"
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
+        self.assertTrue(filecmp.cmp(py_file, tcl_file))
 
 if __name__ == '__main__':
     unittest.main()
