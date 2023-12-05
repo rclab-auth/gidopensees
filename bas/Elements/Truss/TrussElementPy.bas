@@ -122,7 +122,7 @@ set MatTag *MaterialID; # *tcl(UserMaterial::GetMaterialName *MatProp(0))
 *endif
 *#--------------------------------------------
 *format "%6d%6d%6d"
-ops.element('truss', *ElemsNum, *elemsConec, *\
+ops.element('truss', *ElemsNum, *elemsConec(1), *elemsConec(2), *\
 *format "%12g"
 *A, *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum), '-rho', *\
 *format "%8g%d%d"

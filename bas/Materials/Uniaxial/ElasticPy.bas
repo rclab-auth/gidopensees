@@ -1,15 +1,15 @@
-*if(strcmp(Matprop(Parameter_Export), "Yes")==0)
+*if(Matprop(Set_as_variable,int)==1)
 
 *if(strcmp(MatProp(Formulation),"Stress-Strain")==0)
 *format "%d%g"
 elastic_*MaterialID_E = *MatProp(Elastic_modulus_E,real)
 *format "%d%d"
-ops.uniaxialMaterial("Elastic", *MaterialID, Elastic_*MaterialID_E)
+ops.uniaxialMaterial("Elastic", *MaterialID, elastic_*MaterialID_E)
 *elseif(strcmp(MatProp(Formulation),"Force-Deformation")==0)
 *format "%d%g"
 elastic_*MaterialID_K = *MatProp(Stiffness_K,real)
 *format "%d%d"
-ops.uniaxialMaterial("Elastic", *MaterialID, Elastic_*MaterialID_K)
+ops.uniaxialMaterial("Elastic", *MaterialID, elastic_*MaterialID_K)
 *else
 *format "%d%g"
 elastic_*MaterialID_Moment_per_rot = *MatProp(Moment_per_rotation_unit,real)

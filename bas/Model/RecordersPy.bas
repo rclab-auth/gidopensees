@@ -392,7 +392,7 @@ ops.recorder('Element', '-file', 'DispBeamColumnInt_localForce.out', '-time', '-
 *#
 *if(cntTruss!=0)
 *if(GenData(Axial_force,int)==1)
-ops.recorder('Element', '-file', 'Truss_axialForce.out', '-time', '-ele' *\
+ops.recorder('Element', '-file', 'Truss_axialForce.out', '-time', '-ele', *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *ElemsNum , *\
@@ -452,7 +452,7 @@ from Scripts import Recorders.customRecorders # user recorders
 
 *set var layer = GenData(Stress_layer_A,int)
 *for(i=1;i<=4;i=i+1)
-ops.recorder('Element', '-file', 'ShellMITC4_stress_Layer*layer_GP*i.out', '-time', '-ele' *\
+ops.recorder('Element', '-file', 'ShellMITC4_stress_Layer*layer_GP*i.out', '-time', '-ele', *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
 *ElemsNum , *\
