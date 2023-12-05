@@ -125,5 +125,47 @@ class FileComparison(unittest.TestCase):
         else:
             self.assertTrue(True)
 
+    def test_Space_Frame_Static_and_Modal_Analysis(self):
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        python_outputs = os.path.join(current_directory, "datasets", "Space Frame - Static and Modal Analysis",
+                                      "Python outputs")
+        tcl_outputs = os.path.join(current_directory, "datasets", "Space Frame - Static and Modal Analysis",
+                                   "Tcl outputs")
+        d = filecmp.dircmp(python_outputs, tcl_outputs)
+        num_files = len(d.common_files)
+        count = 0
+        for common_file in d.common_files:
+            py_file = f"{python_outputs}/{common_file}"
+            tcl_file = f"{tcl_outputs}/{common_file}"
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
+            count += 1
+            if filecmp.cmp(py_file, tcl_file):
+                count += 1
+        if count == num_files:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+
+    def test_Structure_with_Foundation_on_Soil(self):
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        python_outputs = os.path.join(current_directory, "datasets", "Space Frame - Static and Modal Analysis",
+                                      "Python outputs")
+        tcl_outputs = os.path.join(current_directory, "datasets", "Space Frame - Static and Modal Analysis",
+                                   "Tcl outputs")
+        d = filecmp.dircmp(python_outputs, tcl_outputs)
+        num_files = len(d.common_files)
+        count = 0
+        for common_file in d.common_files:
+            py_file = f"{python_outputs}/{common_file}"
+            tcl_file = f"{tcl_outputs}/{common_file}"
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
+            count += 1
+            if filecmp.cmp(py_file, tcl_file):
+                count += 1
+        if count == num_files:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+
 if __name__ == '__main__':
     unittest.main()
