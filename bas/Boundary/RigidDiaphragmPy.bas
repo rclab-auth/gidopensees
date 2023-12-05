@@ -70,17 +70,17 @@ ops.fix(*RDMasterNodeTag, 0, 1, 0, 1, 0, 1)
 ops.fix(*RDMasterNodeTag, 0, 0, 1, 1, 1, 0)
 *endif
 *format "%6d%6d"
-ops.rigidDiaphragm(*perpendicularAxis, *RDMasterNodeTag, *\
+ops.rigidDiaphragm(*perpendicularAxis, *RDMasterNodeTag *\
 *loop nodes *OnlyInCond
 *set var nodeDOF=tcl(ReturnNodeGroupDOF *NodesNum)
 *if(nodeDOF==currentDOF)
 *set var IsThisRDID=tcl(IsThisRDID *Cond(2) *i)
 *if(IsThisRDID==1 && NodesNum!=RDMasterNodeTag)
-*NodesNum) *\
+*,NodesNum *\
 *endif
 *endif
 *end nodes
-; # ID : *tcl(RDID *i)
+) # ID : *tcl(RDID *i)
 *endfor
 *endif
 *#----------------NOT 3D Model and 6 DOF Nodes ----------------------
