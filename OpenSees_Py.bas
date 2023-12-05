@@ -15,7 +15,8 @@
 # Development Team
 #
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
-# V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
+# K. Mixios, Dipl. Eng. AUTh, MSc, PhD cand.
+# V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Assoc. Prof. AUTh
 #
 # Project Contributors
 #
@@ -440,7 +441,7 @@ elif analysisTime<3600:
     if minutes==1:
         print("Analysis time : 1 minute")
     else:
-        print("Analysis time : {minutes} minutes")
+        print(f"Analysis time : {minutes} minutes")
 
     if seconds==0:
         print("")
