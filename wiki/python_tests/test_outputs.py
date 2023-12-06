@@ -167,5 +167,25 @@ class FileComparison(unittest.TestCase):
         else:
             self.assertTrue(True)
 
+    def test_Structural_Steel_Beam(self):
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        python_outputs = os.path.join(current_directory, "datasets", "Structural Steel Beam",
+                                      "Python outputs")
+        tcl_outputs = os.path.join(current_directory, "datasets", "Structural Steel Beam",
+                                   "Tcl outputs")
+        d = filecmp.dircmp(python_outputs, tcl_outputs)
+        num_files = len(d.common_files)
+        count = 0
+        for common_file in d.common_files:
+            py_file = f"{python_outputs}/{common_file}"
+            tcl_file = f"{tcl_outputs}/{common_file}"
+            print(f"{common_file}: {filecmp.cmp(py_file, tcl_file)}")
+            count += 1
+            if filecmp.cmp(py_file, tcl_file):
+                count += 1
+        if count == num_files:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
 if __name__ == '__main__':
     unittest.main()
