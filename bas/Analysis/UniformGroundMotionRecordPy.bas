@@ -4,49 +4,49 @@
 *# 1 GM direction
 *if(IntvData(Directions,int)==1)
 *if(strcmp(IntvData(Ground_motion_direction),"Ux")==0)
-set iGMdirection 1
+iGMdirection = 1
 *elseif(strcmp(IntvData(Ground_motion_direction),"Uy")==0)
-set iGMdirection 2
+iGMdirection = 2
 *elseif(strcmp(IntvData(Ground_motion_direction),"Uz")==0)
-set iGMdirection 3
+iGMdirection = 3
 *elseif(strcmp(IntvData(Ground_motion_direction),"Rx")==0)
-set iGMdirection 4
+iGMdirection = 4
 *elseif(strcmp(IntvData(Ground_motion_direction),"Ry")==0)
-set iGMdirection 5
+iGMdirection = 5
 *elseif(strcmp(IntvData(Ground_motion_direction),"Rz")==0)
-set iGMdirection 6
+iGMdirection = 6
 *endif
 *set var fileID=tcl(FindMaterialNumber *IntvData(Record_file) *DomainNum)
 *set var dummy=tcl(AddGMFileID *fileID)
 *# 2 GM directions
 *elseif(IntvData(Directions,int)==2)
 *if(strcmp(IntvData(First_ground_motion_direction),"Ux")==0)
-set firstGMdirection 1
+firstGMdirection = 1
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Uy")==0)
-set firstGMdirection 2
+firstGMdirection = 2
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Uz")==0)
-set firstGMdirection 3
+firstGMdirection = 3
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Rx")==0)
-set firstGMdirection 4
+firstGMdirection = 4
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Ry")==0)
-set firstGMdirection 5
+firstGMdirection = 5
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Rz")==0)
-set firstGMdirection 6
+firstGMdirection = 6
 *endif
 *if(strcmp(IntvData(Second_ground_motion_direction),"Ux")==0)
-set secondGMdirection 1
+secondGMdirection = 1
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Uy")==0)
-set secondGMdirection 2
+secondGMdirection = 2
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Uz")==0)
-set secondGMdirection 3
+secondGMdirection = 3
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Rx")==0)
-set secondGMdirection 4
+secondGMdirection = 4
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Ry")==0)
-set secondGMdirection 5
+secondGMdirection = 5
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Rz")==0)
-set secondGMdirection 6
+secondGMdirection = 6
 *endif
-set iGMdirection "$firstGMdirection $secondGMdirection"
+iGMdirection = [firstGMdirection, secondGMdirection]
 *set var firstFileID=tcl(FindMaterialNumber *IntvData(First_record_file) *DomainNum)
 *set var secondFileID=tcl(FindMaterialNumber *IntvData(Second_record_file) *DomainNum)
 *set var dummy=tcl(AddGMFileID *firstFileID)
@@ -54,45 +54,45 @@ set iGMdirection "$firstGMdirection $secondGMdirection"
 *# 3 GM directions
 *elseif(IntvData(Directions,int)==3)
 *if(strcmp(IntvData(First_ground_motion_direction),"Ux")==0)
-set firstGMdirection 1
+firstGMdirection = 1
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Uy")==0)
-set firstGMdirection 2
+firstGMdirection = 2
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Uz")==0)
-set firstGMdirection 3
+firstGMdirection = 3
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Rx")==0)
-set firstGMdirection 4
+firstGMdirection = 4
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Ry")==0)
-set firstGMdirection 5
+firstGMdirection = 5
 *elseif(strcmp(IntvData(First_ground_motion_direction),"Rz")==0)
-set firstGMdirection 6
+firstGMdirection = 6
 *endif
 *if(strcmp(IntvData(Second_ground_motion_direction),"Ux")==0)
-set secondGMdirection 1
+secondGMdirection = 1
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Uy")==0)
-set secondGMdirection 2
+secondGMdirection = 2
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Uz")==0)
-set secondGMdirection 3
+secondGMdirection = 3
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Rx")==0)
-set secondGMdirection 4
+secondGMdirection = 4
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Ry")==0)
-set secondGMdirection 5
+secondGMdirection = 5
 *elseif(strcmp(IntvData(Second_ground_motion_direction),"Rz")==0)
-set secondGMdirection 6
+secondGMdirection = 6
 *endif
 *if(strcmp(IntvData(Third_ground_motion_direction),"Ux")==0)
-set thirdGMdirection 1
+thirdGMdirection = 1
 *elseif(strcmp(IntvData(Third_ground_motion_direction),"Uy")==0)
-set thirdGMdirection 2
+thirdGMdirection = 2
 *elseif(strcmp(IntvData(Third_ground_motion_direction),"Uz")==0)
-set thirdGMdirection 3
+thirdGMdirection = 3
 *elseif(strcmp(IntvData(Third_ground_motion_direction),"Rx")==0)
-set thirdGMdirection 4
+thirdGMdirection = 4
 *elseif(strcmp(IntvData(Third_ground_motion_direction),"Ry")==0)
-set thirdGMdirection 5
+thirdGMdirection = 5
 *elseif(strcmp(IntvData(Third_ground_motion_direction),"Rz")==0)
-set thirdGMdirection 6
+thirdGMdirection = 6
 *endif
-set iGMdirection "$firstGMdirection $secondGMdirection $thirdGMdirection"
+iGMdirection = [firstGMdirection, secondGMdirection,  thirdGMdirection]
 *set var firstFileID=tcl(FindMaterialNumber *IntvData(First_record_file) *DomainNum)
 *set var secondFileID=tcl(FindMaterialNumber *IntvData(Second_record_file) *DomainNum)
 *set var thirdFileID=tcl(FindMaterialNumber *IntvData(Third_record_file) *DomainNum)
@@ -101,9 +101,9 @@ set iGMdirection "$firstGMdirection $secondGMdirection $thirdGMdirection"
 *set var dummy=tcl(AddGMFileID *thirdFileID)
 *endif
 *format "%g"
-set DtAnalysis *IntvData(Analysis_time_step,real)
+DtAnalysis = *IntvData(Analysis_time_step,real)
 *format "%g"
-set TmaxAnalysis *IntvData(Analysis_duration,real)
+TmaxAnalysis = *IntvData(Analysis_duration,real)
 *set var directions=IntvData(Directions,int)
 *# create the necessary procedures
 *for(i=1;i<=directions;i=i+1)
@@ -194,19 +194,19 @@ def LoadRecordTimeandValues(filename, skiplines):
 *end materials
 *endfor
 *# set the list of record file paths
-set iGMfile "*\
+iGMfile = [*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
 *if(RecordID==currGMID)
-{../Records/*MatProp(Record_file)} *\
+"../Records/*MatProp(Record_file)" *\
 *break
 *endif
 *end materials
 *endfor
-"
+
 *# set the list of record scale factors
 set iGMfact "*\
 *for(i=1;i<=directions;i=i+1)
@@ -371,4 +371,4 @@ foreach GMdirection $iGMdirection GMfile $iGMfile GMfact $iGMfact GMtype $iGMTyp
         }
     }
 }
-*include SolutionAlgorithmsDynamic.bas
+*include SolutionAlgorithmsDynamicPy.bas
