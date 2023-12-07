@@ -91,7 +91,7 @@ class FileComparison(unittest.TestCase):
                                    "Tcl outputs")
         d = filecmp.dircmp(python_outputs, tcl_outputs)
         num_files = len(d.common_files)
-        count = 0   
+        count = 0
         for common_file in d.common_files:
             py_file = f"{python_outputs}/{common_file}"
             tcl_file = f"{tcl_outputs}/{common_file}"
@@ -208,5 +208,7 @@ class FileComparison(unittest.TestCase):
             self.assertTrue(False)
         else:
             self.assertTrue(True)
+
+
 if __name__ == '__main__':
     unittest.main()
