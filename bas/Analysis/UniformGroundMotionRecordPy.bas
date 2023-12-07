@@ -115,10 +115,8 @@ TmaxAnalysis = *IntvData(Analysis_duration,real)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
 *if(procReadPeerFilePrinted==0)
 
-def ReadPEERfile(inFilename, scalefactor=None):
+def ReadPEERfile(inFilename):
     try:
-        if not scalefactor:
-            scalefactor = 1.0
         with open(inFilename,'r') as f:
             content = f.readlines()
         counter = 0
@@ -139,13 +137,10 @@ def ReadPEERfile(inFilename, scalefactor=None):
             elif counter > 3:
                 data = str(x).split()
                 for value in data:
-                    a = float(value) * scalefactor
+                    a = float(value)
                     acc_data.append(a)
                 inp_acc = np.asarray(acc_data)
                 time = []
-                for i in range (0,len(acc_data)):
-                    t = i * dt
-                    time.append(t)
             counter = counter + 1
         return inp_acc, dt
 *set var procReadPeerFilePrinted=1
@@ -193,37 +188,99 @@ def LoadRecordTimeandValues(filename, skiplines):
 *endif
 *end materials
 *endfor
+
+
 *# set the list of record file paths
-iGMfile = [*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
+*if(directions==1)
 *if(RecordID==currGMID)
-"../Records/*MatProp(Record_file)" *\
+iGMfile = ["../Records/*MatProp(Record_file)"]
 *break
+*endif
+*elseif(directions==2)
+*if(i==1)
+*if(RecordID==currGMID)
+iGMfile = ["../Records/*MatProp(Record_file)", *\
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+"../Records/*MatProp(Record_file)"]
+*break
+*endif
+*endif
+*elseif(directions==3)
+*if(i==1)
+*if(RecordID==currGMID)
+iGMfile = ["../Records/*MatProp(Record_file)", *\
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+"../Records/*MatProp(Record_file)", *\
+*break
+*endif
+*elseif(i==3)
+*if(RecordID==currGMID)
+"../Records/*MatProp(Record_file)"]
+*break
+*endif
+*endif
 *endif
 *end materials
 *endfor
 
 *# set the list of record scale factors
-set iGMfact "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
+*if(directions==1)
 *if(RecordID==currGMID)
-*format "%1.3f"
-{*MatProp(Scale_factor,real)} *\
+iGMfact = [*MatProp(Scale_factor,real)]
 *break
+*endif
+*elseif(directions==2)
+*if(i==1)
+*if(RecordID==currGMID)
+iGMfile = [*MatProp(Scale_factor,real), *\
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+*MatProp(Scale_factor,real)]
+*break
+*endif
+*endif
+*elseif(directions==3)
+*if(i==1)
+*if(RecordID==currGMID)
+iGMfile = [*MatProp(Scale_factor,real), *\
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+*MatProp(Scale_factor,real), *\
+*break
+*endif
+*elseif(i==3)
+*if(RecordID==currGMID)
+*MatProp(Scale_factor,real)]
+*break
+*endif
+*endif
 *endif
 *end materials
 *endfor
-"
+
+
 *# set the list of the record formats
-set iGMFormat "*\
+set iGMFormat *\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
@@ -241,7 +298,10 @@ set iGMFormat "*\
 *endif
 *end materials
 *endfor
-"
+
+
+
+
 *# set the list of record type : accel or disp
 set iGMType "*\
 *for(i=1;i<=directions;i=i+1)
