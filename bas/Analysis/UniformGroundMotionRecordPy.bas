@@ -280,25 +280,84 @@ iGMfile = [*MatProp(Scale_factor,real), *\
 
 
 *# set the list of the record formats
-set iGMFormat *\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
+*if(directions==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-{PEER} *\
+iGMFormat = ["PEER"]
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
-{Value} *\
+iGMFormat = ["Value"]
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-{TimeValue} *\
+iGMFormat = ["TimeValue"]
 *endif
 *break
 *endif
+*elseif(directions==2)
+*if(i==1)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+iGMFormat = ["PEER", *\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+iGMFormat = ["Value", *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+iGMFormat = ["TimeValue", *\
+*endif
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+"PEER"]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+"Value"]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+"TimeValue"]
+*endif
+*break
+*endif
+*endif
+*elseif(directions==3)
+*if(i==1)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+iGMFormat = ["PEER", *\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+iGMFormat = ["Value", *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+iGMFormat = ["TimeValue", *\
+*endif
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+"PEER", *\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+"Value", *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+"TimeValue", *\
+*endif
+*break
+*endif
+*elseif(i==3)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+"PEER"]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+"Value"]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+"TimeValue"]
+*endif
+*break
+*endif
+*endif
+*endif
 *end materials
 *endfor
-
 
 
 
