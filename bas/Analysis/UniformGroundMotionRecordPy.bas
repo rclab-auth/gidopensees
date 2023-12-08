@@ -359,29 +359,87 @@ iGMFormat = ["TimeValue", *\
 *end materials
 *endfor
 
-
-
 *# set the list of record type : accel or disp
-set iGMType "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *# if record is found
+*if(directions==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_type),"Acceleration")==0)
-{-accel} *\
+iGMType = ["accel"]
 *elseif(strcmp(MatProp(Record_type),"Displacement")==0)
-{-disp} *\
+iGMType = ["disp"]
 *else
 *MessageBox Error: Use an acceleration record type for uniform excitation
 *endif
 *break
 *endif
+*elseif(directions==2)
+*if(i==1)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_type),"Acceleration")==0)
+iGMType = ["accel", *\
+*elseif(strcmp(MatProp(Record_type),"Displacement")==0)
+iGMType = ["disp", *\
+*else
+*MessageBox Error: Use an acceleration record type for uniform excitation
+*endif
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+"PEER"]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+"Value"]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+"TimeValue"]
+*endif
+*break
+*endif
+*endif
+*elseif(directions==3)
+*if(i==1)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_type),"Acceleration")==0)
+iGMType = ["accel", *\
+*elseif(strcmp(MatProp(Record_type),"Displacement")==0)
+iGMType = ["disp", *\
+*else
+*MessageBox Error: Use an acceleration record type for uniform excitation
+*endif
+*break
+*endif
+*elseif(i==2)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_type),"Acceleration")==0)
+"accel", *\
+*elseif(strcmp(MatProp(Record_type),"Displacement")==0)
+"disp", *\
+*else
+*MessageBox Error: Use an acceleration record type for uniform excitation
+*endif
+*break
+*endif
+*elseif(i==3)
+*if(RecordID==currGMID)
+*if(strcmp(MatProp(Record_type),"Acceleration")==0)
+"accel"]
+*elseif(strcmp(MatProp(Record_type),"Displacement")==0)
+"accel"]
+*else
+*MessageBox Error: Use an acceleration record type for uniform excitation
+*endif
+*break
+*endif
+*endif
+*endif
 *end materials
 *endfor
-"
-set iGMdt "*\
+
+set iGMdt *\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
@@ -399,7 +457,9 @@ set iGMdt "*\
 *endif
 *end materials
 *endfor
-"
+
+
+
 set iGMskip "*\
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
