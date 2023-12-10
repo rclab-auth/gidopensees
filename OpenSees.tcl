@@ -188,6 +188,34 @@ proc OpenSees::GetOpenSeesEXE {} {
 	return $OpenSeesEXE
 }
 
+
+proc OpenSees::SetPythonPath {} {
+	variable PythonPath
+	variable OpenSeesProblemTypePath
+	
+	global InfoWin
+	set file "$OpenSeesProblemTypePath/Python.path"
+	set fexists [file exists $file]
+	
+	if {$fexists == 1} {
+		set fp [open $file r]
+		set file_data [read $fp]
+		close $fp
+		set data [split $file_data \n]
+		set PythonPath [lindex $data 0]
+		regsub -all {\\} $PythonPath {/} PythonPath
+	} else {
+		set response [tk_dialog $InfoWin "Error" "Python.path file was not found. Please re-install GiD+OpenSees interface." error 0 "  Ok  " ]
+		destroy $InfoWin
+	}
+	return ""
+}
+
+proc OpenSees::GetPythonPath {} {
+	variable PythonPath
+	return $PythonPath
+}
+
 # Get OpenSees version
 
 proc OpenSees::GetVersion {} {
@@ -1711,25 +1739,45 @@ proc UpdateInfoBar_Do { } {
 	set GiDProjectName [OpenSees::GetProjectName]
 	set post_file [file join "$GiDProjectDir" "$GiDProjectName.post.res"]
 	set log_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.log"]
-	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
+	if {[OpenSees::IsPython]==0} {
+		set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
+	} else {
+		set py_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.py"]
+	}
+
 
 	set lab_info_label "Lab of R/C and Masonry Structures, AUTh"
 	set status_label "Not created"
-
-	if { [file exists $post_file] } {
+	if {[OpenSees::IsPython]==0} {
+		if { [file exists $post_file] } {
 
 		set status_label "Ready to postprocess"
 
-	} elseif { [file exists $log_file] } {
+		} elseif { [file exists $log_file] } {
 
-		set status_label "Solved"
+			set status_label "Solved"
 
-	} elseif { [file exists $tcl_file] } {
+		} elseif { [file exists $tcl_file] } {
 
-		set status_label "Created"
+			set status_label "Created"
+		}
+	} else {
+		if { [file exists $post_file] } {
 
+		set status_label "Ready to postprocess"
+
+		} elseif { [file exists $log_file] } {
+
+			set status_label "Solved"
+
+		} elseif { [file exists $py_file] } {
+
+			set status_label "Created"
+		}
 	}
 
+	
+	
 	.ibar.c create text 252 12 -text $status_label -font "calibri 12" -fill $ibarTextColor -anchor w; # create message about analysis status
 
 	set off 10; # offset from GiD openGL area total width
