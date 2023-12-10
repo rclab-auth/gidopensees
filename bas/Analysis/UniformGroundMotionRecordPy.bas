@@ -661,28 +661,28 @@ for i in range(len(iGMfile)):
     if iGMformat[i] == "PEER":
         inp_acc, dt = ReadPEERfile(iGMfile[i])
         if iGMType[i] == "accel":
-            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", inp_acc, "-factor", iGMfact[i])
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", **inp_acc, "-factor", iGMfact[i])
             ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
         elif iGMType[i] == "disp":
-            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", inp_acc, "-factor", iGMfact[i])
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", **inp_acc, "-factor", iGMfact[i])
             ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
     elif iGMformat[i] == "Values":
         recordValues = LoadRecordValues(iGMfile[i], iGMskip[i])
         dt = GMdt[i]
         if iGMType[i] == "accel":
-            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", recordValues, "-factor", iGMfact[i])
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", **recordValues, "-factor", iGMfact[i])
             ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
         elif iGMType[i] == "disp":
-            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", recordValues, "-factor", iGMfact[i])
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", **recordValues, "-factor", iGMfact[i])
             ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
     elif iGMformat[i] == "TimeValue":
         recordValues, recordTimes = LoadRecordTimeandValues(iGMfile[i], iGMskip[i], GMtimeCol[i], GMvalCol[i])
         dt = recordTimes[1] - recordTimes[0]
         if iGMType[i] == "accel":
-            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", list(recordValues), "-factor", iGMfact[i])
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", **recordValues, "-factor", iGMfact[i])
             ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
         elif iGMType[i] == "disp":
-            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", list(recordValues), "-factor", iGMfact[i])
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", **recordValues, "-factor", iGMfact[i])
             ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
 
 

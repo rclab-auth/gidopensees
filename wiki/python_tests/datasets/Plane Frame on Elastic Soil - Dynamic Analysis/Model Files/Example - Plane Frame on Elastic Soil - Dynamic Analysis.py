@@ -1026,7 +1026,7 @@ ops.recorder('Node', '-file', 'Node_rotations.out', '-time', '-nodeRange', 1, 38
 ops.recorder('Node', '-file', 'Node_forceReactions.out', '-time', '-nodeRange', 1, 382, '-dof', 1, 2, 'reaction')
 ops.recorder('Node', '-file', 'Node_momentReactions.out', '-time', '-nodeRange', 1, 382, '-dof', 3, 'reaction')
 ops.recorder('Node', '-file', 'Node_accelerations.out', '-time', '-nodeRange', 1, 382, '-dof', 1, 2, 'accel')
-ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, 382 '-dof', 1, 2, 'vel')
+ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, 382, '-dof', 1, 2, 'vel')
 ops.recorder('Element', '-file', 'Quad_force.out', '-time', '-ele', 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , 19 , 20 , 21 , 22 , 23 , 24 , 25 , 26 , 27 , 28 , 29 , 30 , 31 , 32 , 33 , 34 , 35 , 36 , 37 , 38 , 39 , 40 , 41 , 42 , 43 , 44 , 45 , 46 , 47 , 48 , 49 , 50 , 51 , 52 , 53 , 54 , 55 , 56 , 57 , 58 , 59 , 60 , 61 , 62 , 63 , 64 , 65 , 66 , 67 , 68 , 69 , 70 , 71 , 72 , 73 , 74 , 75 , 76 , 77 , 78 , 79 , 80 , 81 , 82 , 83 , 84 , 85 , 86 , 87 , 88 , 89 , 90 , 91 , 92 , 93 , 94 , 95 , 96 , 97 , 98 , 99 , 100 , 101 , 102 , 103 , 104 , 105 , 106 , 107 , 108 , 109 , 110 , 111 , 112 , 113 , 114 , 115 , 116 , 117 , 118 , 119 , 120 , 121 , 122 , 123 , 124 , 125 , 126 , 127 , 128 , 129 , 130 , 131 , 132 , 133 , 134 , 135 , 136 , 137 , 138 , 139 , 140 , 141 , 142 , 143 , 144 , 145 , 146 , 147 , 148 , 149 , 150 , 151 , 152 , 153 , 154 , 155 , 156 , 157 , 158 , 159 , 160 , 161 , 162 , 163 , 164 , 165 , 166 , 167 , 168 , 169 , 170 , 171 , 172 , 173 , 174 , 175 , 176 , 177 , 178 , 179 , 180 , 181 , 182 , 183 , 184 , 185 , 186 , 187 , 188 , 189 , 190 , 191 , 192 , 193 , 194 , 195 , 196 , 197 , 198 , 199 , 200 , 201 , 202 , 203 , 204 , 205 , 206 , 207 , 208 , 209 , 210 , 211 , 212 , 213 , 214 , 215 , 216 , 217 , 218 , 219 , 220 , 221 , 222 , 223 , 224 , 225 , 226 , 227 , 228 , 229 , 230 , 231 , 232 , 233 , 234 , 235 , 236 , 237 , 238 , 239 , 240 , 241 , 242 , 243 , 244 , 245 , 246 , 247 , 248 , 249 , 250 , 251 , 252 , 253 , 254 , 255 , 256 , 257 , 258 , 259 , 260 , 261 , 262 , 263 , 264 , 265 , 266 , 267 , 268 , 269 , 270 , 271 , 272 , 273 , 274 , 275 , 276 , 277 , 278 , 279 , 280 , 281 , 282 , 283 , 284 , 285 , 286 , 287 , 288 , 'forces')
 ops.recorder('Element', '-file', 'Quad_stress.out', '-time', '-ele', 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , 19 , 20 , 21 , 22 , 23 , 24 , 25 , 26 , 27 , 28 , 29 , 30 , 31 , 32 , 33 , 34 , 35 , 36 , 37 , 38 , 39 , 40 , 41 , 42 , 43 , 44 , 45 , 46 , 47 , 48 , 49 , 50 , 51 , 52 , 53 , 54 , 55 , 56 , 57 , 58 , 59 , 60 , 61 , 62 , 63 , 64 , 65 , 66 , 67 , 68 , 69 , 70 , 71 , 72 , 73 , 74 , 75 , 76 , 77 , 78 , 79 , 80 , 81 , 82 , 83 , 84 , 85 , 86 , 87 , 88 , 89 , 90 , 91 , 92 , 93 , 94 , 95 , 96 , 97 , 98 , 99 , 100 , 101 , 102 , 103 , 104 , 105 , 106 , 107 , 108 , 109 , 110 , 111 , 112 , 113 , 114 , 115 , 116 , 117 , 118 , 119 , 120 , 121 , 122 , 123 , 124 , 125 , 126 , 127 , 128 , 129 , 130 , 131 , 132 , 133 , 134 , 135 , 136 , 137 , 138 , 139 , 140 , 141 , 142 , 143 , 144 , 145 , 146 , 147 , 148 , 149 , 150 , 151 , 152 , 153 , 154 , 155 , 156 , 157 , 158 , 159 , 160 , 161 , 162 , 163 , 164 , 165 , 166 , 167 , 168 , 169 , 170 , 171 , 172 , 173 , 174 , 175 , 176 , 177 , 178 , 179 , 180 , 181 , 182 , 183 , 184 , 185 , 186 , 187 , 188 , 189 , 190 , 191 , 192 , 193 , 194 , 195 , 196 , 197 , 198 , 199 , 200 , 201 , 202 , 203 , 204 , 205 , 206 , 207 , 208 , 209 , 210 , 211 , 212 , 213 , 214 , 215 , 216 , 217 , 218 , 219 , 220 , 221 , 222 , 223 , 224 , 225 , 226 , 227 , 228 , 229 , 230 , 231 , 232 , 233 , 234 , 235 , 236 , 237 , 238 , 239 , 240 , 241 , 242 , 243 , 244 , 245 , 246 , 247 , 248 , 249 , 250 , 251 , 252 , 253 , 254 , 255 , 256 , 257 , 258 , 259 , 260 , 261 , 262 , 263 , 264 , 265 , 266 , 267 , 268 , 269 , 270 , 271 , 272 , 273 , 274 , 275 , 276 , 277 , 278 , 279 , 280 , 281 , 282 , 283 , 284 , 285 , 286 , 287 , 288 , 'stresses')
 ops.recorder('Element', '-file', 'Quad_strain.out', '-time', '-ele', 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , 19 , 20 , 21 , 22 , 23 , 24 , 25 , 26 , 27 , 28 , 29 , 30 , 31 , 32 , 33 , 34 , 35 , 36 , 37 , 38 , 39 , 40 , 41 , 42 , 43 , 44 , 45 , 46 , 47 , 48 , 49 , 50 , 51 , 52 , 53 , 54 , 55 , 56 , 57 , 58 , 59 , 60 , 61 , 62 , 63 , 64 , 65 , 66 , 67 , 68 , 69 , 70 , 71 , 72 , 73 , 74 , 75 , 76 , 77 , 78 , 79 , 80 , 81 , 82 , 83 , 84 , 85 , 86 , 87 , 88 , 89 , 90 , 91 , 92 , 93 , 94 , 95 , 96 , 97 , 98 , 99 , 100 , 101 , 102 , 103 , 104 , 105 , 106 , 107 , 108 , 109 , 110 , 111 , 112 , 113 , 114 , 115 , 116 , 117 , 118 , 119 , 120 , 121 , 122 , 123 , 124 , 125 , 126 , 127 , 128 , 129 , 130 , 131 , 132 , 133 , 134 , 135 , 136 , 137 , 138 , 139 , 140 , 141 , 142 , 143 , 144 , 145 , 146 , 147 , 148 , 149 , 150 , 151 , 152 , 153 , 154 , 155 , 156 , 157 , 158 , 159 , 160 , 161 , 162 , 163 , 164 , 165 , 166 , 167 , 168 , 169 , 170 , 171 , 172 , 173 , 174 , 175 , 176 , 177 , 178 , 179 , 180 , 181 , 182 , 183 , 184 , 185 , 186 , 187 , 188 , 189 , 190 , 191 , 192 , 193 , 194 , 195 , 196 , 197 , 198 , 199 , 200 , 201 , 202 , 203 , 204 , 205 , 206 , 207 , 208 , 209 , 210 , 211 , 212 , 213 , 214 , 215 , 216 , 217 , 218 , 219 , 220 , 221 , 222 , 223 , 224 , 225 , 226 , 227 , 228 , 229 , 230 , 231 , 232 , 233 , 234 , 235 , 236 , 237 , 238 , 239 , 240 , 241 , 242 , 243 , 244 , 245 , 246 , 247 , 248 , 249 , 250 , 251 , 252 , 253 , 254 , 255 , 256 , 257 , 258 , 259 , 260 , 261 , 262 , 263 , 264 , 265 , 266 , 267 , 268 , 269 , 270 , 271 , 272 , 273 , 274 , 275 , 276 , 277 , 278 , 279 , 280 , 281 , 282 , 283 , 284 , 285 , 286 , 287 , 288 , 'strains')
@@ -1047,7 +1047,7 @@ print("Static Monotonic")
 print(f"{int(1+5)} steps")
 print("Static Cyclic")
 print("Interval 2 : Transient")
-print(f"{int(1.0 + 40/0.01)} steps x 0.01 s"
+print(f"{int(1.0 + 40/0.01)} steps x 0.01 s")
 print("\n----------------\n")
 time_start = time.time()
 print("Starting analysis...\n")
@@ -1270,246 +1270,234 @@ ops.numberer('RCM')
 ops.constraints('Transformation')
 ops.integrator("Newmark", 0.5, 0.25)
 ops.test("RelativeEnergyIncr", 0.0001, 500, 2)
-algorithm ModifiedNewtonops.algorithm("ModifiedNewton", secant=False, initial=True)
+ops.algorithm("ModifiedNewton", False, True)
 ops.analysis('Transient')
 
 # Loads - Uniform Excitation
 
-set iGMdirection 1
-set DtAnalysis 0.01
-set TmaxAnalysis 40
+iGMdirection = [1]
+DtAnalysis = 0.01
+TmaxAnalysis = 40
 
-proc LoadRecordTimeandValues {filename recordValues recordTimes skiplines tcol vcol} {
-    set currentLine 0
-    upvar $recordValues RecValues
-    upvar $recordTimes RecTimes
-    # clear lists
-    set RecValues " "
-    set RecTimes " "
+def LoadRecordTimeandValues(filename, skiplines, GMtimeCol, GMvalCol):
+    recordValues = []
+    recordTimes = []
 
-    if [catch {open $filename r} inFileID] {
-        puts stderr "Cannot open $filename for reading"
-    } else {
-        foreach line [split [read $inFileID] \n] {
-            set currentLine [expr $currentLine+1]
-            if {[llength $line] == 0 || $line == " " || $currentLine<= $skiplines} {
-            continue
-            } else {
-                set valueColumnIndex [expr $vcol-1]
-                set timeColumnIndex [expr $tcol-1]
-                lappend RecValues [lindex [join $line " "] $valueColumnIndex ]
-                lappend RecTimes [lindex [join $line " "] $timeColumnIndex ]
-            }
-        }
-        close $inFileID
-    }
-}
+    with open(filename, 'r') as file:
+        for _ in range(skiplines):
+            next(file)  # Skip the specified number of lines
 
-set iGMfile "{../Records/Loma_Prieta.dat} "
-set iGMfact "{9.810} "
-set iGMFormat "{TimeValue} "
-set iGMType "{-accel} "
-set iGMdt "{0} "
-set iGMskip "{6} "
-set iGMvalCol "{2} "
-set iGMtimeCol "{1} "
-set IDGMLoadPatternTag 250
+        for line in file:
+            columns = line.strip().split()
+            if len(columns) >= 2:  # Ensure at least 2 columns are present in the line
+                recordValues.append(float(columns[GMvalCol - 1]))
+                recordTimes.append(float(columns[GMtimeCol - 1]))
 
-foreach GMdirection $iGMdirection GMfile $iGMfile GMfact $iGMfact GMtype $iGMType GMformat $iGMFormat GMdt $iGMdt GMskip $iGMskip GMvalCol $iGMvalCol GMtimeCol $iGMtimeCol {
-    incr IDGMLoadPatternTag
-    if {$GMformat=="PEER"} {
-        ReadPEERfile $GMfile recordValues dt
-            if {$GMtype == "-accel"} {
-            set AccelSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -accel $AccelSeries
-        } elseif {$GMtype == "-disp"} {
-            set DispSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -disp $DispSeries
-        }
+    return recordValues, recordTimes
 
-    } elseif {$GMformat == "Value"} {
-        LoadRecordValues $GMfile recordValues $GMskip
-        set dt $GMdt
-        if {$GMtype == "-accel"} {
-            set AccelSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -accel $AccelSeries
-        } elseif {$GMtype == "-disp"} {
-            set DispSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -disp $DispSeries
-        }
-    } elseif {$GMformat == "TimeValue"} {
-        LoadRecordTimeandValues $GMfile recordValues recordTimes $GMskip $GMtimeCol $GMvalCol
-        if {$GMtype == "-accel"} {
-                set AccelSeries "Path -time {$recordTimes} -values {$recordValues} -factor $GMfact"
-                pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -accel $AccelSeries
-        } elseif {$GMtype == "-disp"} {
-                set DispSeries "Path -time {$recordTimes} -values {$recordValues} -factor $GMfact"
-                pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -disp $DispSeries
-        }
-    }
-}
 
-set committedSteps 1
-set Nsteps [expr int($TmaxAnalysis/$DtAnalysis)]
 
-set strIni {}
-variable testTypeDynamic RelativeEnergyIncr
-variable TolDynamic 0.0001
-variable maxNumIterDynamic 500
-variable algorithmTypeDynamic ModifiedNewton
-set strIni "/Ini"
 
-for {set i 1} { $i <= $Nsteps } {incr i 1} {
-    set t [format "%7.5f" [expr [getTime] + $DtAnalysis]]
-    puts -nonewline "(2) $algorithmTypeDynamic$strIni Time $t "
-    set AnalOk [analyze 1 $DtAnalysis]; # perform analysis - returns 0 if analysis was successful
-    if {$AnalOk == 0} {
-        set committedSteps [expr $committedSteps+1]
-    } else {
+iGMfile = ["../Records/Loma_Prieta.dat"]
+
+iGMfact = [        9.81]
+
+
+iGMformat = ["TimeValue"]
+
+iGMType = ["accel"]
+
+iGMskip = [6]
+
+GMvalCol = [2]
+
+GMtimeCol = [1]
+
+IDGMLoadPatternTag = 250
+IDGMTimeSeriesTag = 25000
+
+for i in range(len(iGMfile)):
+    IDGMLoadPatternTag += 1
+    IDGMTimeSeriesTag += 1
+    if iGMformat[i] == "PEER":
+        inp_acc, dt = ReadPEERfile(iGMfile[i])
+        if iGMType[i] == "accel":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", *inp_acc, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
+        elif iGMType[i] == "disp":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", *inp_acc, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
+    elif iGMformat[i] == "Values":
+        recordValues = LoadRecordValues(iGMfile[i], iGMskip[i])
+        dt = GMdt[i]
+        if iGMType[i] == "accel":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", *recordValues, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
+        elif iGMType[i] == "disp":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", *recordValues, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
+    elif iGMformat[i] == "TimeValue":
+        recordValues, recordTimes = LoadRecordTimeandValues(iGMfile[i], iGMskip[i], GMtimeCol[i], GMvalCol[i])
+        dt = recordTimes[1] - recordTimes[0]
+        if iGMType[i] == "accel":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", *recordValues, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
+        elif iGMType[i] == "disp":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", *recordValues, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
+
+
+
+
+committedSteps = 1
+Nsteps = int(TmaxAnalysis / DtAnalysis)
+
+strIni = ""
+testTypeDynamic = "RelativeEnergyIncr"
+TolDynamic = 0.0001
+maxNumIterDynamic = 500
+algorithmTypeDynamic = "ModifiedNewton"
+strIni = "/Ini"
+
+for i in range(Nsteps):
+    t = ops.getTime() + DtAnalysis
+    print(f"(2) {algorithmTypeDynamic}{strIni} Time {t} ")
+    AnalOk = ops.analyze(1, DtAnalysis) # perform analysis - returns 0 if analysis was successful
+    if AnalOk == 0:
+        committedSteps += 1
+    else:
         break
-    }
-}
 
-if {$AnalOk != 0} {; # if analysis fails, alternative algorithms and substepping is applied
-    set firstFail 1
-    set AnalOk 0
-    set controlTime [getTime]
-    set Nk 1; # dt = dt/Nk
-    set returnToInitStepFlag 0
-    while {$controlTime < $TmaxAnalysis && $AnalOk == 0} {
-        if { ($Nk == 1 && $AnalOk == 0) || ($Nk == 2 && $AnalOk == 0) } {
-            set Nk 1
-            if {$returnToInitStepFlag} {
-                puts "\nBack to initial step\n"
-                set returnToInitStepFlag 0
-            }
-            if {$firstFail == 0} {; # for the first time only, do not repeat previous failed step
-                set t [format "%7.5f" [expr [getTime] + $DtAnalysis]]
-                puts -nonewline "(2) $algorithmTypeDynamic$strIni Time $t "
-                set AnalOk [analyze 1 $DtAnalysis]
-            } else {
-                set AnalOk 1
-                set firstFail 0
-            }
-            if {$AnalOk == 0} {
-                set committedSteps [expr $committedSteps+1]
-            }
-        }; # end if Nk=1
+
+if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is applied
+    firstFail = 1
+    AnalOk = 0
+    controlTime = ops.getTime()
+    Nk = 1 # dt = dt/Nk
+    returnToInitStepFlag = 0
+    while controlTime < TmaxAnalysis and AnalOk == 0:
+        if (Nk == 1 and AnalOk == 0) or (Nk == 2 and AnalOk == 0):
+            Nk = 1
+            if returnToInitStepFlag:
+                print("\nBack to initial step\n")
+                returnToInitStepFlag = 0
+            if firstFail == 0: # for the first time only, do not repeat previous failed step
+                t = ops.getTime() + DtAnalysis
+                print(f"(2) {algorithmTypeDynamic}{strIni} Time {t} ")
+                AnalOk = ops.analyze(1, DtAnalysis)
+            else:
+                AnalOk = 1
+                firstFail = 0
+
+            if AnalOk == 0:
+                committedSteps += 1
+
+        # end if Nk=1
         # substepping /2
-        if {($Nk == 1 && $AnalOk!=0) || ($Nk == 4 && $AnalOk==0)} {
-            set Nk 2.0
-            set continueFlag 1
-            puts "\nInitial step is divided by 2\n"
-            set currTime1 [getTime]
-            set curStep [expr int($currTime1/$DtAnalysis)]
-            set remStep1 [expr int(($Nsteps-$curStep)*2.0)]
-            set ReducedDtAnalysis [expr $DtAnalysis/2.0]
-            for {set ik 1} {$ik <= $Nk} {incr ik 1} {
-                if {$continueFlag==0} {
+        if (Nk == 1 and AnalOk!=0) or (Nk == 4 and AnalOk==0):
+            Nk = 2
+            continueFlag = 1
+            print("Initial step is divided by 2")
+            currTime1 = ops.getTime()
+            curStep = int(currTime1/DtAnalysis)
+            remStep1 = int((Nsteps-curStep)*2.0)
+            ReducedDtAnalysis = DtAnalysis/2.0
+            for ik in range(Nk):
+                if continueFlag==0:
                     break
-                }
-                set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
-                puts -nonewline "(2) $algorithmTypeDynamic$strIni Time $t "
-                set AnalOk [analyze 1 $ReducedDtAnalysis]
-                if {$AnalOk == 0} {
-                    set committedSteps [expr $committedSteps+1]
-                } else {
-                    set continueFlag 0
-                }
-            }
-            if {$AnalOk == 0} {
-                set returnToInitStepFlag 1
-            }
-        }; # end if Nk=2
-        # substepping /4
-        if {($Nk == 2 && $AnalOk!=0) || ($Nk == 8 && $AnalOk == 0)} {
-            set Nk 4.0
-            set continueFlag 1
-            puts "\nInitial step is divided by 4\n"
-            set currTime2 [getTime]
-            set curStep [expr ($currTime2-$currTime1)/$ReducedDtAnalysis]
-            set remStep2 [expr int(($remStep1-$curStep)*2.0)]
-            set ReducedDtAnalysis [expr $ReducedDtAnalysis/2.0]
-            for {set ik 1} {$ik <= $Nk} {incr ik 1} {
-                if {$continueFlag==0} {
-                    break
-                }
-                set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
-                puts -nonewline "(2) $algorithmTypeDynamic$strIni Time $t "
-                set AnalOk [analyze 1 $ReducedDtAnalysis]
-                if {$AnalOk == 0} {
-                    set committedSteps [expr $committedSteps+1]
-                } else {
-                    set continueFlag 0
-                }
-            }
-            if {$AnalOk == 0} {
-                set returnToInitStepFlag 1
-            }
-        }; # end if Nk=4
-        # substepping /8
-        if {($Nk == 4 && $AnalOk!=0) || ($Nk == 16 && $AnalOk == 0)} {
-            set Nk 8.0
-            set continueFlag 1
-            puts "\nInitial step is divided by 8\n"
-            set currTime3 [getTime]
-            set curStep [expr ($currTime3-$currTime2)/$ReducedDtAnalysis]
-            set remStep3 [expr int(($remStep2-$curStep)*2.0)]
-            set ReducedDtAnalysis [expr $ReducedDtAnalysis/2.0]
-            for {set ik 1} {$ik <= $Nk} {incr ik 1} {
-                if {$continueFlag==0} {
-                    break
-                }
-                set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
-                puts -nonewline "(2) $algorithmTypeDynamic$strIni Time $t "
-                set AnalOk [analyze 1 $ReducedDtAnalysis]
-                if {$AnalOk == 0} {
-                    set committedSteps [expr $committedSteps+1]
-                } else {
-                    set continueFlag 0
-                }
-            }
-            if {$AnalOk == 0} {
-                set returnToInitStepFlag 1
-            }
-        }; # end if Nk=8
-        # substepping /16
-        if {($Nk == 8 && $AnalOk!=0)} {
-            set Nk 16.0
-            set continueFlag 1
-            puts "\nInitial step is divided by 16\n"
-            set currTime4 [getTime]
-            set curStep [expr ($currTime4-$currTime3)/$ReducedDtAnalysis]
-            set remStep4 [expr int(($remStep3-$curStep)*2.0)]
-            set ReducedDtAnalysis [expr $ReducedDtAnalysis/2.0]
-            for {set ik 1} {$ik <= $Nk} {incr ik 1} {
-                if {$continueFlag==0} {
-                    break
-                }
-                set t [format "%7.5f" [expr [getTime] + $ReducedDtAnalysis]]
-                puts -nonewline "(2) $algorithmTypeDynamic$strIni Time $t "
-                set AnalOk [analyze 1 $ReducedDtAnalysis]
-                if {$AnalOk == 0} {
-                    set committedSteps [expr $committedSteps+1]
-                } else {
-                    set continueFlag 0
-                }
-            }
-            if {$AnalOk == 0} {
-                set returnToInitStepFlag 1
-            }
-        }; # end if Nk=16
-        set controlTime [getTime]
-    }
-}
+                t = ops.getTime() + ReducedDtAnalysis
+                print(f"(2) {algorithmTypeDynamic}{strIni} Time {t} ")
+                AnalOk = ops.analyze(1, ReducedDtAnalysis)
+                if AnalOk == 0:
+                    committedSteps += 1
+                else:
+                    continueFlag = 0
 
-if {$AnalOk == 0} {
-    puts "\nAnalysis completed SUCCESSFULLY"
-    puts "Committed steps : $committedSteps\n"
-} else {
-    puts "\nAnalysis FAILED"
-    puts "Committed steps : $committedSteps\n"
-}
+            if AnalOk == 0:
+                returnToInitStepFlag = 1
+
+        # end if Nk=2
+        # substepping /4
+        if (Nk == 2 and AnalOk!=0) or (Nk == 8 and AnalOk==0):
+            Nk = 4
+            continueFlag = 1
+            print("Initial step is divided by 4")
+            currTime2 = ops.getTime()
+            curStep = (currTime2-currTime1)/ReducedDtAnalysis
+            remStep2 = int((remStep1-curStep)*2.0)
+            ReducedDtAnalysis = ReducedDtAnalysis/2.0
+            for ik in range(Nk):
+                if continueFlag==0:
+                    break
+                t = ops.getTime() + ReducedDtAnalysis
+                print(f"(2) {algorithmTypeDynamic}{strIni} Time {t} ")
+                AnalOk = ops.analyze(1, ReducedDtAnalysis)
+                if AnalOk == 0:
+                    committedSteps += 1
+                else:
+                    continueFlag = 0
+
+            if AnalOk == 0:
+                returnToInitStepFlag = 1
+
+        # end if Nk=4
+        # substepping /8
+        if (Nk == 4 and AnalOk!=0) or (Nk == 16 and AnalOk==0):
+            Nk = 8
+            continueFlag = 1
+            print("Initial step is divided by 8")
+            currTime3 = ops.getTime()
+            curStep = (currTime3-currTime2)/ReducedDtAnalysis
+            remStep3 = int((remStep2-curStep)*2.0)
+            ReducedDtAnalysis = ReducedDtAnalysis/2.0
+            for ik in range(Nk):
+                if continueFlag==0:
+                    break
+                t = ops.getTime() + ReducedDtAnalysis
+                print(f"(2) {algorithmTypeDynamic}{strIni} Time {t} ")
+                AnalOk = ops.analyze(1, ReducedDtAnalysis)
+                if AnalOk == 0:
+                    committedSteps += 1
+                else:
+                    continueFlag = 0
+
+            if AnalOk == 0:
+                returnToInitStepFlag = 1
+
+        # end if Nk=8
+        # substepping /16
+        if (Nk == 8 and AnalOk!=0):
+            Nk = 16
+            continueFlag = 1
+            print("Initial step is divided by 16")
+            currTime4 = ops.getTime()
+            curStep = (currTime4-currTime3)/ReducedDtAnalysis
+            remStep4 = int((remStep3-curStep)*2.0)
+            ReducedDtAnalysis = ReducedDtAnalysis/2.0
+            for ik in range(Nk):
+                if continueFlag==0:
+                    break
+                t = ops.getTime() + ReducedDtAnalysis
+                print(f"(2) {algorithmTypeDynamic}{strIni} Time {t} ")
+                AnalOk = ops.analyze(1, ReducedDtAnalysis)
+                if AnalOk == 0:
+                    committedSteps += 1
+                else:
+                    continueFlag = 0
+
+            if AnalOk == 0:
+                returnToInitStepFlag = 1
+
+        # end if Nk=8
+        controlTime = ops.getTime()
+
+
+if AnalOk == 0:
+    print("Analysis completed SUCCESSFULLY")
+    print(f"Committed steps : {committedSteps}")
+else:
+    print("Analysis FAILED")
+    print(f"Committed steps : {committedSteps}")
 
 # --------------------------------------------------------------------------------------------------------------
 

@@ -49,7 +49,7 @@ strIni = "/Ini"
 for i in range(Nsteps):
     t = ops.getTime() + DtAnalysis
 *if(PrintTime==1)
-    print("(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
+    print(f"(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
 *endif
     AnalOk = ops.analyze(1, DtAnalysis) # perform analysis - returns 0 if analysis was successful
     if AnalOk == 0:
@@ -147,7 +147,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
             if firstFail == 0: # for the first time only, do not repeat previous failed step
                 t = ops.getTime() + DtAnalysis
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
+                print(f"(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
 *endif
                 AnalOk = ops.analyze(1, DtAnalysis)
             else:
@@ -172,7 +172,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime() + ReducedDtAnalysis
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
+                print(f"(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
 *endif
                 AnalOk = ops.analyze(1, ReducedDtAnalysis)
                 if AnalOk == 0:
@@ -214,7 +214,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime() + ReducedDtAnalysis
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
+                print(f"(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
 *endif
                 AnalOk = ops.analyze(1, ReducedDtAnalysis)
                 if AnalOk == 0:
@@ -256,7 +256,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime() + ReducedDtAnalysis
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
+                print(f"(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
 *endif
                 AnalOk = ops.analyze(1, ReducedDtAnalysis)
                 if AnalOk == 0:
@@ -298,7 +298,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime() + ReducedDtAnalysis
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
+                print(f"(*IntvNum) {algorithmTypeDynamic}{strIni} Time {t} ")
 *endif
                 AnalOk = ops.analyze(1, ReducedDtAnalysis)
                 if AnalOk == 0:
