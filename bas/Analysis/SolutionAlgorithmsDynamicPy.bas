@@ -4,43 +4,43 @@ Nsteps = int(TmaxAnalysis / DtAnalysis)
 
 strIni = ""
 *if(strcmp(IntvData(Convergence_criterion),"Norm_Unbalance")==0)
-testTypeDynamic = NormUnbalance
+testTypeDynamic = "NormUnbalance"
 *elseif(strcmp(IntvData(Convergence_criterion),"Norm_Displacement_Increment")==0)
-testTypeDynamic = NormDispIncr
+testTypeDynamic = "NormDispIncr"
 *elseif(strcmp(IntvData(Convergence_criterion),"Energy_Increment")==0)
-testTypeDynamic = EnergyIncr
+testTypeDynamic = "EnergyIncr"
 *elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Unbalance")==0)
-testTypeDynamic = RelativeNormUnbalance
+testTypeDynamic = "RelativeNormUnbalance"
 *elseif(strcmp(IntvData(Convergence_criterion),"Relative_Norm_Displacement_Increment")==0)
-testTypeDynamic = RelativeNormDispIncr
+testTypeDynamic = "RelativeNormDispIncr"
 *elseif(strcmp(IntvData(Convergence_criterion),"Total_Relative_Norm_Displacement_Increment")==0)
-testTypeDynamic = RelativeTotalNormDispIncr
+testTypeDynamic = "RelativeTotalNormDispIncr"
 *elseif(strcmp(IntvData(Convergence_criterion),"Relative_Energy_Increment")==0)
-testTypeDynamic = RelativeEnergyIncr
+testTypeDynamic = "RelativeEnergyIncr"
 *elseif(strcmp(IntvData(Convergence_criterion),"Fixed_Number_of_Iterations")==0)
-testTypeDynamic = FixedNumIter
+testTypeDynamic = "FixedNumIter"
 *endif
 *format "%g"
 TolDynamic = *IntvData(Tolerance,real)
 maxNumIterDynamic = *IntvData(Max_Iterations_per_Step,int)
 *if(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
-algorithmTypeDynamic = Newton
+algorithmTypeDynamic = "Newton"
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
 strIni = "/Ini"
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
-algorithmTypeDynamic = ModifiedNewton
+algorithmTypeDynamic = "ModifiedNewton"
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
 strIni = "/Ini"
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
-algorithmTypeDynamic = NewtonLineSearch
+algorithmTypeDynamic = "NewtonLineSearch"
 *elseif(strcmp(IntvData(Solution_algorithm),"Broyden")==0)
-algorithmTypeDynamic = Broyden
+algorithmTypeDynamic = "Broyden"
 *elseif(strcmp(IntvData(Solution_algorithm),"BFGS")==0)
-algorithmTypeDynamic = BFGS
+algorithmTypeDynamic = "BFGS"
 *elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
-algorithmTypeDynamic = KrylovNewton
+algorithmTypeDynamic = "KrylovNewton"
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
 strIni = "/Ini"
 *endif
@@ -160,7 +160,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
         # end if Nk=1
         # substepping /2
         if (Nk == 1 and AnalOk!=0) or (Nk == 4 and AnalOk==0):
-            Nk = 2.0
+            Nk = 2
             continueFlag = 1
             print("Initial step is divided by 2")
             currTime1 = ops.getTime()
@@ -202,7 +202,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
 *endif
         # substepping /4
         if (Nk == 2 and AnalOk!=0) or (Nk == 8 and AnalOk==0):
-            Nk = 4.0
+            Nk = 4
             continueFlag = 1
             print("Initial step is divided by 4")
             currTime2 = ops.getTime()
@@ -244,10 +244,10 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
 *endif
         # substepping /8
         if (Nk == 4 and AnalOk!=0) or (Nk == 16 and AnalOk==0):
-            Nk = 8.0
+            Nk = 8
             continueFlag = 1
             print("Initial step is divided by 8")
-            currTime5 = ops.getTime()
+            currTime3 = ops.getTime()
             curStep = (currTime3-currTime2)/ReducedDtAnalysis
             remStep3 = int((remStep2-curStep)**2.0)
             ReducedDtAnalysis = ReducedDtAnalysis/2.0
@@ -286,7 +286,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
 *endif
         # substepping /16
         if (Nk == 8 and AnalOk!=0):
-            Nk = 16.0
+            Nk = 16
             continueFlag = 1
             print("Initial step is divided by 16")
             currTime4 = ops.getTime()
@@ -337,6 +337,6 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
 if AnalOk == 0:
     print("Analysis completed SUCCESSFULLY")
     print(f"Committed steps : {committedSteps}")
-else
+else:
     print("Analysis FAILED")
     print(f"Committed steps : {committedSteps}")

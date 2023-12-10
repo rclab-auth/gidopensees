@@ -442,6 +442,6 @@ for Dmax in iDmax:
 if AnalOk == 0:
     print("Analysis completed SUCCESSFULLY")
     print(f"Committed steps : {committedSteps}")
-else
+else:
     print("Analysis FAILED")
     print(f"Committed steps : {committedSteps}")

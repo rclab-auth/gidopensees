@@ -4,17 +4,17 @@
 *# 1 GM direction
 *if(IntvData(Directions,int)==1)
 *if(strcmp(IntvData(Ground_motion_direction),"Ux")==0)
-iGMdirection = 1
+iGMdirection = [1]
 *elseif(strcmp(IntvData(Ground_motion_direction),"Uy")==0)
-iGMdirection = 2
+iGMdirection = [2]
 *elseif(strcmp(IntvData(Ground_motion_direction),"Uz")==0)
-iGMdirection = 3
+iGMdirection = [3]
 *elseif(strcmp(IntvData(Ground_motion_direction),"Rx")==0)
-iGMdirection = 4
+iGMdirection = [4]
 *elseif(strcmp(IntvData(Ground_motion_direction),"Ry")==0)
-iGMdirection = 5
+iGMdirection = [5]
 *elseif(strcmp(IntvData(Ground_motion_direction),"Rz")==0)
-iGMdirection = 6
+iGMdirection = [6]
 *endif
 *set var fileID=tcl(FindMaterialNumber *IntvData(Record_file) *DomainNum)
 *set var dummy=tcl(AddGMFileID *fileID)
@@ -143,6 +143,8 @@ def ReadPEERfile(inFilename):
                 time = []
             counter = counter + 1
         return inp_acc, dt
+    except:
+        print("Cannot parse file")
 *set var procReadPeerFilePrinted=1
 
 *endif
@@ -164,7 +166,7 @@ def LoadRecordValues(filename, skiplines):
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
 *if(procLoadRecTimeandValuesPrinted==0)
 
-def LoadRecordTimeandValues(filename, skiplines):
+def LoadRecordTimeandValues(filename, skiplines, GMtimeCol, GMvalCol):
     recordValues = []
     recordTimes = []
 
@@ -175,8 +177,8 @@ def LoadRecordTimeandValues(filename, skiplines):
         for line in file:
             columns = line.strip().split()
             if len(columns) >= 2:  # Ensure at least 2 columns are present in the line
-                recordValues.append(columns[0])
-                recordTimes.append(columns[1])
+                recordValues.append(float(columns[GMvalCol - 1]))
+                recordTimes.append(float(columns[GMtimeCol - 1]))
 
     return recordValues, recordTimes
 
@@ -248,7 +250,7 @@ iGMfact = [*MatProp(Scale_factor,real)]
 *elseif(directions==2)
 *if(i==1)
 *if(RecordID==currGMID)
-iGMfile = [*MatProp(Scale_factor,real), *\
+iGMfact = [*MatProp(Scale_factor,real), *\
 *break
 *endif
 *elseif(i==2)
@@ -260,7 +262,7 @@ iGMfile = [*MatProp(Scale_factor,real), *\
 *elseif(directions==3)
 *if(i==1)
 *if(RecordID==currGMID)
-iGMfile = [*MatProp(Scale_factor,real), *\
+iGMfact = [*MatProp(Scale_factor,real), *\
 *break
 *endif
 *elseif(i==2)
@@ -288,11 +290,11 @@ iGMfile = [*MatProp(Scale_factor,real), *\
 *if(directions==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-iGMFormat = ["PEER"]
+iGMformat = ["PEER"]
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
-iGMFormat = ["Value"]
+iGMformat = ["Value"]
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-iGMFormat = ["TimeValue"]
+iGMformat = ["TimeValue"]
 *endif
 *break
 *endif
@@ -300,11 +302,11 @@ iGMFormat = ["TimeValue"]
 *if(i==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-iGMFormat = ["PEER", *\
+iGMformat = ["PEER", *\
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
 iGMFormat = ["Value", *\
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-iGMFormat = ["TimeValue", *\
+iGMformat = ["TimeValue", *\
 *endif
 *break
 *endif
@@ -324,11 +326,11 @@ iGMFormat = ["TimeValue", *\
 *if(i==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-iGMFormat = ["PEER", *\
+iGMformat = ["PEER", *\
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
-iGMFormat = ["Value", *\
+iGMformat = ["Value", *\
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-iGMFormat = ["TimeValue", *\
+iGMformat = ["TimeValue", *\
 *endif
 *break
 *endif
@@ -439,115 +441,250 @@ iGMType = ["disp", *\
 *end materials
 *endfor
 
-set iGMdt *\
+*# set the list of the record skip lines
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
-*# if record is found
+*if(directions==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-{0} *\
+iGMskip = [0]
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
-{*MatProp(Time_step,real)} *\
+iGMskip = [*MatProp(lines_to_skip,int)]
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-{0} *\
+iGMskip = [*MatProp(lines_to_skip,int)]
 *endif
 *break
 *endif
-*end materials
-*endfor
-
-
-
-set iGMskip "*\
-*for(i=1;i<=directions;i=i+1)
-*set var currGMID=tcl(ReturnGMFileID *i)
-*loop materials *NotUsed
-*set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
-*# if record is found
+*elseif(directions==2)
 *if(RecordID==currGMID)
+*if(i==1)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-{0} *\
+iGMskip = [0,*\
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
-{*MatProp(lines_to_skip,int)} *\
+iGMskip = [*MatProp(lines_to_skip,int), *\
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-{*MatProp(lines_to_skip,int)} *\
+iGMskip = [*MatProp(lines_to_skip,int), *\
+*endif
+*elseif(i==2)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+*MatProp(lines_to_skip,int)]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(lines_to_skip,int)]
+*endif
 *endif
 *break
 *endif
+*elseif(directions==3)
+*if(RecordID==currGMID)
+*if(i==1)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+iGMskip = [0,*\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+iGMskip = [*MatProp(lines_to_skip,int), *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+iGMskip = [*MatProp(lines_to_skip,int), *\
+*endif
+*elseif(i==2)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0, *\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+*MatProp(lines_to_skip,int), *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(lines_to_skip,int), *\
+*endif
+*elseif(i==3)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+*MatProp(lines_to_skip,int)]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(lines_to_skip,int)]
+*endif
+*endif
+*break
+*endif
+*endif
 *end materials
 *endfor
-"
-set iGMvalCol "*\
+
+*# set the list of the values column
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
-*# if record is found
+*if(directions==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-{0} *\
+GMvalCol = [0]
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
-{1} *\
+GMvalCol = [1]
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-{*MatProp(Value_column,int)} *\
+GMvalCol = [*MatProp(Value_column,int)]
+*endif
+*break
+*endif
+*elseif(directions==2)
+*if(RecordID==currGMID)
+*if(i==1)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+GMvalCol = [0,*\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+GMvalCol = [1, *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+GMvalCol = [*MatProp(Value_column,int), *\
+*endif
+*elseif(i==2)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+1]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(Value_column,int)]
+*endif
+*endif
+*break
+*endif
+*elseif(directions==3)
+*if(RecordID==currGMID)
+*if(i==1)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+GMvalCol = [0,*\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+GMvalCol = [1, *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+GMvalCol = [*MatProp(Value_column,int), *\
+*endif
+*elseif(i==2)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0, *\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+1, *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(Value_column,int), *\
+*endif
+*elseif(i==3)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+1]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(Value_column,int)]
+*endif
+*endif
+*break
 *endif
 *endif
 *end materials
 *endfor
-"
-set iGMtimeCol "*\
+
+*# set the list of the time column
 *for(i=1;i<=directions;i=i+1)
 *set var currGMID=tcl(ReturnGMFileID *i)
 *loop materials *NotUsed
 *set var RecordID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
-*# if record is found
+*if(directions==1)
 *if(RecordID==currGMID)
 *if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
-{0} *\
+GMtimeCol = [0]
 *elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
-{0} *\
+GMtimeCol = [0]
 *elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
-{*MatProp(Time_column,int)} *\
+GMtimeCol = [*MatProp(Time_column,int)]
+*endif
+*break
+*endif
+*elseif(directions==2)
+*if(RecordID==currGMID)
+*if(i==1)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+GMtimeCol = [0,*\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+GMtimeCol = [0, *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+GMtimeCol = [*MatProp(Time_column,int), *\
+*endif
+*elseif(i==2)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(Time_column,int)]
+*endif
+*endif
+*break
+*endif
+*elseif(directions==3)
+*if(RecordID==currGMID)
+*if(i==1)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+GMtimeCol = [0,*\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+GMtimeCol = [0, *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+GMtimeCol = [*MatProp(Time_column,int), *\
+*endif
+*elseif(i==2)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0, *\
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+0, *\
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(Time_column,int), *\
+*endif
+*elseif(i==3)
+*if(strcmp(MatProp(Record_file_format),"PEER_format")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Single_value_per_line")==0)
+0]
+*elseif(strcmp(MatProp(Record_file_format),"Time_and_value_per_line")==0)
+*MatProp(Time_column,int)]
+*endif
+*endif
+*break
 *endif
 *endif
 *end materials
 *endfor
-"
-set IDGMLoadPatternTag *operation(100*IntvNum+50)
 
-foreach GMdirection $iGMdirection GMfile $iGMfile GMfact $iGMfact GMtype $iGMType GMformat $iGMFormat GMdt $iGMdt GMskip $iGMskip GMvalCol $iGMvalCol GMtimeCol $iGMtimeCol {
-    incr IDGMLoadPatternTag
-    if {$GMformat=="PEER"} {
-        ReadPEERfile $GMfile recordValues dt
-            if {$GMtype == "-accel"} {
-            set AccelSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -accel $AccelSeries
-        } elseif {$GMtype == "-disp"} {
-            set DispSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -disp $DispSeries
-        }
+*set var IDGMLoadPatternTag=operation(100*IntvNum+50)
+IDGMLoadPatternTag = *operation(100*IntvNum+50)
+IDGMTimeSeriesTag = *operation(100*IDGMLoadPatternTag)
 
-    } elseif {$GMformat == "Value"} {
-        LoadRecordValues $GMfile recordValues $GMskip
-        set dt $GMdt
-        if {$GMtype == "-accel"} {
-            set AccelSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -accel $AccelSeries
-        } elseif {$GMtype == "-disp"} {
-            set DispSeries "Path -dt $dt -values {$recordValues} -factor $GMfact"
-            pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -disp $DispSeries
-        }
-    } elseif {$GMformat == "TimeValue"} {
-        LoadRecordTimeandValues $GMfile recordValues recordTimes $GMskip $GMtimeCol $GMvalCol
-        if {$GMtype == "-accel"} {
-                set AccelSeries "Path -time {$recordTimes} -values {$recordValues} -factor $GMfact"
-                pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -accel $AccelSeries
-        } elseif {$GMtype == "-disp"} {
-                set DispSeries "Path -time {$recordTimes} -values {$recordValues} -factor $GMfact"
-                pattern UniformExcitation $IDGMLoadPatternTag $GMdirection -disp $DispSeries
-        }
-    }
-}
+for i in range(len(iGMfile)):
+    IDGMLoadPatternTag += 1
+    IDGMTimeSeriesTag += 1
+    if iGMformat[i] == "PEER":
+        inp_acc, dt = ReadPEERfile(iGMfile[i])
+        if iGMType[i] == "accel":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", inp_acc, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
+        elif iGMType[i] == "disp":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", inp_acc, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
+    elif iGMformat[i] == "Values":
+        recordValues = LoadRecordValues(iGMfile[i], iGMskip[i])
+        dt = GMdt[i]
+        if iGMType[i] == "accel":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", recordValues, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
+        elif iGMType[i] == "disp":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", recordValues, "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
+    elif iGMformat[i] == "TimeValue":
+        recordValues, recordTimes = LoadRecordTimeandValues(iGMfile[i], iGMskip[i], GMtimeCol[i], GMvalCol[i])
+        dt = recordTimes[1] - recordTimes[0]
+        if iGMType[i] == "accel":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", list(recordValues), "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-accel", IDGMTimeSeriesTag)
+        elif iGMType[i] == "disp":
+            ops.timeSeries("Path", IDGMTimeSeriesTag, "-dt", dt, "-values", list(recordValues), "-factor", iGMfact[i])
+            ops.pattern("UniformExcitation", IDGMLoadPatternTag, iGMdirection[i], "-disp", IDGMTimeSeriesTag)
+
+
+
 *include SolutionAlgorithmsDynamicPy.bas
