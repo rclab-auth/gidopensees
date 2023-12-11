@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- -*- coding: utf-8;-*- -->
+<Infoproblemtype version="1.0">
+  <Program>
+    <Name>OpenSees</Name>
+    <Version>3.0.0</Version>
+    <ExecutableVersion></ExecutableVersion>
+    <CheckMinimumGiDVersion>15.1.3d</CheckMinimumGiDVersion>
+    <CustomLibAutomatic>0</CustomLibAutomatic>
+    <CustomLibNativeGroups>1</CustomLibNativeGroups>
+    <ImageFileBrowser>img/gidopensees.ico</ImageFileBrowser>
+    <ShortDescription>The GiD+OpenSees Interface</ShortDescription>
+    <Description>* What is GiD+OpenSees?
+	The GiD+OpenSees Interface introduces a long-awaited graphical interface for the popular open source finite element software OpenSees
+	by seamlessly connecting its text-only solver to the user-friendly general graphical pre/post processor GiD.
+    </Description>
+
+  </Program>
+</Infoproblemtype>
