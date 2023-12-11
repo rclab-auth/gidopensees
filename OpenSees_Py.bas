@@ -308,6 +308,7 @@ ops.model("basic", "-ndm", *ndime, "-ndf", *currentDOF)
 *endif
 *end groups
 
+ops.logFile("*tcl(OpenSees::GetProjectName).log")
 # --------------------------------------------------------------------------------------------------------------
 #
 # D O M A I N  C O M M O N S
@@ -326,7 +327,6 @@ ops.model("basic", "-ndm", *ndime, "-ndf", *currentDOF)
 *#
 *include bas\Model\RecordersPy.bas
 
-ops.logFile("*tcl(OpenSees::GetProjectName).log")
 
 print(" __   __       __          __                   _       ")
 print("/ _ .|  \\ _|_ /  \\ _  _ _ (_  _ _ _  | _ |_ _ _(_ _  _ _")
@@ -334,6 +334,14 @@ print("\\__)||__/  |  \\__/|_)(-| )__)(-(-_)  || )|_(-| | (_|(_(-")
 print("                  |                                     ")
 print("                             *tcl(OpenSees::GetVersion) with OpenSeesPy\n")
 print("Analysis summary\n")
+
+print(" __   __       __          __                   _       ", file=open(f"{__file__[:-3]}.out", "a"))
+print("/ _ .|  \\ _|_ /  \\ _  _ _ (_  _ _ _  | _ |_ _ _(_ _  _ _", file=open(f"{__file__[:-3]}.out", "a"))
+print("\\__)||__/  |  \\__/|_)(-| )__)(-(-_)  || )|_(-| | (_|(_(-", file=open(f"{__file__[:-3]}.out", "a"))
+print("                  |                                     ", file=open(f"{__file__[:-3]}.out", "a"))
+print("                             *tcl(OpenSees::GetVersion) with OpenSeesPy\n", file=open(f"{__file__[:-3]}.out", "a"))
+print("Analysis summary\n", file=open(f"{__file__[:-3]}.out", "a"))
+
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)

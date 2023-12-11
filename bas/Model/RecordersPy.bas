@@ -53,10 +53,10 @@ ops.recorder('Node', '-file', 'Node_momentReactions.out', '-time', '-nodeRange',
 *endif
 *if(Transient_analysis==1)
 *if(GenData(Nodal_accelerations,int)==1)
-ops.recorder('Node', '-file', 'Node_accelerations.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 1, 2, 3, 'accel')
+ops.recorder('Node', '-file', 'Node_accelerations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'accel')
 *endif
 *if(GenData(Nodal_rotational_accelerations,int)==1)
-ops.recorder('Node', '-file', 'Node_rotAccelerations.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 4, 5, 6, 'accel')
+ops.recorder('Node', '-file', 'Node_rotAccelerations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 4, 5, 6, 'accel')
 *endif
 *if(GenData(Nodal_velocities,int)==1)
 ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'vel')
