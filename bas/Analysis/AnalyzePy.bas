@@ -233,10 +233,14 @@ for i in range(*steps):
         committedSteps += 1
 if AnalOk == 0:
     print("Analysis completed SUCCESSFULLY")
+    print("Analysis completed SUCCESSFULLY", file=open(f"{__file__[:-3]}.log", "a"))
     print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))
 else:
     print("Analysis FAILED")
+    print("Analysis FAILED", file=open(f"{__file__[:-3]}.log", "a"))
     print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))
 *endif
 *#
 *# Cyclic analysis

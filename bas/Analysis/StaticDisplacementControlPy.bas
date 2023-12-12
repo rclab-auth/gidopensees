@@ -336,7 +336,11 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
 
 if AnalOk == 0:
     print("Analysis completed SUCCESSFULLY")
+    print("Analysis completed SUCCESSFULLY", file=open(f"{__file__[:-3]}.log", "a"))
     print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))
 else:
     print("Analysis FAILED")
+    print("Analysis FAILED", file=open(f"{__file__[:-3]}.log", "a"))
     print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))
