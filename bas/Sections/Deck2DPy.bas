@@ -56,25 +56,23 @@ def DeckFiberSection2D(secID, GJ, conc1ID, conc2ID, steel1ID, steel2ID, steel3ID
         ops.patch("rect", conc1ID, nfy1, nfz1, height-ycm, -width1/2, height-ycm+thick3, width1/2)
     
 
-        if {$swthick && $swwidth} {
-        # create the concrete fibers for the sidewalk slab
-        # right
-        #patch quad $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr -$width1/2] [expr $height-$ycm+$thick3] [expr -$width1/2+$swwidth-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2+$swwidth-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2]
-        patch rect $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr -$width1/2] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2+$swwidth-$beamwidth]
-        # left
-        #patch quad $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr $width1/2-$swwidth+$beamwidth] [expr $height-$ycm+$thick3] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2-$swwidth+$beamwidth]
-        patch rect $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr $width1/2-$swwidth+$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2]
-        }
+        if swthick and swwidth:
+            # create the concrete fibers for the sidewalk slab
+            # right
+            #patch quad $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr -$width1/2] [expr $height-$ycm+$thick3] [expr -$width1/2+$swwidth-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2+$swwidth-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2]
+            ops.patch("rect", conc1ID, nfy1, int(nfz1/3), height-ycm+thick3, -width1/2, height-ycm+thick3+swthick, -width1/2+swwidth-beamwidth)
+            # left
+            #patch quad $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr $width1/2-$swwidth+$beamwidth] [expr $height-$ycm+$thick3] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2-$swwidth+$beamwidth]
+            ops.patch("rect", conc1ID, nfy1, int(nfz1/3), height-ycm+thick3, width1/2-swwidth+beamwidth, height-ycm+thick3+swthick, width1/2)
 
-        if {$beamwidth && $beamheight} {
-        # create the sidewalk beams
-        # right
-        #patch quad $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2-$beamwidth] [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2-$beamwidth]
-        patch rect $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2]
-        # left
-        #patch quad $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2+$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2+$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2]
-        patch rect $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2+$beamwidth]
-        }
+        if beamwidth and beamheight:
+            # create the sidewalk beams
+            # right
+            #patch quad $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2-$beamwidth] [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2-$beamwidth]
+            patch rect $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2]
+            # left
+            #patch quad $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2+$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2+$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2]
+            patch rect $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2+$beamwidth]
 
         # create the internal web concrete fibers
         for {set i 1} {$i <= $nintwebs} {incr i 1} {
