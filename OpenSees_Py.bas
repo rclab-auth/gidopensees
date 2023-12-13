@@ -205,6 +205,7 @@ import openseespy.opensees as ops
 import time
 import math
 import os
+import sys
 
 
 *if(currentDOF==30)
@@ -357,7 +358,7 @@ print("Interval *IntvNum : *IntvData(Analysis_type)")
 print("Static Monotonic")
 *if(strcmp(IntvData(Loading_path),"Monotonic")==0)
 *format "%d%g"
-print(f"{int(1+*IntvData(Analysis_steps,int))} steps")
+print(f"{int(1+*IntvData(Analysis_steps,int))} steps x *IntvData(Analysis_time_step,real)")
 print("Static Cyclic")
 *else
 *set var npeaks=IntvData(Displacement_peaks-cycles,int)
@@ -379,13 +380,14 @@ print(f"{int(1+*operation(4*totalCyclicSteps))} steps")
 *endif
 *elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
 *format "%g%g%g"
-print(f"{int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))} steps x *IntvData(Analysis_time_step,real) s")
+print(f"{int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))} steps")
 *endif
 *endif
 *end intervals
 print("\n----------------\n")
 time_start = time.time()
-print("Starting analysis...\n")
+#print("Starting analysis...\n")
+sys.stdout.write("Starting analysis...\n")
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)

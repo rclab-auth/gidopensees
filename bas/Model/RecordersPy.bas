@@ -435,10 +435,9 @@ ops.recorder('Element', '-file', 'CorotTruss_deformations.out', '-time', '-ele',
 *endif
 *#
 *# User recorders
-*#
+*# TODO: Write the .py and the __init__.py file
 *set var FileExists=tcl(UserRecorder::RecorderFileExists)
 *if(FileExists==1)
-
 from Scripts import Recorders.customRecorders # user recorders
 *endif
 *#
