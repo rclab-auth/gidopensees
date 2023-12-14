@@ -36,19 +36,19 @@ def DeckFiberSection2D(secID, GJ, conc1ID, conc2ID, steel1ID, steel2ID, steel3ID
         ###################
 
     # create the rectangular concrete fibers for the middle slab
-    #patch quad $conc2ID $nfy1 $nfz1 [expr $height-$ycm-$thick1] [expr -$width1/2] [expr $height-$ycm-$thick1] [expr +$width1/2] [expr $height-$ycm] [expr +$width1/2] [expr $height-$ycm] [expr -$width1/2]
+    #patch quad  conc2ID  nfy1  nfz1 [expr  height- ycm- thick1] [expr - width1/2] [expr  height- ycm- thick1] [expr + width1/2] [expr  height- ycm] [expr + width1/2] [expr  height- ycm] [expr - width1/2]
     ops.patch("rect", conc2ID, nfy1 ,nfz1 , height-ycm-thick1, -width1/2, height-ycm, +width1/2)
     
     # create the rectangular concrete fibers for the bottom slab
-    #patch quad $conc2ID $nfy2 $nfz2 [expr -$ycm] [expr -$width2/2] [expr -$ycm] [expr +$width2/2] [expr -$ycm+$thick2] [expr +$width2/2] [expr -$ycm+$thick2] [expr -$width2/2]
+    #patch quad  conc2ID  nfy2  nfz2 [expr - ycm] [expr - width2/2] [expr - ycm] [expr + width2/2] [expr - ycm+ thick2] [expr + width2/2] [expr - ycm+ thick2] [expr - width2/2]
     ops.patch("rect", conc2ID, nfy2, nfz2, -ycm, -width2/2, -ycm+thick2, +width2/2)
     
     # create the negative local z dir external web
-    #patch quad $conc2ID $nfzextweb $nfyweb [expr -$ycm+$thick2] [expr -$width2/2] [expr -$ycm+$thick2] [expr -$width2/2+$extWebThick] [expr -$ycm+$thick2+$hv] [expr -$width2/2+$extWebThick] [expr -$ycm+$thick2+$hv] [expr -$width2/2]
+    #patch quad  conc2ID  nfzextweb  nfyweb [expr - ycm+ thick2] [expr - width2/2] [expr - ycm+ thick2] [expr - width2/2+ extWebThick] [expr - ycm+ thick2+ hv] [expr - width2/2+ extWebThick] [expr - ycm+ thick2+ hv] [expr - width2/2]
     ops.patch("rect", conc2ID, nfzextweb, nfyweb, -ycm+thick2, -width2/2, -ycm+thick2+hv, -width2/2+extWebThick)
     
     # create the positive local z dir external web
-    #patch quad $conc2ID $nfyweb $nfzextweb [expr -$ycm+$thick2] [expr +$width2/2-$extWebThick] [expr -$ycm+$thick2] [expr $width2/2] [expr -$ycm+$thick2+$hv] [expr $width2/2] [expr -$ycm+$thick2+$hv] [expr $width2/2-$extWebThick]
+    #patch quad  conc2ID  nfyweb  nfzextweb [expr - ycm+ thick2] [expr + width2/2- extWebThick] [expr - ycm+ thick2] [expr  width2/2] [expr - ycm+ thick2+ hv] [expr  width2/2] [expr - ycm+ thick2+ hv] [expr  width2/2- extWebThick]
     ops.patch("rect", conc2ID, nfyweb, nfzextweb, -ycm+thick2, +width2/2-extWebThick, -ycm+thick2+hv, width2/2)
 
     if thick3:
@@ -56,131 +56,97 @@ def DeckFiberSection2D(secID, GJ, conc1ID, conc2ID, steel1ID, steel2ID, steel3ID
         ops.patch("rect", conc1ID, nfy1, nfz1, height-ycm, -width1/2, height-ycm+thick3, width1/2)
     
 
-        if swthick and swwidth:
-            # create the concrete fibers for the sidewalk slab
-            # right
-            #patch quad $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr -$width1/2] [expr $height-$ycm+$thick3] [expr -$width1/2+$swwidth-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2+$swwidth-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2]
-            ops.patch("rect", conc1ID, nfy1, int(nfz1/3), height-ycm+thick3, -width1/2, height-ycm+thick3+swthick, -width1/2+swwidth-beamwidth)
-            # left
-            #patch quad $conc1ID $nfy1 [expr int($nfz1/3)] [expr $height-$ycm+$thick3] [expr $width1/2-$swwidth+$beamwidth] [expr $height-$ycm+$thick3] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2-$swwidth+$beamwidth]
-            ops.patch("rect", conc1ID, nfy1, int(nfz1/3), height-ycm+thick3, width1/2-swwidth+beamwidth, height-ycm+thick3+swthick, width1/2)
+    if swthick and swwidth:
+        # create the concrete fibers for the sidewalk slab
+        # right
+        #patch quad  conc1ID  nfy1 [expr int( nfz1/3)] [expr  height- ycm+ thick3] [expr - width1/2] [expr  height- ycm+ thick3] [expr - width1/2+ swwidth- beamwidth] [expr  height- ycm+ thick3+ swthick] [expr - width1/2+ swwidth- beamwidth] [expr  height- ycm+ thick3+ swthick] [expr - width1/2]
+        ops.patch("rect", conc1ID, nfy1, int(nfz1/3), height-ycm+thick3, -width1/2, height-ycm+thick3+swthick, -width1/2+swwidth-beamwidth)
+        # left
+        #patch quad  conc1ID  nfy1 [expr int( nfz1/3)] [expr  height- ycm+ thick3] [expr  width1/2- swwidth+ beamwidth] [expr  height- ycm+ thick3] [expr  width1/2] [expr  height- ycm+ thick3+ swthick] [expr  width1/2] [expr  height- ycm+ thick3+ swthick] [expr  width1/2- swwidth+ beamwidth]
+        ops.patch("rect", conc1ID, nfy1, int(nfz1/3), height-ycm+thick3, width1/2-swwidth+beamwidth, height-ycm+thick3+swthick, width1/2)
+    if beamwidth and beamheight:
+        # create the sidewalk beams
+        # right
+        #patch quad  conc1ID  nfybeam  nfzbeam [expr  height- ycm+ thick3+ swthick- beamheight] [expr - width1/2- beamwidth] [expr  height- ycm+ thick3+ swthick- beamheight] [expr - width1/2] [expr  height- ycm+ thick3+ swthick] [expr - width1/2] [expr  height- ycm+ thick3+ swthick] [expr - width1/2- beamwidth]
+        ops.patch("rect", conc1ID, nfybeam, nfzbeam, height-ycm+thick3+swthick-beamheight, -width1/2-beamwidth, height-ycm+thick3+swthick, -width1/2)
+        # left
+        #patch quad  conc1ID  nfybeam  nfzbeam [expr  height- ycm+ thick3+ swthick- beamheight] [expr  width1/2] [expr  height- ycm+ thick3+ swthick- beamheight] [expr  width1/2+ beamwidth] [expr  height- ycm+ thick3+ swthick] [expr  width1/2+ beamwidth] [expr  height- ycm+ thick3+ swthick] [expr  width1/2]
+        ops.patch("rect", conc1ID, nfybeam, nfzbeam, height-ycm+thick3+swthick-beamheight, width1/2, height-ycm+thick3+swthick, width1/2+beamwidth)
+    # create the internal web concrete fibers
+    for i in range(nintwebs):
+        zincr = (i-1)**(dv+intWebThick)
+        #patch quad  conc2ID  nfyweb  nfzintweb [expr - ycm+ thick2] [expr (- width2/2)+ extWebThick+ dv+ zincr] [expr - ycm+ thick2] [expr (- width2/2)+ extWebThick+ dv+ zincr+ intWebThick] [expr - ycm+ thick2+ hv] [expr (- width2/2)+ extWebThick+ dv+ zincr+ intWebThick] [expr - ycm+ thick2+ hv] [expr (- width2/2)+ extWebThick+ dv+ zincr]
+        ops.patch("rect", conc2ID, nfyweb, nfzintweb, -ycm+thick2, (-width2/2)+extWebThick+dv+zincr, -ycm+thick2+hv, (-width2/2)+extWebThick+dv+zincr+intWebThick)
 
-        if beamwidth and beamheight:
-            # create the sidewalk beams
-            # right
-            #patch quad $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2-$beamwidth] [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2-$beamwidth]
-            patch rect $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr -$width1/2-$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr -$width1/2]
-            # left
-            #patch quad $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2+$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2+$beamwidth] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2]
-            patch rect $conc1ID $nfybeam $nfzbeam [expr $height-$ycm+$thick3+$swthick-$beamheight] [expr $width1/2] [expr $height-$ycm+$thick3+$swthick] [expr $width1/2+$beamwidth]
 
-        # create the internal web concrete fibers
-        for {set i 1} {$i <= $nintwebs} {incr i 1} {
+    #################
+    # REINFORCEMENT #
+    #################
 
-            set zincr [expr ($i-1)**($dv+$intWebThick)]
+    # top slab - top reinforcement
+    ops.layer("straight", steel3ID, nsteeltop3, steelArea3, height- ycm+thick3-cover, -width1/2+cover, height-ycm+thick3-cover, +width1/2-cover)
+    # top slab - bottom reinforcement
+    ops.layer("straight", steel3ID, nsteelbot3, steelArea3, height-ycm+cover, -width1/2+cover, height-ycm+cover, +width1/2-cover)
+    # middle slab - top reinforcement
+    ops.layer("straight", steel1ID, nsteeltop1, steelArea1, height-ycm-cover, -width1/2+cover, height-ycm-cover, width1/2-cover)
+    # middle slab - bottom reinforcement
+    ops.layer("straight", steel1ID, nsteelbot1, steelArea1, height-ycm-thick1+cover, -width1/2+cover, height-ycm-thick1+cover, +width1/2-cover)
+    # bottom slab - top reinforcement
+    ops.layer("straight", steel2ID, nsteeltop2, steelArea2, -ycm-cover+thick2, -width2/2+cover, -ycm-cover+thick2, +width2/2-cover)
+    # bottom slab - bottom reinforcement
+    ops.layer("straight", steel2ID, nsteelbot2, steelArea2, -ycm+cover, -width2/2+cover, -ycm+cover, +width2/2-cover)
+    # Beam reinforcement
 
-            #patch quad $conc2ID $nfyweb $nfzintweb [expr -$ycm+$thick2] [expr (-$width2/2)+$extWebThick+$dv+$zincr] [expr -$ycm+$thick2] [expr (-$width2/2)+$extWebThick+$dv+$zincr+$intWebThick] [expr -$ycm+$thick2+$hv] [expr (-$width2/2)+$extWebThick+$dv+$zincr+$intWebThick] [expr -$ycm+$thick2+$hv] [expr (-$width2/2)+$extWebThick+$dv+$zincr]
-            patch rect $conc2ID $nfyweb $nfzintweb [expr -$ycm+$thick2] [expr (-$width2/2)+$extWebThick+$dv+$zincr] [expr -$ycm+$thick2+$hv] [expr (-$width2/2)+$extWebThick+$dv+$zincr+$intWebThick]
-        }
+    if nbeamsteelfacey>=2:
 
-        #################
-        # REINFORCEMENT #
-        #################
+        # corner rebars
+        ops.layer("straight", steelbeamID, 2, beamSteelArea, height-ycm+thick3+swthick-beamheight+cover, -width1/2-beamwidth+cover, height-ycm+thick3+swthick-beamheight+cover, -width1/2-cover)
+        ops.layer("straight", steelbeamID, 2, beamSteelArea, height-ycm+thick3+swthick-cover, -width1/2-beamwidth+cover, height-ycm+thick3+swthick-cover, -width1/2-cover)
+        ops.layer("straight", steelbeamID, 2, beamSteelArea, height-ycm+thick3+swthick-beamheight+cover, width1/2+cover, height-ycm+thick3+swthick-beamheight+cover, width1/2+beamwidth-cover)
+        ops.layer("straight", steelbeamID, 2, beamSteelArea, height-ycm+thick3+swthick-cover, width1/2+cover, height-ycm+thick3+swthick-cover, width1/2+beamwidth-cover)
 
-        # top slab - top reinforcement
-        layer straight $steel3ID $nsteeltop3 $steelArea3 [expr $height-$ycm+$thick3-$cover] [expr -$width1/2+$cover] [expr $height-$ycm+$thick3-$cover] [expr +$width1/2-$cover]
-        # top slab - bottom reinforcement
-        layer straight $steel3ID $nsteelbot3 $steelArea3 [expr $height-$ycm+$cover] [expr -$width1/2+$cover] [expr $height-$ycm+$cover] [expr +$width1/2-$cover]
+    if nbeamsteelfacey == 3:
+        # middle bars
+        ops.fiber(height-ycm+thick3+swthick-beamheight+cover, -width1/2-beamwidth/2, beamSteelArea, steelbeamID)
+        ops.fiber(height-ycm+thick3+swthick-cover, -width1/2-beamwidth/2, beamSteelArea, steelbeamID)
+        ops.fiber(height-ycm+thick3+swthick-beamheight+cover, width1/2+beamwidth/2, beamSteelArea, steelbeamID)
+        ops.fiber(height-ycm+thick3+swthick-cover, width1/2+beamwidth/2, beamSteelArea, steelbeamID)
+        
+    elif nbeamsteelfacey > 3:
 
-        # middle slab - top reinforcement
-        layer straight $steel1ID $nsteeltop1 $steelArea1 [expr $height-$ycm-$cover] [expr -$width1/2+$cover] [expr $height-$ycm-$cover] [expr +$width1/2-$cover]
-        # middle slab - bottom reinforcement
-        layer straight $steel1ID $nsteelbot1 $steelArea1 [expr $height-$ycm-$thick1+$cover] [expr -$width1/2+$cover] [expr $height-$ycm-$thick1+$cover] [expr +$width1/2-$cover]
+        zdist = (beamwidth-2**cover)/(nbeamsteelfacey-1)
+        zfirstcoord = width1/2+beamwidth-cover-zdist
+        zlastcoord = width1/2+cover+zdist
+        ops.layer("straight", steelbeamID, nbeamsteelfacey-2, beamSteelArea, height-ycm+thick3+swthick-cover, zfirstcoord, height- ycm+ thick3+ swthick- cover, zlastcoord)
+        ops.layer("straight", steelbeamID, nbeamsteelfacey-2, beamSteelArea, height-ycm+thick3+swthick-beamheight+cover, zfirstcoord, height- ycm+ thick3+ swthick- beamheight+ cover, zlastcoord)
+        zfirstcoord = -width1/2-cover-zdist
+        zlastcoord = -width1/2-beamwidth+cover+zdist
+        ops.layer("straight", steelbeamID, nbeamsteelfacey-2, beamSteelArea, height - ycm + thick3 + swthick - cover, zfirstcoord, height- ycm+ thick3+ swthick- cover, zlastcoord)
+        ops.layer("straight", steelbeamID, nbeamsteelfacey-2, beamSteelArea, height - ycm + thick3 + swthick - beamheight+ cover, zfirstcoord, height- ycm+ thick3+ swthick- beamheight+ cover, zlastcoord)
 
-        # bottom slab - top reinforcement
-        layer straight $steel2ID $nsteeltop2 $steelArea2 [expr -$ycm-$cover+$thick2] [expr -$width2/2+$cover] [expr -$ycm-$cover+$thick2] [expr +$width2/2-$cover]
-        # bottom slab - bottom reinforcement
-        layer straight $steel2ID $nsteelbot2 $steelArea2 [expr -$ycm+$cover] [expr -$width2/2+$cover] [expr -$ycm+$cover] [expr +$width2/2-$cover]
-
-        # Beam reinforcement
-
-        if {$nbeamsteelfacey>=2} {
-
-            # corner rebars
-            layer straight $steelbeamID 2 $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] [expr -$width1/2-$beamwidth+$cover] [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] [expr -$width1/2-$cover]
-            layer straight $steelbeamID 2 $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$cover] [expr -$width1/2-$beamwidth+$cover] [expr $height-$ycm+$thick3+$swthick-$cover] [expr -$width1/2-$cover]
-
-            layer straight $steelbeamID 2 $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] [expr $width1/2+$cover] [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] [expr $width1/2+$beamwidth-$cover]
-            layer straight $steelbeamID 2 $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$cover] [expr $width1/2+$cover] [expr $height-$ycm+$thick3+$swthick-$cover] [expr $width1/2+$beamwidth-$cover]
-        }
-
-        if {$nbeamsteelfacey == 3 } {
-
-            # middle bars
-            fiber [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] [expr -$width1/2-$beamwidth/2] $beamSteelArea $steelbeamID
-            fiber [expr $height-$ycm+$thick3+$swthick-$cover] [expr -$width1/2-$beamwidth/2] $beamSteelArea $steelbeamID
-
-            fiber [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] [expr $width1/2+$beamwidth/2] $beamSteelArea $steelbeamID
-            fiber [expr $height-$ycm+$thick3+$swthick-$cover] [expr $width1/2+$beamwidth/2] $beamSteelArea $steelbeamID
-
-        } elseif { $nbeamsteelfacey > 3} {
-
-            set zdist [expr ($beamwidth-2**$cover)/($nbeamsteelfacey-1)]
-            set zfirstcoord [expr $width1/2+$beamwidth-$cover-$zdist]
-            set zlastcoord [expr $width1/2+$cover+$zdist]
-
-            layer straight $steelbeamID [expr $nbeamsteelfacey-2] $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$cover] $zfirstcoord [expr $height-$ycm+$thick3+$swthick-$cover] $zlastcoord
-            layer straight $steelbeamID [expr $nbeamsteelfacey-2] $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] $zfirstcoord [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] $zlastcoord
-
-            set zfirstcoord [expr -$width1/2-$cover-$zdist]
-            set zlastcoord [expr -$width1/2-$beamwidth+$cover+$zdist]
-
-            layer straight $steelbeamID [expr $nbeamsteelfacey-2] $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$cover] $zfirstcoord [expr $height-$ycm+$thick3+$swthick-$cover] $zlastcoord
-            layer straight $steelbeamID [expr $nbeamsteelfacey-2] $beamSteelArea [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] $zfirstcoord [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover] $zlastcoord
-        }
-
-        if {$nbeamsteelfacez == 3} {
-
-            fiber [expr $height-$ycm+$thick3+$swthick-$beamheight/2] [expr -$width1/2-$beamwidth+$cover] $beamSteelArea $steelbeamID
-            fiber [expr $height-$ycm+$thick3+$swthick-$beamheight/2] [expr -$width1/2-$cover] $beamSteelArea $steelbeamID
-
-            fiber [expr $height-$ycm+$thick3+$swthick-$beamheight/2] [expr $width1/2+$cover] $beamSteelArea $steelbeamID
-            fiber [expr $height-$ycm+$thick3+$swthick-$beamheight/2] [expr $width1/2+$beamwidth-$cover] $beamSteelArea $steelbeamID
-
-        } elseif {$nbeamsteelfacez > 3} {
-
-            set ydist [expr ($beamheight-2**$cover)/($nbeamsteelfacez-1)]
-            set yfirstcoord [expr $height-$ycm+$thick3+$swthick-$beamheight+$cover+$ydist]
-            set ylastcoord [expr $height-$ycm+$thick3+$swthick-$cover-$ydist]
-
-            layer straight $steelbeamID [expr $nbeamsteelfacez-2] $beamSteelArea $yfirstcoord [expr -$width1/2-$beamwidth+$cover] $ylastcoord [expr -$width1/2-$beamwidth+$cover]
-            layer straight $steelbeamID [expr $nbeamsteelfacez-2] $beamSteelArea $yfirstcoord [expr -$width1/2-$cover] $ylastcoord [expr -$width1/2-$cover]
-
-            layer straight $steelbeamID [expr $nbeamsteelfacez-2] $beamSteelArea $yfirstcoord [expr $width1/2+$cover] $ylastcoord [expr $width1/2+$cover]
-            layer straight $steelbeamID [expr $nbeamsteelfacez-2] $beamSteelArea $yfirstcoord [expr $width1/2+$beamwidth-$cover] $ylastcoord [expr $width1/2+$beamwidth-$cover]
-        }
+    if nbeamsteelfacez == 3:
+        ops.fiber(height- ycm+ thick3+ swthick- beamheight/2, - width1/2- beamwidth+ cover, beamSteelArea,  steelbeamID)
+        ops.fiber(height- ycm+ thick3+ swthick- beamheight/2, - width1/2- cover, beamSteelArea, steelbeamID)
+        ops.fiber(height- ycm+ thick3+ swthick- beamheight/2,  width1/2+ cover, beamSteelArea, steelbeamID)
+        ops.fiber(height- ycm+ thick3+ swthick- beamheight/2,  width1/2+ beamwidth- cover, beamSteelArea, steelbeamID)
+    elif nbeamsteelfacez > 3:
+        ydist = (beamheight-2** cover)/( nbeamsteelfacez-1)
+        yfirstcoord = height- ycm+ thick3+ swthick- beamheight+ cover+ ydist
+        ylastcoord = height- ycm+ thick3+ swthick- cover- ydist
+        ops.layer("straight", steelbeamID, nbeamsteelfacez-2, beamSteelArea, yfirstcoord, - width1/2- beamwidth+ cover, ylastcoord, expr - width1/2- beamwidth+ cover)
+        ops.layer("straight", steelbeamID, nbeamsteelfacez-2, beamSteelArea, yfirstcoord, - width1/2- cover, ylastcoord, -width1/2- cover)
+        ops.layer("straight", steelbeamID, nbeamsteelfacez-2, beamSteelArea, yfirstcoord,  width1/2+ cover, ylastcoord, width1/2+ cover)
+        ops.layer("straight", steelbeamID, nbeamsteelfacez-2, beamSteelArea, yfirstcoord,  width1/2+ beamwidth- cover, ylastcoord, width1/2+ beamwidth- cover)
 
         # tendons
 
-        if {$tendons} {
-
-            if {$nvoid!=0} {
-
-                fiber [expr $ycoordTopExtTendon-$ycm] [expr -$width2/2+$extWebThick/2] $extTendonArea $extTendonSteelID
-                fiber [expr $ycoordBotExtTendon-$ycm] [expr -$width2/2+$extWebThick/2] $extTendonArea $extTendonSteelID
-
-                fiber [expr $ycoordTopExtTendon-$ycm] [expr $width2/2-$extWebThick/2] $extTendonArea $extTendonSteelID
-                fiber [expr $ycoordBotExtTendon-$ycm] [expr $width2/2-$extWebThick/2] $extTendonArea $extTendonSteelID
-
-                for {set i 1} {$i <= $nintwebs} {incr i 1} {
-
-                    set zincr [expr ($i-1)**($dv+$intWebThick)]
-
-                    fiber [expr $ycoordTopIntTendon-$ycm] [expr (-$width2/2)+$extWebThick+$dv+$intWebThick/2+$zincr] $intTendonArea $intTendonSteelID
-                    fiber [expr $ycoordBotIntTendon-$ycm] [expr (-$width2/2)+$extWebThick+$dv+$intWebThick/2+$zincr] $intTendonArea $intTendonSteelID
-
-                }
-            }
-        }
-    }
-}
+    if tendons:
+        if nvoid!=0:
+            ops.fiber(ycoordTopExtTendon- ycm, - width2/2+ extWebThick/2, extTendonArea, extTendonSteelID)
+            ops.fiber(ycoordBotExtTendon- ycm, - width2/2+ extWebThick/2, extTendonArea, extTendonSteelID)
+            ops.fiber(ycoordTopExtTendon- ycm,  width2/2- extWebThick/2, extTendonArea, extTendonSteelID)
+            ops.fiber(ycoordBotExtTendon- ycm,  width2/2- extWebThick/2, extTendonArea, extTendonSteelID)
+            for i in range(nintwebs):
+                zincr = ( i-1)**( dv+ intWebThick)
+                ops.fiber(ycoordTopIntTendon- ycm, (- width2/2)+ extWebThick+ dv+ intWebThick/2+ zincr, intTendonArea, intTendonSteelID)
+                ops.fiber(ycoordBotIntTendon- ycm, (- width2/2)+ extWebThick+ dv+ intWebThick/2+ zincr, intTendonArea, intTendonSteelID)
