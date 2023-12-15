@@ -96,7 +96,7 @@ def DeckFiberSection3D(secID, GJ, conc1ID, conc2ID, steel1ID, steel2ID, steel3ID
         # bottom slab - top reinforcement
         ops.layer("straight", steel2ID, nsteeltop2, steelArea2, -width2/2+ cover, -zcm- cover+ thick2, width2/2- cover, zcm- cover+ thick2)
         # bottom slab - bottom reinforcement
-        layer straight  steel2ID  nsteelbot2  steelArea2 [expr - width2/2+ cover] [expr - zcm+ cover] [expr + width2/2- cover] [expr - zcm+ cover]
+        ops.layer("straight", steel2ID, nsteelbot2, steelArea2, -width2/2+ cover, -zcm+ cover, width2/2- cover, -zcm+ cover)
 
         # Beam reinforcement
 
