@@ -100,40 +100,39 @@ def DeckFiberSection3D(secID, GJ, conc1ID, conc2ID, steel1ID, steel2ID, steel3ID
 
         # Beam reinforcement
 
-        if { nbeamsteelfacez>=2} {
+        if nbeamsteelfacez>=2:
 
             # corner rebars
-            layer straight  steelbeamID 2  beamSteelArea [expr - width1/2- beamwidth+ cover] [expr  height- zcm+ thick3+ swthick- beamheight+ cover] [expr - width1/2- cover] [expr  height- zcm+ thick3+ swthick- beamheight+ cover]
-            layer straight  steelbeamID 2  beamSteelArea [expr - width1/2- beamwidth+ cover] [expr  height- zcm+ thick3+ swthick- cover] [expr - width1/2- cover] [expr  height- zcm+ thick3+ swthick- cover]
+            ops.layer("straight",steelbeamID, 2, beamSteelArea, -width1/2- beamwidth+ cover, height- zcm+ thick3+ swthick- beamheight+ cover, -width1/2- cover, height- zcm+ thick3+ swthick- beamheight+ cover)
+            ops.layer("straight", steelbeamID, 2, beamSteelArea, -width1/2- beamwidth+ cover, height- zcm+ thick3+ swthick- cover, -width1/2- cover, height- zcm+ thick3+ swthick- cover)
 
-            layer straight  steelbeamID 2  beamSteelArea [expr  width1/2+ cover] [expr  height- zcm+ thick3+ swthick- beamheight+ cover] [expr  width1/2+ beamwidth- cover] [expr  height- zcm+ thick3+ swthick- beamheight+ cover]
-            layer straight  steelbeamID 2  beamSteelArea [expr  width1/2+ cover] [expr  height- zcm+ thick3+ swthick- cover] [expr  width1/2+ beamwidth- cover] [expr  height- zcm+ thick3+ swthick- cover]
-        }
+            ops.layer("straight", steelbeamID, 2, beamSteelArea, width1/2+ cover, height- zcm+ thick3+ swthick- beamheight+ cover, width1/2+ beamwidth- cover, height- zcm+ thick3+ swthick- beamheight+ cover)
+            ops.layer("straight", steelbeamID, 2, beamSteelArea, width1/2+ cover, height- zcm+ thick3+ swthick- cover, width1/2+ beamwidth- cover, height- zcm+ thick3+ swthick- cover)
 
-        if {  nbeamsteelfacez == 3} {
+        if nbeamsteelfacez == 3:
 
             # middle bars
-            fiber [expr - width1/2- beamwidth/2] [expr  height- zcm+ thick3+ swthick- cover]  beamSteelArea  steelbeamID
-            fiber [expr - width1/2- beamwidth/2] [expr  height- zcm+ thick3+ swthick- beamheight+ cover]  beamSteelArea  steelbeamID
+            ops.fiber(-width1/2- beamwidth/2, height- zcm+ thick3+ swthick- cover, beamSteelArea, steelbeamID)
+            ops.fiber(-width1/2- beamwidth/2, height- zcm+ thick3+ swthick- beamheight+ cover, beamSteelArea, steelbeamID)
 
-            fiber [expr  width1/2+ beamwidth/2] [expr  height- zcm+ thick3+ swthick- cover]  beamSteelArea  steelbeamID
-            fiber [expr  width1/2+ beamwidth/2] [expr  height- zcm+ thick3+ swthick- beamheight+ cover]  beamSteelArea  steelbeamID
+            ops.fiber(width1/2+ beamwidth/2, height- zcm+ thick3+ swthick- cover, beamSteelArea, steelbeamID)
+            ops.fiber(width1/2+ beamwidth/2, height- zcm+ thick3+ swthick- beamheight+ cover, beamSteelArea, steelbeamID)
 
-        } elseif {  nbeamsteelfacez > 3 } {
+        elif nbeamsteelfacez > 3:
 
-            set ydist [expr ( beamwidth-2** cover)/( nbeamsteelfacez-1)]
-            set yfirstcoord [expr - width1/2- beamwidth+ cover+ ydist]
-            set ylastcoord [expr - width1/2- cover- ydist]
+            ydist = ( beamwidth-2** cover)/( nbeamsteelfacez-1)
+            yfirstcoord = width1/2- beamwidth+ cover+ ydist
+            ylastcoord = -width1/2- cover- ydist
 
-            layer straight  steelbeamID [expr  nbeamsteelfacez-2]  beamSteelArea  yfirstcoord [expr  height- zcm+ thick3+ swthick- cover]  ylastcoord [expr  height- zcm+ thick3+ swthick- cover]
-            layer straight  steelbeamID [expr  nbeamsteelfacez-2]  beamSteelArea  yfirstcoord [expr  height- zcm+ thick3+ swthick- beamheight+ cover]  ylastcoord [expr  height- zcm+ thick3+ swthick- beamheight+ cover]
+            ops.layer("straight", steelbeamID, nbeamsteelfacez-2, beamSteelArea, yfirstcoord, height- zcm+ thick3+ swthick- cover, ylastcoord, height- zcm+ thick3+ swthick- cover)
+            ops.layer("straight", steelbeamID, nbeamsteelfacez-2, beamSteelArea, yfirstcoord, height- zcm+ thick3+ swthick- beamheight+ cover, ylastcoord, height- zcm+ thick3+ swthick- beamheight+ cover)
 
-            set yfirstcoord [expr  width1/2+ cover+ ydist]
-            set ylastcoord [expr  width1/2+ beamwidth- cover- ydist]
+            yfirstcoord = width1/2+ cover+ ydist
+            ylastcoord = width1/2+ beamwidth- cover- ydist
 
-            layer straight  steelbeamID [expr  nbeamsteelfacez-2]  beamSteelArea  yfirstcoord [expr  height- zcm+ thick3+ swthick- cover]  ylastcoord [expr  height- zcm+ thick3+ swthick- cover]
-            layer straight  steelbeamID [expr  nbeamsteelfacez-2]  beamSteelArea  yfirstcoord [expr  height- zcm+ thick3+ swthick- beamheight+ cover]  ylastcoord [expr  height- zcm+ thick3+ swthick- beamheight+ cover]
-        }
+            ops.layer("straight", steelbeamID, nbeamsteelfacez-2, beamSteelArea, yfirstcoord, height- zcm+ thick3+ swthick- cover, ylastcoord, height- zcm+ thick3+ swthick- cover)
+            ops.layer("straight"  steelbeamID [expr  nbeamsteelfacez-2]  beamSteelArea  yfirstcoord [expr  height- zcm+ thick3+ swthick- beamheight+ cover]  ylastcoord [expr  height- zcm+ thick3+ swthick- beamheight+ cover]
+
 
         if { nbeamsteelfacey == 3} {
 
