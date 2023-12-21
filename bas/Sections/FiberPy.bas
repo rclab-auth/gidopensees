@@ -633,7 +633,7 @@ ops.layer("circ", *SelectedRBMaterial, *MatProp(Bars_along_arc,int), *MatProp(Ba
 
 *elseif(strcmp(MatProp(Cross_section),"Bridge_Deck")==0)
 *if(procDeck3DPrinted==0)
-*include deck3D.bas
+*include Deck3DPy.bas
 *set var procDeck3DPrinted=1
 *endif
 *set var wt=MatProp(Top_slab_width_wt,real)
@@ -1314,7 +1314,7 @@ ops.layer("circ", *SelectedRBMaterial, *MatProp(Bars_along_arc,int), *MatProp(Ba
 
 *elseif(strcmp(MatProp(Cross_section),"Bridge_Deck")==0)
 *if(procDeck2DPrinted==0)
-*include deck2D.bas
+*include Deck2DPy.bas
 *set var procDeck2DPrinted=1
 *endif
 *set var wt=MatProp(Top_slab_width_wt,real)
