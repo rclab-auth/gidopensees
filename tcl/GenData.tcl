@@ -72,7 +72,9 @@ proc GenData::Description { event args } {
 		CLOSE {
 
 			OpenSees_Menu [OpenSees::GetProblemTypePath] 0
+			OpenSees::Toolbar1
 			OpenSees::Toolbar2
+			OpenSees::Toolbar3
 			OpenSees::ChangeData
 		}
 	}
