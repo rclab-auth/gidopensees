@@ -41,6 +41,8 @@ var
     GiDPath,
     ModelPath,
     FileName,
+    FileName_tcl,
+    FileName_py,
     ModelName,
     OutFile,
     ResFileASCII,
@@ -961,9 +963,10 @@ begin
 
     // check .tcl file
 
-    FileName := ModelPath+'\OpenSees\'+ModelName+'.tcl';
+    FileName_tcl := ModelPath+'\OpenSees\'+ModelName+'.tcl';
+    FileName_py := ModelPath+'\OpenSees\'+ModelName+'.py';
 
-    if FileExists(FileName) then
+    if FileExists(FileName_tcl) OR FileExists(FileName_py) then
     begin
         TCL := TStringList.Create;
         TCL.LoadFromFile(FileName);
