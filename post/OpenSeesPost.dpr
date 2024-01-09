@@ -66,6 +66,7 @@ var
     Str_IntNames,
     Str_Steps     : array of string;
     Step          : integer;
+    IsPython      : integer;
 
     // console
 
@@ -860,19 +861,21 @@ begin
     // check syntax
 
     TextColor(LightRed);
-     //iammix Commented out
-    //if ParamCount < 3 then
-    //begin
-        //writeln('Syntax : OpenSeesPost <GiD path> <project path> <step> <option /b for binary>');
-        //writeln;
-        //Exit;
-    //end;
+
+    if ParamCount < 4 then
+    begin
+      writeln('Syntax : OpenSeesPost <GiD path> <project path> <step> <option /b for binary>');
+      writeln;
+      Exit;
+    end;
 
     // load model file
 
-    GiDPath := LongPathName('C:\Program Files\GiD\GiD 16.0.6\problemtypes\OpenSees.gid');
-    ModelPath := LongPathName('H:\My Drive\WorkProjects\gidopensees-final-test\python\Example - Plane Frame - Dynamic Analysis.gid');
-    Step := StrToInt('1');
+    GiDPath := LongPathName(ParamStr(1));
+    ModelPath := LongPathName(ParamStr(2));
+    Step := StrToInt(ParamStr(3));
+    IsPython := StrToInt(ParamStr(4));
+
 
     ModelName := Copy(ModelPath,LastDelimiter('\',ModelPath)+1,Length(ModelPath)-LastDelimiter('\',ModelPath));
     ModelName := Copy(ModelName,1,Length(ModelName)-4);
@@ -963,15 +966,13 @@ begin
 
     // check .tcl file
 
-    FileName_tcl := ModelPath+'\OpenSees\'+ModelName+'.tcl';
-    FileName_py := ModelPath+'\OpenSees\'+ModelName+'.py';
-    if FileExists(FileName_tcl) then
+    if IsPython = 0 then
     begin
-      FileName := FileName_tcl;
+      FileName := ModelPath+'\OpenSees\'+ModelName+'.tcl'
     end;
-    if FileExists(FileName_py) then
+    if IsPython = 1 then
     begin
-      FileName:=FileName_py;
+      FileName := ModelPath+'\OpenSees\'+ModelName+'.py';
     end;
 
     if FileExists(FileName) then
@@ -1000,11 +1001,16 @@ begin
 
     writeln;
 
-    // get basic model parameters
-    ndm:=Pos('-ndm',TCL.Text);
+    // get basic model parameters\
+    if IsPython = 0 then
+    begin
+      ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+5,1)); //tcl
+    end;
 
-    //ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+5,1)); //tcl
-    ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+7,1)); //python
+    if IsPython = 1 then
+    begin
+      ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+7,1)); //python
+    end;
 
     // initialize files
 
@@ -3572,7 +3578,7 @@ begin
 
     writeln;
 
-    if ParamStr(4) = '/b' then
+    if ParamStr(5) = '/b' then
     begin
         TextColor(LightGreen);
 

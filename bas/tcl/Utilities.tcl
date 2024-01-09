@@ -18,6 +18,7 @@ proc ExecutePost {} {
 	set OutputStep [lindex [split $OutputStep #] 0]
 
 	set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
+	set IsPython [OpenSees::IsPython]
 
 	cd "$OpenSeesProblemTypePath/exe"
 
@@ -25,11 +26,11 @@ proc ExecutePost {} {
 
 	if {[GiD_AccessValue get GenData Use_HDF5_binary_output_format] == 0 } {
 
-		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep"
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep" "$IsPython"
 
 	} else {
 
-		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep" "/b"
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep" "$IsPython" "/b"
 
 	}
 
@@ -301,7 +302,7 @@ proc Run_existing_tcl { doPost } {
 				AnalysisInformationWindow "NoRun"
 			}
 		} else {
-			tk_dialog .gid.errorMsg "Error" "The .tcl file was not created." error 0 "  Ok  "
+			tk_dialog .gid.errorMsg "Error" "The .py file was not created." error 0 "  Ok  "
 		}
 	}
 	UpdateInfoBar
