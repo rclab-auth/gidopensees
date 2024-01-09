@@ -860,19 +860,19 @@ begin
     // check syntax
 
     TextColor(LightRed);
-
-    if ParamCount < 3 then
-    begin
-        writeln('Syntax : OpenSeesPost <GiD path> <project path> <step> <option /b for binary>');
-        writeln;
-        Exit;
-    end;
+     //iammix Commented out
+    //if ParamCount < 3 then
+    //begin
+        //writeln('Syntax : OpenSeesPost <GiD path> <project path> <step> <option /b for binary>');
+        //writeln;
+        //Exit;
+    //end;
 
     // load model file
 
-    GiDPath := LongPathName(ParamStr(1));
-    ModelPath := LongPathName(ParamStr(2));
-    Step := StrToInt(ParamStr(3));
+    GiDPath := LongPathName('C:\Program Files\GiD\GiD 16.0.6\problemtypes\OpenSees.gid');
+    ModelPath := LongPathName('H:\My Drive\WorkProjects\gidopensees-final-test\python\Example - Plane Frame - Dynamic Analysis.gid');
+    Step := StrToInt('1');
 
     ModelName := Copy(ModelPath,LastDelimiter('\',ModelPath)+1,Length(ModelPath)-LastDelimiter('\',ModelPath));
     ModelName := Copy(ModelName,1,Length(ModelName)-4);
@@ -1001,8 +1001,10 @@ begin
     writeln;
 
     // get basic model parameters
+    ndm:=Pos('-ndm',TCL.Text);
 
-    ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+5,1));
+    //ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+5,1)); //tcl
+    ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+7,1)); //python
 
     // initialize files
 
