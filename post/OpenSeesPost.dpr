@@ -965,8 +965,16 @@ begin
 
     FileName_tcl := ModelPath+'\OpenSees\'+ModelName+'.tcl';
     FileName_py := ModelPath+'\OpenSees\'+ModelName+'.py';
+    if FileExists(FileName_tcl) then
+    begin
+      FileName := FileName_tcl;
+    end;
+    if FileExists(FileName_py) then
+    begin
+      FileName:=FileName_py;
+    end;
 
-    if FileExists(FileName_tcl) OR FileExists(FileName_py) then
+    if FileExists(FileName) then
     begin
         TCL := TStringList.Create;
         TCL.LoadFromFile(FileName);
