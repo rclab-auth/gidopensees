@@ -1000,6 +1000,7 @@ begin
     end;
 
     writeln;
+    ndm := 0;
 
     // get basic model parameters\
     if IsPython = 0 then
