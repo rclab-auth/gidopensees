@@ -86,14 +86,14 @@ ops.load(*NodesNum, *\
 *set cond Line_Uniform_Forces *elems
 *loop elems *OnlyInCond
 *format "%6d%8g%8g%8g"
-ops.eleLoad('-ele', *ElemsNum, '-type', '-beamUniform', *cond(2, real), *cond(3, real), *cond(1, real))
+ops.eleLoad('-ele', *ElemsNum, '-type', '-beamUniform', *cond(2,real), *cond(3,real), *cond(1,real))
 *end elems
 *# if it is 2D
 *else
 *set cond Line_Uniform_Forces *elems
 *loop elems *OnlyInCond
 *format "%6d%8g%8g"
-ops.eleLoad('-ele', *ElemsNum, '-type', '-beamUniform', *cond(2, real), *cond(1, real))
+ops.eleLoad('-ele', *ElemsNum, '-type', '-beamUniform', *cond(2,real), *cond(1,real))
 *end elems
 *endif
 *set cond Point_Displacements *nodes

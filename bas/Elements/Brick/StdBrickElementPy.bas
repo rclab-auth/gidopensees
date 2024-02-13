@@ -33,20 +33,20 @@
 *set var MaterialID=tcl(FindMaterialNumber *MatProp(0) *DomainNum)
 *if(MaterialID==SelectedMaterial)
 *if(strcmp(MatProp(Material:),"ElasticIsotropic")==0)
-*include ..\..\Materials\nD\ElasticIsotropic.bas
+*include ..\..\Materials\nD\ElasticIsotropicPy.bas
 *elseif(strcmp(MatProp(Material:),"ElasticOrthotropic")==0)
-*include ..\..\Materials\nD\ElasticOrthotropic.bas
+*include ..\..\Materials\nD\ElasticOrthotropicPy.bas
 *elseif(strcmp(MatProp(Material:),"PressureIndependMultiYield")==0)
-*include ..\..\Materials\nD\PIMY.bas
+*include ..\..\Materials\nD\PIMYPy.bas
 *elseif(strcmp(MatProp(Material:),"PressureDependMultiYield")==0)
-*include ..\..\Materials\nD\PDMY.bas
+*include ..\..\Materials\nD\PDMYPy.bas
 *elseif(strcmp(MatProp(Material:),"J2Plasticity")==0)
-*include ..\..\Materials\nD\J2Plasticity.bas
+*include ..\..\Materials\nD\J2PlasticityPy.bas
 *elseif(strcmp(MatProp(Material:),"Damage2p")==0)
-*include ..\..\Materials\nD\Damage2p.bas
+*include ..\..\Materials\nD\Damage2pPy.bas
 *elseif(strcmp(MatProp(Material:),"UserMaterial")==0)
 set MatTag *MaterialID; # *tcl(UserMaterial::GetMaterialName *MatProp(0))
-*include ..\..\Materials\User\UserMaterial.bas
+*include ..\..\Materials\User\UserMaterialPy.bas
 *endif
 *break
 *endif
@@ -58,7 +58,7 @@ set MatTag *MaterialID; # *tcl(UserMaterial::GetMaterialName *MatProp(0))
 
 *endif
 *format "%6d%6d%6d%6d%6d%6d%6d%6d%6d   %8g%8g%8g"
-element stdBrick *ElemsNum *ElemsConec(1) *ElemsConec(2) *ElemsConec(3) *ElemsConec(4) *ElemsConec(5) *ElemsConec(6) *ElemsConec(7) *ElemsConec(8) *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum) *ElemsMatProp(X-Direction) *ElemsMatProp(Y-Direction) *ElemsMatProp(Z-Direction) ; # *ElemsMatProp(Material)
+ops.element('stdBrick', *ElemsNum, *ElemsConec(1), *ElemsConec(2), *ElemsConec(3), *ElemsConec(4), *ElemsConec(5), *ElemsConec(6), *ElemsConec(7), *ElemsConec(8), *tcl(FindMaterialNumber *ElemsMatProp(Material) *DomainNum), *ElemsMatProp(X-Direction), *ElemsMatProp(Y-Direction), *ElemsMatProp(Z-Direction)) # *ElemsMatProp(Material)
 *set var VarCount=VarCount+1
 *endif
 *end elems

@@ -18,6 +18,7 @@ proc ExecutePost {} {
 	set OutputStep [lindex [split $OutputStep #] 0]
 
 	set OpenSeesProblemTypePath [OpenSees::GetProblemTypePath]
+	set IsPython [OpenSees::IsPython]
 
 	cd "$OpenSeesProblemTypePath/exe"
 
@@ -25,11 +26,11 @@ proc ExecutePost {} {
 
 	if {[GiD_AccessValue get GenData Use_HDF5_binary_output_format] == 0 } {
 
-		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep"
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep" "$IsPython"
 
 	} else {
 
-		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep" "/b"
+		exec {*}[auto_execok start] "OpenSeesPost.exe" "$param1" "$param2" "$OutputStep" "$IsPython" "/b"
 
 	}
 
@@ -189,7 +190,7 @@ proc ResetAnalysis { confirm } {
 
 # Analysis commands
 
-proc Create_tcl_file { } {
+proc Create_script_file { } {
 
 	global GidProcWin
 
@@ -228,27 +229,33 @@ proc Create_tcl_file { } {
 	return ""
 }
 
-proc Open_tcl_file { } {
+proc Open_script_file { } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
 
-	set filename [file join $GiDProjectDir OpenSees "$GiDProjectName.tcl"]
-	set fexists [file exist $filename]
-
-	if { $fexists==1 } {
-
-		exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl" &
+	if { [OpenSees::IsPython]==0} {
+		set filename [file join $GiDProjectDir OpenSees "$GiDProjectName.tcl"]
+		set fexists [file exist $filename]
+		if { $fexists==1 } {
+			exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.tcl" &
+		}
 	}
-
+	if { [OpenSees::IsPython]==1} {
+		set filename [file join $GiDProjectDir OpenSees "$GiDProjectName.py"]
+		set fexists [file exist $filename]
+		if { $fexists==1 } {
+			exec {*}[auto_execok start] "" "$GiDProjectDir/OpenSees/$GiDProjectName.py" &
+		}
+	}
 	return ""
 }
 
-proc Create_and_open_tcl_file { } {
+proc Create_and_open_script_file { } {
 
-	Create_tcl_file
+	Create_script_file
 
-	Open_tcl_file
+	Open_script_file
 
 	return ""
 }
@@ -258,41 +265,51 @@ proc Run_existing_tcl { doPost } {
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
 	set OpenSeesEXE [OpenSees::GetOpenSeesEXE]
+	set test_python_path [OpenSees::SetPythonPath]
+	set PythonPath [OpenSees::GetPythonPath]
 	global GidProcWin
 
-	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl" ]
-	set opensees_folder [file join "$GiDProjectDir" "OpenSees"]
-
-	if {[file exists $tcl_file] } {
-
-		GiD_Process Mescape Files Save
-
-		cd $opensees_folder
-
-		# run analysis
-
-		eval exec [auto_execok start] \"\" [list [file attributes $OpenSeesEXE -shortname]] \"$tcl_file\"
-
-		if {[file exists "$GiDProjectName.log"] } {
-
-			CheckLogAndPost $GiDProjectDir $GiDProjectName $doPost 0
-
-		} else {
-
-			AnalysisInformationWindow "NoRun"
-		}
-
+	if {[OpenSees::IsPython]==0} {
+		set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
 	} else {
-
-		tk_dialog .gid.errorMsg "Error" "The .tcl file was not created." error 0 "  Ok  "
-
+		set py_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.py"]
 	}
-
+	set opensees_folder [file join "$GiDProjectDir" "OpenSees"]
+	
+	if {[OpenSees::IsPython]==0} {
+		if {[file exists $tcl_file] } {
+			GiD_Process Mescape Files Save
+			cd $opensees_folder
+			# run analysis
+			eval exec [auto_execok start] \"\" [list [file attributes $OpenSeesEXE -shortname]] \"$tcl_file\"
+			if {[file exists "$GiDProjectName.log"] } {
+				CheckLogAndPost $GiDProjectDir $GiDProjectName $doPost 0
+			} else {
+				AnalysisInformationWindow "NoRun"
+			}
+		} else {
+			tk_dialog .gid.errorMsg "Error" "The .tcl file was not created." error 0 "  Ok  "
+		}
+	} else {
+		if {[file exists $py_file]} {
+			GiD_Process Mescape Files save
+			cd $opensees_folder
+			#run Analysis
+			eval exec [auto_execok start] \"\" [list [file attributes $PythonPath -shortname]] \"$py_file\"
+			if {[file exists "$GiDProjectName.log"]} {
+				CheckLogAndPost $GiDProjectDir $GiDProjectName $doPost 0
+			} else {
+				AnalysisInformationWindow "NoRun"
+			}
+		} else {
+			tk_dialog .gid.errorMsg "Error" "The .py file was not created." error 0 "  Ok  "
+		}
+	}
 	UpdateInfoBar
 	return ""
 }
 
-proc Run_existing_tcl_and_postprocess { } {
+proc Run_existing_script_and_postprocess { } {
 
 	set true 1
 	Run_existing_tcl $true
@@ -321,7 +338,7 @@ proc Postprocess_only { } {
 	return ""
 }
 
-proc Create_tcl_run_analysis_and_postprocess { } {
+proc Create_script_run_analysis_and_postprocess { } {
 
 	set mustRegenMesh [GiD_Info Project MustReMesh]; # 0 no, 1 yes
 
@@ -330,21 +347,27 @@ proc Create_tcl_run_analysis_and_postprocess { } {
 		WantToRegenMeshMessage
 
 	} else {
-
-		set GiDProjectDir [OpenSees::GetProjectPath]
-		set GiDProjectName [OpenSees::GetProjectName]
-		set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl" ]
-		ResetAnalysis 0
-
-		Create_tcl_file
-
-		if {[file exists $tcl_file] } {
-
-			# run and postprocess
-
-			Run_existing_tcl_and_postprocess
+		if {[OpenSees::IsPython]==0} {
+			set GiDProjectDir [OpenSees::GetProjectPath]
+			set GiDProjectName [OpenSees::GetProjectName]
+			set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl" ]
+			ResetAnalysis 0
+			Create_script_file
+			if {[file exists $tcl_file] } {
+				# run and postprocess
+				Run_existing_script_and_postprocess
+			}
+		} else {
+			set GiDProjectDir [OpenSees::GetProjectPath]
+			set GiDProjectName [OpenSees::GetProjectName]
+			set py_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.py" ]
+			ResetAnalysis 0
+			Create_script_file
+			if {[file exists $py_file] } {
+				# run and postprocess
+				Run_existing_script_and_postprocess
+			}
 		}
-
 	}
 
 	return ""
@@ -389,7 +412,7 @@ proc AnalysisInformationWindow { AnalResult } {
 
 			if { $response == 0 } {
 
-				Open_tcl_file
+				Open_script_file
 
 			}
 		}
@@ -521,21 +544,26 @@ proc Opt1_dialog { } {
 		set GiDProjectDir [OpenSees::GetProjectPath]
 		set GiDProjectName [OpenSees::GetProjectName]
 
-		set file "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
+		if { [OpenSees::IsPython]== 0 } {
+			set file "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
+		} else {
+			set file "$GiDProjectDir/OpenSees/$GiDProjectName.py"
+		}
+
 		set fexists [file exist $file]
 
 		if { $fexists == 1 } {
-
-			set response [tk_dialog $w "Warning" "Creating the .tcl file and running the analysis will overwrite any user modifications and delete any existing results.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+			if {[OpenSees::IsPython]==0} {
+				set response [tk_dialog $w "Warning" "Creating the .tcl file and running the analysis will overwrite any user modifications and delete any existing results.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+			} else {
+				set response [tk_dialog $w "Warning" "Creating the .py file and running the analysis will overwrite any user modifications and delete any existing results.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+			}
 
 			if { $response == 0 } {
-
-				Create_tcl_run_analysis_and_postprocess
-
+				Create_script_run_analysis_and_postprocess
 			}
 		} else {
-
-			Create_tcl_run_analysis_and_postprocess
+			Create_script_run_analysis_and_postprocess
 		}
 	}
 
@@ -562,38 +590,49 @@ proc Opt2_dialog { } {
 		OpenSees::SetProjectNameAndPath
 		set GiDProjectDir [OpenSees::GetProjectPath]
 		set GiDProjectName [OpenSees::GetProjectName]
-
-		set file "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
+		
+		if { [OpenSees::IsPython] == 0 } {
+			set file "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
+		} else {
+			set file "$GiDProjectDir/OpenSees/$GiDProjectName.py"
+		}
 		set fexists [file exist $file]
 
 		if { $fexists == 1 } {
-
-			set response [tk_dialog $w "Warning" "Creating the .tcl file will overwrite any user modifications.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
-
+			if { [OpenSees::IsPython] == 0 } {
+				set response [tk_dialog $w "Warning" "Creating the .tcl file will overwrite any user modifications.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+			} else {
+				set response [tk_dialog $w "Warning" "Creating the .py file will overwrite any user modifications.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+			}
+			
 			if { $response == 0 } {
-
-				Create_tcl_file
-
+				Create_script_file
 				set fexists [file exist $file]
-				if { $fexists == 1 } {
 
-					tk_dialog $w "Success" "The .tcl file was created" info 0 "  Ok  "
+				if { $fexists == 1 } {
+					if { [OpenSees::IsPython] == 0 } {
+						tk_dialog $w "Success" "The .tcl file was created" info 0 "  Ok  "
+					} else {
+						tk_dialog $w "Success" "The .py file was created" info 0 "  Ok  "
+					}
+					
 				}
 
 			}
 		} else {
 
-			Create_tcl_file
+			Create_script_file
 
 			set fexists [file exist $file]
 			if { $fexists == 1 } {
-
-				tk_dialog $w "Success" "The .tcl file was created" info 0 "  Ok  "
+				if { [OpenSees::IsPython] == 0 } {
+					tk_dialog $w "Success" "The .tcl file was created" info 0 "  Ok  "
+				} else {
+					tk_dialog $w "Success" "The .py file was created" info 0 "  Ok  "
+				}
 			}
-
 		}
 	}
-
 	return ""
 }
 
@@ -617,25 +656,26 @@ proc Opt3_dialog { } {
 		OpenSees::SetProjectNameAndPath
 		set GiDProjectDir [OpenSees::GetProjectPath]
 		set GiDProjectName [OpenSees::GetProjectName]
+		if {[OpenSees::IsPython]==0} {
+			set file_name "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
+		} else {
+			set file_name "$GiDProjectDir/OpenSees/$GiDProjectName.py"
+		}
 
-		set file "$GiDProjectDir/OpenSees/$GiDProjectName.tcl"
-		set fexists [file exist $file]
-
+		set fexists [file exist $file_name]
 		if { $fexists == 1 } {
-
-			set response [tk_dialog $w "Warning" "Creating the .tcl file will overwrite any user modifications.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
-
+			if {[OpenSees::IsPython]==0} {
+				set response [tk_dialog $w "Warning" "Creating the .tcl file will overwrite any user modifications.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+			} else {
+				set response [tk_dialog $w "Warning" "Creating the .py file will overwrite any user modifications.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+			}
 			if { $response == 0 } {
-
-				Create_and_open_tcl_file
-
+				Create_and_open_script_file
 			}
 		} else {
-
-			Create_and_open_tcl_file
+			Create_and_open_script_file
 		}
 	}
-
 	return ""
 }
 
@@ -691,12 +731,12 @@ proc Opt6_dialog { } {
 
 		if { $response == 0 } {
 
-			Run_existing_tcl_and_postprocess
+			Run_existing_script_and_postprocess
 
 		}
 	} else {
 
-		Run_existing_tcl_and_postprocess
+		Run_existing_script_and_postprocess
 	}
 
 	return ""
@@ -708,22 +748,29 @@ proc Opt7_dialog { } {
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
 
-	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
 	set post_file [file join "$GiDProjectDir" "$GiDProjectName.post.res"]
-	set fexists1 [file exist $tcl_file]
 	set fexists2 [file exist $post_file]
+
+	if {[OpenSees::IsPython]==0} {
+		set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
+		set fexists1 [file exist $tcl_file]
+	} else {
+		set py_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.py"]
+		set fexists1 [file exist $py_file]
+	}
+
 	set w .gid.warn6
 
 	if { ($fexists1 == 1) || ($fexists2 == 1) } {
-
+		if {[OpenSees::IsPython]==0} {
 		set response [tk_dialog $w "Warning" "Resetting the analysis will delete any existing .tcl file and corresponding results.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
-
+		} else {
+		set response [tk_dialog $w "Warning" "Resetting the analysis will delete any existing .py file and corresponding results.\n\nDo you want to continue ?" warning 0 "  Yes  " "  No  " ]
+		}
 		if { $response == 0 } {
-
 			ResetAnalysis 1
 		}
 	}
-
 	return ""
 }
 
@@ -805,18 +852,21 @@ proc mnu_open_script { } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
-
-	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
-
-	if {[file exists $tcl_file]} {
-
-		exec {*}[auto_execok start] "" $tcl_file &
-
+	if { [OpenSees::IsPython] == 0} {
+		set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
+		if {[file exists $tcl_file]} {
+			exec {*}[auto_execok start] "" $tcl_file &
+		} else {
+			tk_dialog .gid.infoMsg "Error" "The .tcl file was not created." error 0 "  Ok  "
+		}
 	} else {
-
-		tk_dialog .gid.infoMsg "Error" "The .tcl file was not created." error 0 "  Ok  "
+		set py_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.py"]
+		if {[file exists $py_file]} {
+			exec {*}[auto_execok start] "" $py_file &
+		} else {
+			tk_dialog .gid.infoMsg "Error" "The .py file was not created." error 0 "  Ok  "
+		}
 	}
-
 	UpdateInfoBar
 	return ""
 }
@@ -845,18 +895,21 @@ proc mnu_open_analysis_folder { } {
 
 	set GiDProjectDir [OpenSees::GetProjectPath]
 	set GiDProjectName [OpenSees::GetProjectName]
-
-	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
-
-	if {[file exists $tcl_file]} {
-
-		exec {*}[auto_execok start] "" $GiDProjectDir &
-
+	if {[OpenSees::IsPython]==0} {
+		set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
+		if {[file exists $tcl_file]} {
+			exec {*}[auto_execok start] "" $GiDProjectDir &
+		} else {
+			tk_dialog .gid.infoMsg "Error" "The analysis folder was not created." error 0 "  Ok  "
+		}
 	} else {
-
-		tk_dialog .gid.infoMsg "Error" "The analysis folder was not created." error 0 "  Ok  "
+		set py_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.py"]
+		if {[file exists $py_file]} {
+			exec {*}[auto_execok start] "" $GiDProjectDir &
+		} else {
+			tk_dialog .gid.infoMsg "Error" "The analysis folder was not created." error 0 "  Ok  "
+		}
 	}
-
 	UpdateInfoBar
 	return ""
 }
@@ -987,7 +1040,7 @@ proc OpenSees_Menu { dir new } {
 		"---" \
 		[= "Reset analysis"] \
 		"---" \
-		[= "Open .tcl file"] \
+		[= "Open .py file"] \
 		[= "Open .log file"] \
 		[= "Open analysis folder"] \
 		"---" \
@@ -1044,11 +1097,11 @@ proc OpenSees_Menu { dir new } {
 		"" \
 		mnu_Analysis.png \
 		"" \
-		mnu_TCL.png \
-		mnu_TCL.png \
-		mnu_TCL_Analysis.png \
-		mnu_TCL_Analysis.png \
-		mnu_TCL_Analysis.png \
+		mnu_tcl.png \
+		mnu_tcl.png \
+		mnu_script_Analysis.png \
+		mnu_script_Analysis.png \
+		mnu_script_Analysis.png \
 		"" \
 		mnu_Reset.png \
 		"" \
@@ -1078,9 +1131,9 @@ proc OpenSees_Menu { dir new } {
 		"" \
 		mnu_Py.png \
 		mnu_Py.png \
-		mnu_Py_Analysis.png \
-		mnu_Py_Analysis.png \
-		mnu_Py_Analysis.png \
+		mnu_script_Analysis.png \
+		mnu_script_Analysis.png \
+		mnu_script_Analysis.png \
 		"" \
 		mnu_Reset.png \
 		"" \

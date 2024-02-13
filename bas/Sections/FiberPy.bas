@@ -295,7 +295,7 @@ ops.section("Fiber", *FiberTag, *\
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
 *set var zcoverFibers=tcl(NumofCoverFibers *cover *height *zdivision)
 *set var IntegrationTag=FiberTag*100
-ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, 6)
+ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, *ElemsMatProp(Number_of_integration_points,int))
 *# --------------Core fibers definition-----------
 # Create the Core fibers
 
@@ -417,7 +417,7 @@ ops.section("Fiber", *FiberTag, *\
 "-GJ", 1e10)
 *endif
 *set var IntegrationTag=FiberTag*100
-ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, 6)
+ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, *ElemsMatProp(Number_of_integration_points,int))
 *set var zdivision=MatProp(Fibers_along_h_length,int)
 *set var ydivision=MatProp(Fibers_along_b_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *width *ydivision)
@@ -499,7 +499,7 @@ ops.section("Fiber", *FiberTag, *\
 "-GJ", 1e10)
 *endif
 *set var IntegrationTag=FiberTag*100
-ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, 6)
+ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, *ElemsMatProp(Number_of_integration_points,int))
 *set var ydivisionBw=MatProp(Fibers_along_bw_length,int)
 *set var zdivision=MatProp(Fibers_along_h_length,int)
 *set var ydivision=tcl(NumofCoverFibers *width, *tw, *ydivisionBw)
@@ -612,7 +612,7 @@ ops.section("Fiber", *FiberTag, *\
 "-GJ", 1e10)
 *endif
 *set var IntegrationTag=FiberTag*100
-ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, 6)
+ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, *ElemsMatProp(Number_of_integration_points,int))
 # Create the core fibers
 
 # patch circ $matTag $numSubdivCirc $numSubdivRad $yCenter $zCenter $intRad $extRad $startAng $endAng
@@ -633,7 +633,7 @@ ops.layer("circ", *SelectedRBMaterial, *MatProp(Bars_along_arc,int), *MatProp(Ba
 
 *elseif(strcmp(MatProp(Cross_section),"Bridge_Deck")==0)
 *if(procDeck3DPrinted==0)
-*include deck3D.bas
+*include Deck3DPy.bas
 *set var procDeck3DPrinted=1
 *endif
 *set var wt=MatProp(Top_slab_width_wt,real)
@@ -1007,7 +1007,7 @@ ops.section("Fiber", *FiberTag, *\
 "-GJ", 1e10)
 *endif
 *set var IntegrationTag=FiberTag*100
-ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, 6)
+ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, *ElemsMatProp(Number_of_integration_points,int))
 *set var ydivision=MatProp(Fibers_along_h_length,int)
 *set var zdivision=MatProp(Fibers_along_b_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
@@ -1118,9 +1118,9 @@ ops.layer("straight", *SelectedRBMaterial, *operation(Howmanybars-2), *MatProp(M
 *set var zhalf=operation(width/2.0)
 *set var cover=MatProp(Cover_depth_for_bars,real)
 
-ops.section("Fiber", *FiberTag, "-GJ", 10e10)
+ops.section("Fiber", *FiberTag)
 *set var IntegrationTag=FiberTag*100
-ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, 6)
+ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, *ElemsMatProp(Number_of_integration_points,int))
 *set var ydivision=MatProp(Fibers_along_h_length,int)
 *set var zdivision=MatProp(Fibers_along_b_length,int)
 *set var ycoverFibers=tcl(NumofCoverFibers *cover *height *ydivision)
@@ -1293,7 +1293,7 @@ ops.fiber(*operation(height-Ycm-cover), *operation(+width/2-(width/2-tw/2)/2), *
 
 ops.section("Fiber", *FiberTag, "-GJ", 10e10)
 *set var IntegrationTag=FiberTag*100
-ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, 6)
+ops.beamIntegration('Lobatto', *IntegrationTag, *FiberTag, *ElemsMatProp(Number_of_integration_points,int))
 # Create the core fibers
 
 #patch circ $matTag $numSubdivCirc $numSubdivRad $yCenter $zCenter $intRad $extRad $startAng $endAng
@@ -1314,7 +1314,7 @@ ops.layer("circ", *SelectedRBMaterial, *MatProp(Bars_along_arc,int), *MatProp(Ba
 
 *elseif(strcmp(MatProp(Cross_section),"Bridge_Deck")==0)
 *if(procDeck2DPrinted==0)
-*include deck2D.bas
+*include Deck2DPy.bas
 *set var procDeck2DPrinted=1
 *endif
 *set var wt=MatProp(Top_slab_width_wt,real)

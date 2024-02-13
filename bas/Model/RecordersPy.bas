@@ -33,7 +33,7 @@ ops.recorder('Node', '-file', 'Node_accelerations.out', '-time', '-nodeRange', 1
 ops.recorder('Node', '-file', 'Node_rotAccelerations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 3, 'accel')
 *endif
 *if(GenData(Nodal_velocities,int)==1)
-ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 1, 2, 'vel')
+ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 'vel')
 *endif
 *if(GenData(Nodal_rotational_velocities,int)==1)
 ops.recorder('Node', '-file', 'Node_rotVelocities.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 3, 'vel')
@@ -45,7 +45,7 @@ ops.recorder('Node', '-file', 'Node_rotVelocities.out', '-time', '-nodeRange', 1
 ops.recorder('Node', '-file', 'Node_displacements.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'disp')
 *endif
 *if(GenData(Nodal_rotations,int)==1)
-ops.recorder('Node', '-file', 'Node_rotations.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 4, 5, 6, 'disp')
+ops.recorder('Node', '-file', 'Node_rotations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 4, 5, 6, 'disp')
 *endif
 *if(GenData(Nodal_reactions,int)==1)
 ops.recorder('Node', '-file', 'Node_forceReactions.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'reaction')
@@ -53,10 +53,10 @@ ops.recorder('Node', '-file', 'Node_momentReactions.out', '-time', '-nodeRange',
 *endif
 *if(Transient_analysis==1)
 *if(GenData(Nodal_accelerations,int)==1)
-ops.recorder('Node', '-file', 'Node_accelerations.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 1, 2, 3, 'accel')
+ops.recorder('Node', '-file', 'Node_accelerations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'accel')
 *endif
 *if(GenData(Nodal_rotational_accelerations,int)==1)
-ops.recorder('Node', '-file', 'Node_rotAccelerations.out', '-time', '-nodeRange', 1, *cntNodes '-dof', 4, 5, 6, 'accel')
+ops.recorder('Node', '-file', 'Node_rotAccelerations.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 4, 5, 6, 'accel')
 *endif
 *if(GenData(Nodal_velocities,int)==1)
 ops.recorder('Node', '-file', 'Node_velocities.out', '-time', '-nodeRange', 1, *cntNodes, '-dof', 1, 2, 3, 'vel')
@@ -392,7 +392,7 @@ ops.recorder('Element', '-file', 'DispBeamColumnInt_localForce.out', '-time', '-
 *#
 *if(cntTruss!=0)
 *if(GenData(Axial_force,int)==1)
-ops.recorder('Element', '-file', 'Truss_axialForce.out', '-time', '-ele' *\
+ops.recorder('Element', '-file', 'Truss_axialForce.out', '-time', '-ele', *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Truss")==0)
 *ElemsNum , *\
@@ -435,10 +435,9 @@ ops.recorder('Element', '-file', 'CorotTruss_deformations.out', '-time', '-ele',
 *endif
 *#
 *# User recorders
-*#
+*# TODO: Write the .py and the __init__.py file
 *set var FileExists=tcl(UserRecorder::RecorderFileExists)
 *if(FileExists==1)
-
 from Scripts import Recorders.customRecorders # user recorders
 *endif
 *#
@@ -452,7 +451,7 @@ from Scripts import Recorders.customRecorders # user recorders
 
 *set var layer = GenData(Stress_layer_A,int)
 *for(i=1;i<=4;i=i+1)
-ops.recorder('Element', '-file', 'ShellMITC4_stress_Layer*layer_GP*i.out', '-time', '-ele' *\
+ops.recorder('Element', '-file', 'ShellMITC4_stress_Layer*layer_GP*i.out', '-time', '-ele', *\
 *loop elems
 *if(strcmp(ElemsMatProp(Element_type:),"Shell")==0)
 *ElemsNum , *\

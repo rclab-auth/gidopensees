@@ -258,7 +258,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime()
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
+                print(f"(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
 *endif
                 AnalOk = ops.analyze(1) # zero for convergence
                 if AnalOk == 0:
@@ -298,7 +298,7 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
                     break
                 t = ops.getTime()
 *if(PrintTime==1)
-                print("(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
+                print(f"(*IntvNum) {algorithmTypeStatic}{strIni} LF {t} ")
 *endif
                 AnalOk = ops.analyze(1) # zero for convergence
                 if AnalOk == 0:
@@ -336,7 +336,11 @@ if AnalOk != 0: # if analysis fails, alternative algorithms and substepping is a
 
 if AnalOk == 0:
     print("Analysis completed SUCCESSFULLY")
+    print("Analysis completed SUCCESSFULLY", file=open(f"{__file__[:-3]}.log", "a"))
     print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))
 else:
     print("Analysis FAILED")
-    print("Committed steps : {committedSteps}")
+    print("Analysis FAILED", file=open(f"{__file__[:-3]}.log", "a"))
+    print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))

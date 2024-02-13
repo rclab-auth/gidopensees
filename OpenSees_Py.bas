@@ -15,7 +15,8 @@
 # Development Team
 #
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
-# V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
+# K. Mixios, Dipl. Eng. AUTh, MSc, PhD cand.
+# V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Assoc. Prof. AUTh
 #
 # Project Contributors
 #
@@ -203,6 +204,8 @@
 import openseespy.opensees as ops
 import time
 import math
+import os
+import sys
 
 
 *if(currentDOF==30)
@@ -307,6 +310,11 @@ ops.model("basic", "-ndm", *ndime, "-ndf", *currentDOF)
 *endif
 *end groups
 
+if not os.path.exists("*tcl(OpenSees::GetProjectName).log"):
+    ops.logFile("*tcl(OpenSees::GetProjectName).log", "-append")
+else:
+    os.remove("*tcl(OpenSees::GetProjectName).log")
+    ops.logFile("*tcl(OpenSees::GetProjectName).log", "-append")
 # --------------------------------------------------------------------------------------------------------------
 #
 # D O M A I N  C O M M O N S
@@ -325,7 +333,6 @@ ops.model("basic", "-ndm", *ndime, "-ndf", *currentDOF)
 *#
 *include bas\Model\RecordersPy.bas
 
-ops.logFile("*tcl(OpenSees::GetProjectName).log")
 
 print(" __   __       __          __                   _       ")
 print("/ _ .|  \\ _|_ /  \\ _  _ _ (_  _ _ _  | _ |_ _ _(_ _  _ _")
@@ -333,18 +340,28 @@ print("\\__)||__/  |  \\__/|_)(-| )__)(-(-_)  || )|_(-| | (_|(_(-")
 print("                  |                                     ")
 print("                             *tcl(OpenSees::GetVersion) with OpenSeesPy\n")
 print("Analysis summary\n")
+
+print(" __   __       __          __                   _       ", file=open(f"{__file__[:-3]}.log", "a"))
+print("/ _ .|  \\ _|_ /  \\ _  _ _ (_  _ _ _  | _ |_ _ _(_ _  _ _", file=open(f"{__file__[:-3]}.log", "a"))
+print("\\__)||__/  |  \\__/|_)(-| )__)(-(-_)  || )|_(-| | (_|(_(-", file=open(f"{__file__[:-3]}.log", "a"))
+print("                  |                                     ", file=open(f"{__file__[:-3]}.log", "a"))
+print("                             *tcl(OpenSees::GetVersion) with OpenSeesPy\n", file=open(f"{__file__[:-3]}.log", "a"))
+print("Analysis summary\n", file=open(f"{__file__[:-3]}.log", "a"))
+
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
 *if(IntvData(Enabled,int)==1)
 *format "%d"
-print("Interval *IntvNum : *IntvData(Analysis_type)")
+print("Interval *IntvNum : *IntvData(Analysis_type) - ", end=" ")
+print("Interval *IntvNum : *IntvData(Analysis_type) - ", end=" ", file=open(f"{__file__[:-3]}.log", "a"))
 *if(strcmp(IntvData(Analysis_type),"Static")==0)
-print("Static Monotonic")
+*# Static Monotonic
 *if(strcmp(IntvData(Loading_path),"Monotonic")==0)
 *format "%d%g"
 print(f"{int(1+*IntvData(Analysis_steps,int))} steps")
-print("Static Cyclic")
+print(f"{int(1+*IntvData(Analysis_steps,int))} steps", file=open(f"{__file__[:-3]}.log", "a"))
+*# Static Cyclic
 *else
 *set var npeaks=IntvData(Displacement_peaks-cycles,int)
 *set var totalCyclicSteps=0
@@ -360,18 +377,21 @@ print("Static Cyclic")
 *endfor
 *#set var index=operation(IntvNum*2)
 *#set var cycles=IntvData(Displacement_peaks-cycles,*index,real)
-*#[expr int(1+*operation(4*cycles*IntvData(Analysis_steps,int)))] steps
 print(f"{int(1+*operation(4*totalCyclicSteps))} steps")
+print(f"{int(1+*operation(4*totalCyclicSteps))} steps", file=open(f"{__file__[:-3]}.log", "a"))
 *endif
 *elseif(strcmp(IntvData(Analysis_type),"Transient")==0)
 *format "%g%g%g"
-print(f"{int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))} steps x *IntvData(Analysis_time_step,real) s"
+print(f"{int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))} steps x *IntvData(Analysis_time_step,real) s")
+print(f"{int(1.0 + *IntvData(Analysis_duration,real)/*IntvData(Analysis_time_step,real))} steps x *IntvData(Analysis_time_step,real) s", file=open(f"{__file__[:-3]}.log", "a"))
 *endif
 *endif
 *end intervals
 print("\n----------------\n")
+print("\n----------------\n", file=open(f"{__file__[:-3]}.log", "a"))
 time_start = time.time()
 print("Starting analysis...\n")
+print("Starting analysis...\n", file=open(f"{__file__[:-3]}.log", "a"))
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)
@@ -384,6 +404,7 @@ print("Starting analysis...\n")
 # --------------------------------------------------------------------------------------------------------------
 
 print("Running interval *IntvNum")
+print("Running interval *IntvNum", file=open(f"{__file__[:-3]}.log", "a"))
 *include bas\Actions\LoadsPy.bas
 *include bas\Analysis\UpdateMaterialStagePy.bas
 *include bas\Analysis\UpdateParametersPy.bas
@@ -424,30 +445,38 @@ time_end = time.time()
 analysisTime = time_end - time_start
 
 print("Analysis finished.\n")
+print("Analysis finished.\n", file=open(f"{__file__[:-3]}.log", "a"))
 
 if analysisTime<60:
     if analysisTime==0:
         print("Analysis time : less than one second")
+        print("Analysis time : less than one second", file=open(f"{__file__[:-3]}.log", "a"))
     elif analysisTime==1:
         print("Analysis time : 1 second")
+        print("Analysis time : 1 second", file=open(f"{__file__[:-3]}.log", "a"))
     else:
         print(f"Analysis time : {analysisTime} seconds")
+        print(f"Analysis time : {analysisTime} seconds", file=open(f"{__file__[:-3]}.log", "a"))
 
 elif analysisTime<3600:
     minutes = analysisTime / 60
     seconds = analysisTime % 60
 
     if minutes==1:
-        print("Analysis time : 1 minute")
+        print("Analysis time : 1 minute", end=" ")
+        print("Analysis time : 1 minute", end=" ", file=open(f"{__file__[:-3]}.log", "a"))
     else:
-        print("Analysis time : {minutes} minutes")
+        print(f"Analysis time : {minutes} minutes", end=" ")
+        print(f"Analysis time : {minutes} minutes", end=" ", file=open(f"{__file__[:-3]}.log", "a"))
 
     if seconds==0:
         print("")
     elif seconds==1:
-        print(" and 1 second")
+        print("and 1 second")
+        print("and 1 second", file=open(f"{__file__[:-3]}.log", "a"))
     else:
-        print(f" and {seconds} seconds")
+        print(f"and {seconds} seconds")
+        print(f"and {seconds} seconds", file=open(f"{__file__[:-3]}.log", "a"))
 
 else:
     hours = analysisTime / 3600
@@ -455,23 +484,29 @@ else:
     seconds = (analysisTime % 3600) % 60
 
     if hours==1:
-        print("Analysis time : 1 hour")
+        print("Analysis time : 1 hour", end=" ")
+        print("Analysis time : 1 hour", end=" ", file=open(f"{__file__[:-3]}.log", "a"))
     else:
-        print(f"Analysis time : {hours} hours")
+        print(f"Analysis time : {hours} hours", end=" ")
+        print(f"Analysis time : {hours} hours", end=" ", file=open(f"{__file__[:-3]}.log", "a"))
 
     if minutes==0:
         pass
     elif minute==1:
-        print(", 1 minute")
+        print(", 1 minute", end=" ")
+        print(", 1 minute", end=" ", file=open(f"{__file__[:-3]}.log", "a"))
     else:
-        print(f", {minutes} minutes")
+        print(f", {minutes} minutes", end=" ")
+        print(f", {minutes} minutes", end=" ", file=open(f"{__file__[:-3]}.log", "a"))
 
     if seconds==0:
         print("")
     elif second==1:
-        print(" and 1 second")
+        print("and 1 second")
+        print("and 1 second", file=open(f"{__file__[:-3]}.log", "a"))
     else:
-        print(f" and {seconds} seconds")
+        print(f"and {seconds} seconds")
+        print(f"and {seconds} seconds", file=open(f"{__file__[:-3]}.log", "a"))
 
 *#
 *# Metadata

@@ -41,6 +41,8 @@ var
     GiDPath,
     ModelPath,
     FileName,
+    FileName_tcl,
+    FileName_py,
     ModelName,
     OutFile,
     ResFileASCII,
@@ -64,6 +66,7 @@ var
     Str_IntNames,
     Str_Steps     : array of string;
     Step          : integer;
+    IsPython      : integer;
 
     // console
 
@@ -859,11 +862,11 @@ begin
 
     TextColor(LightRed);
 
-    if ParamCount < 3 then
+    if ParamCount < 4 then
     begin
-        writeln('Syntax : OpenSeesPost <GiD path> <project path> <step> <option /b for binary>');
-        writeln;
-        Exit;
+      writeln('Syntax : OpenSeesPost <GiD path> <project path> <step> <option /b for binary>');
+      writeln;
+      Exit;
     end;
 
     // load model file
@@ -871,6 +874,8 @@ begin
     GiDPath := LongPathName(ParamStr(1));
     ModelPath := LongPathName(ParamStr(2));
     Step := StrToInt(ParamStr(3));
+    IsPython := StrToInt(ParamStr(4));
+
 
     ModelName := Copy(ModelPath,LastDelimiter('\',ModelPath)+1,Length(ModelPath)-LastDelimiter('\',ModelPath));
     ModelName := Copy(ModelName,1,Length(ModelName)-4);
@@ -961,7 +966,14 @@ begin
 
     // check .tcl file
 
-    FileName := ModelPath+'\OpenSees\'+ModelName+'.tcl';
+    if IsPython = 0 then
+    begin
+      FileName := ModelPath+'\OpenSees\'+ModelName+'.tcl'
+    end;
+    if IsPython = 1 then
+    begin
+      FileName := ModelPath+'\OpenSees\'+ModelName+'.py';
+    end;
 
     if FileExists(FileName) then
     begin
@@ -988,10 +1000,18 @@ begin
     end;
 
     writeln;
+    ndm := 0;
 
-    // get basic model parameters
+    // get basic model parameters\
+    if IsPython = 0 then
+    begin
+      ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+5,1)); //tcl
+    end;
 
-    ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+5,1));
+    if IsPython = 1 then
+    begin
+      ndm := StrToInt(Copy(TCL.Text,Pos('-ndm',TCL.Text)+7,1)); //python
+    end;
 
     // initialize files
 
@@ -3559,7 +3579,7 @@ begin
 
     writeln;
 
-    if ParamStr(4) = '/b' then
+    if ParamStr(5) = '/b' then
     begin
         TextColor(LightGreen);
 

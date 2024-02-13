@@ -15,7 +15,8 @@
 # Development Team
 #
 # T. Kartalis-Kaounis, Dipl. Eng. AUTh, MSc
-# V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Asst. Prof. AUTh
+# K. Mixios, Dipl. Eng. AUTh, MSc, PhD cand.
+# V.K. Papanikolaou, Dipl. Eng., MSc DIC, PhD, Assoc. Prof. AUTh
 #
 # Project Contributors
 #
@@ -329,6 +330,7 @@ puts "\\__)||__/  |  \\__/|_)(-| )__)(-(-_)  || )|_(-| | (_|(_(-"
 puts "                  |                                     "
 puts "                             *tcl(OpenSees::GetVersion) with OpenSees v[version]\n"
 puts "Analysis summary\n"
+
 *set var IntvNum=0
 *loop intervals
 *set var IntvNum=operation(IntvNum+1)

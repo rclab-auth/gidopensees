@@ -131,9 +131,8 @@ ops.geomTransf('Corotational', *TransfTag6,  0, 1, 0) # non-vertical
 *else
 *set var TransfTag=TransfTag5
 *endif
-element_list_str = "*elemsConec"
 *format "%6d%6d%7d"
-ops.element('elasticBeamColumn', *ElemsNum, *elemsConec , *\
+ops.element('elasticBeamColumn', *ElemsNum, *elemsConec(1), *elemsConec(2), *\
 *format "%10g%10g%10g%12g%12g%12g   "
 *A, *E, *G, *J, *Iy, *Iz, *TransfTag, '-mass', *\
 *format "%8g"
@@ -147,9 +146,8 @@ ops.element('elasticBeamColumn', *ElemsNum, *elemsConec , *\
 *else
 *set var TransfTag=TransfTag6
 *endif
-element_list_str = "*elemsConec"
 *format "%6d%6d%d"
-ops.element('elasticBeamColumn', *ElemsNum, *elemsConec, *\
+ops.element('elasticBeamColumn', *ElemsNum, *elemsConec(1), *elemsConec(2), *\
 *format "%10g%10g%10g%12g%12g%12g   "
 *A, *E, *G, *J, *Iy, *Iz, *TransfTag, '-mass', *\
 *format "%8g"
@@ -166,9 +164,8 @@ ops.element('elasticBeamColumn', *ElemsNum, *elemsConec, *\
 *else
 *set var TransfTag=TransfTag5
 *endif
-element_list_str = "*elemsConec"
 *format "%6d%6d%7d"
-ops.element('elasticBeamColumn', *ElemsNum, *elemsConec, *\
+ops.element('elasticBeamColumn', *ElemsNum, *elemsConec(1), *elemsConec(2), *\
 *format "%10g%10g%10g%12g%12g%12g   "
 *A, *E, *G, *J, *Iy, *Iz, *TransfTag, '-mass' *\
 *format "%8g"
@@ -182,9 +179,8 @@ ops.element('elasticBeamColumn', *ElemsNum, *elemsConec, *\
 *else
 *set var TransfTag=TransfTag6
 *endif
-element_list_str = "*elemsConec"
 *format "%6d%6d%7d"
-ops.element('elasticBeamColumn', *ElemsNum, *elemsConec, *\
+ops.element('elasticBeamColumn', *ElemsNum, *elemsConec(1), *elemsConec(2), *\
 *format "%10g%10g%10g%12g%12g%12g   "
 *A, *E, *G, *J, *Iy, *Iz, *TransfTag, '-mass', *\
 *format "%8g"

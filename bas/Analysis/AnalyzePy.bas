@@ -12,9 +12,9 @@ numModes = *GenData(Number_of_eigenvalues,int)
 
 for k in range(numModes):
 *if(ndime==2)
-    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, "eigen", k)
+    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, f"eigen {k}")
 *else
-    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, 3, "eigen", k)
+    ops.recorder("Node", "-file", f"Mode_{k}.out", "-nodeRange", 1, *cntNodes, "-dof", 1, 2, 3, f"eigen {k}")
 *endif
 
 lambda_ = ops.eigen(*\
@@ -30,8 +30,7 @@ numModes)
 
 # Modal report
 
-# modalProperties -file "ModalReport.out" -unorm
-
+ops.modalProperties('-file', 'ModalReport.out', '-unorm')
 # Calculate periods
 
 T = []
@@ -42,7 +41,7 @@ for lam in lambda_:
 period = "Periods.out"
 with open(period, "w") as file:
     for index, t in enumerate(T):
-        file.write(f"{index}  {t}")
+        file.write(f"{t}\n")
 file.close()
 
 *endif
@@ -168,26 +167,26 @@ ops.test("FixedNumIter", *IntvData(Max_Iterations_per_Step), *LoggingFlag)
 ops.algorithm("Linear")
 *elseif(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
-ops.algorithm("Newton", secant=False, initial=True, initialThenCurrent=False)
+ops.algorithm("Newton", False, True, False)
 *else
 ops.algorithm("Newton")
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
-ops.algorithm("ModifiedNewton", secant=False, initial=True)
+ops.algorithm("ModifiedNewton", False, True)
 *else
 ops.algorithm("ModifiedNewton")
 *endif
 
 *elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
 *if(strcmp(IntvData(Line_search_type),"Interpolated")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=False, RegulaFalsi=False, InitialInterpolated=True, *\
+ops.algorithm("NewtonLineSearch", False, False, False, True, *\
 *elseif(strcmp(IntvData(Line_search_type),"RegulaFalsi")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=False, RegulaFalsi=True, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", False, False, True, False, *\
 *elseif(strcmp(IntvData(Line_search_type),"Bisection")==0)
-ops.algorithm("NewtonLineSearch", Bisection=True, Secant=False, RegulaFalsi=False, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", True, False, False, False, *\
 *elseif(strcmp(IntvData(Line_search_type),"Secant")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=True, RegulaFalsi=False, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", False, True, False, False, *\
 *endif
 *format "%g%d%g%g"
 "-tol", *IntvData(Search_tolerance,real), "-maxIter", *IntvData(Max_iterations_for_search,int), "-minEta", *IntvData(Min_eta_value,real), "-maxEta", *IntvData(max_eta_value,real))
@@ -198,9 +197,9 @@ ops.algorithm("Broyden", *IntvData(Iterations_for_new_tangent,int))
 ops.algorithm("BFGS")
 *elseif(strcmp(IntvData(Solution_algorithm),"KrylovNewton")==0)
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
-ops.algorithm("KrylovNewton", iterate="initial", increment="initial", *\
+ops.algorithm("KrylovNewton", "initial", "initial", *\
 *else
-ops.algorithm("KrylovNewton", iterate="current", increment="current", *\
+ops.algorithm("KrylovNewton", "current", "current", *\
 *endif
 maxDim=*IntvData(Max_iterations_until_tangent_is_reformed,int))
 *# end if algorithm
@@ -234,10 +233,14 @@ for i in range(*steps):
         committedSteps += 1
 if AnalOk == 0:
     print("Analysis completed SUCCESSFULLY")
+    print("Analysis completed SUCCESSFULLY", file=open(f"{__file__[:-3]}.log", "a"))
     print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))
 else:
     print("Analysis FAILED")
+    print("Analysis FAILED", file=open(f"{__file__[:-3]}.log", "a"))
     print(f"Committed steps : {committedSteps}")
+    print(f"Committed steps : {committedSteps}", file=open(f"{__file__[:-3]}.log", "a"))
 *endif
 *#
 *# Cyclic analysis
@@ -310,19 +313,19 @@ ops.algorithm("Newton")
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
-ops.algorithm("ModifiedNewton", secant=False, initial=True)
+ops.algorithm("ModifiedNewton", False, True)
 *else
 ops.algorithm("ModifiedNewton")
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
 *if(strcmp(IntvData(Line_search_type),"Interpolated")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=False, RegulaFalsi=False, InitialInterpolated=True, *\
+ops.algorithm("NewtonLineSearch", False, False, False, True, *\
 *elseif(strcmp(IntvData(Line_search_type),"RegulaFalsi")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=False, RegulaFalsi=True, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", False, False, True, False, *\
 *elseif(strcmp(IntvData(Line_search_type),"Bisection")==0)
-ops.algorithm("NewtonLineSearch", Bisection=True, Secant=False, RegulaFalsi=False, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", True, False, False, False, *\
 *elseif(strcmp(IntvData(Line_search_type),"Secant")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=True, RegulaFalsi=False, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", False, True, False, False, *\
 *endif
 *format "%g%d%g%g"
 "-tol", *IntvData(Search_tolerance,real), "-maxIter", *IntvData(Max_iterations_for_search,int), "-minEta", *IntvData(Min_eta_value,real), "-maxEta", *IntvData(max_eta_value,real))
@@ -396,26 +399,25 @@ ops.test("FixedNumIter", *IntvData(Max_Iterations_per_Step), *LoggingFlag)
 *MessageBox Error: Invalid Analysis Options
 *elseif(strcmp(IntvData(Solution_algorithm),"Full_Newton-Raphson")==0)
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
-ops.algorithm("Newton", secant=False, initial=True, initialThenCurrent=False)
+ops.algorithm("Newton", False, True, False)
 *else
 ops.algorithm("Newton")
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Modified_Newton-Raphson")==0)
-algorithm ModifiedNewton*\
 *if(IntvData(Use_initial_stiffness_iterations,int)==1)
-ops.algorithm("ModifiedNewton", secant=False, initial=True)
+ops.algorithm("ModifiedNewton", False, True)
 *else
 ops.algorithm("ModifiedNewton")
 *endif
 *elseif(strcmp(IntvData(Solution_algorithm),"Newton-Raphson_with_line_search")==0)
 *if(strcmp(IntvData(Line_search_type),"Interpolated")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=False, RegulaFalsi=False, InitialInterpolated=True, *\
+ops.algorithm("NewtonLineSearch", False, False, False, True, *\
 *elseif(strcmp(IntvData(Line_search_type),"RegulaFalsi")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=False, RegulaFalsi=True, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", False, False, True, False, *\
 *elseif(strcmp(IntvData(Line_search_type),"Bisection")==0)
-ops.algorithm("NewtonLineSearch", Bisection=True, Secant=False, RegulaFalsi=False, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", True, False, False, False, *\
 *elseif(strcmp(IntvData(Line_search_type),"Secant")==0)
-ops.algorithm("NewtonLineSearch", Bisection=False, Secant=True, RegulaFalsi=False, InitialInterpolated=False, *\
+ops.algorithm("NewtonLineSearch", False, True, False, False, *\
 *endif
 *format "%g%d%g%g"
 "-tol", *IntvData(Search_tolerance,real), "-maxIter", *IntvData(Max_iterations_for_search,int), "-minEta", *IntvData(Min_eta_value,real), "-maxEta", *IntvData(max_eta_value,real))

@@ -36,7 +36,7 @@
 
 namespace eval OpenSees {
 
-	variable VersionNumber "v2.9.6"
+	variable VersionNumber "v3.0.0"
 	variable InterfaceName [_ " GiD+OpenSees Interface $VersionNumber "]
 	variable OpenSeesProblemTypePath
 	variable OpenSeesEXE
@@ -51,6 +51,7 @@ proc OpenSees::InitGIDProject { dir } {
 	variable OpenSeesEXE; # OpenSees executable with path
 
 	set OpenSeesProblemTypePath $dir
+	array set problemtype_local [GidUtils::ReadProblemtypeXml [file join $dir OpenSees.xml] Infoproblemtype {Name Version MinimumGiDVersion}]
 
 	OpenSees::SetOpenSeesEXE
 	OpenSees::SetProjectNameAndPath
@@ -186,6 +187,34 @@ proc OpenSees::GetOpenSeesEXE {} {
 
 	variable OpenSeesEXE
 	return $OpenSeesEXE
+}
+
+
+proc OpenSees::SetPythonPath {} {
+	variable PythonPath
+	variable OpenSeesProblemTypePath
+	
+	global InfoWin
+	set file "$OpenSeesProblemTypePath/Python.path"
+	set fexists [file exists $file]
+	
+	if {$fexists == 1} {
+		set fp [open $file r]
+		set file_data [read $fp]
+		close $fp
+		set data [split $file_data \n]
+		set PythonPath [lindex $data 0]
+		regsub -all {\\} $PythonPath {/} PythonPath
+	} else {
+		set response [tk_dialog $InfoWin "Error" "Python.path file was not found. Please re-install GiD+OpenSees interface." error 0 "  Ok  " ]
+		destroy $InfoWin
+	}
+	return ""
+}
+
+proc OpenSees::GetPythonPath {} {
+	variable PythonPath
+	return $PythonPath
 }
 
 # Get OpenSees version
@@ -537,26 +566,50 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		UpdateInfoBar
 	}
 
-	set ToolbarBitmaps2(0) " \
-		img/Toolbar/$GiDtheme/btn_Elem_ZeroLength.png \
-		img/Toolbar/$GiDtheme/btn_Elem_Truss.png \
-		img/Toolbar/$GiDtheme/btn_Elem_Beam.png \
-		img/Toolbar/$GiDtheme/btn_Elem_Quad.png \
-		img/Toolbar/$GiDtheme/btn_Elem_Brick.png \
-		img/Toolbar/$GiDtheme/btn_Separator.png \
-		img/Toolbar/$GiDtheme/btn_Data.png \
-		img/Toolbar/$GiDtheme/btn_Output.png \
-		img/Toolbar/$GiDtheme/btn_Interval.png \
-		img/Toolbar/$GiDtheme/btn_Mesh.png \
-		img/Toolbar/$GiDtheme/btn_Calc.png \
-		img/Toolbar/$GiDtheme/btn_Separator.png \
-		img/Toolbar/$GiDtheme/btn_tcl.png \
-		img/Toolbar/$GiDtheme/btn_Separator.png \
-		img/Toolbar/$GiDtheme/btn_LocalAxes.png \
-		img/Toolbar/$GiDtheme/btn_ViewElem.png \
-		img/Toolbar/$GiDtheme/btn_ViewCond.png \
-		img/Toolbar/$GiDtheme/btn_ActiveInterval.png \
+	if { [OpenSees::IsPython]==0 } {
+		set ToolbarBitmaps2(0) " \
+			img/Toolbar/$GiDtheme/btn_Elem_ZeroLength.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Truss.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Beam.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Quad.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Brick.png \
+			img/Toolbar/$GiDtheme/btn_Separator.png \
+			img/Toolbar/$GiDtheme/btn_Data.png \
+			img/Toolbar/$GiDtheme/btn_Output.png \
+			img/Toolbar/$GiDtheme/btn_Interval.png \
+			img/Toolbar/$GiDtheme/btn_Mesh.png \
+			img/Toolbar/$GiDtheme/btn_Calc.png \
+			img/Toolbar/$GiDtheme/btn_Separator.png \
+			img/Toolbar/$GiDtheme/btn_tcl.png \
+			img/Toolbar/$GiDtheme/btn_Separator.png \
+			img/Toolbar/$GiDtheme/btn_LocalAxes.png \
+			img/Toolbar/$GiDtheme/btn_ViewElem.png \
+			img/Toolbar/$GiDtheme/btn_ViewCond.png \
+			img/Toolbar/$GiDtheme/btn_ActiveInterval.png \
 		"
+	} else {
+		set ToolbarBitmaps2(0) " \
+			img/Toolbar/$GiDtheme/btn_Elem_ZeroLength.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Truss.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Beam.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Quad.png \
+			img/Toolbar/$GiDtheme/btn_Elem_Brick.png \
+			img/Toolbar/$GiDtheme/btn_Separator.png \
+			img/Toolbar/$GiDtheme/btn_Data.png \
+			img/Toolbar/$GiDtheme/btn_Output.png \
+			img/Toolbar/$GiDtheme/btn_Interval.png \
+			img/Toolbar/$GiDtheme/btn_Mesh.png \
+			img/Toolbar/$GiDtheme/btn_Calc.png \
+			img/Toolbar/$GiDtheme/btn_Separator.png \
+			img/Toolbar/$GiDtheme/btn_py.png \
+			img/Toolbar/$GiDtheme/btn_Separator.png \
+			img/Toolbar/$GiDtheme/btn_LocalAxes.png \
+			img/Toolbar/$GiDtheme/btn_ViewElem.png \
+			img/Toolbar/$GiDtheme/btn_ViewCond.png \
+			img/Toolbar/$GiDtheme/btn_ActiveInterval.png \
+		"
+	}
+
 	set ToolbarCommands2(0) [list \
 		[list -np- OpenSees::Opt2_1] \
 		[list -np- OpenSees::Opt2_2] \
@@ -570,34 +623,57 @@ proc OpenSees::Toolbar2 {{type "DEFAULT INSIDELEFT"}} {
 		[list -np- OpenSees::Opt2_9] \
 		[list -np- OpenSees::Opt2_10] \
 		"" \
-		[list -np- mnu_open_tcl] \
+		[list -np- mnu_open_script] \
 		"" \
 		[list -np- OpenSees::Opt2_11] \
 		[list -np- OpenSees::Opt2_12] \
 		[list -np- OpenSees::Opt2_13] \
 		[list -np- OpenSees::Opt2_14] \
 	]
+	if { [OpenSees::IsPython]==0 } {
+		set ToolbarHelp2(0) { \
+			"Define Zero Length Elements" \
+			"Define Truss Elements" \
+			"Define Beam-Column Elements" \
+			"Define Surface Elements" \
+			"Define Solid Elements" \
+			"" \
+			"Set General Data" \
+			"Set Import/Output Options" \
+			"Set Interval Data" \
+			"Generate Mesh" \
+			"Create .tcl, run analysis and postprocess" \
+			"" \
+			"Open .tcl file" \
+			"" \
+			"Show/Hide Line Local Axes" \
+			"Show/Hide Elements" \
+			"Show/Hide All Conditions for Active Interval" \
+			"Select Active Interval" \
+			}
+	} else {
+		set ToolbarHelp2(0) { \
+			"Define Zero Length Elements" \
+			"Define Truss Elements" \
+			"Define Beam-Column Elements" \
+			"Define Surface Elements" \
+			"Define Solid Elements" \
+			"" \
+			"Set General Data" \
+			"Set Import/Output Options" \
+			"Set Interval Data" \
+			"Generate Mesh" \
+			"Create .py, run analysis and postprocess" \
+			"" \
+			"Open .py file" \
+			"" \
+			"Show/Hide Line Local Axes" \
+			"Show/Hide Elements" \
+			"Show/Hide All Conditions for Active Interval" \
+			"Select Active Interval" \
+			}
+	}
 
-	set ToolbarHelp2(0) { \
-		"Define Zero Length Elements" \
-		"Define Truss Elements" \
-		"Define Beam-Column Elements" \
-		"Define Surface Elements" \
-		"Define Solid Elements" \
-		"" \
-		"Set General Data" \
-		"Set Import/Output Options" \
-		"Set Interval Data" \
-		"Generate Mesh" \
-		"Create .tcl, run analysis and postprocess" \
-		"" \
-		"Open .tcl file" \
-		"" \
-		"Show/Hide Line Local Axes" \
-		"Show/Hide Elements" \
-		"Show/Hide All Conditions for Active Interval" \
-		"Select Active Interval" \
-		}
 
 	set OpenSees2(toolbarwin) \
 		[CreateOtherBitmaps PreBar2 "OpenSees Pre-Processor Toolbar 2" \
@@ -1711,25 +1787,45 @@ proc UpdateInfoBar_Do { } {
 	set GiDProjectName [OpenSees::GetProjectName]
 	set post_file [file join "$GiDProjectDir" "$GiDProjectName.post.res"]
 	set log_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.log"]
-	set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
+	if {[OpenSees::IsPython]==0} {
+		set tcl_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.tcl"]
+	} else {
+		set py_file [file join "$GiDProjectDir" "OpenSees" "$GiDProjectName.py"]
+	}
+
 
 	set lab_info_label "Lab of R/C and Masonry Structures, AUTh"
 	set status_label "Not created"
-
-	if { [file exists $post_file] } {
+	if {[OpenSees::IsPython]==0} {
+		if { [file exists $post_file] } {
 
 		set status_label "Ready to postprocess"
 
-	} elseif { [file exists $log_file] } {
+		} elseif { [file exists $log_file] } {
 
-		set status_label "Solved"
+			set status_label "Solved"
 
-	} elseif { [file exists $tcl_file] } {
+		} elseif { [file exists $tcl_file] } {
 
-		set status_label "Created"
+			set status_label "Created"
+		}
+	} else {
+		if { [file exists $post_file] } {
 
+		set status_label "Ready to postprocess"
+
+		} elseif { [file exists $log_file] } {
+
+			set status_label "Solved"
+
+		} elseif { [file exists $py_file] } {
+
+			set status_label "Created"
+		}
 	}
 
+	
+	
 	.ibar.c create text 252 12 -text $status_label -font "calibri 12" -fill $ibarTextColor -anchor w; # create message about analysis status
 
 	set off 10; # offset from GiD openGL area total width

@@ -1,0 +1,9 @@
+wiki/python_tests/.idea/
+wiki/python_tests/__pycache__/
+post/OpenSeesPost.dproj
+post/OpenSeesPost.dproj.local
+post/OpenSeesPost.res
+post/OpenSeesPost.exe
+post/__history/
+post/OpenSeesPost.identcache
+Python.path
