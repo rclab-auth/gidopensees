@@ -1073,22 +1073,22 @@ namespace eval TransformZeroLengthData {
 }
 
 proc TransformZeroLengthData::reset { } {
-	set TransformZeroLengthData::points ""
-	set TransformZeroLengthData::Ids ""
-	set TransformZeroLengthData::options ""
+	set ::TransformZeroLengthData::points ""
+	set ::TransformZeroLengthData::Ids ""
+	set ::TransformZeroLengthData::options ""
 }
 
 proc TransformZeroLengthData::read { cond_points } {
-	set exists [lsearch $cond_points $TransformZeroLengthData::cond_name]
+	set exists [lsearch $cond_points $::TransformZeroLengthData::cond_name]
 
 	if { $exists > -1 } {
 
-		set count [GiD_Info conditions $TransformZeroLengthData::cond_name geometry -count]
+		set count [GiD_Info conditions $::TransformZeroLengthData::cond_name geometry -count]
 
 		if { $count } {
 			set v270 0
 
-			set condition [GiD_Info conditions $TransformZeroLengthData::cond_name geometry]
+			set condition [GiD_Info conditions $::TransformZeroLengthData::cond_name geometry]
 
 			foreach data $condition {
 				if { [llength $data] > 16 } {
@@ -1103,7 +1103,7 @@ proc TransformZeroLengthData::read { cond_points } {
 
 			if { !$v270 } {
 
-				GiD_UnAssignData condition $TransformZeroLengthData::cond_name points "all"
+				GiD_UnAssignData condition $::TransformZeroLengthData::cond_name points "all"
 
 			}
 		}
@@ -1112,10 +1112,10 @@ proc TransformZeroLengthData::read { cond_points } {
 
 proc TransformZeroLengthData::apply {} {
 
-	foreach point $TransformZeroLengthData::points run_id $TransformZeroLengthData::Ids opt $TransformZeroLengthData::options {
+	foreach point $::TransformZeroLengthData::points run_id $::TransformZeroLengthData::Ids opt $::TransformZeroLengthData::options {
 
 		set values [list $run_id [lindex $opt 0] [lindex $opt 1] [lindex $opt 2] [lindex $opt 3] [lindex $opt 4] [lindex $opt 5] [lindex $opt 6] [lindex $opt 7] [lindex $opt 8] [lindex $opt 9] [lindex $opt 10] [lindex $opt 11] { } ]
-		GiD_AssignData condition $TransformZeroLengthData::cond_name points $values $point
+		GiD_AssignData condition $::TransformZeroLengthData::cond_name points $values $point
 	}
 }
 
